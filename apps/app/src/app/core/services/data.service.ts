@@ -1,9 +1,11 @@
 // src/app/core/services/data.service.ts
-import { Injectable } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformServer } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 
-// Importamos TODA nuestra data mock centralizada
+// Fallback data in case API is not reachable during SSR or development
 import {
   SOLUTIONS,
   PRODUCTS,
@@ -159,66 +161,91 @@ const STATIC_PAGES: StaticPage[] = [
   providedIn: 'root',
 })
 export class DataService {
-  constructor() {}
+  private http = inject(HttpClient);
+  private platformId = inject(PLATFORM_ID);
+  private isServer = isPlatformServer(this.platformId);
+  private apiUrl = '/api/data';
 
   // --- Métodos de Ventures ---
   getVentures(): Observable<Venture[]> {
-    return of(VENTURES);
+    if (this.isServer) return of(VENTURES);
+    return this.http.get<Venture[]>(`${this.apiUrl}/ventures`).pipe(
+      catchError(() => of(VENTURES))
+    );
   }
 
   // --- Métodos de Soluciones ---
   getSolutions(): Observable<Solution[]> {
-    return of(SOLUTIONS);
+    if (this.isServer) return of(SOLUTIONS);
+    return this.http.get<Solution[]>(`${this.apiUrl}/solutions`).pipe(
+      catchError(() => of(SOLUTIONS))
+    );
   }
 
   getSolutionBySlug(slug: string): Observable<Solution | undefined> {
-    const solution = SOLUTIONS.find((s) => s.slug === slug);
-    return of(solution);
+    if (this.isServer) return of(SOLUTIONS.find(s => s.slug === slug));
+    return this.http.get<Solution>(`${this.apiUrl}/solutions/${slug}`).pipe(
+      catchError(() => of(SOLUTIONS.find(s => s.slug === slug)))
+    );
   }
 
   // --- Métodos de Productos ---
   getProducts(): Observable<Product[]> {
-    return of(PRODUCTS);
+    if (this.isServer) return of(PRODUCTS);
+    return this.http.get<Product[]>(`${this.apiUrl}/products`).pipe(
+      catchError(() => of(PRODUCTS))
+    );
   }
 
   getProductBySlug(slug: string): Observable<Product | undefined> {
-    const product = PRODUCTS.find((p) => p.slug === slug);
-    return of(product);
+    return this.getProducts().pipe(map(products => products.find(p => p.slug === slug)));
   }
 
   // --- Métodos de Proyectos (Casos de Éxito) ---
   getProjects(): Observable<Project[]> {
-    return of(PROJECTS);
+    if (this.isServer) return of(PROJECTS);
+    return this.http.get<Project[]>(`${this.apiUrl}/projects`).pipe(
+      catchError(() => of(PROJECTS))
+    );
   }
 
   getProjectBySlug(slug: string): Observable<Project | undefined> {
-    const project = PROJECTS.find((p) => p.slug === slug);
-    return of(project);
+    return this.getProjects().pipe(map(projects => projects.find(p => p.slug === slug)));
   }
 
   // --- Métodos de Blog ---
   getBlogPosts(): Observable<BlogPost[]> {
-    return of(BLOG_POSTS);
+    if (this.isServer) return of(BLOG_POSTS);
+    return this.http.get<BlogPost[]>(`${this.apiUrl}/blog`).pipe(
+      catchError(() => of(BLOG_POSTS))
+    );
   }
 
   getPostBySlug(slug: string): Observable<BlogPost | undefined> {
-    const post = BLOG_POSTS.find((p) => p.slug === slug);
-    return of(post);
+    if (this.isServer) return of(BLOG_POSTS.find(p => p.slug === slug));
+    return this.http.get<BlogPost>(`${this.apiUrl}/blog/${slug}`).pipe(
+      catchError(() => of(BLOG_POSTS.find(p => p.slug === slug)))
+    );
   }
 
   // --- Métodos de Equipo ---
   getTeamMembers(): Observable<TeamMember[]> {
-    return of(TEAM_MEMBERS);
+    if (this.isServer) return of(TEAM_MEMBERS);
+    return this.http.get<TeamMember[]>(`${this.apiUrl}/team`).pipe(
+      catchError(() => of(TEAM_MEMBERS))
+    );
   }
 
   getTeamMemberByKey(key: string): Observable<TeamMember | undefined> {
-    const member = TEAM_MEMBERS.find((m) => m.key === key);
-    return of(member);
+    return this.getTeamMembers().pipe(map(members => members.find(m => m.key === key)));
   }
 
   // --- Métodos de Testimonios ---
   getTestimonials(): Observable<Testimonial[]> {
-    return of(TESTIMONIALS);
+    if (this.isServer) return of(TESTIMONIALS);
+    return this.http.get<Testimonial[]>(`${this.apiUrl}/testimonials`).pipe(
+      catchError(() => of(TESTIMONIALS))
+    );
   }
 
   // --- Métodos de Proceso ---
@@ -228,7 +255,10 @@ export class DataService {
 
   // --- Métodos de Stack Tecnológico ---
   getTechStack(): Observable<TechCategory[]> {
-    return of(TECH_STACK);
+    if (this.isServer) return of(TECH_STACK);
+    return this.http.get<TechCategory[]>(`${this.apiUrl}/tech-stack`).pipe(
+      catchError(() => of(TECH_STACK))
+    );
   }
 
   // --- Métodos de Partners ---
@@ -248,16 +278,17 @@ export class DataService {
 
   // --- Método para posts relacionados ---
   getRelatedPosts(currentSlug: string, tags: string[]): Observable<BlogPost[]> {
-    return of(BLOG_POSTS).pipe(
-      map((posts) =>
-        posts
-          .filter(
-            (post) =>
-              post.slug !== currentSlug &&
-              post.tags.some((tag: string) => tags.includes(tag)),
-          )
-          .slice(0, 3),
-      ),
+    if (this.isServer) {
+      return of(BLOG_POSTS.filter(
+        post => post.slug !== currentSlug && post.tags.some(tag => tags.includes(tag))
+      ).slice(0, 3));
+    }
+    return this.http.get<BlogPost[]>(`${this.apiUrl}/related-posts`, {
+      params: { slug: currentSlug, tags: tags.join(',') }
+    }).pipe(
+      catchError(() => of(BLOG_POSTS.filter(
+        post => post.slug !== currentSlug && post.tags.some(tag => tags.includes(tag))
+      ).slice(0, 3)))
     );
   }
 

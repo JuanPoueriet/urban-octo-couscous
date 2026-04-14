@@ -23,35 +23,18 @@ export class ApiService {
   constructor() { }
 
   /**
-   * Simula el envío de un formulario de contacto.
-   * @param formData Los datos del formulario (nombre, email, servicio, mensaje)
+   * Envía el formulario de contacto al backend real.
    */
   sendContactForm(formData: any): Observable<ApiResponse> {
     console.log('ApiService: Enviando formulario de contacto...', formData);
-    
-    // Simulación de una llamada API (1.5 segundos de retraso)
-    // En un futuro, reemplazarías 'of(...)' con 'this.http.post<ApiResponse>(...)'
-    return of({ 
-      success: true, 
-      message: 'Formulario enviado' 
-    }).pipe(delay(1500));
-    
-    // --- Ejemplo de un error simulado (para probar) ---
-    // return throwError(() => new Error('Error de simulación'))
-    //   .pipe(delay(1500));
+    return this.http.post<ApiResponse>('/api/contact', formData);
   }
 
   /**
-   * Simula la suscripción a un newsletter.
-   * @param email El email a suscribir
+   * Suscribe a un newsletter en el backend real.
    */
   subscribeToNewsletter(email: string): Observable<ApiResponse> {
     console.log('ApiService: Suscribiendo al newsletter...', email);
-
-    // Simulación de una llamada API (1 segundo de retraso)
-    return of({ 
-      success: true, 
-      message: 'Suscripción exitosa' 
-    }).pipe(delay(1000));
+    return this.http.post<ApiResponse>('/api/newsletter', { email });
   }
 }

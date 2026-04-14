@@ -7,12 +7,12 @@
   <!-- Navegación principal -->
   <nav class="header__nav container">
     <!-- Logo -->
-    <a [routerLink]="[currentLang, 'home']" class="header__logo" (click)="closeMobileMenu()">
+    <a [routerLink]="[currentLang, 'home']" class="header__logo" (click)="closeMobileMenu()" aria-label="JSL Technology Home">
       JSL Technology
     </a>
 
     <!-- Navegación desktop -->
-    <ul class="header__nav-links">
+    <ul class="header__nav-links" aria-label="Desktop Navigation">
       <!-- Dropdown: Soluciones/Servicios -->
       <li class="dropdown" [class.open]="openDropdown === 'solutions'">
         <button
@@ -230,6 +230,7 @@
           [routerLink]="[currentLang, 'contact']"
           routerLinkActive="active"
           (click)="closeMobileMenu()"
+          aria-label="Contact Us"
         >
           {{ 'HEADER.CONTACT' | translate }}
         </a>

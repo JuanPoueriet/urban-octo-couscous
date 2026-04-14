@@ -416,19 +416,21 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
           const nextBtn = this.el.nativeElement.querySelector('.hero-swiper-button-next');
           
           if (prevBtn) {
-            prevBtn.style.opacity = '0.4';
+            prevBtn.style.opacity = '0.8'; // Increased opacity for better visibility
             prevBtn.style.visibility = 'visible';
+            prevBtn.style.display = 'flex'; // Ensure it's displayed
           }
           if (nextBtn) {
-            nextBtn.style.opacity = '0.4';
+            nextBtn.style.opacity = '0.8'; // Increased opacity for better visibility
             nextBtn.style.visibility = 'visible';
+            nextBtn.style.display = 'flex'; // Ensure it's displayed
           }
           
           // Iniciar autoplay
           if (heroSwiperEl.swiper && heroSwiperEl.swiper.autoplay) {
             heroSwiperEl.swiper.autoplay.start();
           }
-        }, 100);
+        }, 200); // Increased timeout to ensure swiper-container is ready
       }
 
       // 2. Logo Slider (Tech Stack)
@@ -537,11 +539,11 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     // Note: Since I don't have the keys in translation files yet, I will use hardcoded mock strings for now if keys are missing
     // But better to stick to keys. I will add keys to en.json later or use a fallback.
 
-    // Using a direct message for now to ensure it works without waiting for translation update
+    // Using translated messages or fallbacks
     const messages = [
-      'Someone from Madrid just downloaded the 2025 Whitepaper',
-      'New Enterprise client from FinTech sector just onboarded',
-      'JSL just deployed a new High-Performance Banking App',
+      this.translate.instant('HOME.PROOF_1') === 'HOME.PROOF_1' ? 'Someone from Madrid just downloaded the 2025 Whitepaper' : this.translate.instant('HOME.PROOF_1'),
+      this.translate.instant('HOME.PROOF_2') === 'HOME.PROOF_2' ? 'New Enterprise client from FinTech sector just onboarded' : this.translate.instant('HOME.PROOF_2'),
+      this.translate.instant('HOME.PROOF_3') === 'HOME.PROOF_3' ? 'JSL just deployed a new High-Performance Banking App' : this.translate.instant('HOME.PROOF_3'),
       'Visitor from London requested a consultation'
     ];
     const msg = messages[Math.floor(Math.random() * messages.length)];
@@ -596,12 +598,14 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     
     // ← NUEVO: Asegurar que los botones sean visibles
     if (prevButton) {
-      prevButton.style.opacity = '0.4';
+      prevButton.style.opacity = '0.8';
       prevButton.style.visibility = 'visible';
+      prevButton.style.display = 'flex';
     }
     if (nextButton) {
-      nextButton.style.opacity = '0.4';
+      nextButton.style.opacity = '0.8';
       nextButton.style.visibility = 'visible';
+      nextButton.style.display = 'flex';
     }
   }
 

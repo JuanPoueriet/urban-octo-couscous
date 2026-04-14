@@ -23,10 +23,10 @@
         <h1 class="hero-slide__title">{{ 'HOME.HERO1_TITLE' | translate }}</h1>
         <p class="hero-slide__subtitle">{{ 'HOME.HERO1_SUBTITLE' | translate }}</p>
         <div class="hero-actions">
-          <a [routerLink]="['/', currentLang, 'about-us']" class="hero-slide__cta">{{
+          <a [routerLink]="['/', currentLang, 'about-us']" class="hero-slide__cta" aria-label="Learn more about us">{{
             'HEADER.ABOUT' | translate
           }}</a>
-          <button (click)="openVideoModal()" class="hero-slide__cta hero-slide__cta--secondary">
+          <button (click)="openVideoModal()" class="hero-slide__cta hero-slide__cta--secondary" aria-label="Watch our video reel">
              <lucide-icon name="Play"></lucide-icon>
              Watch Reel
           </button>
@@ -42,7 +42,7 @@
       <div class="hero-slide__content container">
         <h1 class="hero-slide__title">{{ 'HOME.HERO2_TITLE' | translate }}</h1>
         <p class="hero-slide__subtitle">{{ 'HOME.HERO2_SUBTITLE' | translate }}</p>
-        <a [routerLink]="['/', currentLang, 'products']" class="hero-slide__cta">{{
+        <a [routerLink]="['/', currentLang, 'products']" class="hero-slide__cta" aria-label="View our products">{{
           'HOME.HERO2_CTA' | translate
         }}</a>
       </div>
@@ -56,7 +56,7 @@
       <div class="hero-slide__content container">
         <h1 class="hero-slide__title">{{ 'HOME.HERO3_TITLE' | translate }}</h1>
         <p class="hero-slide__subtitle">{{ 'HOME.HERO3_SUBTITLE' | translate }}</p>
-        <a [routerLink]="['/', currentLang, 'solutions']" class="hero-slide__cta">{{
+        <a [routerLink]="['/', currentLang, 'solutions']" class="hero-slide__cta" aria-label="Explore our custom solutions">{{
           'HOME.HERO3_CTA' | translate
         }}</a>
       </div>

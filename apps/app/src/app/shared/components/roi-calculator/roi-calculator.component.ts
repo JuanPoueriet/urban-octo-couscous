@@ -27,7 +27,8 @@ export class RoiCalculatorComponent {
 
   // Formatting currency
   formatCurrency(value: number): string {
-    return new Intl.NumberFormat('en-US', {
+    const locale = typeof window !== 'undefined' ? window.navigator.language : 'en-US';
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: 'USD',
       maximumFractionDigits: 0
