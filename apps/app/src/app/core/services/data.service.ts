@@ -19,7 +19,7 @@ import {
   FAQ_ITEMS,
   PARTNERS,
   VENTURES
-} from '@core/data/mock-data';
+} from '../data/mock-data';
 
 // --- DEFINICIÓN DE INTERFACES PARA TODO EL SITIO ---
 
