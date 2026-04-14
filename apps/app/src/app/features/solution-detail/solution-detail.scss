@@ -2,7 +2,6 @@
 
 // Modernizar la sintaxis a @use y usar rutas directas desde 'src'
 @use "app/styles/variables" as *;
-@use "app/styles/mixins" as *;
 
 // Importar parciales de estilos específicos de la página.
 @use "app/features/solution-detail/styles/page-header";

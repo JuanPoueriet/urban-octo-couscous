@@ -8,11 +8,12 @@
   "targets": {
     "build": {
       "executor": "@angular/build:application",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/apps/cms",
         "browser": "apps/cms/src/main.ts",
-        "polyfills": ["zone.js"],
         "tsConfig": "apps/cms/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
@@ -21,7 +22,9 @@
             "input": "apps/cms/public"
           }
         ],
-        "styles": ["apps/cms/src/styles.scss"]
+        "styles": [
+          "apps/cms/src/styles.scss"
+        ]
       },
       "configurations": {
         "production": {
@@ -71,7 +74,9 @@
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
       "options": {
         "jestConfig": "apps/cms/jest.config.ts",
         "tsConfig": "apps/cms/tsconfig.spec.json"
