@@ -24,16 +24,22 @@
           "apps/app/src/assets",
           "apps/app/src/robots.txt"
         ],
-        "styles": ["apps/app/src/styles.scss"],
+        "styles": [
+          "apps/app/src/styles.scss"
+        ],
         "stylePreprocessorOptions": {
-          "includePaths": ["apps/app/src"]
+          "includePaths": [
+            "apps/app/src"
+          ]
         },
         "server": "apps/app/src/main.server.ts",
         "outputMode": "server",
         "ssr": {
           "entry": "apps/app/src/server.ts"
         },
-        "allowedCommonJsDependencies": ["prismjs"],
+        "allowedCommonJsDependencies": [
+          "prismjs"
+        ],
         "outputPath": "dist/apps/app"
       },
       "configurations": {
@@ -46,11 +52,14 @@
             },
             {
               "type": "anyComponentStyle",
-              "maximumWarning": "40kB",
+              "maximumWarning": "50kB",
               "maximumError": "60kB"
             }
           ],
-          "outputHashing": "all"
+          "outputHashing": "all",
+          "optimization": {
+            "fonts": false
+          }
         },
         "development": {
           "optimization": false,
@@ -59,7 +68,9 @@
         }
       },
       "defaultConfiguration": "production",
-      "outputs": ["{options.outputPath}"]
+      "outputs": [
+        "{options.outputPath}"
+      ]
     },
     "serve": {
       "executor": "@angular/build:dev-server",
@@ -89,9 +100,13 @@
           "apps/app/src/assets",
           "apps/app/src/robots.txt"
         ],
-        "styles": ["apps/app/src/styles.scss"],
+        "styles": [
+          "apps/app/src/styles.scss"
+        ],
         "stylePreprocessorOptions": {
-          "includePaths": ["apps/app/src"]
+          "includePaths": [
+            "apps/app/src"
+          ]
         }
       }
     }

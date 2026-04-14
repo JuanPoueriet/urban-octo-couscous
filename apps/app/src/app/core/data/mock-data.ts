@@ -1,6 +1,6 @@
 // src/app/core/data/mock-data.ts
 
-import { BlogPost, TeamMember, Venture } from '@core/services/data.service';
+import { BlogPost, TeamMember, Venture } from '../services/data.service';
 
 /**
  * DATOS DE VENTURES (Innovation Lab)
