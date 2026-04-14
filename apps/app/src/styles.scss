@@ -1,57 +1,44 @@
 /* src/styles.scss */
 
-// 1. Importación de Tipografía (Poppins)
-// --- ELIMINADO: @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-//     (Se movió a index.html para una carga más rápida)
-
-// 2. Definición de Variables CSS (Paleta Dark Mode)
+// 1. Definición de Variables CSS (Design Tokens)
 :root {
-  // Colores (Basados en las imágenes de referencia)
-  --bg-primary: #0D0D0D;      // Un negro muy profundo, casi puro
-  --bg-secondary: #1A1A1A;    // Para tarjetas, header (ligeramente más claro)
-  --border-color: #2C2C2C;    // Bordes sutiles
+  // Colores principales
+  --primary: #FF4B2B;
+  --primary-rgb: 255, 75, 43;
+  --secondary: #FF416C;
+  --secondary-rgb: 255, 65, 108;
+  --accent-gradient: linear-gradient(90deg, var(--primary), var(--secondary));
+
+  // Fondos
+  --bg-primary: #0D0D0D;
+  --bg-secondary: #1A1A1A;
+  --bg-card: #242424;
+  --border-color: #2C2C2C;
+
+  // Texto
+  --text-main: #F5F5F5;
+  --text-muted: #A0A0A0;
+  --text-inverse: #0D0D0D;
 
   // Tipografía
-  --text-primary: #F5F5F5;     // Blanco principal (casi blanco)
-  --text-secondary: #A0A0A0;  // Gris (para subtítulos y párrafos)
   --font-family-base: 'Poppins', sans-serif;
 
-  // Acentos (Extraídos de IMG-20251020-WA0002.jpg)
-  --accent-primary: #FF4B2B;
-  --accent-secondary: #FF416C;
-  --accent-gradient: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-
-  // Layout
+  // Layout & Spacing
   --max-width: 1200px;
-  --top-bar-height: 40px;  // <-- AÑADIR
+  --top-bar-height: 40px;
   --header-height: 75px;
-  --border-radius: 8px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
 
-
-
-
-
-
-
-
-
-  --accent-primary: #FF4B2B;
-  --accent-primary-rgb: 255, 75, 43; // <-- AÑADE ESTA LÍNEA
-  --accent-secondary: #FF416C;
-  --accent-gradient: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-
---font-family-base: 'Poppins', sans-serif;
-
-  // Acentos
-  --accent-primary: #FF4B2B;
-  --accent-primary-rgb: 255, 75, 43;
-  --accent-secondary: #FF416C;
-  --accent-secondary-rgb: 255, 65, 108; // <-- AÑADE ESTA LÍNEA
-  --accent-gradient: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-
+  // Interacciones
+  --transition-speed: 0.3s;
+  --transition-timing: ease;
+  --focus-ring: 0 0 0 3px rgba(var(--primary-rgb), 0.5);
 }
 
-// 3. Reseteo Básico y Estilos Globales
+// 2. Reseteo Básico y Estilos Globales
 * {
   margin: 0;
   padding: 0;
@@ -65,30 +52,46 @@ html, body {
 
 body {
   background-color: var(--bg-primary);
-  color: var(--text-primary);
+  color: var(--text-main);
   font-family: var(--font-family-base);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  // Restaurar selección de texto (UX)
+  user-select: auto;
+  -webkit-user-select: auto;
+}
+
+// Accesibilidad: Foco consistente
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 a {
-  color: var(--text-primary);
+  color: inherit;
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: color var(--transition-speed) var(--transition-timing);
 
   &:hover {
-    color: var(--accent-primary);
+    color: var(--primary);
   }
 }
 
-// Clase utilitaria para centrar contenido
+// Componentes Base
 .container {
   width: 90%;
   max-width: var(--max-width);
   margin: 0 auto;
 }
 
-// Estilo de scrollbar (para un look más "tech")
+.page-container {
+  margin-top: calc(var(--header-height) + var(--top-bar-height));
+  padding: 4rem 0;
+  min-height: calc(100vh - var(--header-height) - var(--top-bar-height) - 400px); // Aproximado para footer
+}
+
+// Scrollbar
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -97,117 +100,32 @@ a {
 }
 ::-webkit-scrollbar-thumb {
   background: var(--border-color);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-secondary);
+  background: var(--text-muted);
 }
 
-.page-container {
-  padding-top: 4rem; // Espacio desde el header
-  padding-bottom: 4rem; // Espacio antes del footer
-  min-height: 50vh; // Asegura que la página tenga algo de altura
-
-  margin-top: calc(var(--header-height) + var(--top-bar-height));;
-}
-
-.page-title {
-  font-size: 3rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 1rem;
-  line-height: 1.2;
-}
-
-.page-subtitle {
-  font-size: 1.2rem;
-  font-weight: 300;
-  color: var(--text-secondary);
-}
-
-// Clases genéricas para secciones (las usaremos más adelante)
-.section-eyebrow {
-  display: block;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--accent-primary);
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.section-title {
-  font-size: 2.8rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 1.5rem;
-  line-height: 1.3;
-}
-
-.section-subtitle {
-  font-size: 1.1rem;
-  color: var(--text-secondary);
-  line-height: 1.8;
-  max-width: 700px; // Limita el ancho de los párrafos
-}
-
+// Utilidades de Animación
 [jslAnimateOnScroll] {
-  // Estado inicial (oculto)
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 
-  // Estado visible (cuando se añade la clase)
   &.is-visible {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-// Para añadir un efecto de "stagger" (retraso) a las tarjetas en un grid
-.solutions-grid,
-.products-grid,
-.projects-grid,
-.core-values-grid {
-  @for $i from 1 through 10 { // Soporta hasta 10 tarjetas
-    > *:nth-child(#{$i}) {
-      transition-delay: #{$i * 0.1}s; // Retraso de 0.1s por tarjeta
-    }
-  }
-}
-
-lucide-icon{
+lucide-icon {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-// img{
-//   width: 100% !important;
-//   height: auto !important;
-//   display: flex !important;
-//   align-items: center !important;
-//   justify-content: center !important;
-//   overflow: hidden;
-// }
-
-@media (max-width: 992px) {
-  *:hover {
-    cursor: default;
-  }
-}
-
-
-body {
-  user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  -moz-user-select: none;
-}
-
 /* RTL Support */
 [dir="rtl"] {
-  /* Flip directional icons */
   lucide-icon[name="ArrowRight"],
   lucide-icon[name="ArrowLeft"],
   lucide-icon[name="ChevronRight"],
