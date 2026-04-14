@@ -1,14 +1,18 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
-  <div class="text-center max-w-lg">
-    <div class="mb-8 flex justify-center text-red-500">
-      <lucide-icon [name]="icons.Server" [size]="64"></lucide-icon>
+<div class="page-container">
+  <div class="container">
+    <div class="server-error-page">
+      <div class="server-error-page__icon-container">
+        <lucide-icon name="Server"></lucide-icon>
+      </div>
+
+      <div class="server-error-page__code">500</div>
+      <h1 class="server-error-page__title">ERRORS.500_TITLE</h1>
+      <p class="server-error-page__desc">ERRORS.500_DESC</p>
+
+      <a routerLink="/" class="server-error-page__button">
+        <lucide-icon name="Home"></lucide-icon>
+        ERRORS.GO_HOME
+      </a>
     </div>
-    <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">500</h1>
-    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{{ 'ERRORS.500_TITLE' | translate }}</h2>
-    <p class="text-gray-600 dark:text-gray-400 mb-8">{{ 'ERRORS.500_DESC' | translate }}</p>
-    <a routerLink="/" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200">
-      <lucide-icon [name]="icons.Home" [size]="20" class="mr-2"></lucide-icon>
-      {{ 'ERRORS.GO_HOME' | translate }}
-    </a>
   </div>
 </div>

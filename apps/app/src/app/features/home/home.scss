@@ -614,7 +614,7 @@ swiper-container {
   padding: 3rem 2rem;
   margin-bottom: 6rem;
   margin-top: 2rem; // Reducido margen superior ya que ahora está el tech stack
-  max-width: 90vw !important;
+  max-width: 100%;
 }
 .welcome-section::after {
   background: linear-gradient(to left top, #a7a7a7, transparent 45%, transparent 55%, #a7a7a7);
