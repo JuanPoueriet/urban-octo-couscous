@@ -8,6 +8,7 @@ import { switchMap } from 'rxjs/operators';
 import { DataService, Project } from '@core/services/data.service';
 import { CtaComponent } from '@shared/components/cta/cta';
 import { Title } from '@angular/platform-browser';
+import { Seo } from '@core/services/seo';
 
 @Component({
   selector: 'jsl-project-detail',
@@ -33,7 +34,8 @@ export class ProjectDetail implements OnInit, OnDestroy {
     @Inject(TranslateService) private translate: TranslateService,
     private route: ActivatedRoute,
     private dataService: DataService, 
-    private titleService: Title
+    private titleService: Title,
+    private seoService: Seo
     // --- CAMBIO: 'Location' eliminado del constructor ---
   ) {
     this.currentLang = this.translate.currentLang || this.translate.defaultLang || 'es';
@@ -58,6 +60,7 @@ export class ProjectDetail implements OnInit, OnDestroy {
     this.project$.subscribe(project => {
       this.projectData = project;
       this.updateTitle();
+      if (project) this.updateMetadata(project);
     });
   }
 
@@ -72,6 +75,23 @@ export class ProjectDetail implements OnInit, OnDestroy {
         this.titleService.setTitle(`${translatedTitle} | JSL Technology`);
       });
     }
+  }
+
+  private updateMetadata(project: Project): void {
+    const titleKey = `PROJECTS.${project.key}_TITLE`;
+    const descKey = `PROJECTS.${project.key}_DESC`;
+    const baseUrl = this.seoService.getBaseUrl();
+    const url = `${baseUrl}/${this.currentLang}/projects/${project.slug}`;
+
+    this.translate.get([titleKey, descKey]).subscribe(translations => {
+      this.seoService.updateCanonicalTag(url);
+      this.seoService.updateSocialTags(
+        translations[titleKey],
+        translations[descKey],
+        url,
+        project.imageUrl
+      );
+    });
   }
 
   // --- CAMBIO: Método 'goBack()' eliminado ---

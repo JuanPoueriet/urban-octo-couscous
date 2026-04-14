@@ -11,6 +11,7 @@ import { DataService, Solution } from '@core/services/data.service';
 import { TECH_STACK } from '@core/data/mock-data';
 import { CtaComponent } from '@shared/components/cta/cta';
 import { RelatedContentComponent } from '@shared/components/related-content/related-content';
+import { Seo } from '@core/services/seo';
 
 @Component({
   selector: 'jsl-solution-detail',
@@ -41,7 +42,8 @@ export class SolutionDetail implements OnInit, OnDestroy {
     @Inject(TranslateService) private translate: TranslateService,
     private route: ActivatedRoute,
     private dataService: DataService,
-    private titleService: Title
+    private titleService: Title,
+    private seoService: Seo
   ) {
     this.currentLang =
       this.translate.currentLang || this.translate.defaultLang || 'es';
@@ -72,6 +74,7 @@ export class SolutionDetail implements OnInit, OnDestroy {
       tap(solution => {
         if (solution) {
           this.updateTitle(solution);
+          this.updateMetadata(solution);
           this.loadOtherSolutions(solution);
         }
       }),
@@ -108,6 +111,23 @@ export class SolutionDetail implements OnInit, OnDestroy {
     const titleKey = `SOLUTIONS.${solution.key}_TITLE`;
     this.translate.get(titleKey).subscribe(translatedTitle => {
       this.titleService.setTitle(`${translatedTitle} | JSL Technology`);
+    });
+  }
+
+  private updateMetadata(solution: Solution): void {
+    const titleKey = `SOLUTIONS.${solution.key}_TITLE`;
+    const descKey = `SOLUTIONS.${solution.key}_DESC`;
+    const baseUrl = this.seoService.getBaseUrl();
+    const url = `${baseUrl}/${this.currentLang}/solutions/${solution.slug}`;
+
+    this.translate.get([titleKey, descKey]).subscribe(translations => {
+      this.seoService.updateCanonicalTag(url);
+      this.seoService.updateSocialTags(
+        translations[titleKey],
+        translations[descKey],
+        url,
+        solution.heroImage
+      );
     });
   }
 }

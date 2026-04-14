@@ -9,6 +9,7 @@ import { switchMap } from 'rxjs/operators';
 import { DataService, Product } from '@core/services/data.service';
 import { Title } from '@angular/platform-browser';
 import { CtaComponent } from '@shared/components/cta/cta'; // --- CAMBIO: Importar CTA ---
+import { Seo } from '@core/services/seo';
 
 @Component({
   selector: 'jsl-product-detail',
@@ -34,7 +35,8 @@ export class ProductDetail implements OnInit, OnDestroy {
     @Inject(TranslateService) private translate: TranslateService,
     private route: ActivatedRoute,
     private dataService: DataService,
-    private titleService: Title
+    private titleService: Title,
+    private seoService: Seo
     // --- CAMBIO: 'Location' eliminado del constructor ---
   ) {
     this.currentLang = this.translate.currentLang || this.translate.defaultLang || 'es';
@@ -59,6 +61,7 @@ export class ProductDetail implements OnInit, OnDestroy {
     this.product$.subscribe(product => {
       this.productData = product;
       this.updateTitle();
+      if (product) this.updateMetadata(product);
     });
   }
 
@@ -73,6 +76,23 @@ export class ProductDetail implements OnInit, OnDestroy {
         this.titleService.setTitle(`${translatedTitle} | JSL Technology`);
       });
     }
+  }
+
+  private updateMetadata(product: Product): void {
+    const titleKey = `PRODUCTS.${product.key}_TITLE`;
+    const descKey = `PRODUCTS.${product.key}_DESC`;
+    const baseUrl = this.seoService.getBaseUrl();
+    const url = `${baseUrl}/${this.currentLang}/products/${product.slug}`;
+
+    this.translate.get([titleKey, descKey]).subscribe(translations => {
+      this.seoService.updateCanonicalTag(url);
+      this.seoService.updateSocialTags(
+        translations[titleKey],
+        translations[descKey],
+        url,
+        '' // Products might need a default or specific image
+      );
+    });
   }
 
   // --- CAMBIO: Método 'goBack()' eliminado ---

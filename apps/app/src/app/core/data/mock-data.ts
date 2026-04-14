@@ -312,7 +312,7 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     key: 'POST_5',
     slug: 'from-wireframe-to-hifi-in-figma',
-    imageUrl: '../../../../assets/imgs/PRD-–-How-To-Guide-–-high-fidelity-wireframes-Suren-Karapetyan-featured-image-792x446.jpg',
+    imageUrl: 'assets/imgs/Avif/photo-1587620962725-abab7fe55159.avif',
     date: '2025-10-05',
     authorKey: 'MEMBER_2',
     tags: ['design', 'ui', 'tools', 'ux'],
