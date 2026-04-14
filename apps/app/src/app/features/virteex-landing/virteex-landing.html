@@ -1,0 +1,50 @@
+<div class="virteex-hero">
+  <div class="container">
+    <div class="logo-container">
+      <img src="assets/imgs/logos/virteex.svg" alt="Virteex Logo" class="virteex-logo">
+    </div>
+    <h1>{{ 'VIRTEEX.TITLE' | translate }}</h1>
+    <p>{{ 'VIRTEEX.SUBTITLE' | translate }}</p>
+    <div class="hero-actions">
+      <a href="https://virteex.com" target="_blank" class="btn btn-primary">
+        {{ 'VIRTEEX.VISIT_SITE' | translate }} <lucide-icon name="ExternalLink" size="18"></lucide-icon>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="container ecosystem-section">
+  <h2 class="section-title">{{ 'VIRTEEX.ECOSYSTEM_TITLE' | translate }}</h2>
+  <div class="ecosystem-diagram">
+    <!-- Simplified CSS Diagram -->
+    <div class="core-system">
+      <div class="system-icon"><lucide-icon name="Database"></lucide-icon></div>
+      <h3>Virteex ERP Core</h3>
+    </div>
+    <div class="connections">
+      <div class="connection-line"></div>
+      <div class="connection-line"></div>
+      <div class="connection-line"></div>
+    </div>
+    <div class="satellites">
+      <div class="satellite">
+        <lucide-icon name="ShoppingCart"></lucide-icon>
+        <span>POS</span>
+      </div>
+      <div class="satellite">
+        <lucide-icon name="Smartphone"></lucide-icon>
+        <span>Mobile App</span>
+      </div>
+      <div class="satellite">
+        <lucide-icon name="Globe"></lucide-icon>
+        <span>E-Commerce</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<jsl-cta-section
+  eyebrowKey="VIRTEEX.CTA_EYEBROW"
+  titleKey="VIRTEEX.CTA_TITLE"
+  subtitleKey="VIRTEEX.CTA_SUBTITLE">
+</jsl-cta-section>

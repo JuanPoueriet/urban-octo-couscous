@@ -1,0 +1,185 @@
+import { Component, HostListener, Inject, PLATFORM_ID, OnInit } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { RouterOutlet } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { CookieService } from 'ngx-cookie-service';
+import { Header } from './layout/header/header';
+import { Footer } from './layout/footer/footer';
+import { Seo } from './core/services/seo';
+import { DirectionService } from './core/services/direction.service';
+import { ChatBubbleComponent } from './shared/components/chat-bubble/chat-bubble';
+import { SUPPORTED_LANGUAGES } from '@core/constants/languages';
+import { ToastComponent } from './shared/components/toast/toast';
+import { CookieBannerComponent } from './shared/components/cookie-banner/cookie-banner';
+import { BreadcrumbsComponent } from './shared/components/breadcrumbs/breadcrumbs';
+
+@Component({
+  selector: 'jsl-root',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    Header,
+    Footer,
+    ChatBubbleComponent,
+    ToastComponent,
+    CookieBannerComponent,
+    BreadcrumbsComponent
+  ],
+  templateUrl: './app.html',
+  styleUrl: './app.scss',
+})
+export class App implements OnInit {
+  title = 'jsl-technology-web';
+  isScrolled = false;
+  private isBrowser: boolean;
+
+  // Swipe blocker variables
+  private edgeThreshold = 24;
+  private minHorizontalMove = 10;
+  private startX = 0;
+  private startY = 0;
+  private maybeEdge = false;
+  private touchId: number | null = null;
+  private supportsPassive = false;
+
+  constructor(
+    private translate: TranslateService,
+    private seo: Seo,
+    private directionService: DirectionService, // Inject to initialize
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private cookieService: CookieService,
+  ) {
+    this.seo.init();
+    this.isBrowser = isPlatformBrowser(this.platformId);
+    this.translate.addLangs(SUPPORTED_LANGUAGES);
+
+    if (this.isBrowser) {
+      this.initializeLanguage();
+      // Ejecutar al cargar la página
+      this.updateScrollAndResize();
+    }
+
+    this.checkPassiveSupport();
+  }
+
+  ngOnInit() {
+    if (this.isBrowser) {
+      this.initSwipeBlocker();
+    }
+  }
+
+  private checkPassiveSupport() {
+    try {
+      const opts = Object.defineProperty({}, 'passive', {
+        get: () => { this.supportsPassive = true; return true; }
+      });
+      (window as any).addEventListener('testPassive', null, opts);
+      (window as any).removeEventListener('testPassive', null, opts);
+    } catch (e) { }
+  }
+
+  private initSwipeBlocker() {
+    const addOpts = this.supportsPassive ? { passive: false } : false;
+
+    document.addEventListener('touchstart', this.onTouchStart.bind(this), addOpts as any);
+    document.addEventListener('touchmove', this.onTouchMove.bind(this), addOpts as any);
+    document.addEventListener('touchend', this.onTouchEnd.bind(this), addOpts as any);
+    document.addEventListener('touchcancel', this.onTouchEnd.bind(this), addOpts as any);
+  }
+
+  private onTouchStart(e: TouchEvent) {
+    if (!e.touches || e.touches.length === 0) return;
+    const t = e.touches[0];
+    this.startX = t.clientX;
+    this.startY = t.clientY;
+    this.maybeEdge = this.startX <= this.edgeThreshold;
+    this.touchId = t.identifier;
+  }
+
+  private onTouchMove(e: TouchEvent) {
+    if (!this.maybeEdge) return;
+
+    let t: Touch | null = null;
+    if (e.touches && e.touches.length) {
+      for (let i = 0; i < e.touches.length; i++) {
+        if (e.touches[i].identifier === this.touchId) { t = e.touches[i]; break; }
+      }
+      if (!t) t = e.touches[0];
+    } else {
+      return;
+    }
+
+    const dx = t.clientX - this.startX;
+    const dy = t.clientY - this.startY;
+
+    // Sólo nos importa movimiento horizontal dominando sobre vertical, y hacia la derecha.
+    if (dx > this.minHorizontalMove && Math.abs(dx) > Math.abs(dy)) {
+      try {
+        if (e.cancelable) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      } catch (err) {
+      }
+    }
+  }
+
+  private onTouchEnd(e: TouchEvent) {
+    this.maybeEdge = false;
+    this.touchId = null;
+  }
+
+  private initializeLanguage(): void {
+    const langCookie = this.cookieService.get('lang');
+    if (langCookie && this.translate.getLangs().includes(langCookie)) {
+      this.translate.use(langCookie);
+      return;
+    }
+
+    const browserLang = this.translate.getBrowserLang();
+    const supportedLangs = this.translate.getLangs();
+    const finalLang =
+      browserLang && supportedLangs.includes(browserLang)
+        ? browserLang
+        : 'en';
+
+    this.cookieService.set('lang', finalLang, { expires: 365, path: '/' });
+    this.translate.use(finalLang);
+  }
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    // Ejecutar al hacer scroll
+    this.updateScrollAndResize();
+  }
+
+  @HostListener('window:resize', [])
+  onWindowResize() {
+    // Ejecutar al redimensionar la ventana
+    this.updateScrollAndResize();
+  }
+
+  /**
+   * Comprueba el estado del scroll y el tamaño de la ventana
+   * para decidir si se aplica la clase 'is-scrolled'.
+   */
+  private updateScrollAndResize() {
+    if (this.isBrowser) {
+      const verticalOffset =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop ||
+        0;
+      const isDesktop = window.innerWidth > 992; // El breakpoint de tu CSS
+
+      if (isDesktop) {
+        // Comportamiento para PC: aplicar clase solo al hacer scroll
+        this.isScrolled = verticalOffset > 50;
+      } else {
+        // Comportamiento para Móvil: nunca aplicar la clase
+        this.isScrolled = false;
+      }
+    }
+  }
+}

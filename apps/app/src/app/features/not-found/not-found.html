@@ -1,0 +1,26 @@
+<div class="page-container container">
+  
+  <div class="not-found-grid" jslAnimateOnScroll>
+    
+    <div class="not-found-content">
+      <span class="not-found-eyebrow">Error 404</span>
+      
+      <h1>{{ 'NOT_FOUND.TITLE' | translate }}</h1>
+      <p>{{ 'NOT_FOUND.SUBTITLE' | translate }}</p>
+      
+      <a [routerLink]="['/', currentLang, 'home']" class="hero-slide__cta">
+        <span>{{ 'NOT_FOUND.CTA' | translate }}</span>
+        <lucide-icon name="Home"></lucide-icon>
+      </a>
+    </div>
+
+    <div class="not-found-image">
+      <img [ngSrc]="illustrationUrl" 
+           alt="Page Not Found Illustration"
+           width="500"
+           height="500"
+           priority>
+    </div>
+
+  </div>
+</div>

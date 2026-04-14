@@ -1,0 +1,55 @@
+<div class="page-container container">
+  <h1 class="page-title" jslAnimateOnScroll>{{ 'INDUSTRIES.TITLE' | translate }}</h1>
+  <p class="page-subtitle" jslAnimateOnScroll>{{ 'INDUSTRIES.SUBTITLE' | translate }}</p>
+
+  <div class="industries-grid">
+    @for (industry of industries; track industry.key) {
+      <div class="industry-card" jslAnimateOnScroll>
+        <div class="industry-card__image-wrapper">
+          <img [src]="industry.image" [alt]="'INDUSTRIES.' + industry.key + '_TITLE' | translate" loading="lazy">
+          <div class="industry-card__icon">
+            <lucide-icon [name]="industry.icon"></lucide-icon>
+          </div>
+        </div>
+        <div class="industry-card__content">
+          <h3 class="industry-card__title">{{ 'INDUSTRIES.' + industry.key + '_TITLE' | translate }}</h3>
+          <p class="industry-card__desc">{{ 'INDUSTRIES.' + industry.key + '_DESC' | translate }}</p>
+          <h4 class="industry-card__links-title">{{ 'INDUSTRIES.RELATED_LINKS' | translate }}</h4>
+          <div class="industry-card__links">
+            @if (industry.key === 'RETAIL') {
+              <a [routerLink]="['/', currentLang, 'products', 'jsl-pos']">
+                {{ 'PRODUCTS.POS_TITLE' | translate }}
+              </a>
+            }
+            @if (industry.key === 'LOGISTICS') {
+              <a [routerLink]="['/', currentLang, 'products', 'jsl-erp']">
+                {{ 'PRODUCTS.ERP_TITLE' | translate }}
+              </a>
+              <a [routerLink]="['/', currentLang, 'projects', 'erp-logistics-optimization']">
+                {{ 'PROJECTS.CASE_ERP_TITLE' | translate }}
+              </a>
+            }
+            @if (industry.key === 'FINTECH') {
+              <a [routerLink]="['/', currentLang, 'solutions', 'web-development']">
+                {{ 'SOLUTIONS.WEB_TITLE' | translate }}
+              </a>
+            }
+            @if (industry.key === 'HEALTH') {
+              <a [routerLink]="['/', currentLang, 'solutions', 'mobile-apps']">
+                {{ 'SOLUTIONS.MOBILE_TITLE' | translate }}
+              </a>
+            }
+            <a [routerLink]="['/', currentLang, 'contact']">{{ 'INDUSTRIES.CONTACT_SOLUTION' | translate }}</a>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+</div>
+
+<jsl-cta-section 
+  eyebrowKey="INDUSTRIES.CTA_EYEBROW"
+  titleKey="INDUSTRIES.CTA_TITLE"
+  subtitleKey="INDUSTRIES.CTA_SUBTITLE">
+</jsl-cta-section>

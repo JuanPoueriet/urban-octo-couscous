@@ -1,0 +1,39 @@
+<section class="status-hero">
+  <div class="container">
+    <div class="status-indicator">
+      <lucide-icon name="check-circle" size="64" class="text-primary"></lucide-icon>
+      <h1>{{ 'STATUS.OPERATIONAL' | translate }}</h1>
+    </div>
+  </div>
+</section>
+
+<section class="status-content">
+  <div class="container">
+    <div class="systems-grid">
+      <div class="system-card" *ngFor="let sys of systems">
+        <div class="sys-header">
+          <span class="sys-name">{{ sys.name }}</span>
+          <span class="sys-val text-primary">{{ sys.uptime }}%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="sys.uptime"></div>
+        </div>
+        <div class="uptime-label">{{ 'STATUS.UPTIME' | translate }} (90 days)</div>
+      </div>
+    </div>
+
+    <div class="incidents-section">
+      <h2>{{ 'STATUS.INCIDENTS' | translate }}</h2>
+      <div class="incident-item" *ngFor="let inc of incidents">
+        <div class="inc-date">{{ inc.date }}</div>
+        <div class="inc-info">
+          <h3>{{ inc.title }}</h3>
+          <p>{{ inc.desc }}</p>
+        </div>
+        <div class="inc-status">{{ inc.status }}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<jsl-cta-section></jsl-cta-section>

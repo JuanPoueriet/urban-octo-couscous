@@ -1,0 +1,1726 @@
+/* src/app/features/home/home.component.scss */
+
+@use 'swiper/css' as *;
+@use 'swiper/css/effect-fade' as *;
+@use 'swiper/css/pagination' as *;
+// --- NUEVO: Imports para el slider de testimonios ---
+@use 'swiper/css/effect-coverflow' as *;
+@use 'swiper/css/navigation' as *; // ← AÑADIDO: Para estilos base de navegación
+
+@use '../solutions/solutions.scss';
+@use '../products/products.scss';
+@use '../projects/projects.scss';
+// --- CAMBIO: Eliminado @use '../tech-stack/tech-stack.scss'; ---
+
+// --- 1. Hero Slider ---
+.hero-slider {
+  width: 100%;
+  height: 100vh; // Ocupa la pantalla completa
+  min-height: 600px;
+  max-height: 900px; // Límite para pantallas muy altas
+  background-color: var(--bg-primary);
+  position: relative; // Contexto para la barra inferior
+  
+  // ← NUEVO: Contexto para posicionamiento absoluto de los botones
+  .swiper {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+swiper-container {
+  width: 100%;
+  height: 100%;
+}
+
+.hero-slide {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  // --- INICIO DE CORRECCIÓN DE ASPECT RATIO ---
+  img {
+    object-fit: cover; // Asegura que la imagen cubra el slide sin distorsionarse
+    object-position: center;
+  }
+  // --- FIN DE CORRECCIÓN DE ASPECT RATIO ---
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    inset-inline-start: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(50% 50% at 50% 50%, rgba(50, 50, 50, 0) 0%, lab(0% 0 0 / 0.8) 100%);
+  }
+
+  &__content {
+    position: relative;
+    z-index: 2;
+    max-width: 650px;
+  }
+
+  &__title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    animation: fadeInDown 1s ease-out both;
+  }
+
+  &__subtitle {
+    font-size: 1.2rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    max-width: 550px;
+    animation: fadeInUp 1s ease-out 0.5s both;
+  }
+
+  &__cta {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    background: var(--accent-gradient);
+    border-radius: var(--border-radius);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    animation: fadeInUp 1s ease-out 1s both;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(255, 65, 108, 0.2);
+    }
+    
+    // --- Sazón: Micro-interacción de clic ---
+    &:active {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 10px rgba(255, 65, 108, 0.2);
+    }
+
+    &--secondary {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+
+    @media (max-width: 576px) {
+       flex-direction: column;
+       align-items: stretch;
+       .hero-slide__cta {
+         text-align: center;
+         justify-content: center;
+       }
+    }
+  }
+}
+
+// --- NUEVO: Scroll Down Indicator ---
+.scroll-indicator {
+  position: absolute;
+  bottom: 120px; // Encima de la bottom bar
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 15;
+  opacity: 0.7;
+
+  .mouse {
+    width: 30px;
+    height: 50px;
+    border: 2px solid rgba(255,255,255,0.6);
+    border-radius: 15px;
+    position: relative;
+
+    .wheel {
+      width: 4px;
+      height: 8px;
+      background: #fff;
+      border-radius: 2px;
+      position: absolute;
+      top: 10px;
+      inset-inline-start: 50%;
+      transform: translateX(-50%);
+      animation: scrollWheel 2s infinite;
+    }
+  }
+
+  .arrow {
+    width: 10px;
+    height: 10px;
+    border-right: 2px solid rgba(255,255,255,0.6);
+    border-bottom: 2px solid rgba(255,255,255,0.6);
+    transform: rotate(45deg);
+    animation: scrollArrow 2s infinite;
+    animation-delay: 0.2s;
+  }
+
+  @media (max-width: 768px) {
+    display: none; // Ocultar en movil si molesta
+  }
+}
+
+@keyframes scrollWheel {
+  0% { top: 10px; opacity: 1; }
+  100% { top: 30px; opacity: 0; }
+}
+
+@keyframes scrollArrow {
+  0% { opacity: 0; transform: rotate(45deg) translateY(-5px); }
+  50% { opacity: 1; transform: rotate(45deg) translateY(0); }
+  100% { opacity: 0; transform: rotate(45deg) translateY(5px); }
+}
+
+
+// --- NUEVO: Offerings Tabs Section ---
+.offerings-section {
+  padding: 6rem 0;
+
+  .offerings-header {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 3rem auto;
+  }
+
+  .offerings-tabs-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+
+  .offerings-tabs {
+    display: inline-flex;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 100px;
+    padding: 0.5rem;
+    position: relative;
+    gap: 0.5rem;
+
+    .tab-btn {
+      padding: 0.8rem 2rem;
+      border-radius: 100px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &.active {
+        background: var(--bg-card);
+        color: var(--text-primary);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      }
+
+      &:hover:not(.active) {
+        color: var(--text-primary);
+      }
+    }
+  }
+
+  .offerings-content {
+    min-height: 400px; // Evitar saltos grandes
+  }
+
+  .fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+}
+
+// --- NUEVO: Maturity Section ---
+.maturity-section {
+  padding: 6rem 0;
+  border-top: 1px solid var(--border-color);
+  background: radial-gradient(circle at 50% 50%, rgba(var(--accent-primary-rgb), 0.05), transparent 70%);
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .maturity-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 4rem;
+    align-items: start;
+
+    h3 {
+      margin-bottom: 2rem;
+      text-align: center;
+      color: var(--text-secondary);
+    }
+  }
+
+  .maturity-cta {
+    text-align: center;
+    margin-top: 3rem;
+  }
+}
+
+// --- NUEVO: Success Cases Section ---
+.success-cases-section {
+  padding: 6rem 0;
+  margin-bottom: 5rem;
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .comparison-container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+}
+
+// --- 1.1. Hero Bottom Bar (Estilos Perfeccionados) ---
+.hero-bottom-bar {
+  position: absolute;
+  bottom: 0;
+  inset-inline-start: 0;
+  width: 100%;
+  z-index: 10; // Por encima del swiper
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(5px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2); 
+}
+
+.hero-bottom-bar__container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 0; // Padding vertical
+  gap: 2rem;
+}
+
+.hero-bottom-bar__col {
+  color: var(--text-primary);
+
+  p {
+    margin: 0;
+    line-height: 1.3;
+  }
+  &:first-child {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    flex-shrink: 0; 
+  }
+  &--center {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    max-width: 450px;
+    line-height: 1.6;
+  }
+  &--right {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: right;
+    color: var(--text-primary);
+    flex-shrink: 0;
+    p:first-child {
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+  }
+}
+
+// --- 1.2. Hero Swiper Custom Navigation (BOTONES PERSONALIZADOS MODERNOS) ---
+.hero-swiper-button-next,
+.hero-swiper-button-prev {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20; // Más alto que otros elementos
+  width: 60px;
+  height: 60px;
+  background-color: rgba(255, 255, 255, 0.03); // Casi invisible inicialmente
+  backdrop-filter: blur(15px) saturate(180%);
+  -webkit-backdrop-filter: blur(15px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1); // Borde sutil
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.4); // Icono muy tenue
+  cursor: pointer;
+  transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0; // Completamente oculto por defecto
+  visibility: hidden; // Asegura que no sean interactuables cuando están ocultos
+  
+  // Efecto de brillo sutil en hover
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  
+  lucide-icon {
+    width: 26px;
+    height: 26px;
+    transition: all var(--transition-speed) ease;
+    stroke-width: 1.5;
+  }
+
+  // Efecto al pasar el cursor cerca (no solo sobre el botón)
+  .hero-slider:hover & {
+    opacity: 0.6; // Visible pero discreto
+    visibility: visible;
+    
+    // Efecto de aparición suave
+    animation: fadeInScale 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  // Efecto hover directo sobre el botón
+  &:hover {
+    opacity: 1 !important; // Totalmente visible
+    visibility: visible;
+    background-color: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.95);
+    transform: translateY(-50%) scale(1.08);
+    
+    // Efecto de elevación y brillo
+    box-shadow: 
+      0 8px 30px rgba(0, 0, 0, 0.15),
+      0 0 0 1px rgba(255, 255, 255, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    
+    lucide-icon {
+      transform: scale(1.1);
+      stroke-width: 2;
+    }
+  }
+
+  // Efecto activo (clic)
+  &:active {
+    transform: translateY(-50%) scale(0.98);
+    transition: transform 0.1s ease;
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+
+  // Efecto de deslizamiento para aparición
+  @keyframes fadeInScale {
+    0% {
+      opacity: 0;
+      transform: translateY(-50%) scale(0.9);
+    }
+    100% {
+      opacity: 0.6;
+      transform: translateY(-50%) scale(1);
+    }
+  }
+}
+
+// Posicionamiento específico para cada botón
+.hero-swiper-button-prev {
+  left: 3.5rem; // Posición desde el borde izquierdo
+  
+  // Efecto de entrada desde la izquierda
+  .hero-slider:hover & {
+    animation: slideInFromLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+}
+
+.hero-swiper-button-next {
+  right: 3.5rem; // Posición desde el borde derecho
+  
+  // Efecto de entrada desde la derecha
+  .hero-slider:hover & {
+    animation: slideInFromRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+}
+
+// Animaciones de deslizamiento
+@keyframes slideInFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) translateX(-20px);
+  }
+  100% {
+    opacity: 0.6;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) translateX(20px);
+  }
+  100% {
+    opacity: 0.6;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+// --- NUEVO: Detección de proximidad del cursor (opcional, para mejor UX) ---
+.hero-slider {
+  position: relative;
+  
+  // Zonas de detección de proximidad para mostrar botones
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 100px; // Ancho de la zona de detección
+    height: 100%;
+    z-index: 15; // Entre el slider y los botones
+    pointer-events: none;
+    transition: background 0.3s ease;
+  }
+  
+  &::before {
+    inset-inline-start: 0;
+    // background: linear-gradient(to right, rgba(0,0,0,0.1), transparent);
+  }
+  
+  &::after {
+    inset-inline-end: 0;
+    // background: linear-gradient(to left, rgba(0,0,0,0.1), transparent);
+  }
+  
+  // Mostrar botones cuando el cursor está cerca de los bordes
+  &:hover::before {
+    // background: linear-gradient(to right, rgba(0,0,0,0.2), transparent);
+  }
+  
+  &:hover::after {
+    // background: linear-gradient(to left, rgba(0,0,0,0.2), transparent);
+  }
+}
+
+// Estilos para la paginación de Swiper
+:host::ng-deep {
+  // Paginación del Hero
+  .hero-slider .swiper-pagination-bullet {
+    background: rgba(255, 255, 255, 0.5);
+    width: 10px;
+    height: 10px;
+    opacity: 1;
+    transition: all var(--transition-speed) ease;
+    
+    // Efecto hover en bullets
+    &:hover {
+      background: rgba(255, 255, 255, 0.8);
+      transform: scale(1.2);
+    }
+  }
+  .hero-slider .swiper-pagination-bullet-active {
+    background: var(--text-primary);
+    transform: scale(1.3);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  }
+  
+  // --- NUEVO: Paginación de Testimonios ---
+  .testimonials-section .swiper-pagination-bullet {
+    background: var(--border-color);
+    width: 10px;
+    height: 10px;
+    opacity: 1;
+  }
+  .testimonials-section .swiper-pagination-bullet-active {
+    background: var(--accent-primary);
+  }
+}
+
+// Keyframes para animación
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// --- NUEVO: Tech Stack Slider (Marquee) ---
+.tech-stack-slider {
+  padding: 3rem 0;
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
+  overflow: hidden;
+  margin-bottom: 4rem;
+
+  .container-fluid {
+    width: 100%;
+    overflow: hidden;
+  }
+}
+
+.logo-slider {
+  width: 100%;
+}
+
+.logo-slide {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+  filter: grayscale(100%); // Escala de grises por defecto
+
+  img {
+    max-height: 50px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  &:hover {
+    opacity: 1;
+    filter: grayscale(0%); // Color al hover
+  }
+}
+
+// --- 2. Welcome Section (Tus estilos) ---
+.welcome-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  background: linear-gradient(345deg, hsla(0, 0%, 100%, 0.2) -2%, transparent 10.12%),
+    linear-gradient(160deg, hsla(0, 0%, 100%, 0.2), transparent 15.27%), var(--bg-primary);
+  overflow: hidden;
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  margin-bottom: 6rem;
+  margin-top: 2rem; // Reducido margen superior ya que ahora está el tech stack
+  max-width: 90vw !important;
+}
+.welcome-section::after {
+  background: linear-gradient(to left top, #a7a7a7, transparent 45%, transparent 55%, #a7a7a7);
+  border-radius: 16px;
+  content: '';
+  inset: 0;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: add, add;
+  -webkit-mask-composite: exclude;
+  mask-composite: exclude;
+  padding: 1px;
+  pointer-events: none;
+  position: absolute;
+  background: var(
+    --broker-card-base-border-color,
+    linear-gradient(to left top, #a7a7a7 0, transparent 45%, transparent 55%, #a7a7a7 100%)
+  );
+  border-radius: var(--broker-card-base-border-radius, 16px);
+}
+
+.welcome-section__text {
+  .section-eyebrow {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--accent-primary);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .section-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+  }
+  .section-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+  }
+}
+
+.welcome-section__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  border: 2px solid var(--border-color);
+  padding: 0.8rem 1.8rem;
+  border-radius: var(--border-radius);
+  transition: all var(--transition-speed) ease;
+  lucide-icon {
+    transition: transform var(--transition-speed) ease;
+  }
+  &:hover {
+    background-color: var(--border-color);
+    lucide-icon {
+      transform: translateX(5px);
+    }
+  }
+}
+
+.welcome-section__image {
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+  }
+}
+
+// --- 3. NUEVO: Testimonials Section ---
+.testimonials-section {
+  padding: 6rem 0;
+  // 1. Fondo con gradiente sutil para un look más premium
+  background: radial-gradient(
+      circle at 0% 100%,
+      rgba(var(--accent-primary-rgb), 0.1),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 100% 50%,
+      rgba(var(--accent-secondary-rgb), 0.1),
+      transparent 40%
+    ),
+    var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  overflow: hidden; // Para el slider
+}
+
+.testimonials-header {
+  text-align: center;
+  max-width: 750px;
+  margin: 0 auto 4rem auto;
+}
+
+.testimonial-slider {
+  width: 100%;
+  padding-bottom: 4rem; // Espacio para la paginación
+}
+
+.testimonial-card {
+  background-color: var(--bg-primary); // Más oscuro que el fondo de la sección
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative; // 2. Necesario para los pseudo-elementos
+  overflow: hidden; // 3. Necesario para el glow
+
+  // 4. Icono de comillas gigante como fondo (sutil)
+  &::before {
+    content: '“';
+    position: absolute;
+    top: -20px;
+    inset-inline-start: 1rem;
+    font-size: 150px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.03);
+    z-index: 1;
+    line-height: 1;
+  }
+
+  // Estilos del slide de coverflow
+  width: 100%;
+  max-width: 400px; // Ancho máximo de la tarjeta
+  height: auto;
+  
+  // Sombra y efecto 3D
+  transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  z-index: 2; // 5. Asegurar que la tarjeta esté sobre el glow
+
+  .swiper-slide-active & {
+    // La tarjeta del centro
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    transform: scale(1.05); // 6. Hacer la activa un poco más grande
+    border-color: rgba(var(--accent-primary-rgb), 0.5);
+  }
+}
+
+.testimonial-card__stars {
+  display: flex;
+  gap: 0.25rem;
+  color: #f39c12; // Amarillo estrella
+  z-index: 3; // Sobre el icono de comillas
+  lucide-icon {
+    width: 20px;
+    height: 20px;
+    // Rellenar la estrella
+    fill: #f39c12;
+  }
+}
+
+.testimonial-card__text {
+  font-size: 1.15rem; // 7. Un poco más grande
+  font-style: italic;
+  font-weight: 400; // 8. Más legible
+  color: var(--text-primary);
+  line-height: 1.7;
+  flex-grow: 1; // Para alinear al autor abajo
+  z-index: 3; // Sobre el icono de comillas
+}
+
+.testimonial-card__author {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: auto;
+  z-index: 3; // Sobre el icono de comillas
+  
+  img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+  }
+  
+  &-info {
+    display: flex;
+    flex-direction: column;
+    
+    .name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .role {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+  }
+}
+
+// --- 4. Featured Services, Products & Projects Section ---
+.featured-services,
+.featured-products,
+.featured-projects {
+  padding: 6rem 0;
+}
+
+.featured-services__header,
+.featured-products__header,
+.featured-projects__header {
+  text-align: center;
+  max-width: 750px;
+  margin: 0 auto 2rem auto;
+}
+
+.projects-filter {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+
+  .filter-pill {
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+
+    &.active {
+      background: var(--accent-primary);
+      color: white;
+      border-color: var(--accent-primary);
+    }
+  }
+}
+
+// --- 5. Process Section ---
+.process-section {
+  padding: 6rem 0;
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+}
+
+.process-header {
+  text-align: center;
+  max-width: 750px;
+  margin: 0 auto 4rem auto;
+}
+
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  position: relative;
+}
+
+.process-step {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  transition: transform var(--transition-speed) ease, border-color var(--transition-speed) ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-primary);
+  }
+}
+
+.process-step__icon {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 1.5rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  color: #fff;
+  flex-shrink: 0;
+  lucide-icon {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+.process-step__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.process-step__desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.process-grid::after {
+  content: '';
+  position: absolute;
+  top: 52px;
+  inset-inline-start: 15%;
+  width: 70%;
+  height: 2px;
+  background: var(--border-color);
+  z-index: 1;
+}
+
+// --- CAMBIO: Nuevo estilo para el CTA de Proceso ---
+.process-section__cta {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+// --- NUEVO: Latest Insights (Blog) Section ---
+.latest-insights {
+  padding: 6rem 0;
+  border-top: 1px solid var(--border-color);
+}
+
+.latest-insights__header {
+  text-align: center;
+  max-width: 750px;
+  margin: 0 auto 4rem auto;
+}
+
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// --- 6. Final CTA Section ---
+.final-cta-section {
+  padding: 6rem 0;
+  margin-top: 4rem;
+  background-color: var(--bg-primary);
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.final-cta__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+
+  .section-title {
+    font-size: 2.5rem;
+  }
+  .section-subtitle {
+    margin-bottom: 1.5rem;
+  }
+  .hero-slide__cta {
+    animation: none;
+  }
+}
+
+// --- RESPONSIVIDAD ---
+@media (max-width: 992px) {
+  .hero-bottom-bar__col--center {
+    display: none; 
+  }
+  .hero-bottom-bar__container {
+    justify-content: space-between;
+  }
+
+  .welcome-section {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .welcome-section__image {
+    order: -1;
+  }
+  .welcome-section__cta {
+    margin: 0 auto;
+  }
+
+  .process-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .process-grid::after {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-slide {
+    &__title {
+      font-size: 2.5rem;
+    }
+    &__subtitle {
+      font-size: 1rem;
+    }
+    &__cta {
+      padding: 0.8rem 2rem;
+      font-size: 0.9rem;
+    }
+  }
+
+  .hero-bottom-bar__container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+  }
+  .hero-bottom-bar__col--right {
+    text-align: center;
+  }
+
+  .welcome-section__text .section-title {
+    font-size: 2.2rem;
+  }
+
+  .featured-services,
+  .featured-products,
+  .featured-projects,
+  .process-section,
+  .final-cta-section,
+  .testimonials-section { // Añadido
+    padding: 4rem 0;
+  }
+  
+  .testimonials-header {
+    margin-bottom: 3rem;
+  }
+
+  .process-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .final-cta__content .section-title {
+    font-size: 2rem;
+  }
+  
+  // Ajustar posición del paginador para compensar
+  :host::ng-deep {
+    .hero-slider .swiper-pagination {
+      bottom: 120px !important; // Subir un poco el paginador en móvil
+    }
+  }
+}
+
+// --- NUEVO COMPONENTE: Stats Section ---
+.stats-section {
+  padding: 3rem 0;
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.8rem;
+
+  &__icon {
+    color: var(--accent-primary);
+    lucide-icon {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  &__value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+}
+
+// --- NUEVO COMPONENTE: Team Teaser (Integrated in Welcome) ---
+.team-teaser.welcome-section__image {
+  img {
+    display: none; // Ocultar imagen anterior si existe
+  }
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); // 2 columnas para 3 items (uno abajo centrado o 2x2)
+  gap: 1.5rem;
+
+  // Si son 3 items, el ultimo ocupa todo el ancho o ajustamos
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.team-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  background-color: var(--bg-card);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+
+  &__img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: calc(var(--border-radius) - 4px);
+    background-color: var(--bg-secondary); // Placeholder bg
+    display: block !important; // Forzar display
+  }
+
+  &__info {
+    .name {
+      display: block;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1rem;
+    }
+    .role {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+  }
+}
+
+// --- NUEVO COMPONENTE: Lead Magnet ---
+.lead-magnet-section {
+  padding: 5rem 0;
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.lead-magnet-container {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 4rem;
+  align-items: center;
+
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 3rem;
+  }
+}
+
+.lead-magnet-content {
+  .lead-magnet-eyebrow {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent-primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .lead-magnet-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .lead-magnet-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+}
+
+.lead-magnet-form {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  @media (max-width: 576px) {
+    flex-direction: column;
+  }
+
+  .lead-magnet-input {
+    flex: 1;
+    padding: 0.8rem 1.2rem;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 1rem;
+
+    &:focus {
+      border-color: var(--accent-primary);
+      outline: none;
+    }
+  }
+
+  .lead-magnet-btn {
+    padding: 0.8rem 1.5rem;
+    background: var(--accent-gradient);
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: transform var(--transition-speed) ease;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+}
+
+.lead-magnet-disclaimer {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.lead-magnet-visual {
+  display: flex;
+  justify-content: center;
+
+  .book-mockup {
+    width: 200px;
+    height: 280px;
+    background: var(--accent-gradient);
+    border-radius: 4px;
+    box-shadow:
+      -10px 10px 20px rgba(0,0,0,0.3),
+      -2px 0 0 rgba(255,255,255,0.2) inset; // Spine effect
+    position: relative;
+    transform: rotateY(-15deg) rotateX(5deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .book-cover {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+      text-align: center;
+      gap: 1rem;
+      padding: 1rem;
+
+      span {
+        font-weight: 700;
+        font-size: 1.2rem;
+      }
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 5px;
+      right: -10px; // Page thickness
+      width: 10px;
+      height: calc(100% - 10px);
+      background: #fff;
+      transform: skewY(45deg);
+      z-index: -1;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: -10px; // Bottom thickness
+      left: 5px;
+      width: 100%;
+      height: 10px;
+      background: #fff;
+      transform: skewX(45deg);
+      z-index: -1;
+    }
+  }
+}
+
+// --- NUEVO COMPONENTE: FAQ Preview ---
+.faq-preview-section {
+  padding: 6rem 0;
+  border-top: 1px solid var(--border-color);
+}
+
+.faq-preview-header {
+  text-align: center;
+  margin-bottom: 3rem;
+
+  .section-eyebrow {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent-primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+}
+
+.faq-list {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.faq-item {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  background-color: var(--bg-primary);
+  transition: border-color 0.3s ease;
+
+  &.open {
+    border-color: var(--accent-primary);
+  }
+}
+
+.faq-question {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  text-align: left;
+
+  &:hover {
+    background-color: var(--bg-secondary);
+  }
+}
+
+.faq-answer {
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+
+  &-inner {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+}
+
+.faq-preview-footer {
+  margin-top: 3rem;
+  text-align: center;
+
+  .welcome-section__cta {
+    display: inline-flex;
+    margin: 0 auto;
+  }
+}
+
+// --- CAMBIO: Estilos .clients-section eliminados ---
+
+
+
+
+
+
+
+
+/* src/app/features/home/home.component.scss */
+
+// --- 1.2. Hero Swiper Custom Navigation (BOTONES PERSONALIZADOS MODERNOS) ---
+.hero-swiper-button-next,
+.hero-swiper-button-prev {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  width: 60px;
+  height: 60px;
+  background-color: rgba(255, 255, 255, 0.08); // Aumentado de 0.03 para ser más visible
+  backdrop-filter: blur(15px) saturate(180%);
+  -webkit-backdrop-filter: blur(15px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.15); // Borde más visible
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.7); // Icono más visible
+  cursor: pointer;
+  transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+  
+  // ← CRÍTICO: Cambiar de invisible a visible con baja opacidad
+  opacity: 0.4; // Visible pero discreto
+  visibility: visible; // Siempre visible
+  
+  // Efecto de brillo sutil
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  
+  lucide-icon {
+    width: 26px;
+    height: 26px;
+    transition: all var(--transition-speed) ease;
+    stroke-width: 1.5;
+  }
+
+  // ← CRÍTICO: El hover debe estar en el botón, no en el slider
+  &:hover {
+    opacity: 1 !important;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 1);
+    transform: translateY(-50%) scale(1.08);
+    
+    box-shadow: 
+      0 8px 30px rgba(0, 0, 0, 0.2),
+      0 0 0 1px rgba(255, 255, 255, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    
+    lucide-icon {
+      transform: scale(1.1);
+      stroke-width: 2;
+    }
+  }
+
+  // Efecto activo (clic)
+  &:active {
+    transform: translateY(-50%) scale(0.98);
+    transition: transform 0.1s ease;
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  // ← CRÍTICO: Asegurar que estén siempre visibles, no solo en hover del slider
+  // .hero-slider:hover & {
+  //   opacity: 0.6;
+  //   visibility: visible;
+  // }
+}
+
+// Posicionamiento específico para cada botón
+.hero-swiper-button-prev {
+  inset-inline-start: 2.5rem; // Reducido de 3.5rem para estar más cerca del borde
+  
+  // Efecto de entrada desde la izquierda
+  &:hover {
+    transform: translateY(-50%) translateX(-5px) scale(1.08);
+  }
+}
+
+.hero-swiper-button-next {
+  inset-inline-end: 2.5rem; // Reducido de 3.5rem para estar más cerca del borde
+  
+  // Efecto de entrada desde la derecha
+  &:hover {
+    transform: translateY(-50%) translateX(5px) scale(1.08);
+  }
+}
+
+// ← NUEVO: Asegurar que el contenedor tenga posición relativa
+.hero-slider {
+  position: relative;
+  
+  swiper-container {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+// ← NUEVO: Estilos para cuando Swiper está deshabilitado (por si acaso)
+.hero-swiper-button-next.swiper-button-disabled,
+.hero-swiper-button-prev.swiper-button-disabled {
+  opacity: 0.2 !important;
+  cursor: not-allowed;
+  pointer-events: none;
+  
+  &:hover {
+    transform: translateY(-50%) !important;
+    background-color: rgba(255, 255, 255, 0.08) !important;
+  }
+}
+
+// Responsividad
+@media (max-width: 768px) {
+  .hero-swiper-button-next,
+  .hero-swiper-button-prev {
+    // ← CRÍTICO: Solo ocultar en móvil si es necesario, pero mantener visible
+    display: flex; // Asegurar que se muestren
+    opacity: 0.3; // Aún más visible en móvil
+    width: 50px;
+    height: 50px;
+    left: 1rem;
+    right: 1rem;
+    
+    // Mejor: hacerlos más táctiles en móvil
+    &:active {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    // Ocultar solo si el cliente lo prefiere
+    // display: none !important;
+  }
+  
+  // Ajustar posición del paginador si se muestran los botones
+  :host::ng-deep {
+    .hero-slider .swiper-pagination {
+      bottom: 100px !important;
+    }
+  }
+}
+// Partners Section
+.partners-section {
+  padding: 3rem 0;
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
+  text-align: center;
+
+  .partners-title {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-tertiary);
+    margin-bottom: 2rem;
+    font-weight: 600;
+  }
+
+  .partners-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3rem;
+    align-items: center;
+    opacity: 0.6; // Subtle look
+
+    .partner-logo {
+      width: 120px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: grayscale(100%); // B&W logos for professional look
+        transition: filter var(--transition-speed) ease;
+
+        &:hover {
+          filter: grayscale(0%);
+        }
+      }
+    }
+  }
+}
+
+// Mobile Sticky CTA
+.mobile-sticky-cta {
+  position: fixed;
+  bottom: 0;
+  inset-inline-start: 0;
+  width: 100%;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1); // Glassmorphism base if supported, else solid
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 99;
+  display: flex;
+  justify-content: center;
+
+  // Only visible on mobile
+  @media (min-width: 768px) {
+    display: none;
+  }
+
+  button {
+    width: 100%;
+    background: var(--accent-gradient);
+    color: white;
+    border: none;
+    padding: 0.9rem;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+}
+
+// --- NEW FEATURES STYLES ---
+
+.welcome-back-msg {
+  color: var(--accent-primary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  animation: fadeInDown 1s ease-out both;
+}
+
+.search-trigger-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.search-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 50px;
+  padding: 0.8rem 1.5rem;
+  width: 100%;
+  max-width: 400px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--text-secondary);
+
+  &:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: var(--accent-primary);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+  }
+
+  lucide-icon {
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
+  }
+}
+
+.spin-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.lead-magnet-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.skeleton-wrapper {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 1rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}

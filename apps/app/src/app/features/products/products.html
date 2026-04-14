@@ -1,0 +1,18 @@
+<div class="page-container container">
+  <h1 class="page-title" jslAnimateOnScroll>{{ 'PRODUCTS.TITLE' | translate }}</h1>
+  <p class="page-subtitle" jslAnimateOnScroll>{{ 'PRODUCTS.SUBTITLE' | translate }}</p>
+
+  <div class="products-grid">
+    @for (product of products(); track product.key) {
+      <jsl-card 
+        [icon]="product.icon"
+        [title]="'PRODUCTS.' + product.key + '_TITLE' | translate"
+        [description]="'PRODUCTS.' + product.key + '_DESC' | translate"
+        [link]="['/', currentLang, 'products', product.slug]"
+        [externalLink]="product.externalUrl">
+      </jsl-card>
+    }
+  </div>
+</div>
+
+<jsl-cta-section></jsl-cta-section>

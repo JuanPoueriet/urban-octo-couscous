@@ -1,0 +1,91 @@
+<section class="pricing-hero">
+  <div class="container">
+    <h1>{{ 'PRICING.TITLE' | translate }}</h1>
+    <p class="subtitle">{{ 'PRICING.SUBTITLE' | translate }}</p>
+  </div>
+</section>
+
+<section class="wizard-section">
+  <div class="container">
+    <div class="wizard-card">
+      <!-- Step 1: Type -->
+      <div *ngIf="step === 1" class="step">
+        <h2>{{ 'PRICING.WIZARD_STEP_1' | translate }}</h2>
+        <div class="options-grid">
+          <button *ngFor="let type of types" class="option-btn" (click)="selectType(type)">
+            {{ type.name }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Scale -->
+      <div *ngIf="step === 2" class="step">
+        <h2>{{ 'PRICING.WIZARD_STEP_2' | translate }}</h2>
+        <div class="options-grid">
+          <button *ngFor="let scale of scales" class="option-btn" (click)="selectScale(scale)">
+            {{ scale.name }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: Features -->
+      <div *ngIf="step === 3" class="step">
+        <h2>{{ 'PRICING.WIZARD_STEP_3' | translate }}</h2>
+        <div class="options-grid">
+          <button *ngFor="let feat of features" class="option-btn"
+                  [class.selected]="selections.features.includes(feat)"
+                  (click)="toggleFeature(feat)">
+            {{ feat.name }}
+          </button>
+        </div>
+        <button class="btn-primary mt-4" (click)="nextStep()">Calculate</button>
+      </div>
+
+      <!-- Step 4: Result -->
+      <div *ngIf="step === 4" class="step result">
+        <h2>{{ 'PRICING.ESTIMATE' | translate }}</h2>
+        <div class="price-display">
+          ${{ estimatedPrice | number }} - ${{ (estimatedPrice * 1.2) | number }}
+        </div>
+        <p>This is a rough estimate. Contact us for a precise quote.</p>
+        <button class="btn-outline" (click)="restart()">Start Over</button>
+      </div>
+
+      <!-- Progress Dots -->
+      <div class="progress-dots">
+        <span [class.active]="step >= 1"></span>
+        <span [class.active]="step >= 2"></span>
+        <span [class.active]="step >= 3"></span>
+        <span [class.active]="step >= 4"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="comparison-section">
+  <div class="container">
+    <h2>Virteex vs Others</h2>
+    <div class="comparison-table">
+      <div class="header-row">
+        <div class="cell feature">Feature</div>
+        <div class="cell virteex">Virteex</div>
+        <div class="cell others">Others</div>
+      </div>
+      <div class="row" *ngFor="let row of comparison">
+        <div class="cell feature">{{ row.feature }}</div>
+        <div class="cell virteex">
+          <span *ngIf="row.virteex === true">✅</span>
+          <span *ngIf="row.virteex === false">❌</span>
+          <span *ngIf="row.virteex !== true && row.virteex !== false">{{ row.virteex }}</span>
+        </div>
+        <div class="cell others">
+          <span *ngIf="row.others === true">✅</span>
+          <span *ngIf="row.others === false">❌</span>
+          <span *ngIf="row.others !== true && row.others !== false">{{ row.others }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<jsl-cta-section></jsl-cta-section>

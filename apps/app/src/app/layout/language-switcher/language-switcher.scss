@@ -1,0 +1,118 @@
+/* src/app/layout/language-switcher/language-switcher.scss */
+
+.lang-switcher {
+  position: relative; // Contexto de posicionamiento para el dropdown
+}
+
+.lang-switcher__button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  // --- ESTILOS MEJORADOS ---
+  background-color: transparent;
+  border: none; // <--- 1. Sin bordes
+  padding: 0.5rem 0.75rem; // <--- 2. Padding ajustado (más vertical) para mejor centrado
+  // border-radius: var(--border-radius);
+  // --- FIN CAMBIOS ---
+
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-speed) ease;
+  font-family: var(--font-family-base);
+  font-size: 0.9rem;
+  font-weight: 500;
+
+  lucide-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  // Icono de Globo
+  lucide-icon:first-of-type {
+    color: var(--text-secondary);
+    transition: color var(--transition-speed) ease;
+  }
+  
+  // Icono de Chevron
+  lucide-icon:last-of-type {
+    color: var(--text-secondary);
+    transition: transform 0.3s ease; // Transición para girar
+  }
+
+  // Estado cuando el dropdown está abierto
+  &.is-open {
+    background-color: var(--bg-secondary); // Mantenemos el fondo
+    
+    lucide-icon:last-of-type {
+      transform: rotate(180deg); // Girar el chevron
+    }
+  }
+
+  &:hover:not(.is-open) { // Hover solo si NO está abierto
+    background-color: var(--bg-secondary); // Mantenemos el fondo en hover
+    
+    lucide-icon:first-of-type {
+      color: var(--text-primary);
+    }
+  }
+}
+
+.lang-switcher__dropdown {
+  position: absolute;
+  top: calc(100% + 10px); // Se posiciona 10px por debajo del botón
+  inset-inline-end: 0;
+  width: 160px;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color); // El dropdown mantiene su borde
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  z-index: 1010; // Asegura que esté por encima de otros elementos
+  overflow: hidden; // Para que los bordes redondeados se apliquen a los `<a>`
+  display: flex;
+  flex-direction: column;
+
+  // --- ANIMACIÓN DE APERTURA ---
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none; // Evita clics mientras está oculto
+  transition: opacity 0.3s ease, transform 0.3s ease;
+
+  &.is-open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  // --- Style for opening upwards ---
+  &.opens-up {
+    top: auto;
+    bottom: calc(100% + 10px);
+    // Adjust animation for upward opening
+    transform: translateY(10px);
+    &.is-open {
+      transform: translateY(0);
+    }
+  }
+  // --- FIN ANIMACIÓN ---
+
+  a {
+    padding: 0.8rem 1rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    transition: all var(--transition-speed) ease;
+    text-decoration: none;
+
+    &:hover {
+      background-color: var(--border-color);
+      color: var(--text-primary);
+    }
+
+    // Estilo para el idioma actualmente activo
+    &.active {
+      color: var(--accent-primary);
+      font-weight: 600;
+      background-color: rgba(255, 75, 43, 0.1);
+    }
+  }
+}

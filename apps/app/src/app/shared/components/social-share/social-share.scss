@@ -1,0 +1,62 @@
+@use 'app/styles/variables' as *;
+
+.social-share {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 0;
+  border-top: 1px solid #e5e7eb;
+  margin-top: 32px;
+
+  .label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #4b5563;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 12px;
+  }
+
+  .share-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e5e7eb;
+    background: white;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    &.linkedin:hover { background: #0077b5; color: white; border-color: #0077b5; }
+    &.twitter:hover { background: #1da1f2; color: white; border-color: #1da1f2; }
+    &.facebook:hover { background: #1877f2; color: white; border-color: #1877f2; }
+    &.mail:hover { background: #ea4335; color: white; border-color: #ea4335; }
+    &.copy:hover { background: #1f2937; color: white; border-color: #1f2937; }
+  }
+}
+
+// Dark Mode
+:host-context(.dark) {
+  .social-share {
+    border-color: #374151;
+
+    .label { color: #9ca3af; }
+
+    .share-btn {
+      background: #1f2937;
+      border-color: #374151;
+      color: #9ca3af;
+    }
+  }
+}

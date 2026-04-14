@@ -1,0 +1,32 @@
+<div class="page-container container">
+  <h1 class="page-title" jslAnimateOnScroll>{{ 'PROJECTS.TITLE' | translate }}</h1>
+  <p class="page-subtitle" jslAnimateOnScroll>{{ 'PROJECTS.SUBTITLE' | translate }}</p>
+
+  <div class="projects-grid">
+    @for (project of paginatedProjects(); track project.key) {
+      <jsl-card 
+        [imageUrl]="project.imageUrl"
+        [title]="'PROJECTS.' + project.key + '_TITLE' | translate"
+        [description]="'PROJECTS.' + project.key + '_DESC' | translate"
+        [link]="['/', currentLang, 'projects', project.slug]"
+        jslAnimateOnScroll>
+      </jsl-card>
+    }
+  </div>
+
+  @if (projects().length > itemsPerPage) {
+    <app-pagination
+      [totalItems]="projects().length"
+      [itemsPerPage]="itemsPerPage"
+      [currentPage]="currentPage()"
+      (pageChange)="onPageChange($event)">
+    </app-pagination>
+  }
+</div>
+
+<jsl-cta-section 
+  eyebrowKey="BLOG.CTA_EYEBROW"
+  titleKey="BLOG.CTA_TITLE"
+  subtitleKey="BLOG.CTA_SUBTITLE"
+  [ctaLink]="['/', currentLang, 'blog']">
+</jsl-cta-section>

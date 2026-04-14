@@ -1,0 +1,72 @@
+<div class="page-container container">
+  <h1 class="page-title" jslAnimateOnScroll>{{ 'ABOUT.TITLE' | translate }}</h1>
+  <p class="page-subtitle" jslAnimateOnScroll>{{ 'ABOUT.SUBTITLE' | translate }}</p>
+</div>
+
+<section class="about-intro container">
+  <div class="about-intro__text" jslAnimateOnScroll>
+    <span class="section-eyebrow">{{ 'ABOUT.INTRO_EYEBROW' | translate }}</span>
+    <h2 class="section-title">{{ 'ABOUT.INTRO_TITLE' | translate }}</h2>
+    <p class="section-subtitle">{{ 'ABOUT.INTRO_DESC_1' | translate }}</p>
+    <p class="section-subtitle">{{ 'ABOUT.INTRO_DESC_2' | translate }}</p>
+  </div>
+ <div class="about-intro__image" jslAnimateOnScroll>
+    <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?fit=crop&w=600&q=80" 
+         alt="Arquitectura de Software en JSL Technology">
+  </div>
+</section>
+
+<section class="core-values-section">
+  <div class="container">
+    <div class="core-values-grid">
+      @for (value of coreValues; track value.key) {
+        <div class="core-value-card" jslAnimateOnScroll>
+          <div class="core-value-card__icon">
+            <lucide-icon [name]="value.icon"></lucide-icon>
+          </div>
+          <h3 class="core-value-card__title">{{ 'ABOUT.' + value.key + '_TITLE' | translate }}</h3>
+          <p class="core-value-card__desc">{{ 'ABOUT.' + value.key + '_DESC' | translate }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Sección Team (Refactorizada) -->
+<section class="team-section container">
+  <div class="team-header" jslAnimateOnScroll>
+    <span class="section-eyebrow">{{ 'ABOUT.TEAM_EYEBROW' | translate }}</span>
+    <h2 class="section-title">{{ 'ABOUT.TEAM_TITLE' | translate }}</h2>
+    <p class="section-subtitle">{{ 'ABOUT.TEAM_SUBTITLE' | translate }}</p>
+  </div>
+
+  <div class="team-grid">
+    @for (member of teamMembers(); track member.nameKey) {
+      <div class="team-member-card" jslAnimateOnScroll>
+        <div class="team-member-card__image">
+          <img [src]="member.imageUrl" [alt]="member.nameKey | translate">
+        </div>
+        <div class="team-member-card__info">
+          <h3 class="team-member-card__name">{{ member.nameKey | translate }}</h3>
+          <p class="team-member-card__role">{{ member.roleKey | translate }}</p>
+
+          <!-- Certifications -->
+          @if (member.certifications && member.certifications.length > 0) {
+            <div class="team-member-certs">
+              @for (cert of member.certifications; track cert) {
+                <span class="cert-badge">{{ cert }}</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- 2. Añadir CTA reutilizable al final -->
+<jsl-cta-section 
+  eyebrowKey="ABOUT.CTA_EYEBROW"
+  titleKey="ABOUT.CTA_TITLE"
+  subtitleKey="ABOUT.CTA_SUBTITLE">
+</jsl-cta-section>

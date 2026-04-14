@@ -1,0 +1,42 @@
+<section class="press-hero">
+  <div class="container">
+    <h1>{{ 'PRESS.TITLE' | translate }}</h1>
+    <p class="subtitle">{{ 'PRESS.SUBTITLE' | translate }}</p>
+  </div>
+</section>
+
+<section class="assets-section">
+  <div class="container">
+    <h2>{{ 'PRESS.KIT' | translate }}</h2>
+    <div class="assets-grid">
+      <div class="asset-card" *ngFor="let asset of assets">
+        <div class="asset-icon">
+          <lucide-icon name="file-text" size="32"></lucide-icon>
+        </div>
+        <div class="asset-info">
+          <h3>{{ asset.name }}</h3>
+          <span class="meta">{{ asset.type }} • {{ asset.size }}</span>
+        </div>
+        <button class="btn-download">
+          <lucide-icon name="download" size="16"></lucide-icon>
+          {{ 'PRESS.DOWNLOAD' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mentions-section">
+  <div class="container">
+    <h2>{{ 'PRESS.MENTIONS' | translate }}</h2>
+    <div class="mentions-list">
+      <div class="mention-item" *ngFor="let m of mentions">
+        <div class="outlet">{{ m.outlet }}</div>
+        <div class="title">{{ m.title }}</div>
+        <div class="date">{{ m.date }}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<jsl-cta-section></jsl-cta-section>

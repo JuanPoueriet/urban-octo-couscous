@@ -1,0 +1,57 @@
+<div class="page-container container">
+  <h1 class="page-title">{{ 'INVESTORS.TITLE' | translate }}</h1>
+  <p class="page-subtitle">{{ 'INVESTORS.SUBTITLE' | translate }}</p>
+</div>
+
+<div class="container">
+  <!-- Governance Section -->
+  <section class="governance-section">
+    <div class="content">
+      <h2>{{ 'INVESTORS.GOVERNANCE_TITLE' | translate }}</h2>
+      <p>{{ 'INVESTORS.GOVERNANCE_DESC' | translate }}</p>
+
+      <ul class="governance-list">
+        <li>
+          <lucide-icon name="ShieldCheck"></lucide-icon>
+          <span>{{ 'INVESTORS.GOVERNANCE_POINT1' | translate }}</span>
+        </li>
+        <li>
+          <lucide-icon name="Users"></lucide-icon>
+          <span>{{ 'INVESTORS.GOVERNANCE_POINT2' | translate }}</span>
+        </li>
+        <li>
+          <lucide-icon name="FileText"></lucide-icon>
+          <span>{{ 'INVESTORS.GOVERNANCE_POINT3' | translate }}</span>
+        </li>
+      </ul>
+    </div>
+    <div class="image">
+      <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?fit=crop&w=800&q=80" alt="Corporate Governance">
+    </div>
+  </section>
+
+  <!-- Financial Stability -->
+  <section class="financial-section">
+    <h2>{{ 'INVESTORS.FINANCIAL_TITLE' | translate }}</h2>
+    <div class="financial-grid">
+      <div class="stat-card">
+        <span class="stat-value">5+</span>
+        <span class="stat-label">{{ 'INVESTORS.STAT_YEARS' | translate }}</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">30%</span>
+        <span class="stat-label">{{ 'INVESTORS.STAT_GROWTH' | translate }}</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">50+</span>
+        <span class="stat-label">{{ 'INVESTORS.STAT_CLIENTS' | translate }}</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<jsl-cta-section
+  eyebrowKey="INVESTORS.CTA_EYEBROW"
+  titleKey="INVESTORS.CTA_TITLE"
+  subtitleKey="INVESTORS.CTA_SUBTITLE">
+</jsl-cta-section>

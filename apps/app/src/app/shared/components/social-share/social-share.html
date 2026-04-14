@@ -1,0 +1,20 @@
+<div class="social-share">
+  <span class="label">{{ 'SHARE.LABEL' | translate }}</span>
+  <div class="buttons">
+    <button (click)="share('linkedin')" aria-label="Share on LinkedIn" class="share-btn linkedin">
+      <lucide-icon [name]="icons.Linkedin" [size]="18"></lucide-icon>
+    </button>
+    <button (click)="share('twitter')" aria-label="Share on Twitter" class="share-btn twitter">
+      <lucide-icon [name]="icons.Twitter" [size]="18"></lucide-icon>
+    </button>
+    <button (click)="share('facebook')" aria-label="Share on Facebook" class="share-btn facebook">
+      <lucide-icon [name]="icons.Facebook" [size]="18"></lucide-icon>
+    </button>
+    <button (click)="share('mail')" aria-label="Share via Email" class="share-btn mail">
+      <lucide-icon [name]="icons.Mail" [size]="18"></lucide-icon>
+    </button>
+    <button (click)="copyLink()" aria-label="Copy Link" class="share-btn copy">
+      <lucide-icon [name]="icons.Link" [size]="18"></lucide-icon>
+    </button>
+  </div>
+</div>

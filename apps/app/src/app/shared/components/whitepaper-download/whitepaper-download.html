@@ -1,0 +1,29 @@
+<div class="whitepaper-card">
+  <div class="icon-container">
+    <lucide-icon name="FileText" size="32"></lucide-icon>
+  </div>
+  <div class="content">
+    <h3>{{ titleKey | translate }}</h3>
+    <p>{{ descriptionKey | translate }}</p>
+
+    @if (!isSubmitted) {
+      <form (submit)="onSubmit()" class="download-form">
+        <input
+          type="email"
+          [(ngModel)]="email"
+          name="email"
+          [placeholder]="'WHITEPAPER.EMAIL_PLACEHOLDER' | translate"
+          required
+        >
+        <button type="submit" class="btn-download">
+          {{ 'WHITEPAPER.DOWNLOAD_BTN' | translate }}
+        </button>
+      </form>
+    } @else {
+      <div class="success-message">
+        <lucide-icon name="CheckCircle"></lucide-icon>
+        <span>{{ 'WHITEPAPER.SENT_MSG' | translate }}</span>
+      </div>
+    }
+  </div>
+</div>

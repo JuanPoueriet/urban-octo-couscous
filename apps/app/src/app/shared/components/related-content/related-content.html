@@ -1,0 +1,20 @@
+@if (items.length > 0) {
+  <section class="related-content">
+    <h2 class="section-title">{{ title | translate }}</h2>
+    <div class="grid">
+      @for (item of items; track item.slug) {
+        <a [routerLink]="getItemLink(item)" class="related-card">
+          <div class="image-wrapper">
+            <img [src]="getItemImage(item)" [alt]="getItemTitle(item) | translate" loading="lazy">
+          </div>
+          <div class="content">
+            <h3>{{ getItemTitle(item) | translate }}</h3>
+            @if (type === 'blog') {
+              <span class="date">{{ $any(item).date | date }}</span>
+            }
+          </div>
+        </a>
+      }
+    </div>
+  </section>
+}

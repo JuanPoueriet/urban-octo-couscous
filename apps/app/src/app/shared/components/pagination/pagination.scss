@@ -1,0 +1,96 @@
+@use 'app/styles/variables' as *;
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 48px;
+
+  .page-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    background: white;
+    color: #4b5563;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &:not(:disabled):hover {
+      background: #f3f4f6;
+      border-color: #d1d5db;
+    }
+  }
+
+  .pages {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    .page-number {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: #4b5563;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #f3f4f6;
+      }
+
+      &.active {
+        background: #111827; // Primary
+        color: white;
+      }
+    }
+
+    .ellipsis {
+      color: #9ca3af;
+    }
+  }
+}
+
+// Dark Mode
+:host-context(.dark) {
+  .pagination {
+    .page-btn {
+      background: #1f2937;
+      border-color: #374151;
+      color: #9ca3af;
+
+      &:not(:disabled):hover {
+        background: #374151;
+        color: white;
+      }
+    }
+
+    .pages {
+      .page-number {
+        color: #9ca3af;
+
+        &:hover { background: #374151; color: white; }
+
+        &.active {
+          background: white;
+          color: #111827;
+        }
+      }
+    }
+  }
+}

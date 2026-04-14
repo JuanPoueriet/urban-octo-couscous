@@ -1,0 +1,31 @@
+<section class="developers-hero">
+  <div class="container">
+    <div class="hero-content">
+      <h1>{{ 'DEVELOPERS.TITLE' | translate }}</h1>
+      <p class="subtitle">{{ 'DEVELOPERS.SUBTITLE' | translate }}</p>
+      <div class="actions">
+        <a routerLink="/status" class="status-link">
+          <span class="dot"></span>
+          {{ 'DEVELOPERS.STATUS' | translate }}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="api-section">
+  <div class="container">
+    <div class="grid">
+      <div class="content">
+        <h2>{{ 'DEVELOPERS.API_DOCS' | translate }}</h2>
+        <p>Explore our powerful APIs to integrate Virteex into your applications. Our SDKs are available for Node.js, Python, and PHP.</p>
+        <button class="btn-primary">{{ 'DEVELOPERS.GET_KEY' | translate }}</button>
+      </div>
+      <div class="code-demo">
+        <jsl-code-block [code]="exampleCode" language="typescript"></jsl-code-block>
+      </div>
+    </div>
+  </div>
+</section>
+
+<jsl-cta-section></jsl-cta-section>

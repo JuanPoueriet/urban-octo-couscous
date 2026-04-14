@@ -1,0 +1,26 @@
+<div class="page-container container">
+  <h1 class="page-title" jslAnimateOnScroll>{{ 'PROCESS.TITLE' | translate }}</h1>
+  <p class="page-subtitle" jslAnimateOnScroll>{{ 'PROCESS.SUBTITLE' | translate }}</p>
+
+  <div class="process-timeline">
+    @for (step of processSteps(); track step.key; let i = $index) {
+      <div class="process-item" jslAnimateOnScroll>
+        <div class="process-item__icon-wrapper">
+          <div class="process-item__icon">
+            <lucide-icon [name]="step.icon"></lucide-icon>
+          </div>
+          @if (i < processSteps().length - 1) {
+            <div class="process-item__line"></div>
+          }
+        </div>
+        <div class="process-item__content">
+          <span class="process-item__number">{{ '0' + (i + 1) }}</span>
+          <h2 class="process-item__title">{{ 'HOME.PROCESS_' + step.key + '_TITLE' | translate }}</h2>
+          <p class="process-item__desc">{{ 'PROCESS.' + step.key + '_DETAIL' | translate }}</p>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<jsl-cta-section></jsl-cta-section>

@@ -1,0 +1,22 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+  <div class="text-center max-w-lg">
+    <div class="mb-8 flex justify-center text-green-500">
+      <div class="rounded-full bg-green-100 dark:bg-green-900 p-6">
+        <lucide-icon [name]="icons.CheckCheck" [size]="48"></lucide-icon>
+      </div>
+    </div>
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">{{ 'THANK_YOU.TITLE' | translate }}</h1>
+    <p class="text-gray-600 dark:text-gray-400 mb-8 text-lg">{{ 'THANK_YOU.MESSAGE' | translate }}</p>
+
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a routerLink="/blog" class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 dark:border-gray-600 text-base font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+        <lucide-icon [name]="icons.FileText" [size]="20" class="mr-2"></lucide-icon>
+        {{ 'THANK_YOU.READ_BLOG' | translate }}
+      </a>
+      <a routerLink="/" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200">
+        <lucide-icon [name]="icons.Home" [size]="20" class="mr-2"></lucide-icon>
+        {{ 'THANK_YOU.GO_HOME' | translate }}
+      </a>
+    </div>
+  </div>
+</div>

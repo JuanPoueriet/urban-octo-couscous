@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Bloquea carpetas específicas
+Disallow: /admin/
+Disallow: /archivos-privados/
+Disallow: /mi-pagina-secreta.html

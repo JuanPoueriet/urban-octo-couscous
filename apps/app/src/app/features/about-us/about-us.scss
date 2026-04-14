@@ -1,0 +1,213 @@
+/* src/app/features/about-us/about-us.scss */
+
+@use '../tech-stack/tech-stack.scss'; // Importar para el grid de logos
+
+
+.page-title {
+  text-align: center;
+}
+.page-subtitle {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 4rem auto;
+}
+
+// --- Sección Intro (Estilo IMG-20251020-WA0001.jpg) ---
+.about-intro {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  margin-bottom: 6rem; // Espacio antes de la siguiente sección
+
+  .section-subtitle {
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.about-intro__image {
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+  }
+
+  @media (max-width: 992px) {
+    order: -1; // Imagen primero en móvil
+    margin-bottom: 2rem;
+  }
+}
+
+// --- Sección Core Values ---
+.core-values-section {
+  background-color: var(--bg-secondary);
+  padding: 6rem 0;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.core-values-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem;
+
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.core-value-card {
+  text-align: center;
+  padding: 2rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background-color: var(--bg-primary); // Ligeramente más oscuro que el fondo de la sección
+  transition: transform var(--transition-speed) ease, border-color var(--transition-speed) ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-primary);
+  }
+}
+
+.core-value-card__icon {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 1.5rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  color: #fff;
+
+  lucide-icon {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+.core-value-card__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.core-value-card__desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+
+// --- NUEVO: Sección de Equipo ---
+.team-section {
+  padding: 6rem 0;
+}
+
+.team-header {
+  text-align: center;
+  max-width: 750px;
+  margin: 0 auto 4rem auto;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.team-member-card {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  overflow: hidden; // Para la imagen
+  text-align: center;
+  background-color: var(--bg-secondary);
+  transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.team-member-card__image {
+  img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(80%); // Sutil desaturación
+    transition: filter var(--transition-speed) ease, transform var(--transition-speed) ease;
+  }
+  
+  .team-member-card:hover & img {
+    filter: grayscale(0%); // Color al hacer hover
+    transform: scale(1.05);
+  }
+}
+
+.team-member-card__info {
+  padding: 1.5rem;
+}
+
+.team-member-card__name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.team-member-card__role {
+  font-size: 0.9rem;
+  color: var(--accent-primary); // Rol destacado
+}
+
+.team-member-certs {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+
+  .cert-badge {
+    background: var(--primary-light, #e0f2fe);
+    color: var(--primary, #0284c7);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+  }
+}
+
+.clients-section-about {
+  padding: 6rem 0;
+  text-align: center;
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.clients-header {
+  @extend .team-header; // Reutilizar estilos de header
+}
+
+.clients-grid {
+  @extend .tech-grid; // Reutilizar el grid de logos
+  
+  // Usar la versión con fondo de la logo-card
+  ::ng-deep jsl-logo-card .logo-card {
+    background-color: var(--bg-primary); // Fondo más oscuro
+    
+    &:hover {
+      border-color: var(--accent-primary); // Hover con acento
+      box-shadow: 0 0 20px rgba(var(--accent-primary-rgb), 0.2);
+    }
+  }
+}

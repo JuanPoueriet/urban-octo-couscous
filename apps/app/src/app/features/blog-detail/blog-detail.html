@@ -1,0 +1,235 @@
+@if (post$ | async; as post) {
+  <div class="blog-detail-page">
+    <header class="detail-page-header">
+      <div class="header-background">
+        <div class="gradient-overlay"></div>
+      </div>
+      <div class="container">
+        <div class="detail-page-breadcrumb" jslAnimateOnScroll>
+          <a [routerLink]="['/', currentLang, 'home']" class="breadcrumb-link">
+            <lucide-icon name="Home"></lucide-icon>
+            {{ 'COMMON.BREADCRUMB_HOME' | translate }}
+          </a>
+          <lucide-icon name="ChevronRight" class="breadcrumb-separator"></lucide-icon>
+          <a [routerLink]="['/', currentLang, 'blog']" class="breadcrumb-link">
+            {{ 'HEADER.BLOG' | translate }}
+          </a>
+          <lucide-icon name="ChevronRight" class="breadcrumb-separator"></lucide-icon>
+          <span class="breadcrumb-current">{{ truncateText('BLOG.' + post.key + '_TITLE' | translate, 40) }}</span>
+        </div>
+
+        <div class="title-section" jslAnimateOnScroll>
+          <div class="post-badge">
+            <lucide-icon name="Star"></lucide-icon>
+            {{ 'Artículo Destacado' | translate }}
+          </div>
+          <h1 class="detail-page-title fade-in-up">
+            {{ 'BLOG.' + post.key + '_TITLE' | translate }}
+          </h1>
+          <div class="title-gradient"></div>
+        </div>
+
+        <div class="detail-page-meta" jslAnimateOnScroll>
+          <div class="meta-grid">
+            <div class="meta-item meta-item--author">
+              <div class="meta-icon-wrapper">
+                <lucide-icon name="User"></lucide-icon>
+              </div>
+              <div class="meta-content">
+                <span class="meta-label">{{ 'COMMON.AUTHOR' | translate }}</span>
+                <span class="meta-value">{{ post.authorKey | translate }}</span>
+              </div>
+            </div>
+            
+            <div class="meta-item meta-item--date">
+              <div class="meta-icon-wrapper">
+                <lucide-icon name="Calendar"></lucide-icon>
+              </div>
+              <div class="meta-content">
+                <span class="meta-label">{{ 'COMMON.PUBLISHED_DATE' | translate }}</span>
+                <span class="meta-value">{{ post.date | date: 'longDate' }}</span>
+              </div>
+            </div>
+            
+            <div class="meta-item meta-item--read-time">
+              <div class="meta-icon-wrapper">
+                <lucide-icon name="Clock"></lucide-icon>
+              </div>
+              <div class="meta-content">
+                <span class="meta-label">{{ 'Tiempo de lectura' | translate }}</span>
+                <span class="meta-value">{{ post.readTime }} {{ 'min' | translate }}</span>
+              </div>
+            </div>
+
+            <div class="meta-item meta-item--tags">
+              <div class="meta-icon-wrapper">
+                <lucide-icon name="Tag"></lucide-icon>
+              </div>
+              <div class="meta-content">
+                <span class="meta-label">{{ 'Etiquetas' | translate }}</span>
+                <div class="tags-container">
+                  @for (tag of post.tags; track tag) {
+                    <span class="tag-pill">{{ tag }}</span>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="banner-container" jslAnimateOnScroll>
+        <div class="banner-frame">
+          <img
+            [src]="post.imageUrl"
+            [alt]="'BLOG.' + post.key + '_TITLE' | translate"
+            class="detail-page-banner"
+            (load)="onImageLoad()"
+            #bannerImage
+          />
+          <div class="banner-overlay">
+            <div class="banner-shine"></div>
+          </div>
+        </div>
+        <div class="image-caption">
+          <lucide-icon name="Image"></lucide-icon>
+          {{ 'BLOG.' + post.key + '_TITLE' | translate }}
+        </div>
+      </div>
+
+      <main class="detail-page-content blog-content" jslAnimateOnScroll>
+        <article class="content-article">
+          <div class="content-wrapper">
+            <div class="content-body" [innerHTML]="'BLOG.' + post.key + '_CONTENT' | translate"></div>
+            
+            <app-social-share
+              [url]="'/blog/' + post.slug"
+              [title]="'BLOG.' + post.key + '_TITLE' | translate"
+            ></app-social-share>
+
+            <div class="whitepaper-section" style="margin: 3rem 0;">
+              <jsl-whitepaper-download></jsl-whitepaper-download>
+            </div>
+
+            <div class="content-divider">
+              <div class="divider-line"></div>
+              <lucide-icon name="Bookmark" class="divider-icon"></lucide-icon>
+              <div class="divider-line"></div>
+            </div>
+          </div>
+        </article>
+      </main>
+
+      <div class="action-section">
+        <div class="reading-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="scrollProgress"></div>
+          </div>
+          <div class="progress-text">
+            {{ scrollProgress }}% {{ 'leído' | translate }}
+          </div>
+        </div>
+      </div>
+
+      @if (author$ | async; as author) {
+        <div class="author-card" jslAnimateOnScroll>
+          <div class="author-card__background"></div>
+          <div class="author-card__content">
+            <div class="author-card__image">
+              <div class="image-frame">
+                <img [src]="author.imageUrl" [alt]="author.nameKey | translate" />
+                <div class="image-glow"></div>
+              </div>
+            </div>
+            <div class="author-card__info">
+              <span class="author-card__eyebrow">{{ 'Escrito por' | translate }}</span>
+              <h3 class="author-card__name">{{ author.nameKey | translate }}</h3>
+              <p class="author-card__role">{{ author.roleKey | translate }}</p>
+              @if (author.bioKey) {
+                <p class="author-card__bio">{{ author.bioKey | translate }}</p>
+              }
+              <div class="author-card__social">
+                @if (author.linkedIn) {
+                  <a [href]="author.linkedIn" target="_blank" class="author-social-link">
+                    <lucide-icon name="Linkedin"></lucide-icon>
+                  </a>
+                }
+                @if (author.twitter) {
+                  <a [href]="author.twitter" target="_blank" class="author-social-link">
+                    <lucide-icon name="Twitter"></lucide-icon>
+                  </a>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <section class="related-posts-section">
+      <div class="section-background"></div>
+      @if (relatedPosts$ | async; as relatedPosts) {
+        @if (relatedPosts.length > 0) {
+          <div class="container">
+            <div class="section-header" jslAnimateOnScroll>
+              <span class="section-eyebrow">{{ 'Te podría interesar' | translate }}</span>
+              <h2>{{ 'BLOG.RELATED_POSTS' | translate }}</h2>
+              <p class="section-subtitle">{{ 'Descubre más contenido relacionado' | translate }}</p>
+            </div>
+          </div>
+
+          <div class="related-posts-slider-wrapper">
+            <swiper-container
+              init="false"
+              class="related-posts-slider"
+              jslAnimateOnScroll
+              [attr.dir]="directionService.isRtl() ? 'rtl' : 'ltr'"
+            >
+              @for (relatedPost of relatedPosts; track trackBySlug($index, relatedPost)) {
+                <swiper-slide class="related-post-slide">
+                  <jsl-card
+                    [imageUrl]="relatedPost.imageUrl"
+                    [title]="'BLOG.' + relatedPost.key + '_TITLE' | translate"
+                    [description]="'BLOG.' + relatedPost.key + '_EXCERPT' | translate"
+                    [link]="['/', currentLang, 'blog', relatedPost.slug]"
+                    [meta]="{
+                      date: relatedPost.date,
+                      readTime: relatedPost.readTime,
+                      tags: relatedPost.tags
+                    }"
+                  ></jsl-card>
+                </swiper-slide>
+              }
+            </swiper-container>
+          </div>
+        }
+      }
+    </section>
+    <jsl-cta-section
+      eyebrowKey="BLOG.CTA_EYEBROW"
+      titleKey="BLOG.CTA_TITLE"
+      subtitleKey="BLOG.CTA_SUBTITLE"
+    ></jsl-cta-section>
+  </div>
+} @else {
+  <div class="not-found-container">
+    <div class="container">
+      <div class="not-found-content">
+        <lucide-icon name="FileText" class="not-found-icon"></lucide-icon>
+        <h1>{{ 'NOT_FOUND.BLOG_TITLE' | translate }}</h1>
+        <p class="not-found-subtitle">
+          {{ 'NOT_FOUND.BLOG_SUBTITLE' | translate }}
+          <a [routerLink]="['/', currentLang, 'blog']" class="not-found-link">
+            {{ 'HEADER.BLOG' | translate }}
+          </a>
+        </p>
+        <a [routerLink]="['/', currentLang, 'blog']" class="back-to-blog-btn">
+          <lucide-icon name="ArrowLeft"></lucide-icon>
+          {{ 'Volver al blog' | translate }}
+        </a>
+      </div>
+    </div>
+  </div>
+}

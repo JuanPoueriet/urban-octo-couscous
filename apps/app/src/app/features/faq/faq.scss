@@ -1,0 +1,113 @@
+// src/app/features/faq/faq.scss
+
+.page-title {
+  text-align: center;
+}
+.page-subtitle {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 4rem auto;
+}
+
+.faq-list {
+  max-width: 800px;
+  margin: 0 auto;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  overflow: hidden; // Para los bordes del acordeón
+}
+
+.faq-item {
+  // Borde entre preguntas
+  border-bottom: 1px solid var(--border-color);
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  padding: 1.5rem;
+  background-color: var(--bg-secondary);
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  
+  // Tipografía
+  font-family: var(--font-family-base);
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  
+  transition: background-color var(--transition-speed) ease;
+
+  &:hover {
+    background-color: var(--border-color);
+  }
+
+  .faq-icon {
+    flex-shrink: 0;
+    lucide-icon {
+      width: 24px;
+      height: 24px;
+      color: var(--text-secondary);
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+  }
+}
+
+.faq-answer {
+  background-color: var(--bg-primary);
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  animation: fadeInAnswer 0.4s ease-out;
+
+  p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    max-width: 700px; // Ancho de línea cómodo
+
+    // Estilos para el contenido HTML (ej. <strong>)
+    strong, b {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    
+    // Estilos para enlaces dentro de la respuesta
+    a {
+      color: var(--accent-primary);
+      text-decoration: underline;
+      &:hover {
+        color: var(--text-primary);
+      }
+    }
+  }
+}
+
+// Estilos cuando el acordeón está abierto
+.faq-item.open {
+  .faq-question {
+    color: var(--accent-primary);
+    background-color: var(--bg-secondary);
+  }
+  .faq-icon lucide-icon {
+    transform: rotate(180deg);
+    color: var(--accent-primary);
+  }
+}
+
+// Animación de la respuesta
+@keyframes fadeInAnswer {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

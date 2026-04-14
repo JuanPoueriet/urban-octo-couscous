@@ -1,0 +1,26 @@
+<div class="lang-switcher" (jslClickOutside)="closeDropdown()">
+  <button
+    class="lang-switcher__button"
+    (click)="toggleDropdown()"
+    aria-label="Select language"
+    [class.is-open]="isDropdownOpen"
+  >
+    <lucide-icon name="Globe"></lucide-icon>
+    <span>{{ currentLang | uppercase }}</span>
+    <lucide-icon name="ChevronDown"></lucide-icon>
+  </button>
+
+  <div 
+    class="lang-switcher__dropdown" 
+    [class.is-open]="isDropdownOpen"
+    [class.opens-up]="opensUp">
+    <a
+      *ngFor="let lang of languages"
+      [routerLink]="getRouteForLang(lang.code)"
+      (click)="setLanguage(lang.code); closeDropdown()"
+      [class.active]="currentLang === lang.code"
+    >
+      {{ lang.name | translate }}
+    </a>
+  </div>
+</div>

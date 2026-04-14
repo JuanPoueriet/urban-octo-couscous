@@ -1,0 +1,31 @@
+<section class="life-hero">
+  <div class="container">
+    <h1>{{ 'LIFE_AT_JSL.TITLE' | translate }}</h1>
+    <p class="subtitle">{{ 'LIFE_AT_JSL.SUBTITLE' | translate }}</p>
+  </div>
+</section>
+
+<section class="gallery-section">
+  <div class="container">
+    <h2>{{ 'LIFE_AT_JSL.GALLERY' | translate }}</h2>
+    <div class="gallery-grid">
+      <div class="gallery-item" *ngFor="let img of moments">
+        <img [src]="img" alt="Life at JSL" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="benefits-section">
+  <div class="container">
+    <h2>{{ 'LIFE_AT_JSL.BENEFITS' | translate }}</h2>
+    <div class="benefits-grid">
+      <div class="benefit-card" *ngFor="let b of benefits">
+        <h3>{{ b.title }}</h3>
+        <p>{{ b.desc }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<jsl-cta-section></jsl-cta-section>

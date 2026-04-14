@@ -1,0 +1,18 @@
+<div class="page-container container">
+  <h1 class="page-title" jslAnimateOnScroll>{{ 'SOLUTIONS.TITLE' | translate }}</h1>
+  <p class="page-subtitle" jslAnimateOnScroll>{{ 'SOLUTIONS.SUBTITLE' | translate }}</p>
+
+  <div class="solutions-grid">
+    @for (solution of solutions(); track solution.key) {
+      <jsl-card 
+        [icon]="solution.icon"
+        [title]="'SOLUTIONS.' + solution.key + '_TITLE' | translate"
+        [description]="'SOLUTIONS.' + solution.key + '_DESC' | translate"
+        [link]="['/', currentLang, 'solutions', solution.slug]"
+        jslAnimateOnScroll>
+      </jsl-card>
+    }
+  </div>
+</div>
+
+<jsl-cta-section></jsl-cta-section>

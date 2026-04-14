@@ -1,0 +1,53 @@
+@if (product$ | async; as product) {
+  <header class="detail-page-header">
+    <div class="container">
+      <div class="detail-page-breadcrumb">
+        <a [routerLink]="['/', currentLang, 'home']">{{ 'COMMON.BREADCRUMB_HOME' | translate }}</a>
+        <lucide-icon name="ChevronRight"></lucide-icon>
+        <a [routerLink]="['/', currentLang, 'products']">{{ 'HEADER.PRODUCTS' | translate }}</a>
+        <lucide-icon name="ChevronRight"></lucide-icon>
+        <span>{{ 'PRODUCTS.' + product.key + '_TITLE' | translate }}</span>
+      </div>
+      
+      <h1 class="detail-page-title">{{ 'PRODUCTS.' + product.key + '_TITLE' | translate }}</h1>
+      <p class="page-subtitle">{{ 'PRODUCTS.' + product.key + '_DESC' | translate }}</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <main class="detail-page-content" style="max-width: 900px; grid-template-columns: 1fr;">
+      
+      <h2>{{ 'COMMON.PLACEHOLDER_TITLE' | translate }}</h2>
+      <p [innerHTML]="'PRODUCTS.' + product.key + '_DETAIL_CONTENT' | translate"></p>
+      
+      @if (product.externalUrl) {
+        <a [href]="product.externalUrl"
+           target="_blank"
+           class="hero-slide__cta"
+           style="margin-top: 2rem; margin-right: auto; background: var(--accent-gradient); gap: 0.5rem;">
+          <lucide-icon name="ExternalLink" style="width: 18px;"></lucide-icon>
+          <span>{{ 'PRODUCTS.VIEW_DEDICATED_PAGE' | translate }}</span>
+        </a>
+      } @else {
+        <a [href]="'PRODUCTS.' + product.key + '_MARKETING_URL' | translate"
+           target="_blank"
+           class="hero-slide__cta"
+           style="margin-top: 2rem; margin-right: auto; background: var(--accent-gradient); gap: 0.5rem;">
+          <lucide-icon name="ExternalLink" style="width: 18px;"></lucide-icon>
+          <span>{{ 'PRODUCTS.VIEW_DEDICATED_PAGE' | translate }}</span>
+        </a>
+      }
+
+    </main>
+  </div>
+
+  <jsl-cta-section></jsl-cta-section>
+} @else {
+  <div class="page-container container">
+    <h1 class="page-title">{{ 'NOT_FOUND.PRODUCT_TITLE' | translate }}</h1>
+    <p class="page-subtitle">
+      {{ 'NOT_FOUND.PRODUCT_SUBTITLE' | translate }}
+      <a [routerLink]="['/', currentLang, 'products']">{{ 'HEADER.PRODUCTS' | translate }}</a>.
+    </p>
+  </div>
+}

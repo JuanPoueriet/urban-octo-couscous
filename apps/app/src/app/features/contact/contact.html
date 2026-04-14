@@ -1,0 +1,139 @@
+<div class="page-container container">
+  <h1 class="page-title">{{ 'CONTACT.TITLE' | translate }}</h1>
+  <p class="page-subtitle">{{ 'CONTACT.SUBTITLE' | translate }}</p>
+
+  <div class="contact-grid">
+    
+    <!-- Columna 1: Información de Contacto -->
+    <div class="contact-info">
+      <h3>{{ 'CONTACT.INFO_TITLE' | translate }}</h3>
+      <p>{{ 'CONTACT.INFO_DESC' | translate }}</p>
+
+      <div class="contact-info__item">
+        <lucide-icon name="Mail"></lucide-icon>
+        <div>
+          <h4>{{ 'CONTACT.EMAIL' | translate }}</h4>
+          <a href="mailto:info@jsltechnology.com">info@jsltechnology.com</a>
+        </div>
+      </div>
+      <div class="contact-info__item">
+        <lucide-icon name="Phone"></lucide-icon>
+        <div>
+          <h4>{{ 'CONTACT.PHONE' | translate }}</h4>
+          <a href="tel:+18091234567">+1 (809) 123-4567</a>
+        </div>
+      </div>
+      <div class="contact-info__item">
+        <lucide-icon name="MapPin"></lucide-icon>
+        <div>
+          <h4>{{ 'CONTACT.LOCATION' | translate }}</h4>
+          <p>Santo Domingo, República Dominicana</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna 2: Formulario de Contacto -->
+    <form class="contact-form" [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Campo Nombre -->
+      <div class="form-group">
+        <label for="name">{{ 'CONTACT.FORM.NAME' | translate }}</label>
+        <input type="text" id="name" class="form-control" formControlName="name" 
+               [class.is-invalid]="f['name'].invalid && (f['name'].dirty || f['name'].touched)">
+        @if (f['name'].invalid && (f['name'].dirty || f['name'].touched)) {
+          <div class="form-error">
+            @if (f['name'].errors?.['required']) {
+              <span>{{ 'CONTACT.FORM.ERRORS.REQUIRED' | translate }}</span>
+            }
+            @if (f['name'].errors?.['minlength']) {
+              <span>{{ 'CONTACT.FORM.ERRORS.MINLENGTH' | translate:{'value': 3} }}</span>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Campo Email -->
+      <div class="form-group">
+        <label for="email">{{ 'CONTACT.FORM.EMAIL' | translate }}</label>
+        <input type="email" id="email" class="form-control" formControlName="email"
+               [class.is-invalid]="f['email'].invalid && (f['email'].dirty || f['email'].touched)">
+        @if (f['email'].invalid && (f['email'].dirty || f['email'].touched)) {
+          <div class="form-error">
+            @if (f['email'].errors?.['required']) {
+              <span>{{ 'CONTACT.FORM.ERRORS.REQUIRED' | translate }}</span>
+            }
+            @if (f['email'].errors?.['email']) {
+              <span>{{ 'CONTACT.FORM.ERRORS.EMAIL' | translate }}</span>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Campo Servicio -->
+      <div class="form-group">
+        <label for="service">{{ 'CONTACT.FORM.SERVICE' | translate }}</label>
+        <select id="service" class="form-control" formControlName="service"
+                [class.is-invalid]="f['service'].invalid && (f['service'].dirty || f['service'].touched)">
+          <option value="" disabled>{{ 'CONTACT.FORM.SERVICE_PROMPT' | translate }}</option>
+          <option value="erp">{{ 'PRODUCTS_LIST.ERP' | translate }}</option>
+          <option value="pos">{{ 'PRODUCTS_LIST.POS' | translate }}</option>
+          <option value="web_dev">{{ 'SERVICES_LIST.WEB' | translate }}</option>
+          <option value="mobile_dev">{{ 'SERVICES_LIST.MOBILE' | translate }}</option>
+          <option value="other">{{ 'CONTACT.FORM.SERVICE_OTHER' | translate }}</option>
+        </select>
+        @if (f['service'].invalid && (f['service'].dirty || f['service'].touched)) {
+          <div class="form-error">
+            @if (f['service'].errors?.['required']) {
+              <span>{{ 'CONTACT.FORM.ERRORS.REQUIRED' | translate }}</span>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Campo Mensaje -->
+      <div class="form-group">
+        <label for="message">{{ 'CONTACT.FORM.MESSAGE' | translate }}</label>
+        <textarea id="message" class="form-control" rows="6" formControlName="message"
+                  [class.is-invalid]="f['message'].invalid && (f['message'].dirty || f['message'].touched)"></textarea>
+        @if (f['message'].invalid && (f['message'].dirty || f['message'].touched)) {
+          <div class="form-error">
+            @if (f['message'].errors?.['required']) {
+              <span>{{ 'CONTACT.FORM.ERRORS.REQUIRED' | translate }}</span>
+            }
+            @if (f['message'].errors?.['minlength']) {
+              <span>{{ 'CONTACT.FORM.ERRORS.MINLENGTH' | translate:{'value': 10} }}</span>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Botón de Envío -->
+      <div class="form-group">
+        <button type="submit" class="submit-btn" [disabled]="isSubmitting || contactForm.invalid">
+          @if (!isSubmitting) {
+            <span>{{ 'CONTACT.FORM.SUBMIT' | translate }}</span>
+          }
+          @if (isSubmitting) {
+            <span class="spinner"></span> <!-- (Estilizaremos el spinner) -->
+          }
+          @if (!isSubmitting) {
+            <lucide-icon name="Send"></lucide-icon>
+          }
+        </button>
+      </div>
+
+      <!-- Mensajes de Estado -->
+      @if (submitSuccess) {
+        <div class="submit-success">
+          {{ 'CONTACT.FORM.SUCCESS' | translate }}
+        </div>
+      }
+      @if (submitError) {
+        <div class="submit-error">
+          {{ 'CONTACT.FORM.ERROR' | translate }}
+        </div>
+      }
+    </form>
+
+  </div>
+</div>

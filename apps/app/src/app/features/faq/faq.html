@@ -1,0 +1,36 @@
+<div class="page-container container">
+  <h1 class="page-title" jslAnimateOnScroll>{{ 'FAQ.TITLE' | translate }}</h1>
+  <p class="page-subtitle" jslAnimateOnScroll>{{ 'FAQ.SUBTITLE' | translate }}</p>
+
+  <div class="faq-list" jslAnimateOnScroll>
+    @if (faqItems$ | async; as faqItems) {
+      @for (item of faqItems; track $index) {
+        <div class="faq-item" [class.open]="openQuestionIndex() === $index">
+          
+          <!-- El botón de la pregunta -->
+          <button class="faq-question" (click)="toggleQuestion($index)">
+            <span>{{ item.questionKey | translate }}</span>
+            <div class="faq-icon">
+              <!-- El ícono rota basado en el estado 'open' -->
+              <lucide-icon name="ChevronDown"></lucide-icon>
+            </div>
+          </button>
+          
+          <!-- La respuesta (se muestra condicionalmente) -->
+          @if (openQuestionIndex() === $index) {
+            <div class="faq-answer">
+              <p [innerHTML]="item.answerKey | translate"></p>
+            </div>
+          }
+        </div>
+      }
+    }
+  </div>
+</div>
+
+<!-- CTA al final -->
+<jsl-cta-section
+  eyebrowKey="FAQ.CTA_EYEBROW"
+  titleKey="FAQ.CTA_TITLE"
+  subtitleKey="FAQ.CTA_SUBTITLE">
+</jsl-cta-section>
