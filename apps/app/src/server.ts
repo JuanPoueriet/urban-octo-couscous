@@ -92,9 +92,7 @@ const staticRoutes = [
   'life-at-jsl',
   'press',
   'pricing',
-  'security',
-  'server-error',
-  'thank-you'
+  'security'
 ];
 
 const domain = 'https://www.jsl.technology';
