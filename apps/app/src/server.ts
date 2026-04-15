@@ -98,8 +98,12 @@ const staticRoutes = [
 const supportedLangs = SUPPORTED_LANGUAGES;
 const defaultLang = 'en';
 
+// --- NUEVO: Fecha de última modificación para rutas estáticas (evita fluctuaciones de crawl budget) ---
+const STATIC_LASTMOD = '2025-10-30';
+
 /**
- * Genera el XML del sitemap dinámicamente
+ * Genera el XML del sitemap dinámicamente.
+ * Refactorizado para mayor escalabilidad y modularidad.
  */
 function generateSitemap(domain: string): string {
   let xml = '<?xml version="1.0" encoding="UTF-8"?>';
@@ -107,27 +111,37 @@ function generateSitemap(domain: string): string {
 
   const now = new Date().toISOString().split('T')[0];
 
-  // 1. Añadir rutas estáticas
-  staticRoutes.forEach(route => {
-    xml += generateUrlEntry(route, now, domain);
-  });
+  // 1. Rutas estáticas
+  xml += generateStaticEntriesXml(domain);
 
-  // 2. Añadir rutas dinámicas de Soluciones
-  SOLUTIONS.forEach((solution: any) => {
-    xml += generateUrlEntry(`solutions/${solution.slug}`, solution.date || now, domain);
-  });
-
-  // 3. Añadir rutas dinámicas de Proyectos
-  PROJECTS.forEach((project: any) => {
-    xml += generateUrlEntry(`projects/${project.slug}`, project.date || now, domain);
-  });
-  
-  // 4. Añadir rutas dinámicas de Blog
-  BLOG_POSTS.forEach(post => {
-    xml += generateUrlEntry(`blog/${post.slug}`, post.date || now, domain);
-  });
+  // 2. Rutas dinámicas (Soluciones, Proyectos, Blog)
+  xml += generateDynamicEntriesXml('solutions', SOLUTIONS, domain, now);
+  xml += generateDynamicEntriesXml('projects', PROJECTS, domain, now);
+  xml += generateDynamicEntriesXml('blog', BLOG_POSTS, domain, now);
 
   xml += '</urlset>';
+  return xml;
+}
+
+/**
+ * Genera las entradas XML para las rutas estáticas
+ */
+function generateStaticEntriesXml(domain: string): string {
+  let xml = '';
+  staticRoutes.forEach(route => {
+    xml += generateUrlEntry(route, STATIC_LASTMOD, domain);
+  });
+  return xml;
+}
+
+/**
+ * Genera las entradas XML para rutas dinámicas basadas en una colección
+ */
+function generateDynamicEntriesXml(basePath: string, collection: any[], domain: string, fallbackDate: string): string {
+  let xml = '';
+  collection.forEach(item => {
+    xml += generateUrlEntry(`${basePath}/${item.slug}`, item.date || fallbackDate, domain);
+  });
   return xml;
 }
 

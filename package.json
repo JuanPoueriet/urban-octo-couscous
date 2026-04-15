@@ -7,7 +7,8 @@
     "build": "nx build",
     "watch": "nx build --watch --configuration development",
     "test": "nx test",
-    "serve:ssr:app": "node dist/app/server/server.mjs"
+    "serve:ssr:app": "node dist/app/server/server.mjs",
+    "lighthouse": "lhci autorun --config=./.lighthouserc.js"
   },
   "prettier": {
     "printWidth": 100,
