@@ -106,11 +106,13 @@ export class SolutionDetail implements OnInit, OnDestroy {
   private updateMetadata(solution: Solution): void {
     const titleKey = `SOLUTIONS.${solution.key}_TITLE`;
     const descKey = `SOLUTIONS.${solution.key}_DESC`;
+
+    // Set breadcrumbs first if possible, or wait for translations
     const baseUrl = this.seoService.getBaseUrl();
     const url = `${baseUrl}/${this.currentLang}/solutions/${solution.slug}`;
 
     this.translate.get([titleKey, descKey, 'COMMON.BREADCRUMB_HOME', 'HEADER.SERVICES', 'COMMON.DEFAULT_DESCRIPTION']).subscribe(translations => {
-      const title = `${translations[titleKey]} | JSL Technology`;
+      const title = `${translations[titleKey] || solution.key} | JSL Technology`;
       const description = translations[descKey] !== descKey ? translations[descKey] : translations['COMMON.DEFAULT_DESCRIPTION'];
 
       this.seoService.updateTitleAndDescription(title, description);

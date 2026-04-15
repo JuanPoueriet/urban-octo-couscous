@@ -1,4 +1,5 @@
 import {
+  Copy,
   ArrowLeft,
   ArrowRight,
   Brain,
@@ -136,6 +137,7 @@ export const ICON_LIST = {
     Download,
     Minus,
     Plus,
+    Copy,
     Building,
     Layers,
     HardDrive,

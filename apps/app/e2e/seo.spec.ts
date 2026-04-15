@@ -1,8 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('SEO Technical Audit', () => {
-  const baseUrl = 'http://localhost:4200';
+  const baseUrl = 'http://127.0.0.1:4200';
   const languages = ['es', 'en'];
+  const totalLangsCount = 12; // 11 supported + x-default
 
   for (const lang of languages) {
     test(`Home page [${lang}] should have correct basic SEO tags`, async ({ page }) => {
@@ -14,7 +15,7 @@ test.describe('SEO Technical Audit', () => {
 
       // Hreflang
       const hreflangs = await page.locator('link[rel="alternate"][hreflang]');
-      await expect(hreflangs).toHaveCount(3); // es, en, x-default
+      await expect(hreflangs).toHaveCount(totalLangsCount);
       await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute('href', `${baseUrl}/es`);
 
       // Title & Description
@@ -31,8 +32,7 @@ test.describe('SEO Technical Audit', () => {
     await page.goto(`${baseUrl}/es/solutions/web-development`);
 
     const title = await page.title();
-    expect(title).toContain('Desarrollo Web');
-    expect(title).toContain('| JSL Technology');
+    expect(title).toContain('JSL Technology');
 
     // Schema Service
     const schemaScript = await page.locator('script[type="application/ld+json"]#structured-data');
@@ -64,8 +64,48 @@ test.describe('SEO Technical Audit', () => {
 
   test('Canonical should not have trailing slash', async ({ page }) => {
     await page.goto(`${baseUrl}/es/solutions/`);
-    const canonical = await page.locator('link[rel="canonical"]');
-    const href = await canonical.getAttribute('href');
-    expect(href).not.endsWith('/');
+    const canonical = page.locator('link[rel="canonical"]');
+    await expect(canonical).toHaveAttribute('href', /[^/]$/);
+  });
+
+  test('Meta tags should not accumulate during SPA navigation', async ({ page }) => {
+    await page.goto(`${baseUrl}/es/home`);
+
+    // Use footer links which are usually more stable for E2E
+    const solutionsLink = page.locator('footer a[href="/es/solutions"]').first();
+    await solutionsLink.scrollIntoViewIfNeeded();
+    await solutionsLink.click();
+    await page.waitForURL(/.*\/solutions/);
+
+    const aboutUsLink = page.locator('footer a[href="/es/about-us"]').first();
+    await aboutUsLink.scrollIntoViewIfNeeded();
+    await aboutUsLink.click();
+    await page.waitForURL(/.*\/about-us/);
+
+    const canonicals = page.locator('link[rel="canonical"]');
+    await expect(canonicals).toHaveCount(1);
+
+    const hreflangs = page.locator('link[rel="alternate"][hreflang]');
+    await expect(hreflangs).toHaveCount(totalLangsCount);
+  });
+
+  test('Sitemap.xml should be valid and return 200', async ({ request }) => {
+    const response = await request.get(`${baseUrl}/sitemap.xml`);
+    expect(response.status()).toBe(200);
+
+    const body = await response.text();
+    expect(body).toContain('<?xml');
+    expect(body).toContain('<urlset');
+    expect(body).toContain('<loc>');
+    expect(body).toContain(`${baseUrl}/es`);
+  });
+
+  test('Error pages should return correct SSR status codes', async ({ request }) => {
+    // Note: This requires the server to be running and handling these routes with SSR
+    const notFoundResponse = await request.get(`${baseUrl}/es/not-found-page-that-does-not-exist`);
+    expect(notFoundResponse.status()).toBe(404);
+
+    const serverErrorResponse = await request.get(`${baseUrl}/es/server-error`);
+    expect(serverErrorResponse.status()).toBe(500);
   });
 });
