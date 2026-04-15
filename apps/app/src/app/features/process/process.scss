@@ -85,7 +85,7 @@
 .process-item__number {
   font-size: 1.2rem;
   font-weight: 700;
-  color: var(--accent-primary);
+  color: var(--primary);
   margin-bottom: 0.5rem;
   display: block;
 }
@@ -93,13 +93,13 @@
 .process-item__title {
   font-size: 2rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-main);
   margin-bottom: 1rem;
 }
 
 .process-item__desc {
   font-size: 1rem;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   line-height: 1.8;
 }
 

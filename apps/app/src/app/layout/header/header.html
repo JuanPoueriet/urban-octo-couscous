@@ -99,7 +99,7 @@
         </div>
       </li>
 
-      <!-- Dropdown: Compañía -->
+      <!-- Dropdown: Compañía (Merged with Resources) -->
       <li class="dropdown" [class.open]="openDropdown === 'company'">
         <button
           class="dropdown-toggle"
@@ -124,52 +124,11 @@
             >{{ 'HEADER.PROCESS' | translate }}</a
           >
           <a
-            [routerLink]="[currentLang, 'tech-stack']"
-            routerLinkActive="active"
-            (click)="closeMobileMenu()"
-            >{{ 'HEADER.TECH_STACK' | translate }}</a
-          >
-          <a
-            [routerLink]="[currentLang, 'careers']"
-            routerLinkActive="active"
-            (click)="closeMobileMenu()"
-            >{{ 'HEADER.CAREERS' | translate }}</a
-          >
-          <a
-            [routerLink]="[currentLang, 'partners']"
-            routerLinkActive="active"
-            (click)="closeMobileMenu()"
-            >{{ 'HEADER.PARTNERS' | translate }}</a
-          >
-          <a
-            [routerLink]="[currentLang, 'security']"
-            routerLinkActive="active"
-            (click)="closeMobileMenu()"
-            >{{ 'HEADER.SECURITY' | translate }}</a
-          >
-        </div>
-      </li>
-
-      <!-- Dropdown: Recursos -->
-      <li class="dropdown" [class.open]="openDropdown === 'resources'">
-        <button
-          class="dropdown-toggle"
-          (click)="toggleDropdown('resources', $event)"
-          aria-haspopup="true"
-          [attr.aria-expanded]="openDropdown === 'resources'"
-        >
-          {{ 'FOOTER.RESOURCES' | translate }}
-          <lucide-icon name="ChevronDown"></lucide-icon>
-        </button>
-        <div class="dropdown-menu" [class.open]="openDropdown === 'resources'">
-          <a
             [routerLink]="[currentLang, 'projects']"
             routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
             (click)="closeMobileMenu()"
+            >{{ 'HEADER.PROJECTS' | translate }}</a
           >
-            {{ 'HEADER.PROJECTS' | translate }}
-          </a>
           <a
             [routerLink]="[currentLang, 'blog']"
             routerLinkActive="active"
@@ -177,10 +136,10 @@
             >{{ 'HEADER.BLOG' | translate }}</a
           >
           <a
-            [routerLink]="[currentLang, 'news']"
+            [routerLink]="[currentLang, 'careers']"
             routerLinkActive="active"
             (click)="closeMobileMenu()"
-            >{{ 'HEADER.PRESS' | translate }}</a
+            >{{ 'HEADER.CAREERS' | translate }}</a
           >
           <a
             [routerLink]="[currentLang, 'faq']"

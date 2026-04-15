@@ -28,7 +28,7 @@
           }}</a>
           <button (click)="openVideoModal()" class="hero-slide__cta hero-slide__cta--secondary" aria-label="Watch our video reel">
              <lucide-icon name="Play"></lucide-icon>
-             Watch Reel
+             {{ 'HOME.WATCH_REEL' | translate }}
           </button>
         </div>
       </div>
@@ -266,11 +266,11 @@
 
   <div class="maturity-grid">
     <div>
-      <h3>Assess your Tech Stack</h3>
+      <h3>{{ 'HOME.ASSESS_TECH' | translate }}</h3>
       <jsl-digital-maturity-selector></jsl-digital-maturity-selector>
     </div>
     <div>
-      <h3>Calculate Potential Savings</h3>
+      <h3>{{ 'HOME.CALC_SAVINGS' | translate }}</h3>
       <app-roi-calculator></app-roi-calculator>
     </div>
   </div>
@@ -475,18 +475,18 @@
 <!-- NUEVO COMPONENTE: Casos de Éxito (Before/After) -->
 <section class="success-cases-section container">
   <div class="section-header text-center">
-     <span class="section-eyebrow">Visual Transformation</span>
-     <h2 class="section-title">See the Difference</h2>
-     <p class="section-subtitle">From legacy systems to modern, high-performance interfaces.</p>
+     <span class="section-eyebrow">{{ 'HOME.VISUAL_TRANSFORMATION' | translate }}</span>
+     <h2 class="section-title">{{ 'HOME.SEE_DIFFERENCE' | translate }}</h2>
+     <p class="section-subtitle">{{ 'HOME.DIFF_SUBTITLE' | translate }}</p>
   </div>
 
   <div class="comparison-container">
      <jsl-image-comparison
        beforeImage="assets/imgs/Avif/legacy-ui.avif"
        afterImage="assets/imgs/Avif/modern-ui.avif"
-       beforeLabel="Legacy System"
-       afterLabel="JSL Solution"
-       alt="Dashboard modernization comparison"
+       [beforeLabel]="'HOME.LEGACY_SYSTEM' | translate"
+       [afterLabel]="'HOME.JSL_SOLUTION' | translate"
+       [alt]="'HOME.DASHBOARD_COMP' | translate"
      ></jsl-image-comparison>
   </div>
 </section>

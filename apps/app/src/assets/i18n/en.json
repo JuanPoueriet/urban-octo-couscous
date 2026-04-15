@@ -98,6 +98,15 @@
     "VISIT_WEBSITE": "Visit Website"
   },
   "HOME": {
+    "WATCH_REEL": "Watch Reel",
+    "VISUAL_TRANSFORMATION": "Visual Transformation",
+    "SEE_DIFFERENCE": "See the Difference",
+    "DIFF_SUBTITLE": "From legacy systems to modern, high-performance interfaces.",
+    "LEGACY_SYSTEM": "Legacy System",
+    "JSL_SOLUTION": "JSL Solution",
+    "DASHBOARD_COMP": "Dashboard modernization comparison",
+    "ASSESS_TECH": "Assess your Tech Stack",
+    "CALC_SAVINGS": "Calculate Potential Savings",
     "HERO1_TITLE": "Shaping The Future Of Digital Innovation",
     "HERO1_SUBTITLE": "Bridging the gap between Consultancy and Venture Building. We orchestrate digital transformation.",
     "HERO1_CTA": "More Info",
@@ -660,9 +669,13 @@
     "TITLE": "Security Center",
     "SUBTITLE": "Enterprise-grade security and compliance.",
     "ENCRYPTION": "End-to-End Encryption",
+    "ENCRYPTION_DESC": "AES-256 encryption at rest and TLS 1.3 in transit. We ensure that your data is protected by the highest industry standards.",
     "BACKUPS": "Daily Backups",
+    "BACKUPS_DESC": "Automated daily backups with 30-day retention and point-in-time recovery to guarantee business continuity.",
     "DRP": "Disaster Recovery",
+    "DRP_DESC": "Multi-region failover architecture ensuring 99.99% availability even in the event of catastrophic regional failures.",
     "COMPLIANCE": "Compliance",
+    "COMPLIANCE_DESC": "SOC 2 Type II, GDPR, and HIPAA compliant infrastructure. We undergo regular third-party audits.",
     "BADGES": "Security Certifications"
   },
   "VENTURES": {
@@ -704,6 +717,10 @@
     "SUBTITLE": "The Operating System for Modern Business.",
     "VISIT_SITE": "Visit Official Site",
     "ECOSYSTEM_TITLE": "A Unified Architecture",
+    "ERP_CORE": "Virteex ERP Core",
+    "POS": "POS",
+    "MOBILE_APP": "Mobile App",
+    "ECOMMERCE": "E-Commerce",
     "CTA_EYEBROW": "Ready to upgrade?",
     "CTA_TITLE": "Switch to Virteex",
     "CTA_SUBTITLE": "Join thousands of businesses running on our cloud."

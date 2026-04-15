@@ -17,7 +17,7 @@
 
   .page-subtitle {
     font-size: 1.2rem;
-    color: var(--text-secondary);
+    color: var(--text-muted);
     max-width: 700px;
     margin: 0 auto;
   }
@@ -30,12 +30,12 @@
   gap: 0.5rem;
   margin-bottom: 1.5rem;
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  color: var(--text-muted);
 
   a {
-    color: var(--text-secondary);
+    color: var(--text-muted);
     &:hover {
-      color: var(--text-primary);
+      color: var(--text-main);
     }
   }
 
@@ -48,7 +48,7 @@
 .detail-page-title {
   font-size: 3rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--text-main);
   margin-bottom: 1rem;
   line-height: 1.2;
   max-width: 900px;
@@ -63,7 +63,7 @@
   flex-wrap: wrap; // <-- Añadido para mejor responsive
   gap: 1.5rem;
   margin-top: 1.5rem; // <-- Ajustado
-  color: var(--text-secondary);
+  color: var(--text-muted);
 
   .meta-item {
     display: flex;
@@ -74,7 +74,7 @@
     lucide-icon {
       width: 16px;
       height: 16px;
-      color: var(--accent-primary);
+      color: var(--primary);
     }
   }
 }
@@ -87,7 +87,7 @@
   height: 500px;
   max-height: 60vh;
   object-fit: cover;
-  border-radius: var(--border-radius);
+  border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
   
   // 2. Eliminado el 'margin-top' negativo que causaba el
@@ -125,7 +125,7 @@
   h2 {
     font-size: 2rem;
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--text-main);
     margin-bottom: 1.5rem;
     margin-top: 0;
     border-bottom: 1px solid var(--border-color);
@@ -140,13 +140,13 @@
   h3 {
     font-size: 1.5rem;
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--text-main);
     margin: 2rem 0 1rem 0;
   }
 
   p, li {
     font-size: 1.1rem;
-    color: var(--text-secondary);
+    color: var(--text-muted);
     line-height: 1.9;
     margin-bottom: 1.5rem;
   }

@@ -7,7 +7,7 @@
     // Gradiente de acento izquierdo (Rojo)
     radial-gradient(
       600px circle at 0% 0%, 
-      rgba(var(--accent-primary-rgb), 0.15),
+      rgba(var(--primary-rgb), 0.15),
       transparent 40%
     ),
     // Gradiente de acento derecho (Rosado)
@@ -23,7 +23,7 @@
     background:
       radial-gradient(
         600px circle at 100% 0%,
-        rgba(var(--accent-primary-rgb), 0.15),
+        rgba(var(--primary-rgb), 0.15),
         transparent 40%
       ),
       radial-gradient(
@@ -104,15 +104,15 @@
 .footer__logo {
   font-size: 1.75rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--text-main);
   text-decoration: none;
   &::first-letter {
-    color: var(--accent-primary);
+    color: var(--primary);
   }
 }
 
 .footer__slogan {
-  color: var(--text-secondary);
+  color: var(--text-muted);
   font-size: 0.9rem;
   max-width: 300px;
   line-height: 1.7;
@@ -122,7 +122,7 @@
 .footer__col-title {
   font-size: 1.15rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-main);
   margin-bottom: 0.5rem;
   position: relative;
   
@@ -148,7 +148,7 @@
   gap: 1rem;
 
   a {
-    color: var(--text-secondary);
+    color: var(--text-muted);
     font-size: 0.9rem;
     transition: color var(--transition-speed) ease, padding-inline-start var(--transition-speed) ease;
     display: inline-flex;
@@ -165,11 +165,11 @@
     }
 
     &:hover {
-      color: var(--text-primary);
+      color: var(--text-main);
       padding-inline-start: 5px;
       
       lucide-icon {
-        color: var(--accent-primary);
+        color: var(--primary);
       }
     }
   }
@@ -192,7 +192,7 @@
   gap: 0.75rem;
 
   .social-link {
-    color: var(--text-secondary);
+    color: var(--text-muted);
     background-color: var(--bg-primary);
     border: 1px solid var(--border-color);
     border-radius: 50%;
@@ -211,7 +211,7 @@
     &:hover {
       color: #fff;
       transform: translateY(-3px) scale(1.05); // Efecto de hover mejorado
-      border-color: var(--accent-primary);
+      border-color: var(--primary);
 
       // Colores de marca
       &.social-link--linkedin { border-color: #0A66C2; background-color: #0A66C2; }
@@ -224,7 +224,7 @@
 
 // Formulario de Newsletter (Refinado)
 .footer__newsletter-subtitle {
-  color: var(--text-secondary);
+  color: var(--text-muted);
   font-size: 0.9rem;
   line-height: 1.6;
   margin-bottom: 1rem;
@@ -243,10 +243,10 @@
       padding: 0.8rem 1rem;
       font-size: 0.9rem;
       font-family: var(--font-family-base);
-      color: var(--text-primary);
+      color: var(--text-main);
       background-color: var(--bg-primary); // Más oscuro
       border: 1px solid var(--border-color);
-      border-radius: var(--border-radius);
+      border-radius: var(--radius-md);
       border-start-end-radius: 0;
       border-end-end-radius: 0;
       transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
@@ -254,8 +254,8 @@
       &:focus {
         outline: none;
         // Efecto "glow" al enfocar
-        border-color: rgba(var(--accent-primary-rgb), 0.5);
-        box-shadow: 0 0 10px rgba(var(--accent-primary-rgb), 0.2);
+        border-color: rgba(var(--primary-rgb), 0.5);
+        box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.2);
         z-index: 2;
       }
   
@@ -264,7 +264,7 @@
       }
   
       &::placeholder {
-        color: var(--text-secondary);
+        color: var(--text-muted);
       }
     }
     
@@ -276,8 +276,8 @@
       padding: 0.8rem 1.25rem;
       color: #fff;
       background: var(--accent-gradient);
-      border: 1px solid var(--accent-primary);
-      border-radius: var(--border-radius);
+      border: 1px solid var(--primary);
+      border-radius: var(--radius-md);
       border-start-start-radius: 0;
       border-end-start-radius: 0;
       cursor: pointer;
@@ -291,7 +291,7 @@
   
       &:hover:not(:disabled) {
         // Sutil "glow" al pasar el ratón
-        box-shadow: 0 5px 15px rgba(var(--accent-primary-rgb), 0.3);
+        box-shadow: 0 5px 15px rgba(var(--primary-rgb), 0.3);
       }
   
       &:disabled {
@@ -348,7 +348,7 @@
   border-top: 1px solid var(--border-color);
   margin-top: 4rem;
   padding: 2rem 0;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   font-size: 0.85rem;
   display: flex;
   align-items: center;
@@ -372,11 +372,11 @@
   display: flex;
   gap: 1.5rem;
   a {
-    color: var(--text-secondary);
+    color: var(--text-muted);
     font-size: 0.85rem;
     text-decoration: none;
     &:hover {
-      color: var(--text-primary);
+      color: var(--text-main);
       text-decoration: underline;
     }
   }

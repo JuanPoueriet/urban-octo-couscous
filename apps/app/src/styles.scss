@@ -36,6 +36,14 @@
   --transition-speed: 0.3s;
   --transition-timing: ease;
   --focus-ring: 0 0 0 3px rgba(var(--primary-rgb), 0.5);
+
+  // Aliases (for backward compatibility & consistency)
+  --text-primary: var(--text-main);
+  --text-secondary: var(--text-muted);
+  --accent-primary: var(--primary);
+  --accent-primary-rgb: var(--primary-rgb);
+  --border-radius: var(--radius-md);
+  --bg-body: var(--bg-primary);
 }
 
 // 2. Reseteo Básico y Estilos Globales
@@ -122,6 +130,16 @@ lucide-icon {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+// Utility Classes (Minimal set to avoid full framework)
+.mx-auto { margin-left: auto; margin-right: auto; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.mt-20 { margin-top: 5rem; }
+.text-center { text-align: center; }
+
+@media (min-width: 1024px) {
+  .lg\:mt-24 { margin-top: 6rem; }
 }
 
 /* RTL Support */

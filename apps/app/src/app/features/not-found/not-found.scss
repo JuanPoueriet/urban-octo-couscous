@@ -35,14 +35,14 @@
   h1 {
     font-size: 3.5rem;
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--text-main);
     margin-bottom: 0;
     line-height: 1.2;
   }
 
   p {
     font-size: 1.2rem;
-    color: var(--text-secondary);
+    color: var(--text-muted);
     max-width: 450px;
     margin-bottom: 1rem;
     line-height: 1.7;
@@ -57,7 +57,7 @@
     font-weight: 600;
     color: #fff;
     background: var(--accent-gradient);
-    border-radius: var(--border-radius);
+    border-radius: var(--radius-md);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
@@ -94,7 +94,7 @@
   img {
     max-width: 100%;
     height: auto;
-    filter: drop-shadow(0 10px 30px rgba(var(--accent-primary-rgb), 0.1));
+    filter: drop-shadow(0 10px 30px rgba(var(--primary-rgb), 0.1));
   }
 }
 
