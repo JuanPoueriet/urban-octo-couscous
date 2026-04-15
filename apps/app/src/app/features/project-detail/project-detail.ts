@@ -54,12 +54,11 @@ export class ProjectDetail implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.langSub = this.translate.onLangChange.subscribe(event => {
       this.currentLang = event.lang;
-      this.updateTitle();
+      if (this.projectData) this.updateMetadata(this.projectData);
     });
 
     this.project$.subscribe(project => {
       this.projectData = project;
-      this.updateTitle();
       if (project) this.updateMetadata(project);
     });
   }
@@ -68,22 +67,18 @@ export class ProjectDetail implements OnInit, OnDestroy {
     this.langSub?.unsubscribe();
   }
 
-  private updateTitle(): void {
-    if (this.projectData) {
-      const titleKey = `PROJECTS.${this.projectData.key}_TITLE`;
-      this.translate.get(titleKey).subscribe(translatedTitle => {
-        this.titleService.setTitle(`${translatedTitle} | JSL Technology`);
-      });
-    }
-  }
-
   private updateMetadata(project: Project): void {
     const titleKey = `PROJECTS.${project.key}_TITLE`;
     const descKey = `PROJECTS.${project.key}_DESC`;
     const baseUrl = this.seoService.getBaseUrl();
     const url = `${baseUrl}/${this.currentLang}/projects/${project.slug}`;
 
-    this.translate.get([titleKey, descKey, 'COMMON.BREADCRUMB_HOME', 'HEADER.PROJECTS']).subscribe(translations => {
+    this.translate.get([titleKey, descKey, 'COMMON.BREADCRUMB_HOME', 'HEADER.PROJECTS', 'COMMON.DEFAULT_DESCRIPTION']).subscribe(translations => {
+      const title = `${translations[titleKey]} | JSL Technology`;
+      const description = translations[descKey] !== descKey ? translations[descKey] : translations['COMMON.DEFAULT_DESCRIPTION'];
+
+      this.seoService.updateTitleAndDescription(title, description);
+
       // --- Breadcrumbs Schema ---
       this.seoService.setBreadcrumbs([
         { name: translations['COMMON.BREADCRUMB_HOME'], item: `/${this.currentLang}/home` },
@@ -93,8 +88,8 @@ export class ProjectDetail implements OnInit, OnDestroy {
 
       this.seoService.updateCanonicalTag(url);
       this.seoService.updateSocialTags(
-        translations[titleKey],
-        translations[descKey],
+        title,
+        description,
         url,
         project.imageUrl
       );
@@ -104,7 +99,7 @@ export class ProjectDetail implements OnInit, OnDestroy {
         '@context': 'https://schema.org',
         '@type': 'CreativeWork',
         'name': translations[titleKey],
-        'description': translations[descKey],
+        'description': description,
         'image': project.imageUrl,
         'url': url,
         'author': {

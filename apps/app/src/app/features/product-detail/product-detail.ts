@@ -45,7 +45,7 @@ export class ProductDetail implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.langSub = this.translate.onLangChange.subscribe(event => {
       this.currentLang = event.lang;
-      this.updateTitle();
+      if (this.productData) this.updateMetadata(this.productData);
     });
 
     this.product$ = this.route.paramMap.pipe(
@@ -60,7 +60,6 @@ export class ProductDetail implements OnInit, OnDestroy {
     
     this.product$.subscribe(product => {
       this.productData = product;
-      this.updateTitle();
       if (product) this.updateMetadata(product);
     });
   }
@@ -69,22 +68,18 @@ export class ProductDetail implements OnInit, OnDestroy {
     this.langSub?.unsubscribe();
   }
 
-  private updateTitle(): void {
-    if (this.productData) {
-      const titleKey = `PRODUCTS.${this.productData.key}_TITLE`;
-      this.translate.get(titleKey).subscribe(translatedTitle => {
-        this.titleService.setTitle(`${translatedTitle} | JSL Technology`);
-      });
-    }
-  }
-
   private updateMetadata(product: Product): void {
     const titleKey = `PRODUCTS.${product.key}_TITLE`;
     const descKey = `PRODUCTS.${product.key}_DESC`;
     const baseUrl = this.seoService.getBaseUrl();
     const url = `${baseUrl}/${this.currentLang}/products/${product.slug}`;
 
-    this.translate.get([titleKey, descKey, 'COMMON.BREADCRUMB_HOME', 'HEADER.PRODUCTS']).subscribe(translations => {
+    this.translate.get([titleKey, descKey, 'COMMON.BREADCRUMB_HOME', 'HEADER.PRODUCTS', 'COMMON.DEFAULT_DESCRIPTION']).subscribe(translations => {
+      const title = `${translations[titleKey]} | JSL Technology`;
+      const description = translations[descKey] !== descKey ? translations[descKey] : translations['COMMON.DEFAULT_DESCRIPTION'];
+
+      this.seoService.updateTitleAndDescription(title, description);
+
       // --- Breadcrumbs Schema ---
       this.seoService.setBreadcrumbs([
         { name: translations['COMMON.BREADCRUMB_HOME'], item: `/${this.currentLang}/home` },
@@ -94,8 +89,8 @@ export class ProductDetail implements OnInit, OnDestroy {
 
       this.seoService.updateCanonicalTag(url);
       this.seoService.updateSocialTags(
-        translations[titleKey],
-        translations[descKey],
+        title,
+        description,
         url,
         `${baseUrl}/assets/imgs/jsl-social-default.jpg` // Using default social image
       );
@@ -105,7 +100,7 @@ export class ProductDetail implements OnInit, OnDestroy {
         '@context': 'https://schema.org',
         '@type': 'Product',
         'name': translations[titleKey],
-        'description': translations[descKey],
+        'description': description,
         'brand': {
           '@type': 'Brand',
           'name': 'JSL Technology'

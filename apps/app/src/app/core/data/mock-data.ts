@@ -43,6 +43,7 @@ export const SOLUTIONS = [
   {
     key: 'WEB',
     slug: 'web-development',
+    date: '2025-05-15',
     icon: 'Monitor',
     heroImage: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?fit=crop&w=1200&q=80',
     sections: [
@@ -64,6 +65,7 @@ export const SOLUTIONS = [
   {
     key: 'MOBILE',
     slug: 'mobile-apps',
+    date: '2025-06-10',
     icon: 'Smartphone',
     heroImage: 'https://images.unsplash.com/photo-1607936834114-0a300c3f0b24?fit=crop&w=1200&q=80',
     sections: [
@@ -81,6 +83,7 @@ export const SOLUTIONS = [
   {
     key: 'DESKTOP',
     slug: 'desktop-software',
+    date: '2025-04-20',
     icon: 'Server',
     heroImage: 'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?fit=crop&w=1200&q=80',
     sections: [
@@ -98,6 +101,7 @@ export const SOLUTIONS = [
   {
     key: 'CLOUD',
     slug: 'cloud-architecture',
+    date: '2025-07-05',
     icon: 'Cloud',
     heroImage: 'https://images.unsplash.com/photo-1534972195531-d756b9bfa9f2?fit=crop&w=1200&q=80',
     sections: [
@@ -247,6 +251,7 @@ export const PROJECTS = [
   {
     key: 'CASE_ERP',
     slug: 'erp-logistics-optimization',
+    date: '2025-08-12',
     imageUrl: 'https://images.unsplash.com/photo-1556761175-577380e25f2b?fit=crop&w=600&q=80',
     category: 'Enterprise',
     metrics: ['30% Cost Reduction', '99.8% Inventory Accuracy'],
@@ -254,6 +259,7 @@ export const PROJECTS = [
   {
     key: 'CASE_ECOMMERCE',
     slug: 'b2b-ecommerce-platform',
+    date: '2025-09-25',
     imageUrl: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?fit=crop&w=600&q=80',
     category: 'Commerce',
     metrics: ['200% Order Increase', '45% Sales Growth'],
@@ -261,6 +267,7 @@ export const PROJECTS = [
   {
     key: 'CASE_MOBILE_APP',
     slug: 'fleet-management-mobile-app',
+    date: '2025-10-02',
     imageUrl: 'https://images.unsplash.com/photo-1607936834114-0a300c3f0b24?fit=crop&w=600&q=80',
     category: 'Mobile',
     metrics: ['40% Efficiency Boost', '18% Fuel Savings'],

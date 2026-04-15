@@ -73,7 +73,6 @@ export class SolutionDetail implements OnInit, OnDestroy {
       }),
       tap(solution => {
         if (solution) {
-          this.updateTitle(solution);
           this.updateMetadata(solution);
           this.loadOtherSolutions(solution);
         }
@@ -104,23 +103,18 @@ export class SolutionDetail implements OnInit, OnDestroy {
     return this.techLogoMap.get(techName) || '';
   }
 
-  /**
-   * Actualiza el título de la página.
-   */
-  private updateTitle(solution: Solution): void {
-    const titleKey = `SOLUTIONS.${solution.key}_TITLE`;
-    this.translate.get(titleKey).subscribe(translatedTitle => {
-      this.titleService.setTitle(`${translatedTitle} | JSL Technology`);
-    });
-  }
-
   private updateMetadata(solution: Solution): void {
     const titleKey = `SOLUTIONS.${solution.key}_TITLE`;
     const descKey = `SOLUTIONS.${solution.key}_DESC`;
     const baseUrl = this.seoService.getBaseUrl();
     const url = `${baseUrl}/${this.currentLang}/solutions/${solution.slug}`;
 
-    this.translate.get([titleKey, descKey, 'COMMON.BREADCRUMB_HOME', 'HEADER.SERVICES']).subscribe(translations => {
+    this.translate.get([titleKey, descKey, 'COMMON.BREADCRUMB_HOME', 'HEADER.SERVICES', 'COMMON.DEFAULT_DESCRIPTION']).subscribe(translations => {
+      const title = `${translations[titleKey]} | JSL Technology`;
+      const description = translations[descKey] !== descKey ? translations[descKey] : translations['COMMON.DEFAULT_DESCRIPTION'];
+
+      this.seoService.updateTitleAndDescription(title, description);
+
       // --- Breadcrumbs Schema ---
       this.seoService.setBreadcrumbs([
         { name: translations['COMMON.BREADCRUMB_HOME'], item: `/${this.currentLang}/home` },
@@ -130,8 +124,8 @@ export class SolutionDetail implements OnInit, OnDestroy {
 
       this.seoService.updateCanonicalTag(url);
       this.seoService.updateSocialTags(
-        translations[titleKey],
-        translations[descKey],
+        title,
+        description,
         url,
         solution.heroImage
       );
@@ -141,7 +135,7 @@ export class SolutionDetail implements OnInit, OnDestroy {
         '@context': 'https://schema.org',
         '@type': 'Service',
         'name': translations[titleKey],
-        'description': translations[descKey],
+        'description': description,
         'provider': {
           '@type': 'Organization',
           'name': 'JSL Technology',

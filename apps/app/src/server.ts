@@ -114,13 +114,13 @@ function generateSitemap(): string {
   });
 
   // 2. Añadir rutas dinámicas de Soluciones
-  SOLUTIONS.forEach(solution => {
-    xml += generateUrlEntry(`solutions/${solution.slug}`, now);
+  SOLUTIONS.forEach((solution: any) => {
+    xml += generateUrlEntry(`solutions/${solution.slug}`, solution.date || now);
   });
 
   // 3. Añadir rutas dinámicas de Proyectos
-  PROJECTS.forEach(project => {
-    xml += generateUrlEntry(`projects/${project.slug}`, now);
+  PROJECTS.forEach((project: any) => {
+    xml += generateUrlEntry(`projects/${project.slug}`, project.date || now);
   });
   
   // 4. Añadir rutas dinámicas de Blog

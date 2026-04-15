@@ -73,11 +73,19 @@ export class Seo {
         : `${translatedTitle} | ${this.baseTitle}`;
       
       const currentLang = route.parent?.snapshot.params['lang'];
-      const pathWithoutLang = route.snapshot.url.map(segment => segment.path).join('/');
+      const pathSegments = route.snapshot.pathFromRoot
+        .flatMap(r => r.url.map(segment => segment.path))
+        .filter(path => path !== currentLang); // Exclude language segment from path
+
+      const pathWithoutLang = pathSegments.join('/');
       
       // --- B. Lógica de URL Canónica ---
       // (Ej: 'home' se convierte en '', 'solutions' se queda como 'solutions')
-      const canonicalPath = pathWithoutLang === 'home' ? '' : pathWithoutLang;
+      let canonicalPath = pathWithoutLang === 'home' ? '' : pathWithoutLang;
+
+      // Ensure no double slashes and no trailing slash unless it's the root
+      canonicalPath = canonicalPath.replace(/\/+$/, '');
+
       // (Ej: https://www.jsltechnology.com/es ó https://www.jsltechnology.com/es/solutions)
       // Evitamos slash final si canonicalPath está vacío
       const canonicalUrl = canonicalPath
@@ -130,6 +138,14 @@ export class Seo {
       currentRoute = currentRoute.firstChild;
     }
     return currentRoute;
+  }
+
+  /**
+   * Actualiza el título y la descripción meta.
+   */
+  public updateTitleAndDescription(title: string, description: string): void {
+    this.titleService.setTitle(title);
+    this.metaService.updateTag({ name: 'description', content: description });
   }
 
   /**
@@ -270,11 +286,17 @@ export class Seo {
     // 5.1. Limpiar etiquetas hreflang antiguas (SOLO en el navegador)
     if (isPlatformBrowser(this.platformId)) {
       const oldTags = this.document.querySelectorAll('link[rel="alternate"]');
-      oldTags.forEach(tag => tag.remove());
+      oldTags.forEach(tag => {
+        // Only remove if it's a hreflang tag (not a sitemap or other alternate)
+        if (tag.hasAttribute('hreflang')) {
+          tag.remove();
+        }
+      });
     }
 
     // 5.2. Obtener la URL canónica para la ruta (quitando 'home')
-    const canonicalPath = pathWithoutLang === 'home' ? '' : pathWithoutLang;
+    let canonicalPath = pathWithoutLang === 'home' ? '' : pathWithoutLang;
+    canonicalPath = canonicalPath.replace(/\/+$/, '');
 
     // 5.3. Añadir una etiqueta por cada idioma soportado (Se ejecuta en servidor y cliente)
     this.supportedLangs.forEach(lang => {

@@ -249,11 +249,12 @@ export class BlogDetail
     }
 
     // Traducir título y descripción
-    this.translate.get([titleKey, excerptKey, 'COMMON.BREADCRUMB_HOME', 'HEADER.BLOG']).subscribe(translations => {
-      const translatedTitle = translations[titleKey] || 'Artículo de JSL Technology';
-      const translatedDesc = translations[excerptKey] || 'Lee este artículo en JSL Technology';
+    this.translate.get([titleKey, excerptKey, 'COMMON.BREADCRUMB_HOME', 'HEADER.BLOG', 'COMMON.DEFAULT_DESCRIPTION']).subscribe(translations => {
+      const translatedTitle = translations[titleKey] && translations[titleKey] !== titleKey ? translations[titleKey] : 'Artículo de JSL Technology';
+      const translatedDesc = translations[excerptKey] && translations[excerptKey] !== excerptKey ? translations[excerptKey] : translations['COMMON.DEFAULT_DESCRIPTION'];
 
-      this.titleService.setTitle(`${translatedTitle} | JSL Technology Blog`);
+      const title = `${translatedTitle} | JSL Technology Blog`;
+      this.seoService.updateTitleAndDescription(title, translatedDesc);
 
       // --- Breadcrumbs Schema ---
       this.seoService.setBreadcrumbs([
@@ -263,7 +264,7 @@ export class BlogDetail
       ]);
       this.seoService.updateCanonicalTag(postUrl);
       this.seoService.updateSocialTags(
-        translatedTitle,
+        title,
         translatedDesc,
         postUrl,
         imageUrl,
