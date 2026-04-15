@@ -1,5 +1,10 @@
 User-agent: *
 Allow: /
+Disallow: /assets/sounds/
+Disallow: /*/status
+Disallow: /*/thank-you
+Disallow: /*/server-error
+Disallow: /*/not-found
 
 # Sitemap
 Sitemap: https://www.jsl.technology/sitemap.xml
