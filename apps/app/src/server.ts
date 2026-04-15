@@ -183,9 +183,12 @@ function generateUrlEntry(route: string, lastmod: string, domain: string): strin
 
 
 app.get('/sitemap.xml', (req, res) => {
-  const protocol = req.protocol;
   const host = req.get('host');
-  const domain = `${protocol}://${host}`;
+  // Usar dominio canónico en producción para evitar inconsistencias
+  const domain = (host && (host.includes('localhost') || host.includes('127.0.0.1')))
+    ? `${req.protocol}://${host}`
+    : 'https://www.jsl.technology';
+
   const sitemap = generateSitemap(domain);
   res.header('Content-Type', 'application/xml');
   res.send(sitemap);
@@ -213,9 +216,10 @@ app.use((req, res, next) => {
   res.setHeader('X-Frame-Options', 'DENY');
   // --- FIN AÑADIDO ---
 
-  const protocol = req.protocol;
   const host = req.get('host');
-  const dynamicBaseUrl = `${protocol}://${host}`;
+  const dynamicBaseUrl = (host && (host.includes('localhost') || host.includes('127.0.0.1')))
+    ? `${req.protocol}://${host}`
+    : 'https://www.jsl.technology';
 
   angularApp
     .handle(req, {
