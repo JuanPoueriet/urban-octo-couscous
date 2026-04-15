@@ -69,7 +69,10 @@ export class Seo {
       // (Ej: 'home' se convierte en '', 'solutions' se queda como 'solutions')
       const canonicalPath = pathWithoutLang === 'home' ? '' : pathWithoutLang;
       // (Ej: https://www.jsltechnology.com/es ó https://www.jsltechnology.com/es/solutions)
-      const canonicalUrl = `${this.baseUrl}/${currentLang}/${canonicalPath}`;
+      // Evitamos slash final si canonicalPath está vacío
+      const canonicalUrl = canonicalPath
+        ? `${this.baseUrl}/${currentLang}/${canonicalPath}`
+        : `${this.baseUrl}/${currentLang}`;
 
       // --- C. Actualizar Título y Meta Descripción ---
       this.titleService.setTitle(title);
@@ -204,7 +207,8 @@ export class Seo {
       const link: HTMLLinkElement = this.document.createElement('link');
       link.setAttribute('rel', 'alternate');
       link.setAttribute('hreflang', lang);
-      link.setAttribute('href', `${baseUrl}/${lang}/${canonicalPath}`);
+      const url = canonicalPath ? `${baseUrl}/${lang}/${canonicalPath}` : `${baseUrl}/${lang}`;
+      link.setAttribute('href', url);
       this.document.head.appendChild(link);
     });
 
@@ -212,7 +216,8 @@ export class Seo {
     const defaultLink: HTMLLinkElement = this.document.createElement('link');
     defaultLink.setAttribute('rel', 'alternate');
     defaultLink.setAttribute('hreflang', 'x-default');
-    defaultLink.setAttribute('href', `${baseUrl}/es/${canonicalPath}`); // Usamos 'es' como default
+    const defaultUrl = canonicalPath ? `${baseUrl}/es/${canonicalPath}` : `${baseUrl}/es`;
+    defaultLink.setAttribute('href', defaultUrl); // Usamos 'es' como default
     this.document.head.appendChild(defaultLink);
   }
 }

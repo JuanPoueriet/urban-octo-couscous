@@ -261,7 +261,7 @@ export const routes: Routes = [
         data: {
           title: 'ERRORS.500_TITLE',
           description: 'ERRORS.500_DESC',
-          robots: 'noindex, nofollow'
+          robots: 'noindex, follow'
         }
       },
       {
@@ -270,7 +270,7 @@ export const routes: Routes = [
         data: {
           title: 'THANK_YOU.TITLE',
           description: 'THANK_YOU.MESSAGE',
-          robots: 'noindex, nofollow'
+          robots: 'noindex, follow'
         }
       },
       {
@@ -284,7 +284,7 @@ export const routes: Routes = [
         data: { 
           title: 'NOT_FOUND.TITLE',
           description: 'NOT_FOUND.SUBTITLE',
-          robots: 'noindex, nofollow'
+          robots: 'noindex, follow'
         }
       }
     ]

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
-import { Seo } from '@core/services/seo';
 
 @Component({
   selector: 'app-server-error',
@@ -13,7 +12,5 @@ import { Seo } from '@core/services/seo';
   styleUrls: ['./server-error.scss']
 })
 export class ServerError {
-  constructor(private seoService: Seo) {
-    this.seoService.updateRobotsTag('noindex, follow');
-  }
+  constructor() {}
 }

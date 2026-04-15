@@ -7,7 +7,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { Subscription } from 'rxjs';
 import { AnimateOnScroll } from '@shared/directives/animate-on-scroll';
-import { Seo } from '@core/services/seo';
 
 @Component({
   selector: 'jsl-not-found',
@@ -32,13 +31,9 @@ export class NotFound implements OnDestroy {
 
   constructor(
     @Inject(TranslateService) private translate: TranslateService,
-    private seoService: Seo
   ) {
     this.currentLang = this.translate.currentLang || this.translate.defaultLang || 'es';
     this.langSub = this.translate.onLangChange.subscribe(event => this.currentLang = event.lang);
-
-    // Set noindex for 404 page
-    this.seoService.updateRobotsTag('noindex, follow');
   }
 
   ngOnDestroy(): void {
