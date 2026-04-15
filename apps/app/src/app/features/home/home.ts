@@ -80,7 +80,9 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     },
     loop: true,
     speed: 800,
-    grabCursor: true,
+    grabCursor: false,
+    allowTouchMove: false,
+    simulateTouch: false,
     // ← CRÍTICO: Configuración de navegación CORRECTA
     navigation: {
       nextEl: '.hero-swiper-button-next',
@@ -405,7 +407,9 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
           },
           loop: true,
           speed: 800,
-          grabCursor: true,
+          grabCursor: false,
+          allowTouchMove: false,
+          simulateTouch: false,
           // ← CRÍTICO: Navegación correctamente configurada
           navigation: {
             nextEl: '.hero-swiper-button-next',
@@ -563,7 +567,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     const updateVisibility = (event: MouseEvent) => {
       const rect = heroSlider.getBoundingClientRect();
       const x = event.clientX - rect.left;
-      const edgeZone = Math.max(140, rect.width * 0.16);
+      const edgeZone = Math.max(240, rect.width * 0.3);
 
       const leftRatio = Math.max(0, (edgeZone - x) / edgeZone);
       const rightRatio = Math.max(0, (x - (rect.width - edgeZone)) / edgeZone);
