@@ -173,6 +173,14 @@ export const routes: Routes = [
         }
       },
       {
+        path: 'cookie-policy',
+        loadComponent: () => import('./features/legal/cookie/cookie').then(c => c.Cookie),
+        data: {
+          title: 'LEGAL.COOKIE_TITLE',
+          description: 'LEGAL.COOKIE_INTRO'
+        }
+      },
+      {
         path: 'careers',
         loadComponent: () => import('./features/careers/careers').then(c => c.Careers),
         data: {
