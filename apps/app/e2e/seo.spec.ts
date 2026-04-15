@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('SEO Technical Audit', () => {
-  const baseUrl = 'http://127.0.0.1:4200';
+  const baseUrl = 'http://127.0.0.1:4000';
   const languages = ['es', 'en'];
   const totalLangsCount = 12; // 11 supported + x-default
 
@@ -24,8 +24,23 @@ test.describe('SEO Technical Audit', () => {
 
       const description = await page.locator('meta[name="description"]');
       await expect(description).toHaveAttribute('content', /.+/); // Not empty
+
+      // Robots
+      const robots = await page.locator('meta[name="robots"]');
+      await expect(robots).toHaveAttribute('content', 'index, follow');
     });
   }
+
+  test('Organization schema should be present on all pages', async ({ page }) => {
+    await page.goto(`${baseUrl}/en/home`);
+    const schemaScript = await page.locator('script[type="application/ld+json"]#organization-schema');
+    const schemaText = await schemaScript.textContent();
+    const schema = JSON.parse(schemaText || '{}');
+    expect(schema['@type']).toBe('Organization');
+    expect(schema['name']).toBe('JSL Technology');
+    expect(schema['url']).toBeDefined();
+    expect(schema['logo']).toBeDefined();
+  });
 
   test('Solution detail page should have granular metadata and schema', async ({ page }) => {
     // web-development is a slug in mock-data
@@ -40,9 +55,37 @@ test.describe('SEO Technical Audit', () => {
     const schema = JSON.parse(schemaText || '{}');
     expect(schema['@type']).toBe('Service');
     expect(schema['name']).toContain('Desarrollo Web');
+    expect(schema['provider']['name']).toBe('JSL Technology');
+
+    // Breadcrumb schema
+    const bcScript = await page.locator('script[type="application/ld+json"]#breadcrumb-schema');
+    const bcText = await bcScript.textContent();
+    const bcSchema = JSON.parse(bcText || '{}');
+    expect(bcSchema['@type']).toBe('BreadcrumbList');
+    expect(bcSchema['itemListElement'].length).toBe(3);
   });
 
-  test('Blog detail page should have Article schema', async ({ page }) => {
+  test('Product detail page should have Product schema', async ({ page }) => {
+    await page.goto(`${baseUrl}/en/products/jsl-erp`);
+    const schemaScript = await page.locator('script[type="application/ld+json"]#structured-data');
+    const schemaText = await schemaScript.textContent();
+    const schema = JSON.parse(schemaText || '{}');
+    expect(schema['@type']).toBe('Product');
+    expect(schema['name']).toBeDefined();
+    expect(schema['brand']['name']).toBe('JSL Technology');
+  });
+
+  test('Project detail page should have CreativeWork schema', async ({ page }) => {
+    await page.goto(`${baseUrl}/en/projects/erp-logistics-optimization`);
+    const schemaScript = await page.locator('script[type="application/ld+json"]#structured-data');
+    const schemaText = await schemaScript.textContent();
+    const schema = JSON.parse(schemaText || '{}');
+    expect(schema['@type']).toBe('CreativeWork');
+    expect(schema['name']).toBeDefined();
+    expect(schema['author']['name']).toBe('JSL Technology');
+  });
+
+  test('Blog detail page should have BlogPosting schema', async ({ page }) => {
     await page.goto(`${baseUrl}/en/blog/future-of-angular-ssr`);
 
     const schemaScript = await page.locator('script[type="application/ld+json"]#structured-data');
@@ -50,6 +93,7 @@ test.describe('SEO Technical Audit', () => {
     const schema = JSON.parse(schemaText || '{}');
     expect(schema['@type']).toBe('BlogPosting');
     expect(schema['headline']).toContain('Future of Angular SSR');
+    expect(schema['author']['name']).toBe('JSL Technology');
   });
 
   test('FAQ page should have FAQPage schema', async ({ page }) => {
@@ -60,6 +104,8 @@ test.describe('SEO Technical Audit', () => {
     const schema = JSON.parse(schemaText || '{}');
     expect(schema['@type']).toBe('FAQPage');
     expect(schema['mainEntity'].length).toBeGreaterThan(0);
+    expect(schema['mainEntity'][0]['@type']).toBe('Question');
+    expect(schema['mainEntity'][0]['acceptedAnswer']['@type']).toBe('Answer');
   });
 
   test('Canonical should not have trailing slash', async ({ page }) => {
@@ -98,6 +144,12 @@ test.describe('SEO Technical Audit', () => {
     expect(body).toContain('<urlset');
     expect(body).toContain('<loc>');
     expect(body).toContain(`${baseUrl}/en`);
+
+    // Check that noindex routes are NOT in sitemap
+    expect(body).not.toContain('<loc>' + baseUrl + '/en/status</loc>');
+    expect(body).not.toContain('<loc>' + baseUrl + '/en/server-error</loc>');
+    expect(body).not.toContain('<loc>' + baseUrl + '/en/thank-you</loc>');
+    expect(body).not.toContain('<loc>' + baseUrl + '/en/not-found</loc>');
   });
 
   test('Error pages should return correct SSR status codes', async ({ request }) => {

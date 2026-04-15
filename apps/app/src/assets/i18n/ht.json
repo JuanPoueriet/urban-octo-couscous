@@ -13,7 +13,9 @@
     "CAREERS": "Karyè",
     "FAQ": "FAQ",
     "VIEW_ALL_SERVICES": "Gade Tout Solisyon Yo",
-    "VIEW_ALL_PRODUCTS": "Gade Tout Pwodwi Yo"
+    "VIEW_ALL_PRODUCTS": "Gade Tout Pwodwi Yo",
+    "VENTURES": "Ventures",
+    "INVESTORS": "Investors"
   },
   "TOP_BAR": {
     "PORTFOLIO": "Pòtfolyo",
@@ -292,7 +294,9 @@
     "TERMS_SECTION_2_TITLE": "Itilizasyon sit entènèt la",
     "TERMS_SECTION_2_P1": "Ou dakò pou w pa itilize sit entènèt la pou okenn rezon ilegal oswa nenpòt rezon ki entèdi pa kondisyon sa yo. Ou pa ka itilize sit entènèt la nan okenn fason ki ta ka domaje, enfim, oswa twò chaje sit la.",
     "TERMS_SECTION_3_TITLE": "Pwopriyete entelektyèl",
-    "TERMS_SECTION_3_P1": "Tout kontni ki prezan sou sit sa a, ki gen ladan tèks, grafik, logo, ak imaj, se pwopriyete JSL Technology epi li pwoteje pa lwa sou copyright."
+    "TERMS_SECTION_3_P1": "Tout kontni ki prezan sou sit sa a, ki gen ladan tèks, grafik, logo, ak imaj, se pwopriyete JSL Technology epi li pwoteje pa lwa sou copyright.",
+    "COOKIE_TITLE": "Cookie Policy",
+    "COOKIE_INTRO": "At JSL Technology, we use cookies and similar technologies to enhance your experience, analyze traffic, and personalize content. This policy explains what cookies are, how we use them, and your options for controlling them."
   },
   "NOT_FOUND": {
     "TITLE": "Paj pa jwenn (404)",
@@ -412,5 +416,63 @@
     "DESCRIPTION": "Nou itilize bonbon pou amelyore eksperyans navigasyon ou, sèvi anons pèsonalize oswa kontni, epi analize trafik nou an.",
     "ACCEPT": "Aksepte tout",
     "DECLINE": "Refize tout"
+  },
+  "EVENTS": {
+    "SUBTITLE": "Join our live sessions and learn from the experts.",
+    "TITLE": "Events & Webinars"
+  },
+  "TRUST_PAGE": {
+    "TITLE": "Trust & Security",
+    "SUBTITLE": "Our commitment to security, compliance, and governance."
+  },
+  "THANK_YOU": {
+    "MESSAGE": "Your request has been received. We will get back to you shortly.",
+    "TITLE": "Thank You"
+  },
+  "ROADMAP": {
+    "TITLE": "Public Roadmap",
+    "SUBTITLE": "See what we are building next."
+  },
+  "STATUS": {
+    "TITLE": "System Status",
+    "SUBTITLE": "Real-time performance metrics."
+  },
+  "LIFE_AT_JSL": {
+    "TITLE": "Life at JSL",
+    "SUBTITLE": "Join our culture of innovation."
+  },
+  "NEWS_PAGE": {
+    "TITLE": "Press Room",
+    "SUBTITLE": "Latest corporate news and announcements from JSL Technology."
+  },
+  "VIRTEEX": {
+    "SUBTITLE": "The Operating System for Modern Business.",
+    "TITLE": "Virteex Ecosystem"
+  },
+  "PRICING": {
+    "TITLE": "Pricing Calculator",
+    "SUBTITLE": "Estimate your project cost in minutes."
+  },
+  "VENTURES": {
+    "SUBTITLE": "From Incubating Ideas to Scaling Exits. We build the next generation of SaaS companies."
+  },
+  "DEVELOPERS": {
+    "TITLE": "Developer Hub",
+    "SUBTITLE": "Build the future with our open APIs and SDKs."
+  },
+  "PARTNERS_PAGE": {
+    "TITLE": "Partners Program",
+    "SUBTITLE": "Join our ecosystem of integrators and distributors."
+  },
+  "ERRORS": {
+    "500_DESC": "We are experiencing technical difficulties. Please try again later.",
+    "500_TITLE": "Server Error (500)"
+  },
+  "PRESS": {
+    "TITLE": "Press Room",
+    "SUBTITLE": "News, assets, and media resources."
+  },
+  "INVESTORS": {
+    "SUBTITLE": "Building a resilient Tech Holding with transparency and long-term vision."
   }
 }

@@ -471,6 +471,14 @@
     "SUBTITLE": "Our commitment to security, compliance, and governance.",
     "CONTENT": "We adhere to the highest standards of security to protect your data and ensure business continuity."
   },
+  "ERRORS": {
+    "500_TITLE": "Server Error (500)",
+    "500_DESC": "We are experiencing technical difficulties. Please try again later."
+  },
+  "THANK_YOU": {
+    "TITLE": "Thank You",
+    "MESSAGE": "Your request has been received. We will get back to you shortly."
+  },
   "NOT_FOUND": {
     "TITLE": "Page Not Found (404)",
     "SUBTITLE": "The page you are looking for does not exist or has been moved. Let's get you back to a safe place.",

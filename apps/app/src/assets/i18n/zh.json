@@ -13,7 +13,9 @@
     "CAREERS": "招聘",
     "FAQ": "常见问题",
     "VIEW_ALL_SERVICES": "查看所有解决方案",
-    "VIEW_ALL_PRODUCTS": "查看所有产品"
+    "VIEW_ALL_PRODUCTS": "查看所有产品",
+    "VENTURES": "Ventures",
+    "INVESTORS": "Investors"
   },
   "TOP_BAR": {
     "PORTFOLIO": "作品集",
@@ -292,7 +294,9 @@
     "TERMS_SECTION_2_TITLE": "网站的使用",
     "TERMS_SECTION_2_P1": "您同意不将本网站用于任何非法目的或本条款禁止的任何目的。您不得以任何可能损坏、禁用或负担本网站的方式使用本网站。",
     "TERMS_SECTION_3_TITLE": "知识产权",
-    "TERMS_SECTION_3_P1": "本网站上出现的所有内容，包括文本、图形、徽标和图像，均为 JSL Technology 的财产，受版权法保护。"
+    "TERMS_SECTION_3_P1": "本网站上出现的所有内容，包括文本、图形、徽标和图像，均为 JSL Technology 的财产，受版权法保护。",
+    "COOKIE_TITLE": "Cookie Policy",
+    "COOKIE_INTRO": "At JSL Technology, we use cookies and similar technologies to enhance your experience, analyze traffic, and personalize content. This policy explains what cookies are, how we use them, and your options for controlling them."
   },
   "NOT_FOUND": {
     "TITLE": "找不到页面 (404)",
@@ -412,5 +416,63 @@
     "DESCRIPTION": "我们使用 cookie 来增强您的浏览体验、提供个性化广告或内容并分析我们的流量。",
     "ACCEPT": "全部接受",
     "DECLINE": "全部拒绝"
+  },
+  "EVENTS": {
+    "SUBTITLE": "Join our live sessions and learn from the experts.",
+    "TITLE": "Events & Webinars"
+  },
+  "TRUST_PAGE": {
+    "TITLE": "Trust & Security",
+    "SUBTITLE": "Our commitment to security, compliance, and governance."
+  },
+  "THANK_YOU": {
+    "MESSAGE": "Your request has been received. We will get back to you shortly.",
+    "TITLE": "Thank You"
+  },
+  "ROADMAP": {
+    "TITLE": "Public Roadmap",
+    "SUBTITLE": "See what we are building next."
+  },
+  "STATUS": {
+    "TITLE": "System Status",
+    "SUBTITLE": "Real-time performance metrics."
+  },
+  "LIFE_AT_JSL": {
+    "TITLE": "Life at JSL",
+    "SUBTITLE": "Join our culture of innovation."
+  },
+  "NEWS_PAGE": {
+    "TITLE": "Press Room",
+    "SUBTITLE": "Latest corporate news and announcements from JSL Technology."
+  },
+  "VIRTEEX": {
+    "SUBTITLE": "The Operating System for Modern Business.",
+    "TITLE": "Virteex Ecosystem"
+  },
+  "PRICING": {
+    "TITLE": "Pricing Calculator",
+    "SUBTITLE": "Estimate your project cost in minutes."
+  },
+  "VENTURES": {
+    "SUBTITLE": "From Incubating Ideas to Scaling Exits. We build the next generation of SaaS companies."
+  },
+  "DEVELOPERS": {
+    "TITLE": "Developer Hub",
+    "SUBTITLE": "Build the future with our open APIs and SDKs."
+  },
+  "PARTNERS_PAGE": {
+    "TITLE": "Partners Program",
+    "SUBTITLE": "Join our ecosystem of integrators and distributors."
+  },
+  "ERRORS": {
+    "500_DESC": "We are experiencing technical difficulties. Please try again later.",
+    "500_TITLE": "Server Error (500)"
+  },
+  "PRESS": {
+    "TITLE": "Press Room",
+    "SUBTITLE": "News, assets, and media resources."
+  },
+  "INVESTORS": {
+    "SUBTITLE": "Building a resilient Tech Holding with transparency and long-term vision."
   }
 }
