@@ -131,7 +131,7 @@
      <div class="partners-grid">
         @for (partner of partners(); track partner.name) {
            <div class="partner-logo">
-              <img [src]="partner.imageUrl" [alt]="partner.name" loading="lazy">
+              <img [src]="partner.imageUrl" [alt]="partner.name" loading="lazy" width="150" height="60">
            </div>
         }
      </div>
@@ -144,7 +144,7 @@
     <swiper-container [config]="logoSwiperConfig" init="true" class="logo-slider" [attr.dir]="directionService.isRtl() ? 'rtl' : 'ltr'">
       @for (tech of techStack(); track tech.name) {
         <swiper-slide class="logo-slide">
-          <img [src]="tech.imageUrl" [alt]="tech.name" loading="lazy" />
+          <img [src]="tech.imageUrl" [alt]="tech.name" loading="lazy" width="100" height="100" />
         </swiper-slide>
       }
     </swiper-container>
@@ -167,7 +167,7 @@
     <div class="team-grid">
        @for (member of teamMembers; track member.nameKey) {
         <div class="team-card">
-           <img [src]="member.image" [alt]="member.nameKey | translate" class="team-card__img" />
+           <img [src]="member.image" [alt]="member.nameKey | translate" class="team-card__img" width="150" height="150" loading="lazy" />
            <div class="team-card__info">
               <span class="name">{{ member.nameKey | translate }}</span>
               <span class="role">{{ member.roleKey | translate }}</span>
@@ -369,6 +369,8 @@
               [src]="testimonial.imageUrl"
               [alt]="testimonial.nameKey | translate"
               loading="lazy"
+              width="60"
+              height="60"
             />
             <div class="testimonial-card__author-info">
               <span class="name">{{ testimonial.nameKey | translate }}</span>

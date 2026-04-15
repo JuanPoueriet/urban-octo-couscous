@@ -6,7 +6,7 @@
     @for (industry of industries; track industry.key) {
       <div class="industry-card" jslAnimateOnScroll>
         <div class="industry-card__image-wrapper">
-          <img [src]="industry.image" [alt]="'INDUSTRIES.' + industry.key + '_TITLE' | translate" loading="lazy">
+          <img [src]="industry.image" [alt]="'INDUSTRIES.' + industry.key + '_TITLE' | translate" loading="lazy" width="400" height="300">
           <div class="industry-card__icon">
             <lucide-icon [name]="industry.icon"></lucide-icon>
           </div>

@@ -97,7 +97,7 @@ const staticRoutes = [
 ];
 
 const supportedLangs = SUPPORTED_LANGUAGES;
-const defaultLang = 'es';
+const defaultLang = 'en';
 
 /**
  * Genera el XML del sitemap dinámicamente

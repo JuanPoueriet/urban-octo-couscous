@@ -87,8 +87,10 @@
             [alt]="'BLOG.' + post.key + '_TITLE' | translate"
             class="detail-page-banner"
             (load)="onImageLoad()"
-          fetchpriority="high"
-          loading="eager"
+            fetchpriority="high"
+            loading="eager"
+            width="1200"
+            height="600"
             #bannerImage
           />
           <div class="banner-overlay">
@@ -141,7 +143,7 @@
           <div class="author-card__content">
             <div class="author-card__image">
               <div class="image-frame">
-                <img [src]="author.imageUrl" [alt]="author.nameKey | translate" />
+                <img [src]="author.imageUrl" [alt]="author.nameKey | translate" width="80" height="80" loading="lazy" />
                 <div class="image-glow"></div>
               </div>
             </div>

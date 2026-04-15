@@ -29,7 +29,7 @@
   @if (featuredPost(); as post) {
     <div class="featured-post-card" jslAnimateOnScroll>
       <a [routerLink]="['/', currentLang, 'blog', post.slug]" class="featured-post__image">
-        <img [src]="post.imageUrl" [alt]="'BLOG.' + post.key + '_TITLE' | translate" />
+        <img [src]="post.imageUrl" [alt]="'BLOG.' + post.key + '_TITLE' | translate" width="800" height="400" loading="eager" fetchpriority="high" />
       </a>
       <div class="featured-post__content">
         <span class="featured-post__eyebrow">

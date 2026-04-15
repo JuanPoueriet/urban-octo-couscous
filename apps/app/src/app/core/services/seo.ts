@@ -371,8 +371,8 @@ export class Seo {
     const defaultLink: HTMLLinkElement = this.document.createElement('link');
     defaultLink.setAttribute('rel', 'alternate');
     defaultLink.setAttribute('hreflang', 'x-default');
-    const defaultUrl = canonicalPath ? `${baseUrl}/es/${canonicalPath}` : `${baseUrl}/es`;
-    defaultLink.setAttribute('href', defaultUrl); // Usamos 'es' como default
+    const defaultUrl = canonicalPath ? `${baseUrl}/en/${canonicalPath}` : `${baseUrl}/en`;
+    defaultLink.setAttribute('href', defaultUrl); // Usamos 'en' como default
     this.document.head.appendChild(defaultLink);
   }
 }

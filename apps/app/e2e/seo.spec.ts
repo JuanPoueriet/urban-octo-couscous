@@ -16,7 +16,7 @@ test.describe('SEO Technical Audit', () => {
       // Hreflang
       const hreflangs = await page.locator('link[rel="alternate"][hreflang]');
       await expect(hreflangs).toHaveCount(totalLangsCount);
-      await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute('href', `${baseUrl}/es`);
+      await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute('href', `${baseUrl}/en`);
 
       // Title & Description
       const title = await page.title();
@@ -97,15 +97,41 @@ test.describe('SEO Technical Audit', () => {
     expect(body).toContain('<?xml');
     expect(body).toContain('<urlset');
     expect(body).toContain('<loc>');
-    expect(body).toContain(`${baseUrl}/es`);
+    expect(body).toContain(`${baseUrl}/en`);
   });
 
   test('Error pages should return correct SSR status codes', async ({ request }) => {
     // Note: This requires the server to be running and handling these routes with SSR
-    const notFoundResponse = await request.get(`${baseUrl}/es/not-found-page-that-does-not-exist`);
+    const notFoundResponse = await request.get(`${baseUrl}/en/not-found-page-that-does-not-exist`);
     expect(notFoundResponse.status()).toBe(404);
 
-    const serverErrorResponse = await request.get(`${baseUrl}/es/server-error`);
+    const serverErrorResponse = await request.get(`${baseUrl}/en/server-error`);
     expect(serverErrorResponse.status()).toBe(500);
+  });
+
+  test('Status page should have noindex meta tag', async ({ page }) => {
+    await page.goto(`${baseUrl}/en/status`);
+    const robots = await page.locator('meta[name="robots"]');
+    await expect(robots).toHaveAttribute('content', 'noindex, follow');
+  });
+
+  test('All images should have an alt attribute', async ({ page }) => {
+    await page.goto(`${baseUrl}/en/home`);
+    const images = await page.locator('img');
+    const count = await images.count();
+    for (let i = 0; i < count; i++) {
+      const alt = await images.nth(i).getAttribute('alt');
+      expect(alt).not.toBeNull();
+      expect(alt?.length).toBeGreaterThan(0);
+    }
+  });
+
+  test('Key landing pages should have exactly one H1', async ({ page }) => {
+    const pages = ['/en/home', '/en/solutions', '/en/blog', '/en/about-us'];
+    for (const route of pages) {
+      await page.goto(`${baseUrl}${route}`);
+      const h1s = await page.locator('h1');
+      await expect(h1s).toHaveCount(1);
+    }
   });
 });

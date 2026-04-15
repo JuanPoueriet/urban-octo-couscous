@@ -5,7 +5,7 @@
   (touchstart)="onTouchStart($event)"
 >
   <div class="image-wrapper after-image">
-    <img [src]="afterImage" [alt]="alt + ' - ' + afterLabel">
+    <img [src]="afterImage" [alt]="alt + ' - ' + afterLabel" width="1200" height="600" loading="lazy">
     <span class="label after-label">{{ afterLabel }}</span>
   </div>
 
@@ -13,7 +13,7 @@
     class="image-wrapper before-image"
     [style.clip-path]="'inset(0 ' + (100 - sliderPosition) + '% 0 0)'"
   >
-    <img [src]="beforeImage" [alt]="alt + ' - ' + beforeLabel">
+    <img [src]="beforeImage" [alt]="alt + ' - ' + beforeLabel" width="1200" height="600" loading="lazy">
     <span class="label before-label">{{ beforeLabel }}</span>
   </div>
 
