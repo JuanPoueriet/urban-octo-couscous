@@ -3,6 +3,7 @@ import { Title, Meta } from '@angular/platform-browser';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SUPPORTED_LANGUAGES } from '../constants/languages';
 import { BASE_URL, RESPONSE } from '../constants/tokens';
@@ -43,6 +44,7 @@ export class Seo {
       filter(event => event instanceof NavigationEnd),
       tap(() => {
         this.setOrganizationSchema();
+        this.setResourceHints();
         this.clearDynamicSchemas();
       }),
       map(() => this.getDeepestRoute(this.activatedRoute)),
@@ -51,21 +53,62 @@ export class Seo {
         const titleKey = route.snapshot.data['title'];
         let descriptionKey = route.snapshot.data['description'];
 
+        if (titleKey === 'dynamic') {
+          return of({ route, translatedTitle: null, translatedDesc: null });
+        }
+
         if (!descriptionKey || descriptionKey === '') {
           descriptionKey = 'COMMON.DEFAULT_DESCRIPTION';
         }
 
         return this.translate.get([titleKey, descriptionKey]).pipe(
-          map(translations => ({
-            route,
-            translatedTitle: translations[titleKey],
-            translatedDesc: translations[descriptionKey]
-          }))
+          map(translations => {
+            let translatedTitle = translations[titleKey];
+            let translatedDesc = translations[descriptionKey];
+
+            // Robust fallback if translation is missing (ngx-translate returns the key)
+            if (translatedTitle === titleKey || !translatedTitle) {
+              translatedTitle = this.baseTitle;
+            }
+            if (translatedDesc === descriptionKey || !translatedDesc) {
+              translatedDesc = 'Expert software development and digital transformation solutions.';
+            }
+
+            return {
+              route,
+              translatedTitle,
+              translatedDesc
+            };
+          })
         );
       })
     ).subscribe(({ route, translatedTitle, translatedDesc }) => {
       // --- 0. Leer Robots Meta de la Ruta ---
       const robotsConfig = route.snapshot.data['robots'] || 'index, follow';
+
+      // --- G. Handle HTTP Status for Noindex Routes ---
+      if (this.response) {
+        const fullPath = this.router.url;
+        const isNotFound = route.routeConfig?.path === '**' ||
+                         fullPath.includes('/not-found') ||
+                         route.snapshot.url.some(s => s.path === 'not-found');
+
+        const isServerError = fullPath.includes('/server-error') ||
+                            route.snapshot.url.some(s => s.path === 'server-error');
+
+        if (isNotFound) {
+          console.log('SEO: Setting status to 404 for', fullPath);
+          this.response.status(404);
+        } else if (isServerError) {
+          console.log('SEO: Setting status to 500 for', fullPath);
+          this.response.status(500);
+        }
+      }
+
+      // Skip if the component handles SEO manually
+      if (translatedTitle === null) {
+        return;
+      }
       
       // --- A. Construir URLs y Título ---
       const title = (translatedTitle === 'Inicio' || translatedTitle === 'Home')
@@ -113,14 +156,6 @@ export class Seo {
       // --- F. Update Robots Tag ---
       this.updateRobotsTag(robotsConfig);
 
-      // --- G. Handle HTTP Status for Noindex Routes ---
-      if (robotsConfig.includes('noindex') && this.response) {
-        if (route.snapshot.url.some(s => s.path === 'not-found') || route.snapshot.url.length === 0 && route.routeConfig?.path === '**') {
-          this.response.status(404);
-        } else if (route.snapshot.url.some(s => s.path === 'server-error')) {
-          this.response.status(500);
-        }
-      }
 
       // --- G. Actualizar Etiquetas Hreflang (¡MODIFICADO!) ---
       // Ya no está dentro de 'isPlatformBrowser', se ejecutará en el servidor.
@@ -152,14 +187,9 @@ export class Seo {
    * 3. ¡NUEVO! Actualiza la etiqueta <link rel="canonical">.
    */
   public updateCanonicalTag(url: string): void {
-    // En el navegador, primero eliminamos la etiqueta canónica anterior
-    // para evitar duplicados durante la navegación SPA.
-    if (isPlatformBrowser(this.platformId)) {
-      const oldTag = this.document.querySelector('link[rel="canonical"]');
-      if (oldTag) {
-        oldTag.remove();
-      }
-    }
+    // Remove ALL existing canonical tags to avoid duplicates during SPA navigation
+    const existingCanonicalTags = this.document.querySelectorAll('link[rel="canonical"]');
+    existingCanonicalTags.forEach(tag => tag.remove());
     
     // Creamos la nueva etiqueta (esto se ejecuta en servidor y cliente)
     const link: HTMLLinkElement = this.document.createElement('link');
@@ -262,6 +292,37 @@ export class Seo {
   }
 
   /**
+   * Inyecta Resource Hints (preconnect, dns-prefetch) para optimizar carga.
+   */
+  public setResourceHints(): void {
+    const domains = [
+      'https://fonts.googleapis.com',
+      'https://fonts.gstatic.com'
+    ];
+
+    domains.forEach(domain => {
+      // Preconnect
+      if (!this.document.querySelector(`link[rel="preconnect"][href="${domain}"]`)) {
+        const preconnect = this.document.createElement('link');
+        preconnect.rel = 'preconnect';
+        preconnect.href = domain;
+        if (domain.includes('gstatic')) {
+          preconnect.setAttribute('crossorigin', '');
+        }
+        this.document.head.appendChild(preconnect);
+      }
+
+      // DNS-prefetch
+      if (!this.document.querySelector(`link[rel="dns-prefetch"][href="${domain}"]`)) {
+        const dnsPrefetch = this.document.createElement('link');
+        dnsPrefetch.rel = 'dns-prefetch';
+        dnsPrefetch.href = domain;
+        this.document.head.appendChild(dnsPrefetch);
+      }
+    });
+  }
+
+  /**
    * Genera e inyecta el esquema de BreadcrumbList.
    */
   public setBreadcrumbs(breadcrumbs: { name: string, item: string }[]): void {
@@ -283,16 +344,14 @@ export class Seo {
    */
   private updateHreflangTags(baseUrl: string, pathWithoutLang: string): void {
     
-    // 5.1. Limpiar etiquetas hreflang antiguas (SOLO en el navegador)
-    if (isPlatformBrowser(this.platformId)) {
-      const oldTags = this.document.querySelectorAll('link[rel="alternate"]');
-      oldTags.forEach(tag => {
-        // Only remove if it's a hreflang tag (not a sitemap or other alternate)
-        if (tag.hasAttribute('hreflang')) {
-          tag.remove();
-        }
-      });
-    }
+    // 5.1. Limpiar etiquetas hreflang antiguas
+    const oldTags = this.document.querySelectorAll('link[rel="alternate"]');
+    oldTags.forEach(tag => {
+      // Only remove if it's a hreflang tag (not a sitemap or other alternate)
+      if (tag.hasAttribute('hreflang')) {
+        tag.remove();
+      }
+    });
 
     // 5.2. Obtener la URL canónica para la ruta (quitando 'home')
     let canonicalPath = pathWithoutLang === 'home' ? '' : pathWithoutLang;

@@ -2,10 +2,12 @@ import {
   ApplicationConfig,
   importProvidersFrom,
   provideZonelessChangeDetection,
+  PLATFORM_ID,
 } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { BASE_URL } from './core/constants/tokens';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { TranslateLoader, provideTranslateService } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
 import { LucideAngularModule } from 'lucide-angular';
@@ -61,7 +63,17 @@ export function createTranslateLoader(): TranslateLoader {
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    { provide: BASE_URL, useValue: 'https://www.jsl.technology' },
+    {
+      provide: BASE_URL,
+      useFactory: (platformId: object, document: Document) => {
+        if (isPlatformBrowser(platformId)) {
+          return document.location.origin;
+        }
+        // Valor por defecto para SSR, puede ser sobreescrito en app.config.server.ts o via REQUEST
+        return 'https://www.jsl.technology';
+      },
+      deps: [PLATFORM_ID, DOCUMENT],
+    },
     provideZonelessChangeDetection(),
     provideRouter(
       routes,

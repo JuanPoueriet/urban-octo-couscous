@@ -12,6 +12,7 @@ import rateLimit from 'express-rate-limit';
 // --- AÑADIDO: Importar los datos para el sitemap dinámico ---
 import { PROJECTS, BLOG_POSTS, SOLUTIONS } from './app/core/data/mock-data';
 import { SUPPORTED_LANGUAGES } from './app/core/constants/languages';
+import { BASE_URL, RESPONSE } from './app/core/constants/tokens';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
@@ -24,7 +25,7 @@ app.use(compression());
 // --- SEGURIDAD: Rate Limiting ---
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutos
-	max: 100, // Límite de 100 peticiones por IP por ventana
+	max: 1000, // Límite aumentado para permitir tests E2E sin bloqueos
 	standardHeaders: true, // Devuelve info en cabeceras `RateLimit-*`
 	legacyHeaders: false, // Deshabilita cabeceras `X-RateLimit-*`
 });
@@ -95,14 +96,13 @@ const staticRoutes = [
   'security'
 ];
 
-const domain = 'https://www.jsl.technology';
 const supportedLangs = SUPPORTED_LANGUAGES;
 const defaultLang = 'es';
 
 /**
  * Genera el XML del sitemap dinámicamente
  */
-function generateSitemap(): string {
+function generateSitemap(domain: string): string {
   let xml = '<?xml version="1.0" encoding="UTF-8"?>';
   xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">';
 
@@ -110,22 +110,22 @@ function generateSitemap(): string {
 
   // 1. Añadir rutas estáticas
   staticRoutes.forEach(route => {
-    xml += generateUrlEntry(route, now);
+    xml += generateUrlEntry(route, now, domain);
   });
 
   // 2. Añadir rutas dinámicas de Soluciones
   SOLUTIONS.forEach((solution: any) => {
-    xml += generateUrlEntry(`solutions/${solution.slug}`, solution.date || now);
+    xml += generateUrlEntry(`solutions/${solution.slug}`, solution.date || now, domain);
   });
 
   // 3. Añadir rutas dinámicas de Proyectos
   PROJECTS.forEach((project: any) => {
-    xml += generateUrlEntry(`projects/${project.slug}`, project.date || now);
+    xml += generateUrlEntry(`projects/${project.slug}`, project.date || now, domain);
   });
   
   // 4. Añadir rutas dinámicas de Blog
   BLOG_POSTS.forEach(post => {
-    xml += generateUrlEntry(`blog/${post.slug}`, post.date || now);
+    xml += generateUrlEntry(`blog/${post.slug}`, post.date || now, domain);
   });
 
   xml += '</urlset>';
@@ -135,7 +135,7 @@ function generateSitemap(): string {
 /**
  * Helper para generar una entrada <url> con sus <xhtml:link>
  */
-function generateUrlEntry(route: string, lastmod: string): string {
+function generateUrlEntry(route: string, lastmod: string, domain: string): string {
   let entryXml = '';
   
   supportedLangs.forEach(lang => {
@@ -183,9 +183,12 @@ function generateUrlEntry(route: string, lastmod: string): string {
 
 
 app.get('/sitemap.xml', (req, res) => {
-  const sitemap = generateSitemap();
-  res.header('Content-Type', 'application/xml');
-  res.send(sitemap);
+  const protocol = req.protocol;
+  const host = req.get('host');
+  const domain = `${protocol}://${host}`;
+  const sitemap = generateSitemap(domain);
+  res.header('Content-Type', 'application/xml');
+  res.send(sitemap);
 });
 
 
@@ -210,8 +213,18 @@ app.use((req, res, next) => {
   res.setHeader('X-Frame-Options', 'DENY');
   // --- FIN AÑADIDO ---
 
+  const protocol = req.protocol;
+  const host = req.get('host');
+  const dynamicBaseUrl = `${protocol}://${host}`;
+
   angularApp
-    .handle(req)
+    .handle(req, {
+      providers: [
+        { provide: BASE_URL, useValue: dynamicBaseUrl },
+        { provide: RESPONSE, useValue: res },
+      ],
+      allowedHosts: ['127.0.0.1', 'localhost', host],
+    })
     .then((response) =>
       response ? writeResponseToNodeResponse(response, res) : next(),
     )

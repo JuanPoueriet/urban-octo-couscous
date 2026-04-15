@@ -20,7 +20,8 @@ export const routes: Routes = [
         path: 'solutions',
         data: {
           title: 'HEADER.SERVICES',
-          description: 'SOLUTIONS.SUBTITLE'
+          description: 'SOLUTIONS.SUBTITLE',
+          robots: 'index, follow'
         },
         children: [
           {
@@ -31,7 +32,8 @@ export const routes: Routes = [
             path: ':slug',
             loadComponent: () => import('./features/solution-detail/solution-detail').then(c => c.SolutionDetail),
             data: {
-              description: 'SOLUTIONS.SUBTITLE'
+              title: 'dynamic',
+              robots: 'index, follow'
             }
           }
         ]
@@ -70,7 +72,7 @@ export const routes: Routes = [
           {
             path: ':slug',
             loadComponent: () => import('./features/project-detail/project-detail').then(c => c.ProjectDetail),
-            data: { description: 'PROJECTS.SUBTITLE' }
+            data: { title: 'dynamic' }
           }
         ]
       },
@@ -88,7 +90,7 @@ export const routes: Routes = [
           {
             path: ':slug',
             loadComponent: () => import('./features/blog-detail/blog-detail').then(c => c.BlogDetail),
-            data: { description: 'BLOG.SUBTITLE' }
+            data: { title: 'dynamic' }
           }
         ]
       },

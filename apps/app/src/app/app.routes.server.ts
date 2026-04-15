@@ -152,8 +152,7 @@ export const serverRoutes: ServerRoute[] = [
   },
   {
     path: ':lang/server-error',
-    renderMode: RenderMode.Prerender,
-    getPrerenderParams: async () => supportedLangs.map(lang => ({ lang })),
+    renderMode: RenderMode.Server,
   },
   {
     path: ':lang/thank-you',
