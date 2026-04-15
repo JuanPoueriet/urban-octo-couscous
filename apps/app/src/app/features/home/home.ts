@@ -235,6 +235,8 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   public directionService = inject(DirectionService);
   private schemaScript: any; // HTMLScriptElement
   private unlistenExitIntent: (() => void) | null = null;
+  private unlistenHeroMouseMove: (() => void) | null = null;
+  private unlistenHeroMouseLeave: (() => void) | null = null;
   private socialProofInterval: any;
   private isBrowser: boolean;
 
@@ -274,6 +276,12 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     }
     if (this.unlistenExitIntent) {
       this.unlistenExitIntent();
+    }
+    if (this.unlistenHeroMouseMove) {
+      this.unlistenHeroMouseMove();
+    }
+    if (this.unlistenHeroMouseLeave) {
+      this.unlistenHeroMouseLeave();
     }
     if (this.socialProofInterval) {
       clearInterval(this.socialProofInterval);
@@ -408,29 +416,14 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
         // Inicializar
         heroSwiperEl.initialize();
-        
-        // ← CRÍTICO: Forzar la visibilidad de los botones después de inicializar
+        this.setupHeroNavigationVisibility();
+
+        // Iniciar autoplay
         setTimeout(() => {
-          // Asegurar que los botones estén visibles
-          const prevBtn = this.el.nativeElement.querySelector('.hero-swiper-button-prev');
-          const nextBtn = this.el.nativeElement.querySelector('.hero-swiper-button-next');
-          
-          if (prevBtn) {
-            prevBtn.style.opacity = '0.8'; // Increased opacity for better visibility
-            prevBtn.style.visibility = 'visible';
-            prevBtn.style.display = 'flex'; // Ensure it's displayed
-          }
-          if (nextBtn) {
-            nextBtn.style.opacity = '0.8'; // Increased opacity for better visibility
-            nextBtn.style.visibility = 'visible';
-            nextBtn.style.display = 'flex'; // Ensure it's displayed
-          }
-          
-          // Iniciar autoplay
           if (heroSwiperEl.swiper && heroSwiperEl.swiper.autoplay) {
             heroSwiperEl.swiper.autoplay.start();
           }
-        }, 200); // Increased timeout to ensure swiper-container is ready
+        }, 200);
       }
 
       // 2. Logo Slider (Tech Stack)
@@ -505,9 +498,6 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         }, 500);
       }
 
-      // ← NUEVO: Agregar event listeners manuales como fallback
-      this.setupCustomNavigation();
-
       // Setup Exit Intent
       this.setupExitIntent();
 
@@ -566,47 +556,31 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  // ← NUEVO: Método para configurar navegación manual como fallback
-  private setupCustomNavigation(): void {
-    const prevButton = this.el.nativeElement.querySelector('.hero-swiper-button-prev');
-    const nextButton = this.el.nativeElement.querySelector('.hero-swiper-button-next');
-    const heroSwiperEl = this.el.nativeElement.querySelector('.hero-slider swiper-container');
-    
-    if (prevButton && heroSwiperEl) {
-      prevButton.addEventListener('click', () => {
-        if (heroSwiperEl.swiper) {
-          heroSwiperEl.swiper.slidePrev();
-          // Reiniciar autoplay
-          if (heroSwiperEl.swiper.autoplay) {
-            heroSwiperEl.swiper.autoplay.start();
-          }
-        }
-      });
-    }
-    
-    if (nextButton && heroSwiperEl) {
-      nextButton.addEventListener('click', () => {
-        if (heroSwiperEl.swiper) {
-          heroSwiperEl.swiper.slideNext();
-          // Reiniciar autoplay
-          if (heroSwiperEl.swiper.autoplay) {
-            heroSwiperEl.swiper.autoplay.start();
-          }
-        }
-      });
-    }
-    
-    // ← NUEVO: Asegurar que los botones sean visibles
-    if (prevButton) {
-      prevButton.style.opacity = '0.8';
-      prevButton.style.visibility = 'visible';
-      prevButton.style.display = 'flex';
-    }
-    if (nextButton) {
-      nextButton.style.opacity = '0.8';
-      nextButton.style.visibility = 'visible';
-      nextButton.style.display = 'flex';
-    }
+  private setupHeroNavigationVisibility(): void {
+    const heroSlider = this.el.nativeElement.querySelector('.hero-slider') as HTMLElement | null;
+    if (!heroSlider) return;
+
+    const updateVisibility = (event: MouseEvent) => {
+      const rect = heroSlider.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const edgeZone = Math.max(140, rect.width * 0.16);
+
+      const leftRatio = Math.max(0, (edgeZone - x) / edgeZone);
+      const rightRatio = Math.max(0, (x - (rect.width - edgeZone)) / edgeZone);
+
+      heroSlider.style.setProperty('--hero-nav-left-visibility', leftRatio.toFixed(3));
+      heroSlider.style.setProperty('--hero-nav-right-visibility', rightRatio.toFixed(3));
+    };
+
+    this.unlistenHeroMouseMove = this.renderer.listen(heroSlider, 'mousemove', updateVisibility);
+    this.unlistenHeroMouseLeave = this.renderer.listen(heroSlider, 'mouseleave', () => {
+      heroSlider.style.setProperty('--hero-nav-left-visibility', '0');
+      heroSlider.style.setProperty('--hero-nav-right-visibility', '0');
+    });
+
+    // Estado inicial sutil
+    heroSlider.style.setProperty('--hero-nav-left-visibility', '0');
+    heroSlider.style.setProperty('--hero-nav-right-visibility', '0');
   }
 
   getStars(count: number): any[] {
@@ -659,14 +633,14 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
   onPrevNav() {
     if (!this.isBrowser) return;
-    const btn = this.el.nativeElement.querySelector('.hero-swiper-button-prev');
-    if (btn) btn.click();
+    const heroSwiperEl = this.el.nativeElement.querySelector('.hero-slider swiper-container');
+    heroSwiperEl?.swiper?.slidePrev();
   }
 
   onNextNav() {
     if (!this.isBrowser) return;
-    const btn = this.el.nativeElement.querySelector('.hero-swiper-button-next');
-    if (btn) btn.click();
+    const heroSwiperEl = this.el.nativeElement.querySelector('.hero-slider swiper-container');
+    heroSwiperEl?.swiper?.slideNext();
   }
 
   downloadLeadMagnet() {
