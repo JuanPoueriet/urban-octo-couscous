@@ -1,0 +1,77 @@
+
+> nx run app:serve:development
+
+[33m❯[39m Building...
+[32m✔[39m Building...
+[37m[35mBrowser bundles[37m
+[1mInitial chunk files[22m [2m | [22m[1mNames[22m           [2m | [22m [1mRaw size[22m
+[32mmain.js[37m             [2m | [22m[2mmain[22m            [2m | [22m[36m952.07 kB[37m[2m | [22m
+[32mchunk-PZURLCRC.js[37m   [2m | [22m[2m-[22m               [2m | [22m [36m18.20 kB[37m[2m | [22m
+[32mchunk-E2PPE32A.js[37m   [2m | [22m[2m-[22m               [2m | [22m [36m11.45 kB[37m[2m | [22m
+[32mstyles.css[37m          [2m | [22m[2mstyles[22m          [2m | [22m  [36m3.71 kB[37m[2m | [22m
+[32mchunk-WQACPJKN.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m2.62 kB[37m[2m | [22m
+[32mchunk-LP37HCHI.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m2.38 kB[37m[2m | [22m
+[32mchunk-HGRUNZ3C.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m1.86 kB[37m[2m | [22m
+[32mchunk-KKDX2NKB.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m1.57 kB[37m[2m | [22m
+[32mchunk-VNJPHAZU.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m1.45 kB[37m[2m | [22m
+[32mchunk-CZJLB7T5.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m1.08 kB[37m[2m | [22m
+[32mchunk-S2FSJABJ.js[37m   [2m | [22m[2m-[22m               [2m | [22m[36m974 bytes[37m[2m | [22m
+[1m [22m                   [2m | [22m[1mInitial total[22m   [2m | [22m[1m997.36 kB[22m
+[1mLazy chunk files[22m    [2m | [22m[1mNames[22m           [2m | [22m [1mRaw size[22m
+[32mchunk-WXHR2I5P.js[37m   [2m | [22m[2mhome[22m            [2m | [22m[36m296.02 kB[37m[2m | [22m
+[32mchunk-27BTWHMN.js[37m   [2m | [22m[2mcareers[22m         [2m | [22m[36m145.86 kB[37m[2m | [22m
+[32mchunk-NUVZQPHD.js[37m   [2m | [22m[2mblog-detail[22m     [2m | [22m[36m119.79 kB[37m[2m | [22m
+[32mchunk-W5T2A5HU.js[37m   [2m | [22m[2msolution-detail[22m [2m | [22m [36m54.77 kB[37m[2m | [22m
+[32mchunk-[39m[37m2DFMQPU3.js[37m   [2m | [22m[2mcontact[22m         [2m | [22m [36m36.74 kB[37m[2m | [22m
+[32mchunk-QBLY7ONW.js[37m   [2m | [22m[2mindustries[22m      [2m | [22m [36m31.62 kB[37m[2m | [22m
+[32mchunk-F3T54YK4.js[37m   [2m | [22m[2mblog[22m            [2m | [22m [36m29.12 kB[37m[2m | [22m
+[32mchunk-XUQLSA6C.js[37m   [2m | [22m[2mpricing[22m         [2m | [22m [36m29.09 kB[37m[2m | [22m
+[32mchunk-T3DD64XG.js[37m   [2m | [22m[2mabout-us[22m        [2m | [22m [36m27.73 kB[37m[2m | [22m
+[32mchunk-DW7UDEAR.js[37m   [2m | [22m[2m-[22m               [2m | [22m [36m23.20 kB[37m[2m | [22m
+[32mchunk-KLRI553X.js[37m   [2m | [22m[2mtech-stack[22m      [2m | [22m [36m22.10 kB[37m[2m | [22m
+[32mchunk-43RKVH2C.js[37m   [2m | [22m[2mdevelopers[22m      [2m | [22m [36m17.93 kB[37m[2m | [22m
+[32mchunk-E7PLMU7I.js[37m   [2m | [22m[2mventures[22m        [2m | [22m [36m17.02 kB[37m[2m | [22m
+[32mchunk-FSHHQ5AF.js[37m   [2m | [22m[2mproject-detail[22m  [2m | [22m [36m16.88 kB[37m[2m | [22m
+[32mchunk-NGBTOIDJ.js[37m   [2m | [22m[2mroadmap[22m         [2m | [22m [36m15.71 kB[37m[2m | [22m
+[2m...and 23 more lazy chunks files. Use "--verbose" to show all the files.[22m
+[35mServer bundles[37m
+[1mInitial chunk files[22m [2m | [22m[1mNames[22m           [2m | [22m [1mRaw size[22m
+[32mmain.server.mjs[37m     [2m | [22m[2mmain.server[22m     [2m | [22m[36m959.61 kB[37m[2m | [22m
+[32mchunk-GH7FXC2P.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m [36m12.19 kB[37m[2m | [22m
+[32mchunk-MLHE6BJ3.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m [36m11.48 kB[37m[2m | [22m
+[32mserver.mjs[37m          [2m | [22m[2mserver[22m          [2m | [22m [36m10.69 kB[37m[2m | [22m
+[32mchunk-VYFPWGRR.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m6.51 kB[37m[2m | [22m
+[32mchunk-IXN2IRLK.mjs[39m[37m[39m  [2m | [22m[2m-[22m               [2m | [22m  [36m2.65 kB[37m[2m | [22m
+[32mchunk-Z5SQALEC.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m2.41 kB[37m[2m | [22m
+[32mchunk-JLLGOD42.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m1.89 kB[37m[2m | [22m
+[32mchunk-V5OOGHWJ.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m1.61 kB[37m[2m | [22m
+[32mchunk-5MBYQBRU.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m1.49 kB[37m[2m | [22m
+[32mchunk-XZXRA2IB.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m1.11 kB[37m[2m | [22m
+[32mchunk-AAUBS5G5.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m1.01 kB[37m[2m | [22m
+[32mpolyfills.server.mjs[37m[2m | [22m[2mpolyfills.server[22m[2m | [22m[36m243 bytes[37m[2m | [22m
+[1mLazy chunk files[22m    [2m | [22m[1mNames[22m           [2m | [22m [1mRaw size[22m
+[32mchunk-URBJJKVB.mjs[37m  [2m | [22m[2mhome[22m            [2m | [22m[36m296.10 kB[37m[2m | [22m
+[32mchunk-UQ4YE2SD.mjs[37m  [2m | [22m[2mcareers[22m         [2m | [22m[36m145.93 kB[37m[2m | [22m
+[32mchunk-KHPMN7JY.mjs[37m  [2m | [22m[2mblog-detail[22m     [2m | [22m[36m119.87 kB[37m[2m | [22m
+[32mchunk-7OVB62VN.mjs[37m  [2m | [22m[2msolution-detail[22m [2m | [22m [36m54.84 kB[37m[2m | [22m
+[32mchunk-4W3M5SAG.mjs[37m  [2m | [22m[2mcontact[22m         [2m | [22m [36m36.77 kB[37m[2m | [22m
+[32mchunk-ZKJY6CHT.mjs[37m  [2m | [22m[2mindustries[22m      [2m | [22m [36m31.66 kB[37m[2m | [22m
+[32mchunk-IWFU3H62.mjs[37m  [2m | [22m[2mblog[22m            [2m | [22m [36m29.19 kB[37m[2m | [22m
+[32mchunk-6ACSGSDT.mjs[37m  [2m | [22m[2mpricing[22m         [2m | [22m [36m29.13 kB[37m[2m | [22m
+[32mchunk-7VAXCWSD.mjs[37m  [2m | [22m[2mabout-us[22m        [2m | [22m [36m27.79 kB[37m[2m | [22m
+[32mchunk-HJNUKTYI.mjs[37m  [2m | [39m[37m[22m[2m-[22m               [2m | [22m [36m23.24 kB[37m[2m | [22m
+[32mchunk-ZTZCI36B.mjs[37m  [2m | [22m[2mtech-stack[22m      [2m | [22m [36m22.17 kB[37m[2m | [22m
+[32mchunk-26KQ73IX.mjs[37m  [2m | [22m[2mdevelopers[22m      [2m | [22m [36m17.97 kB[37m[2m | [22m
+[32mchunk-EUWOVMVE.mjs[37m  [2m | [22m[2mventures[22m        [2m | [22m [36m17.09 kB[37m[2m | [22m
+[32mchunk-OBDWCZOO.mjs[37m  [2m | [22m[2mproject-detail[22m  [2m | [22m [36m16.95 kB[37m[2m | [22m
+[32mchunk-QIBXT2DB.mjs[37m  [2m | [22m[2mroadmap[22m         [2m | [22m [36m15.74 kB[37m[2m | [22m
+[2m...and 24 more lazy chunks files. Use "--verbose" to show all the files.[22m
+Application bundle generation complete. [11.313 seconds] - 2026-04-15T04:32:51.710Z
+[39m
+[37mWatch mode enabled. Watching for file changes...[39m
+[37mNOTE: Raw file sizes do not reflect development server per-request transformations.[39m
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m4200[22m/[39m
+
+
+
+ NX   Successfully ran target serve for project app
