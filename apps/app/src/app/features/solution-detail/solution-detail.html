@@ -24,7 +24,10 @@
         <p>{{ 'SOLUTIONS.' + solution.key + '_SECTION_INTRO_DESC' | translate }}</p>
       </div>
       <div class="intro-image">
-        <img [src]="solution.heroImage" alt="{{ 'SOLUTIONS.' + solution.key + '_SECTION_INTRO_TITLE' | translate }}">
+        <img [src]="solution.heroImage"
+             alt="{{ 'SOLUTIONS.' + solution.key + '_SECTION_INTRO_TITLE' | translate }}"
+             fetchpriority="high"
+             loading="eager">
       </div>
     </section>
 

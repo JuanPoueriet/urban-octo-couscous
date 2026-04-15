@@ -106,24 +106,26 @@ function generateSitemap(): string {
   let xml = '<?xml version="1.0" encoding="UTF-8"?>';
   xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">';
 
+  const now = new Date().toISOString().split('T')[0];
+
   // 1. Añadir rutas estáticas
   staticRoutes.forEach(route => {
-    xml += generateUrlEntry(route);
+    xml += generateUrlEntry(route, now);
   });
 
   // 2. Añadir rutas dinámicas de Soluciones
   SOLUTIONS.forEach(solution => {
-    xml += generateUrlEntry(`solutions/${solution.slug}`);
+    xml += generateUrlEntry(`solutions/${solution.slug}`, now);
   });
 
   // 3. Añadir rutas dinámicas de Proyectos
   PROJECTS.forEach(project => {
-    xml += generateUrlEntry(`projects/${project.slug}`);
+    xml += generateUrlEntry(`projects/${project.slug}`, now);
   });
   
   // 4. Añadir rutas dinámicas de Blog
   BLOG_POSTS.forEach(post => {
-    xml += generateUrlEntry(`blog/${post.slug}`);
+    xml += generateUrlEntry(`blog/${post.slug}`, post.date || now);
   });
 
   xml += '</urlset>';
@@ -133,7 +135,7 @@ function generateSitemap(): string {
 /**
  * Helper para generar una entrada <url> con sus <xhtml:link>
  */
-function generateUrlEntry(route: string): string {
+function generateUrlEntry(route: string, lastmod: string): string {
   let entryXml = '';
   
   supportedLangs.forEach(lang => {
@@ -141,6 +143,7 @@ function generateUrlEntry(route: string): string {
 
     entryXml += '<url>';
     entryXml += `<loc>${url}</loc>`;
+    entryXml += `<lastmod>${lastmod}</lastmod>`;
 
     // Añadir las alternativas hreflang
     supportedLangs.forEach(altLang => {

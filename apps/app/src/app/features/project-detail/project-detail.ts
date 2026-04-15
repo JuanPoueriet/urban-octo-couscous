@@ -83,7 +83,14 @@ export class ProjectDetail implements OnInit, OnDestroy {
     const baseUrl = this.seoService.getBaseUrl();
     const url = `${baseUrl}/${this.currentLang}/projects/${project.slug}`;
 
-    this.translate.get([titleKey, descKey]).subscribe(translations => {
+    this.translate.get([titleKey, descKey, 'COMMON.BREADCRUMB_HOME', 'HEADER.PROJECTS']).subscribe(translations => {
+      // --- Breadcrumbs Schema ---
+      this.seoService.setBreadcrumbs([
+        { name: translations['COMMON.BREADCRUMB_HOME'], item: `/${this.currentLang}/home` },
+        { name: translations['HEADER.PROJECTS'], item: `/${this.currentLang}/projects` },
+        { name: translations[titleKey], item: `/${this.currentLang}/projects/${project.slug}` }
+      ]);
+
       this.seoService.updateCanonicalTag(url);
       this.seoService.updateSocialTags(
         translations[titleKey],
@@ -91,6 +98,21 @@ export class ProjectDetail implements OnInit, OnDestroy {
         url,
         project.imageUrl
       );
+
+      // --- CreativeWork Schema ---
+      const projectSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'CreativeWork',
+        'name': translations[titleKey],
+        'description': translations[descKey],
+        'image': project.imageUrl,
+        'url': url,
+        'author': {
+          '@type': 'Organization',
+          'name': 'JSL Technology'
+        }
+      };
+      this.seoService.setJsonLd(projectSchema);
     });
   }
 
