@@ -90,7 +90,7 @@ export class ProductDetail implements OnInit, OnDestroy {
         translations[titleKey],
         translations[descKey],
         url,
-        '' // Products might need a default or specific image
+        `${baseUrl}/assets/imgs/jsl-social-default.jpg` // Using default social image
       );
     });
   }
