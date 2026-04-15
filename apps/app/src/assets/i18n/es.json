@@ -5,6 +5,8 @@
     "PRODUCTS": "Productos",
     "PROJECTS": "Casos de Éxito",
     "BLOG": "Blog",
+    "VENTURES": "Ventures",
+    "INVESTORS": "Inversores",
     "PROCESS": "Proceso",
     "INDUSTRIES": "Industrias",
     "TECH_STACK": "Tecnologías",
@@ -467,6 +469,14 @@
     "TITLE": "Confianza y Seguridad",
     "SUBTITLE": "Nuestro compromiso con la seguridad, el cumplimiento y la gobernanza.",
     "CONTENT": "Nos adherimos a los más altos estándares de seguridad para proteger sus datos y garantizar la continuidad del negocio."
+  },
+  "ERRORS": {
+    "500_TITLE": "Error del servidor (500)",
+    "500_DESC": "Estamos experimentando dificultades técnicas. Por favor, inténtelo de nuevo más tarde."
+  },
+  "THANK_YOU": {
+    "TITLE": "Gracias",
+    "MESSAGE": "Tu solicitud ha sido recibida. Nos pondremos en contacto contigo en breve."
   },
   "NOT_FOUND": {
     "TITLE": "Página No Encontrada (404)",

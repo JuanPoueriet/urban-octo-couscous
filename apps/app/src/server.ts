@@ -25,7 +25,7 @@ app.use(compression());
 // --- SEGURIDAD: Rate Limiting ---
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutos
-	max: 1000, // Límite aumentado para permitir tests E2E sin bloqueos
+	max: 10000, // Límite aumentado significativamente para permitir tests E2E paralelos sin bloqueos 429
 	standardHeaders: true, // Devuelve info en cabeceras `RateLimit-*`
 	legacyHeaders: false, // Deshabilita cabeceras `X-RateLimit-*`
 });
@@ -89,7 +89,6 @@ const staticRoutes = [
   'developers',
   'roadmap',
   'events',
-  'status',
   'life-at-jsl',
   'press',
   'pricing',
@@ -227,7 +226,7 @@ app.use((req, res, next) => {
         { provide: BASE_URL, useValue: dynamicBaseUrl },
         { provide: RESPONSE, useValue: res },
       ],
-      allowedHosts: ['127.0.0.1', 'localhost', host],
+      allowedHosts: ['127.0.0.1', 'localhost', '127.0.0.1:4000', 'localhost:4000', host],
     })
     .then((response) =>
       response ? writeResponseToNodeResponse(response, res) : next(),

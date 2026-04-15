@@ -13,7 +13,9 @@
     "CAREERS": "채용",
     "FAQ": "자주 묻는 질문",
     "VIEW_ALL_SERVICES": "모든 솔루션 보기",
-    "VIEW_ALL_PRODUCTS": "모든 제품 보기"
+    "VIEW_ALL_PRODUCTS": "모든 제품 보기",
+    "VENTURES": "Ventures",
+    "INVESTORS": "Investors"
   },
   "TOP_BAR": {
     "PORTFOLIO": "포트폴리오",
@@ -292,7 +294,9 @@
     "TERMS_SECTION_2_TITLE": "웹사이트 사용",
     "TERMS_SECTION_2_P1": "귀하는 불법적인 목적이나 본 약관에서 금지하는 목적으로 웹사이트를 사용하지 않을 것에 동의합니다. 귀하는 사이트를 손상시키거나, 비활성화하거나, 과부하를 줄 수 있는 방식으로 웹사이트를 사용할 수 없습니다.",
     "TERMS_SECTION_3_TITLE": "지적 재산",
-    "TERMS_SECTION_3_P1": "텍스트, 그래픽, 로고 및 이미지를 포함하여 이 사이트에 있는 모든 콘텐츠는 JSL 기술의 자산이며 저작권법에 의해 보호됩니다."
+    "TERMS_SECTION_3_P1": "텍스트, 그래픽, 로고 및 이미지를 포함하여 이 사이트에 있는 모든 콘텐츠는 JSL 기술의 자산이며 저작권법에 의해 보호됩니다.",
+    "COOKIE_TITLE": "Cookie Policy",
+    "COOKIE_INTRO": "At JSL Technology, we use cookies and similar technologies to enhance your experience, analyze traffic, and personalize content. This policy explains what cookies are, how we use them, and your options for controlling them."
   },
   "NOT_FOUND": {
     "TITLE": "페이지를 찾을 수 없음(404)",
@@ -412,5 +416,63 @@
     "DESCRIPTION": "우리는 쿠키를 사용하여 브라우징 경험을 개선하고, 개인화된 광고나 콘텐츠를 제공하며, 트래픽을 분석합니다.",
     "ACCEPT": "모두 수락",
     "DECLINE": "모두 거부"
+  },
+  "EVENTS": {
+    "SUBTITLE": "Join our live sessions and learn from the experts.",
+    "TITLE": "Events & Webinars"
+  },
+  "TRUST_PAGE": {
+    "TITLE": "Trust & Security",
+    "SUBTITLE": "Our commitment to security, compliance, and governance."
+  },
+  "THANK_YOU": {
+    "MESSAGE": "Your request has been received. We will get back to you shortly.",
+    "TITLE": "Thank You"
+  },
+  "ROADMAP": {
+    "TITLE": "Public Roadmap",
+    "SUBTITLE": "See what we are building next."
+  },
+  "STATUS": {
+    "TITLE": "System Status",
+    "SUBTITLE": "Real-time performance metrics."
+  },
+  "LIFE_AT_JSL": {
+    "TITLE": "Life at JSL",
+    "SUBTITLE": "Join our culture of innovation."
+  },
+  "NEWS_PAGE": {
+    "TITLE": "Press Room",
+    "SUBTITLE": "Latest corporate news and announcements from JSL Technology."
+  },
+  "VIRTEEX": {
+    "SUBTITLE": "The Operating System for Modern Business.",
+    "TITLE": "Virteex Ecosystem"
+  },
+  "PRICING": {
+    "TITLE": "Pricing Calculator",
+    "SUBTITLE": "Estimate your project cost in minutes."
+  },
+  "VENTURES": {
+    "SUBTITLE": "From Incubating Ideas to Scaling Exits. We build the next generation of SaaS companies."
+  },
+  "DEVELOPERS": {
+    "TITLE": "Developer Hub",
+    "SUBTITLE": "Build the future with our open APIs and SDKs."
+  },
+  "PARTNERS_PAGE": {
+    "TITLE": "Partners Program",
+    "SUBTITLE": "Join our ecosystem of integrators and distributors."
+  },
+  "ERRORS": {
+    "500_DESC": "We are experiencing technical difficulties. Please try again later.",
+    "500_TITLE": "Server Error (500)"
+  },
+  "PRESS": {
+    "TITLE": "Press Room",
+    "SUBTITLE": "News, assets, and media resources."
+  },
+  "INVESTORS": {
+    "SUBTITLE": "Building a resilient Tech Holding with transparency and long-term vision."
   }
 }

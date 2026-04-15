@@ -13,7 +13,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/home/home').then(c => c.Home),
         data: {
           title: 'HEADER.HOME',
-          description: 'HOME.HERO1_SUBTITLE'
+          description: 'HOME.HERO1_SUBTITLE',
+          robots: 'index, follow'
         }
       },
       {
@@ -42,7 +43,8 @@ export const routes: Routes = [
         path: 'products',
         data: {
           title: 'HEADER.PRODUCTS',
-          description: 'PRODUCTS.SUBTITLE'
+          description: 'PRODUCTS.SUBTITLE',
+          robots: 'index, follow'
         },
         children: [
           {
@@ -53,7 +55,9 @@ export const routes: Routes = [
             path: ':slug',
             loadComponent: () => import('./features/product-detail/product-detail').then(c => c.ProductDetail),
             data: {
-              description: 'PRODUCTS.SUBTITLE'
+              title: 'dynamic',
+              description: 'PRODUCTS.SUBTITLE',
+              robots: 'index, follow'
             }
           }
         ]
@@ -62,7 +66,8 @@ export const routes: Routes = [
         path: 'projects',
         data: { 
           title: 'HEADER.PROJECTS',
-          description: 'PROJECTS.SUBTITLE'
+          description: 'PROJECTS.SUBTITLE',
+          robots: 'index, follow'
         },
         children: [
           {
@@ -72,7 +77,10 @@ export const routes: Routes = [
           {
             path: ':slug',
             loadComponent: () => import('./features/project-detail/project-detail').then(c => c.ProjectDetail),
-            data: { title: 'dynamic' }
+            data: {
+              title: 'dynamic',
+              robots: 'index, follow'
+            }
           }
         ]
       },
@@ -80,7 +88,8 @@ export const routes: Routes = [
         path: 'blog',
         data: {
           title: 'HEADER.BLOG',
-          description: 'BLOG.SUBTITLE'
+          description: 'BLOG.SUBTITLE',
+          robots: 'index, follow'
         },
         children: [
           {
@@ -90,7 +99,10 @@ export const routes: Routes = [
           {
             path: ':slug',
             loadComponent: () => import('./features/blog-detail/blog-detail').then(c => c.BlogDetail),
-            data: { title: 'dynamic' }
+            data: {
+              title: 'dynamic',
+              robots: 'index, follow'
+            }
           }
         ]
       },
@@ -99,7 +111,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/ventures/ventures').then(c => c.Ventures),
         data: {
           title: 'HEADER.VENTURES',
-          description: 'VENTURES.SUBTITLE'
+          description: 'VENTURES.SUBTITLE',
+          robots: 'index, follow'
         }
       },
       {
@@ -107,7 +120,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/investors/investors').then(c => c.Investors),
         data: {
           title: 'HEADER.INVESTORS',
-          description: 'INVESTORS.SUBTITLE'
+          description: 'INVESTORS.SUBTITLE',
+          robots: 'index, follow'
         }
       },
       {
@@ -115,7 +129,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/virteex-landing/virteex-landing').then(c => c.VirteexLanding),
         data: {
           title: 'VIRTEEX.TITLE',
-          description: 'VIRTEEX.SUBTITLE'
+          description: 'VIRTEEX.SUBTITLE',
+          robots: 'index, follow'
         }
       },
       {
@@ -123,7 +138,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/process/process').then(c => c.Process),
         data: {
           title: 'HEADER.PROCESS',
-          description: 'PROCESS.SUBTITLE'
+          description: 'PROCESS.SUBTITLE',
+          robots: 'index, follow'
         }
       },
       {
@@ -131,7 +147,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/industries/industries').then(c => c.Industries),
         data: {
           title: 'HEADER.INDUSTRIES',
-          description: 'INDUSTRIES.SUBTITLE'
+          description: 'INDUSTRIES.SUBTITLE',
+          robots: 'index, follow'
         }
       },
       {
@@ -139,7 +156,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/tech-stack/tech-stack').then(c => c.TechStack),
         data: { 
           title: 'HEADER.TECH_STACK',
-          description: 'TECH_STACK.SUBTITLE'
+          description: 'TECH_STACK.SUBTITLE',
+          robots: 'index, follow'
         }
       },
       {
@@ -147,7 +165,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/about-us/about-us').then(c => c.AboutUs),
         data: {
           title: 'HEADER.ABOUT',
-          description: 'ABOUT.SUBTITLE'
+          description: 'ABOUT.SUBTITLE',
+          robots: 'index, follow'
         }
       },
       {
@@ -155,7 +174,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/contact/contact').then(c => c.Contact),
         data: {
           title: 'HEADER.CONTACT',
-          description: 'CONTACT.SUBTITLE'
+          description: 'CONTACT.SUBTITLE',
+          robots: 'index, follow'
         }
       },
       {
@@ -163,7 +183,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/legal/privacy/privacy').then(c => c.Privacy),
         data: {
           title: 'LEGAL.PRIVACY_TITLE',
-          description: 'LEGAL.PRIVACY_INTRO'
+          description: 'LEGAL.PRIVACY_INTRO',
+          robots: 'index, follow'
         }
       },
       {
@@ -171,7 +192,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/legal/terms/terms').then(c => c.Terms),
         data: {
           title: 'LEGAL.TERMS_TITLE',
-          description: 'LEGAL.TERMS_SECTION_1_P1'
+          description: 'LEGAL.TERMS_SECTION_1_P1',
+          robots: 'index, follow'
         }
       },
       {
@@ -179,7 +201,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/legal/cookie/cookie').then(c => c.Cookie),
         data: {
           title: 'LEGAL.COOKIE_TITLE',
-          description: 'LEGAL.COOKIE_INTRO'
+          description: 'LEGAL.COOKIE_INTRO',
+          robots: 'index, follow'
         }
       },
       {
@@ -187,7 +210,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/careers/careers').then(c => c.Careers),
         data: {
           title: 'HEADER.CAREERS',
-          description: 'CAREERS.SUBTITLE'
+          description: 'CAREERS.SUBTITLE',
+          robots: 'index, follow'
         }
       },
       {
@@ -195,7 +219,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/faq/faq').then(c => c.Faq),
         data: {
           title: 'HEADER.FAQ',
-          description: 'FAQ.SUBTITLE'
+          description: 'FAQ.SUBTITLE',
+          robots: 'index, follow'
         }
       },
       {
@@ -203,7 +228,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/partners/partners').then(c => c.Partners),
         data: {
           title: 'PARTNERS_PAGE.TITLE',
-          description: 'PARTNERS_PAGE.SUBTITLE'
+          description: 'PARTNERS_PAGE.SUBTITLE',
+          robots: 'index, follow'
         }
       },
       {
@@ -211,23 +237,36 @@ export const routes: Routes = [
         loadComponent: () => import('./features/news/news').then(c => c.News),
         data: {
           title: 'NEWS_PAGE.TITLE',
-          description: 'NEWS_PAGE.SUBTITLE'
+          description: 'NEWS_PAGE.SUBTITLE',
+          robots: 'index, follow'
         }
       },
       {
         path: 'developers',
         loadComponent: () => import('./features/developers/developers').then(c => c.Developers),
-        data: { title: 'DEVELOPERS.TITLE', description: 'DEVELOPERS.SUBTITLE' }
+        data: {
+          title: 'DEVELOPERS.TITLE',
+          description: 'DEVELOPERS.SUBTITLE',
+          robots: 'index, follow'
+        }
       },
       {
         path: 'roadmap',
         loadComponent: () => import('./features/roadmap/roadmap').then(c => c.Roadmap),
-        data: { title: 'ROADMAP.TITLE', description: 'ROADMAP.SUBTITLE' }
+        data: {
+          title: 'ROADMAP.TITLE',
+          description: 'ROADMAP.SUBTITLE',
+          robots: 'index, follow'
+        }
       },
       {
         path: 'events',
         loadComponent: () => import('./features/events/events').then(c => c.Events),
-        data: { title: 'EVENTS.TITLE', description: 'EVENTS.SUBTITLE' }
+        data: {
+          title: 'EVENTS.TITLE',
+          description: 'EVENTS.SUBTITLE',
+          robots: 'index, follow'
+        }
       },
       {
         path: 'status',
@@ -241,24 +280,37 @@ export const routes: Routes = [
       {
         path: 'life-at-jsl',
         loadComponent: () => import('./features/life-at-jsl/life-at-jsl').then(c => c.LifeAtJsl),
-        data: { title: 'LIFE_AT_JSL.TITLE', description: 'LIFE_AT_JSL.SUBTITLE' }
+        data: {
+          title: 'LIFE_AT_JSL.TITLE',
+          description: 'LIFE_AT_JSL.SUBTITLE',
+          robots: 'index, follow'
+        }
       },
       {
         path: 'press',
         loadComponent: () => import('./features/press/press').then(c => c.Press),
-        data: { title: 'PRESS.TITLE', description: 'PRESS.SUBTITLE' }
+        data: {
+          title: 'PRESS.TITLE',
+          description: 'PRESS.SUBTITLE',
+          robots: 'index, follow'
+        }
       },
       {
         path: 'pricing',
         loadComponent: () => import('./features/pricing/pricing').then(c => c.Pricing),
-        data: { title: 'PRICING.TITLE', description: 'PRICING.SUBTITLE' }
+        data: {
+          title: 'PRICING.TITLE',
+          description: 'PRICING.SUBTITLE',
+          robots: 'index, follow'
+        }
       },
       {
         path: 'security',
         loadComponent: () => import('./features/trust/trust').then(c => c.Trust),
         data: {
           title: 'TRUST_PAGE.TITLE',
-          description: 'TRUST_PAGE.SUBTITLE'
+          description: 'TRUST_PAGE.SUBTITLE',
+          robots: 'index, follow'
         }
       },
       {

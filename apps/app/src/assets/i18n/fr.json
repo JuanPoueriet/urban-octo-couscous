@@ -13,7 +13,9 @@
     "CAREERS": "Carrières",
     "FAQ": "FAQ",
     "VIEW_ALL_SERVICES": "Voir Toutes les Solutions",
-    "VIEW_ALL_PRODUCTS": "Voir Tous les Produits"
+    "VIEW_ALL_PRODUCTS": "Voir Tous les Produits",
+    "VENTURES": "Ventures",
+    "INVESTORS": "Investors"
   },
   "TOP_BAR": {
     "PORTFOLIO": "Portfolio",
@@ -292,7 +294,9 @@
     "TERMS_SECTION_2_TITLE": "Utilisation du Site Web",
     "TERMS_SECTION_2_P1": "Vous vous engagez à ne pas utiliser le site web à des fins illégales ou interdites par ces conditions. Vous ne pouvez pas utiliser le site web d'une manière qui pourrait endommager, désactiver ou surcharger le site.",
     "TERMS_SECTION_3_TITLE": "Propriété Intellectuelle",
-    "TERMS_SECTION_3_P1": "Tout le contenu présent sur ce site, y compris les textes, graphiques, logos et images, est la propriété de JSL Technology et est protégé par les lois sur le droit d'auteur."
+    "TERMS_SECTION_3_P1": "Tout le contenu présent sur ce site, y compris les textes, graphiques, logos et images, est la propriété de JSL Technology et est protégé par les lois sur le droit d'auteur.",
+    "COOKIE_TITLE": "Cookie Policy",
+    "COOKIE_INTRO": "At JSL Technology, we use cookies and similar technologies to enhance your experience, analyze traffic, and personalize content. This policy explains what cookies are, how we use them, and your options for controlling them."
   },
   "NOT_FOUND": {
     "TITLE": "Page Non Trouvée (404)",
@@ -412,5 +416,63 @@
     "DESCRIPTION": "Nous utilisons des cookies pour améliorer votre expérience de navigation, diffuser des publicités ou des contenus personnalisés et analyser notre trafic.",
     "ACCEPT": "Tout accepter",
     "DECLINE": "Tout refuser"
+  },
+  "EVENTS": {
+    "SUBTITLE": "Join our live sessions and learn from the experts.",
+    "TITLE": "Events & Webinars"
+  },
+  "TRUST_PAGE": {
+    "TITLE": "Trust & Security",
+    "SUBTITLE": "Our commitment to security, compliance, and governance."
+  },
+  "THANK_YOU": {
+    "MESSAGE": "Your request has been received. We will get back to you shortly.",
+    "TITLE": "Thank You"
+  },
+  "ROADMAP": {
+    "TITLE": "Public Roadmap",
+    "SUBTITLE": "See what we are building next."
+  },
+  "STATUS": {
+    "TITLE": "System Status",
+    "SUBTITLE": "Real-time performance metrics."
+  },
+  "LIFE_AT_JSL": {
+    "TITLE": "Life at JSL",
+    "SUBTITLE": "Join our culture of innovation."
+  },
+  "NEWS_PAGE": {
+    "TITLE": "Press Room",
+    "SUBTITLE": "Latest corporate news and announcements from JSL Technology."
+  },
+  "VIRTEEX": {
+    "SUBTITLE": "The Operating System for Modern Business.",
+    "TITLE": "Virteex Ecosystem"
+  },
+  "PRICING": {
+    "TITLE": "Pricing Calculator",
+    "SUBTITLE": "Estimate your project cost in minutes."
+  },
+  "VENTURES": {
+    "SUBTITLE": "From Incubating Ideas to Scaling Exits. We build the next generation of SaaS companies."
+  },
+  "DEVELOPERS": {
+    "TITLE": "Developer Hub",
+    "SUBTITLE": "Build the future with our open APIs and SDKs."
+  },
+  "PARTNERS_PAGE": {
+    "TITLE": "Partners Program",
+    "SUBTITLE": "Join our ecosystem of integrators and distributors."
+  },
+  "ERRORS": {
+    "500_DESC": "We are experiencing technical difficulties. Please try again later.",
+    "500_TITLE": "Server Error (500)"
+  },
+  "PRESS": {
+    "TITLE": "Press Room",
+    "SUBTITLE": "News, assets, and media resources."
+  },
+  "INVESTORS": {
+    "SUBTITLE": "Building a resilient Tech Holding with transparency and long-term vision."
   }
 }
