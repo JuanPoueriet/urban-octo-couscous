@@ -3,6 +3,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Seo } from './seo';
 import { RouterModule } from '@angular/router';
 import { provideZonelessChangeDetection } from '@angular/core';
+import { BASE_URL } from '../constants/tokens';
 
 describe('Seo', () => {
   let service: Seo;
@@ -15,7 +16,8 @@ describe('Seo', () => {
       ],
       providers: [
         Seo,
-        provideZonelessChangeDetection()
+        provideZonelessChangeDetection(),
+        { provide: BASE_URL, useValue: 'https://www.jsl.technology' }
       ]
     });
     service = TestBed.inject(Seo);

@@ -301,7 +301,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
           '@type': 'Organization',
           'name': 'JSL Technology',
           'url': baseUrl,
-          'logo': `${baseUrl}/assets/logo.png`,
+          'logo': `${baseUrl}/logo.png`,
           'sameAs': [
             'https://www.linkedin.com/company/jsl-technology',
             'https://twitter.com/jsl_tech'

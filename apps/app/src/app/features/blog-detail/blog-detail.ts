@@ -270,16 +270,19 @@ export class BlogDetail
         'headline': translatedTitle,
         'description': translatedDesc,
         'image': imageUrl,
+        'datePublished': this.postData?.date,
+        'dateModified': this.postData?.date,
         'author': {
-          '@type': 'Organization', // Podría ser Persona si authorData estuviera disponible síncronamente
-          'name': 'JSL Technology'
+          '@type': 'Organization',
+          'name': 'JSL Technology',
+          'url': baseUrl
         },
         'publisher': {
           '@type': 'Organization',
           'name': 'JSL Technology',
           'logo': {
             '@type': 'ImageObject',
-            'url': `${baseUrl}/assets/logo.png`
+            'url': `${baseUrl}/logo.png`
           }
         },
         'url': postUrl,
