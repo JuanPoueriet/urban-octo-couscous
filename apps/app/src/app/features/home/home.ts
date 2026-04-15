@@ -563,10 +563,12 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     const updateVisibility = (event: MouseEvent) => {
       const rect = heroSlider.getBoundingClientRect();
       const x = event.clientX - rect.left;
-      const edgeZone = Math.max(240, rect.width * 0.3);
+      const pointerPercent = (x / rect.width) * 100;
 
-      const leftRatio = Math.max(0, (edgeZone - x) / edgeZone);
-      const rightRatio = Math.max(0, (x - (rect.width - edgeZone)) / edgeZone);
+      // UX: la visibilidad empieza a crecer ya desde el 40% hacia el borde izquierdo
+      // y desde el 60% hacia el borde derecho (centro visual en 50%).
+      const leftRatio = Math.max(0, Math.min(1, (40 - pointerPercent) / 40));
+      const rightRatio = Math.max(0, Math.min(1, (pointerPercent - 60) / 40));
 
       heroSlider.style.setProperty('--hero-nav-left-visibility', leftRatio.toFixed(3));
       heroSlider.style.setProperty('--hero-nav-right-visibility', rightRatio.toFixed(3));
