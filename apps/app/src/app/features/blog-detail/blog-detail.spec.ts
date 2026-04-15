@@ -7,6 +7,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter, ActivatedRoute } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { ALL_ICONS } from '@core/constants/icons';
+import { BASE_URL } from '@core/constants/tokens';
 import { of } from 'rxjs';
 
 describe('BlogDetail', () => {
@@ -25,6 +26,7 @@ describe('BlogDetail', () => {
         provideHttpClient(),
         provideHttpClientTesting(),
         provideRouter([]),
+        { provide: BASE_URL, useValue: 'https://www.jsl.technology' },
         {
           provide: ActivatedRoute,
           useValue: {

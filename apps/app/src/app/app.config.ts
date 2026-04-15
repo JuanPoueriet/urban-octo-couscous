@@ -5,6 +5,7 @@ import {
 } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
+import { BASE_URL } from './core/constants/tokens';
 import { TranslateLoader, provideTranslateService } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
 import { LucideAngularModule } from 'lucide-angular';
@@ -60,6 +61,7 @@ export function createTranslateLoader(): TranslateLoader {
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    { provide: BASE_URL, useValue: 'https://www.jsl.technology' },
     provideZonelessChangeDetection(),
     provideRouter(
       routes,

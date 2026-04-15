@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SUPPORTED_LANGUAGES } from '../constants/languages';
+import { BASE_URL } from '../constants/tokens';
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +13,7 @@ import { SUPPORTED_LANGUAGES } from '../constants/languages';
 export class Seo {
   private baseTitle = 'JSL Technology';
   private siteName = 'JSL Technology'; // Para Open Graph
-  // --- 1. URL base de tu sitio (¡IMPORTANTE: cambia esto en producción!) ---
-  private baseUrl = 'https://www.jsl.technology'; // <-- ¡CORREGIDO! Antes era 'https.www...'
-  // --- 2. Imagen por defecto para redes sociales (Open Graph) ---
-  // Debes crear esta imagen y colocarla en 'assets'
-  private defaultImageUrl = `${this.baseUrl}/assets/imgs/jsl-social-default.jpg`; 
+  private defaultImageUrl: string;
   private supportedLangs = SUPPORTED_LANGUAGES;
 
   constructor(
@@ -26,8 +23,11 @@ export class Seo {
     private activatedRoute: ActivatedRoute,
     private translate: TranslateService,
     @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(BASE_URL) private baseUrl: string
+  ) {
+    this.defaultImageUrl = `${this.baseUrl}/assets/imgs/jsl-social-default.jpg`;
+  }
 
   /**
    * Devuelve la URL base del sitio.
@@ -43,7 +43,11 @@ export class Seo {
       filter(route => !!route.snapshot.data['title']),
       switchMap(route => {
         const titleKey = route.snapshot.data['title'];
-        const descriptionKey = route.snapshot.data['description'] || 'COMMON.DEFAULT_DESCRIPTION';
+        let descriptionKey = route.snapshot.data['description'];
+
+        if (!descriptionKey || descriptionKey === '') {
+          descriptionKey = 'COMMON.DEFAULT_DESCRIPTION';
+        }
 
         return this.translate.get([titleKey, descriptionKey]).pipe(
           map(translations => ({
