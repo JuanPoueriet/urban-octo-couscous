@@ -363,19 +363,19 @@ swiper-container {
   z-index: 20; // Más alto que otros elementos
   width: 60px;
   height: 60px;
-  background-color: rgba(255, 255, 255, 0.03); // Casi invisible inicialmente
+  background-color: rgba(255, 255, 255, 0.04); // Casi invisible inicialmente
   backdrop-filter: blur(15px) saturate(180%);
   -webkit-backdrop-filter: blur(15px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.1); // Borde sutil
+  border: 1px solid rgba(255, 255, 255, 0.08); // Borde sutil
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.4); // Icono muy tenue
+  color: rgba(255, 255, 255, 0.32); // Icono muy tenue
   cursor: pointer;
   transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
-  opacity: 0; // Completamente oculto por defecto
-  visibility: hidden; // Asegura que no sean interactuables cuando están ocultos
+  opacity: 0.08; // Casi transparente por defecto
+  visibility: visible;
   
   // Efecto de brillo sutil en hover
   box-shadow: 
@@ -387,15 +387,6 @@ swiper-container {
     height: 26px;
     transition: all var(--transition-speed) ease;
     stroke-width: 1.5;
-  }
-
-  // Efecto al pasar el cursor cerca (no solo sobre el botón)
-  .hero-slider:hover & {
-    opacity: 0.6; // Visible pero discreto
-    visibility: visible;
-    
-    // Efecto de aparición suave
-    animation: fadeInScale 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
 
   // Efecto hover directo sobre el botón
@@ -426,64 +417,24 @@ swiper-container {
     background-color: rgba(255, 255, 255, 0.08);
   }
 
-  // Efecto de deslizamiento para aparición
-  @keyframes fadeInScale {
-    0% {
-      opacity: 0;
-      transform: translateY(-50%) scale(0.9);
-    }
-    100% {
-      opacity: 0.6;
-      transform: translateY(-50%) scale(1);
-    }
-  }
 }
 
 // Posicionamiento específico para cada botón
 .hero-swiper-button-prev {
+  opacity: calc(0.08 + (var(--hero-nav-left-visibility, 0) * 0.62));
   left: 3.5rem; // Posición desde el borde izquierdo
-  
-  // Efecto de entrada desde la izquierda
-  .hero-slider:hover & {
-    animation: slideInFromLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  }
 }
 
 .hero-swiper-button-next {
+  opacity: calc(0.08 + (var(--hero-nav-right-visibility, 0) * 0.62));
   right: 3.5rem; // Posición desde el borde derecho
-  
-  // Efecto de entrada desde la derecha
-  .hero-slider:hover & {
-    animation: slideInFromRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  }
-}
-
-// Animaciones de deslizamiento
-@keyframes slideInFromLeft {
-  0% {
-    opacity: 0;
-    transform: translateY(-50%) translateX(-20px);
-  }
-  100% {
-    opacity: 0.6;
-    transform: translateY(-50%) translateX(0);
-  }
-}
-
-@keyframes slideInFromRight {
-  0% {
-    opacity: 0;
-    transform: translateY(-50%) translateX(20px);
-  }
-  100% {
-    opacity: 0.6;
-    transform: translateY(-50%) translateX(0);
-  }
 }
 
 // --- NUEVO: Detección de proximidad del cursor (opcional, para mejor UX) ---
 .hero-slider {
   position: relative;
+  --hero-nav-left-visibility: 0;
+  --hero-nav-right-visibility: 0;
   
   // Zonas de detección de proximidad para mostrar botones
   &::before,
@@ -520,6 +471,12 @@ swiper-container {
 
 // Estilos para la paginación de Swiper
 :host::ng-deep {
+  // Ocultar botones nativos de Swiper y dejar solo los personalizados
+  .hero-slider .swiper-button-next,
+  .hero-slider .swiper-button-prev {
+    display: none !important;
+  }
+
   // Paginación del Hero
   .hero-slider .swiper-pagination-bullet {
     background: rgba(255, 255, 255, 0.5);
@@ -1430,148 +1387,6 @@ swiper-container {
 
 
 
-/* src/app/features/home/home.component.scss */
-
-// --- 1.2. Hero Swiper Custom Navigation (BOTONES PERSONALIZADOS MODERNOS) ---
-.hero-swiper-button-next,
-.hero-swiper-button-prev {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 20;
-  width: 60px;
-  height: 60px;
-  background-color: rgba(255, 255, 255, 0.08); // Aumentado de 0.03 para ser más visible
-  backdrop-filter: blur(15px) saturate(180%);
-  -webkit-backdrop-filter: blur(15px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.15); // Borde más visible
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255, 255, 255, 0.7); // Icono más visible
-  cursor: pointer;
-  transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
-  
-  // ← CRÍTICO: Cambiar de invisible a visible con baja opacidad
-  opacity: 0.4; // Visible pero discreto
-  visibility: visible; // Siempre visible
-  
-  // Efecto de brillo sutil
-  box-shadow: 
-    0 4px 20px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  
-  lucide-icon {
-    width: 26px;
-    height: 26px;
-    transition: all var(--transition-speed) ease;
-    stroke-width: 1.5;
-  }
-
-  // ← CRÍTICO: El hover debe estar en el botón, no en el slider
-  &:hover {
-    opacity: 1 !important;
-    background-color: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.4);
-    color: rgba(255, 255, 255, 1);
-    transform: translateY(-50%) scale(1.08);
-    
-    box-shadow: 
-      0 8px 30px rgba(0, 0, 0, 0.2),
-      0 0 0 1px rgba(255, 255, 255, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    
-    lucide-icon {
-      transform: scale(1.1);
-      stroke-width: 2;
-    }
-  }
-
-  // Efecto activo (clic)
-  &:active {
-    transform: translateY(-50%) scale(0.98);
-    transition: transform 0.1s ease;
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-  
-  // ← CRÍTICO: Asegurar que estén siempre visibles, no solo en hover del slider
-  // .hero-slider:hover & {
-  //   opacity: 0.6;
-  //   visibility: visible;
-  // }
-}
-
-// Posicionamiento específico para cada botón
-.hero-swiper-button-prev {
-  inset-inline-start: 2.5rem; // Reducido de 3.5rem para estar más cerca del borde
-  
-  // Efecto de entrada desde la izquierda
-  &:hover {
-    transform: translateY(-50%) translateX(-5px) scale(1.08);
-  }
-}
-
-.hero-swiper-button-next {
-  inset-inline-end: 2.5rem; // Reducido de 3.5rem para estar más cerca del borde
-  
-  // Efecto de entrada desde la derecha
-  &:hover {
-    transform: translateY(-50%) translateX(5px) scale(1.08);
-  }
-}
-
-// ← NUEVO: Asegurar que el contenedor tenga posición relativa
-.hero-slider {
-  position: relative;
-  
-  swiper-container {
-    position: relative;
-    z-index: 1;
-  }
-}
-
-// ← NUEVO: Estilos para cuando Swiper está deshabilitado (por si acaso)
-.hero-swiper-button-next.swiper-button-disabled,
-.hero-swiper-button-prev.swiper-button-disabled {
-  opacity: 0.2 !important;
-  cursor: not-allowed;
-  pointer-events: none;
-  
-  &:hover {
-    transform: translateY(-50%) !important;
-    background-color: rgba(255, 255, 255, 0.08) !important;
-  }
-}
-
-// Responsividad
-@media (max-width: 768px) {
-  .hero-swiper-button-next,
-  .hero-swiper-button-prev {
-    // ← CRÍTICO: Solo ocultar en móvil si es necesario, pero mantener visible
-    display: flex; // Asegurar que se muestren
-    opacity: 0.3; // Aún más visible en móvil
-    width: 50px;
-    height: 50px;
-    left: 1rem;
-    right: 1rem;
-    
-    // Mejor: hacerlos más táctiles en móvil
-    &:active {
-      background-color: rgba(255, 255, 255, 0.2);
-    }
-    
-    // Ocultar solo si el cliente lo prefiere
-    // display: none !important;
-  }
-  
-  // Ajustar posición del paginador si se muestran los botones
-  :host::ng-deep {
-    .hero-slider .swiper-pagination {
-      bottom: 100px !important;
-    }
-  }
-}
 // Partners Section
 .partners-section {
   padding: 3rem 0;
