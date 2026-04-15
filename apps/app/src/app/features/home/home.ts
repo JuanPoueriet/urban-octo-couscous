@@ -22,6 +22,7 @@ import { map } from 'rxjs/operators';
 import { Card } from '@shared/components/card/card';
 import { AnimateOnScroll } from '@shared/directives/animate-on-scroll';
 import { DataService, Technology } from '@core/services/data.service';
+import { Seo } from '@core/services/seo';
 import { ToastService } from '@core/services/toast.service';
 import { SwiperOptions } from 'swiper/types';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -234,8 +235,8 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   private renderer = inject(Renderer2);
   private document = inject(DOCUMENT);
   private searchUiService = inject(SearchUiService);
+  private seoService = inject(Seo);
   public directionService = inject(DirectionService);
-  private schemaScript: any; // HTMLScriptElement
   private unlistenExitIntent: (() => void) | null = null;
   private unlistenHeroMouseMove: (() => void) | null = null;
   private unlistenHeroMouseLeave: (() => void) | null = null;
@@ -273,9 +274,6 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.schemaScript) {
-      this.renderer.removeChild(this.document.head, this.schemaScript);
-    }
     if (this.unlistenExitIntent) {
       this.unlistenExitIntent();
     }
@@ -295,14 +293,15 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private addSchemaData() {
+    const baseUrl = this.seoService.getBaseUrl();
     const schema = {
       '@context': 'https://schema.org',
       '@graph': [
         {
           '@type': 'Organization',
           'name': 'JSL Technology',
-          'url': 'https://jsl.technology',
-          'logo': 'https://jsl.technology/assets/logo.png',
+          'url': baseUrl,
+          'logo': `${baseUrl}/assets/logo.png`,
           'sameAs': [
             'https://www.linkedin.com/company/jsl-technology',
             'https://twitter.com/jsl_tech'
@@ -360,7 +359,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
             '@type': 'ListItem',
             'position': 1,
             'name': 'Home',
-            'item': 'https://jsl.technology/'
+            'item': `${baseUrl}/${this.currentLang}/`
           }]
         },
         {
@@ -377,10 +376,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       ]
     };
 
-    this.schemaScript = this.renderer.createElement('script');
-    this.schemaScript.type = 'application/ld+json';
-    this.schemaScript.text = JSON.stringify(schema);
-    this.renderer.appendChild(this.document.head, this.schemaScript);
+    this.seoService.setJsonLd(schema);
   }
 
   ngAfterViewInit(): void {

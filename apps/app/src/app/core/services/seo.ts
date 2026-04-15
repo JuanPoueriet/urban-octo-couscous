@@ -4,6 +4,7 @@ import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { SUPPORTED_LANGUAGES } from '../constants/languages';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class Seo {
   // --- 2. Imagen por defecto para redes sociales (Open Graph) ---
   // Debes crear esta imagen y colocarla en 'assets'
   private defaultImageUrl = `${this.baseUrl}/assets/imgs/jsl-social-default.jpg`; 
-  private supportedLangs = ['es', 'en'];
+  private supportedLangs = SUPPORTED_LANGUAGES;
 
   constructor(
     private titleService: Title,
@@ -53,6 +54,8 @@ export class Seo {
         );
       })
     ).subscribe(({ route, translatedTitle, translatedDesc }) => {
+      // --- 0. Leer Robots Meta de la Ruta ---
+      const robotsConfig = route.snapshot.data['robots'] || 'index, follow';
       
       // --- A. Construir URLs y Título ---
       const title = (translatedTitle === 'Inicio' || translatedTitle === 'Home')
@@ -86,8 +89,8 @@ export class Seo {
         'website' // Añadimos el tipo por defecto
       );
 
-      // --- F. Reset Robots Tag ---
-      this.updateRobotsTag('index, follow');
+      // --- F. Update Robots Tag ---
+      this.updateRobotsTag(robotsConfig);
 
       // --- G. Actualizar Etiquetas Hreflang (¡MODIFICADO!) ---
       // Ya no está dentro de 'isPlatformBrowser', se ejecutará en el servidor.
@@ -158,6 +161,28 @@ export class Seo {
    */
   public updateRobotsTag(content: string): void {
     this.metaService.updateTag({ name: 'robots', content: content });
+  }
+
+  /**
+   * 8. ¡NUEVO! Gestiona scripts de Datos Estructurados (JSON-LD).
+   */
+  public setJsonLd(schema: any): void {
+    const schemaName = 'structured-data';
+
+    // 8.1. Limpiar script previo (solo navegador para evitar fugas en navegación SPA)
+    if (isPlatformBrowser(this.platformId)) {
+      const existingScript = this.document.getElementById(schemaName);
+      if (existingScript) {
+        existingScript.remove();
+      }
+    }
+
+    // 8.2. Crear y añadir el nuevo script
+    const script = this.document.createElement('script');
+    script.type = 'application/ld+json';
+    script.id = schemaName;
+    script.text = JSON.stringify(schema);
+    this.document.head.appendChild(script);
   }
 
   /**

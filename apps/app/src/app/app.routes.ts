@@ -260,7 +260,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/server-error/server-error').then(c => c.ServerError),
         data: {
           title: 'ERRORS.500_TITLE',
-          description: 'ERRORS.500_DESC'
+          description: 'ERRORS.500_DESC',
+          robots: 'noindex, nofollow'
         }
       },
       {
@@ -268,7 +269,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/thank-you/thank-you').then(c => c.ThankYou),
         data: {
           title: 'THANK_YOU.TITLE',
-          description: 'THANK_YOU.MESSAGE'
+          description: 'THANK_YOU.MESSAGE',
+          robots: 'noindex, nofollow'
         }
       },
       {
@@ -281,7 +283,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/not-found/not-found').then(c => c.NotFound),
         data: { 
           title: 'NOT_FOUND.TITLE',
-          description: 'NOT_FOUND.SUBTITLE'
+          description: 'NOT_FOUND.SUBTITLE',
+          robots: 'noindex, nofollow'
         }
       }
     ]

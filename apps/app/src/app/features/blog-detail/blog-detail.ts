@@ -262,6 +262,33 @@ export class BlogDetail
         imageUrl,
         'article'
       );
+
+      // --- Datos Estructurados: Article ---
+      const articleSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        'headline': translatedTitle,
+        'description': translatedDesc,
+        'image': imageUrl,
+        'author': {
+          '@type': 'Organization', // Podría ser Persona si authorData estuviera disponible síncronamente
+          'name': 'JSL Technology'
+        },
+        'publisher': {
+          '@type': 'Organization',
+          'name': 'JSL Technology',
+          'logo': {
+            '@type': 'ImageObject',
+            'url': `${baseUrl}/assets/logo.png`
+          }
+        },
+        'url': postUrl,
+        'mainEntityOfPage': {
+          '@type': 'WebPage',
+          '@id': postUrl
+        }
+      };
+      this.seoService.setJsonLd(articleSchema);
     });
   }
 
