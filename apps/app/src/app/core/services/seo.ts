@@ -86,7 +86,10 @@ export class Seo {
         'website' // Añadimos el tipo por defecto
       );
 
-      // --- F. Actualizar Etiquetas Hreflang (¡MODIFICADO!) ---
+      // --- F. Reset Robots Tag ---
+      this.updateRobotsTag('index, follow');
+
+      // --- G. Actualizar Etiquetas Hreflang (¡MODIFICADO!) ---
       // Ya no está dentro de 'isPlatformBrowser', se ejecutará en el servidor.
       // La lógica interna se encarga de la limpieza solo en el navegador.
       if (currentLang) {
@@ -148,6 +151,13 @@ export class Seo {
    */
   private updateLanguageTag(lang: string): void {
     this.document.documentElement.lang = lang;
+  }
+
+  /**
+   * 7. ¡NUEVO! Actualiza la etiqueta meta robots.
+   */
+  public updateRobotsTag(content: string): void {
+    this.metaService.updateTag({ name: 'robots', content: content });
   }
 
   /**

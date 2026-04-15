@@ -10,7 +10,7 @@ import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 
 // --- AÑADIDO: Importar los datos para el sitemap dinámico ---
-import { PROJECTS, BLOG_POSTS } from './app/core/data/mock-data';
+import { PROJECTS, BLOG_POSTS, SOLUTIONS } from './app/core/data/mock-data';
 import { SUPPORTED_LANGUAGES } from './app/core/constants/languages';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
@@ -49,14 +49,14 @@ app.get('/', (req, res) => {
     // Encuentra el primer idioma soportado
     for (const lang of langs) {
       if (supportedLangs.includes(lang.code)) {
-        res.redirect(302, `/${lang.code}`);
+        res.redirect(301, `/${lang.code}`);
         return;
       }
     }
   }
 
   // Si no hay header o no hay coincidencia, redirige al idioma por defecto
-  res.redirect(302, `/${defaultLang}`);
+  res.redirect(301, `/${defaultLang}`);
 });
 
 
@@ -70,10 +70,28 @@ const staticRoutes = [
   'products',
   'projects', // Página índice de proyectos
   'blog',     // Página índice de blog
+  'ventures',
+  'investors',
+  'virteex-ecosystem',
+  'process',
+  'industries',
+  'tech-stack',
   'about-us',
   'contact',
   'privacy-policy',
-  'terms-of-service'
+  'terms-of-service',
+  'careers',
+  'faq',
+  'partners',
+  'news',
+  'developers',
+  'roadmap',
+  'events',
+  'status',
+  'life-at-jsl',
+  'press',
+  'pricing',
+  'security'
 ];
 
 const domain = 'https://www.jsl.technology';
@@ -92,12 +110,17 @@ function generateSitemap(): string {
     xml += generateUrlEntry(route);
   });
 
-  // 2. Añadir rutas dinámicas de Proyectos
+  // 2. Añadir rutas dinámicas de Soluciones
+  SOLUTIONS.forEach(solution => {
+    xml += generateUrlEntry(`solutions/${solution.slug}`);
+  });
+
+  // 3. Añadir rutas dinámicas de Proyectos
   PROJECTS.forEach(project => {
     xml += generateUrlEntry(`projects/${project.slug}`);
   });
   
-  // 3. Añadir rutas dinámicas de Blog
+  // 4. Añadir rutas dinámicas de Blog
   BLOG_POSTS.forEach(post => {
     xml += generateUrlEntry(`blog/${post.slug}`);
   });
