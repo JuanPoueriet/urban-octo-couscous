@@ -13,7 +13,7 @@ export class LanguageRedirectService {
 
   redirect(): boolean {
     if (isPlatformBrowser(this.platformId)) {
-      const defaultLang = 'es';
+      const defaultLang = 'en';
       const supportedLangs = this.translate.getLangs();
 
       // 1. Intentar obtener el idioma desde localStorage (visitas anteriores)

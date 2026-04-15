@@ -232,7 +232,11 @@ export const routes: Routes = [
       {
         path: 'status',
         loadComponent: () => import('./features/status/status').then(c => c.Status),
-        data: { title: 'STATUS.TITLE', description: 'STATUS.SUBTITLE' }
+        data: {
+          title: 'STATUS.TITLE',
+          description: 'STATUS.SUBTITLE',
+          robots: 'noindex, follow'
+        }
       },
       {
         path: 'life-at-jsl',

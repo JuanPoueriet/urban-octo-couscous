@@ -27,7 +27,9 @@
         <img [src]="solution.heroImage"
              alt="{{ 'SOLUTIONS.' + solution.key + '_SECTION_INTRO_TITLE' | translate }}"
              fetchpriority="high"
-             loading="eager">
+             loading="eager"
+             width="800"
+             height="500">
       </div>
     </section>
 
@@ -80,7 +82,7 @@
         <div class="tech-logos">
           @for (tech of solution.technologies; track tech) {
             <div class="tech-logo">
-              <img [src]="getTechLogo(tech)" [alt]="tech">
+              <img [src]="getTechLogo(tech)" [alt]="tech" width="48" height="48" loading="lazy">
               <span>{{ tech }}</span>
             </div>
           }

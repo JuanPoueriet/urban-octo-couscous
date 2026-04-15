@@ -34,7 +34,7 @@
     @for (venture of ventures$ | async; track venture.key) {
       <div class="venture-card">
         <div class="venture-status" [class]="venture.status.toLowerCase()">{{ venture.status }}</div>
-        <img [src]="venture.logoUrl" [alt]="venture.name" class="venture-logo">
+        <img [src]="venture.logoUrl" [alt]="venture.name" class="venture-logo" width="120" height="40" loading="lazy">
         <h3>{{ venture.name }}</h3>
         <p>{{ venture.descriptionKey | translate }}</p>
         <a [href]="venture.website" target="_blank" class="venture-link">

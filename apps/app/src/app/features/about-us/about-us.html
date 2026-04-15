@@ -12,7 +12,10 @@
   </div>
  <div class="about-intro__image" jslAnimateOnScroll>
     <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?fit=crop&w=600&q=80" 
-         alt="Equipo de JSL Technology trabajando en arquitectura de software y soluciones digitales">
+         alt="Equipo de JSL Technology trabajando en arquitectura de software y soluciones digitales"
+         width="600"
+         height="400"
+         loading="lazy">
   </div>
 </section>
 
@@ -44,7 +47,7 @@
     @for (member of teamMembers(); track member.nameKey) {
       <div class="team-member-card" jslAnimateOnScroll>
         <div class="team-member-card__image">
-          <img [src]="member.imageUrl" [alt]="member.nameKey | translate">
+          <img [src]="member.imageUrl" [alt]="member.nameKey | translate" width="300" height="300" loading="lazy">
         </div>
         <div class="team-member-card__info">
           <h3 class="team-member-card__name">{{ member.nameKey | translate }}</h3>
