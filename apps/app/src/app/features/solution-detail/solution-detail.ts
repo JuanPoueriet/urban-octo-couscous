@@ -128,6 +128,22 @@ export class SolutionDetail implements OnInit, OnDestroy {
         url,
         solution.heroImage
       );
+
+      // --- Datos Estructurados: Service ---
+      const serviceSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        'name': translations[titleKey],
+        'description': translations[descKey],
+        'provider': {
+          '@type': 'Organization',
+          'name': 'JSL Technology',
+          'url': baseUrl
+        },
+        'image': solution.heroImage,
+        'url': url
+      };
+      this.seoService.setJsonLd(serviceSchema);
     });
   }
 }

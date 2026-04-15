@@ -80,6 +80,7 @@ const staticRoutes = [
   'contact',
   'privacy-policy',
   'terms-of-service',
+  'cookie-policy',
   'careers',
   'faq',
   'partners',
@@ -91,7 +92,9 @@ const staticRoutes = [
   'life-at-jsl',
   'press',
   'pricing',
-  'security'
+  'security',
+  'server-error',
+  'thank-you'
 ];
 
 const domain = 'https://www.jsl.technology';
