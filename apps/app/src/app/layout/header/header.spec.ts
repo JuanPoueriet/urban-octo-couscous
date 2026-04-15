@@ -3,6 +3,9 @@ import { Header } from './header';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { provideZonelessChangeDetection, importProvidersFrom } from '@angular/core';
+import { LucideAngularModule } from 'lucide-angular';
+import { ALL_ICONS } from '../../core/constants/icons';
 
 describe('Header', () => {
   let component: Header;
@@ -13,7 +16,9 @@ describe('Header', () => {
       imports: [Header, NoopAnimationsModule],
       providers: [
         provideRouter([]), // Mock
-        provideTranslateService() // Mock
+        provideTranslateService(), // Mock
+        provideZonelessChangeDetection(),
+        importProvidersFrom(LucideAngularModule.pick(ALL_ICONS))
       ]
     })
     .compileComponents();
@@ -33,8 +38,14 @@ describe('Header', () => {
 
   it('should toggle mobile menu on toggleMobileMenu()', () => {
     expect(component.isMobileMenuOpen).toBe(false);
+    component.isDesktop = false; // Asegurar que no está en modo desktop
+
     component.toggleMobileMenu();
     expect(component.isMobileMenuOpen).toBe(true);
+
+    // Reset isAnimating para permitir el cierre inmediato en el test
+    (component as any).isAnimating = false;
+
     component.toggleMobileMenu();
     expect(component.isMobileMenuOpen).toBe(false);
   });

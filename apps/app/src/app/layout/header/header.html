@@ -99,7 +99,7 @@
         </div>
       </li>
 
-      <!-- Dropdown: Compañía (Merged with Resources) -->
+      <!-- Dropdown: Compañía & Login (Merged to reduce density) -->
       <li class="dropdown" [class.open]="openDropdown === 'company'">
         <button
           class="dropdown-toggle"
@@ -135,50 +135,18 @@
             (click)="closeMobileMenu()"
             >{{ 'HEADER.BLOG' | translate }}</a
           >
+          <div class="dropdown-divider"></div>
           <a
-            [routerLink]="[currentLang, 'careers']"
-            routerLinkActive="active"
+            href="https://portal.jsl.technology"
+            target="_blank"
             (click)="closeMobileMenu()"
-            >{{ 'HEADER.CAREERS' | translate }}</a
+            >{{ 'HEADER.LOGIN' | translate }} <lucide-icon name="ExternalLink" size="14"></lucide-icon></a
           >
           <a
             [routerLink]="[currentLang, 'faq']"
             routerLinkActive="active"
             (click)="closeMobileMenu()"
             >{{ 'HEADER.FAQ' | translate }}</a
-          >
-        </div>
-      </li>
-
-      <!-- Dropdown: Login -->
-      <li class="dropdown" [class.open]="openDropdown === 'login'">
-        <button
-          class="dropdown-toggle"
-          (click)="toggleDropdown('login', $event)"
-          aria-haspopup="true"
-          [attr.aria-expanded]="openDropdown === 'login'"
-        >
-          {{ 'HEADER.LOGIN' | translate }}
-          <lucide-icon name="ChevronDown"></lucide-icon>
-        </button>
-        <div class="dropdown-menu" [class.open]="openDropdown === 'login'">
-          <a
-            href="https://app.virteex.com"
-            target="_blank"
-            (click)="closeMobileMenu()"
-            >{{ 'HEADER.LOGIN_VIRTEEX' | translate }} <lucide-icon name="ExternalLink" size="14"></lucide-icon></a
-          >
-          <a
-            href="https://portal.jsl.technology"
-            target="_blank"
-            (click)="closeMobileMenu()"
-            >{{ 'HEADER.LOGIN_CLIENT' | translate }} <lucide-icon name="ExternalLink" size="14"></lucide-icon></a
-          >
-          <a
-            href="https://support.jsl.technology"
-            target="_blank"
-            (click)="closeMobileMenu()"
-            >{{ 'HEADER.LOGIN_SUPPORT' | translate }} <lucide-icon name="ExternalLink" size="14"></lucide-icon></a
           >
         </div>
       </li>

@@ -239,6 +239,12 @@ li.dropdown {
       background-color: rgba(var(--primary-rgb), 0.1);
     }
   }
+
+  .dropdown-divider {
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 0.5rem 0;
+  }
 }
 
 .header__controls {

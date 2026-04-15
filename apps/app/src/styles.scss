@@ -37,6 +37,39 @@
   --transition-timing: ease;
   --focus-ring: 0 0 0 3px rgba(var(--primary-rgb), 0.5);
 
+  // Accent Secondary (derived from "tech" palette complementary to warm primary)
+  --accent-secondary: #00d2ff;
+  --accent-secondary-rgb: 0, 210, 255;
+  --bg-tertiary: #2a2a2a;
+
+  // Spacing Scale
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 3rem;
+  --space-2xl: 4rem;
+
+  // Typography Scale
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+
+  // Shadows & Motion
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.3);
+  --transition-base: all var(--transition-speed) var(--transition-timing);
+
+  // Layout & Offset
+  --page-top-offset: calc(var(--header-height) + var(--top-bar-height));
+
   // Aliases (for backward compatibility & consistency)
   --text-primary: var(--text-main);
   --text-secondary: var(--text-muted);
@@ -62,6 +95,7 @@ body {
   background-color: var(--bg-primary);
   color: var(--text-main);
   font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
@@ -94,9 +128,9 @@ a {
 }
 
 .page-container {
-  margin-top: calc(var(--header-height) + var(--top-bar-height));
-  padding: 4rem 0;
-  min-height: calc(100vh - var(--header-height) - var(--top-bar-height) - 400px); // Aproximado para footer
+  margin-top: var(--page-top-offset);
+  padding: var(--space-xl) 0;
+  min-height: calc(100vh - var(--page-top-offset) - 400px); // Aproximado para footer
 }
 
 // Scrollbar
