@@ -374,7 +374,6 @@ swiper-container {
   color: rgba(255, 255, 255, 0.58); // Icono más visible
   cursor: pointer;
   transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
     background-color 0.25s ease,
     border-color 0.25s ease,
     color 0.25s ease,
@@ -401,7 +400,6 @@ swiper-container {
     background-color: rgba(255, 255, 255, 0.12);
     border-color: rgba(255, 255, 255, 0.3);
     color: rgba(255, 255, 255, 0.95);
-    transform: translateY(-50%) scale(1.08);
     
     // Efecto de elevación y brillo
     box-shadow: 
@@ -410,15 +408,13 @@ swiper-container {
       inset 0 1px 0 rgba(255, 255, 255, 0.15);
     
     lucide-icon {
-      transform: scale(1.1);
       stroke-width: 2;
     }
   }
 
   // Efecto activo (clic)
   &:active {
-    transform: translateY(-50%) scale(0.98);
-    transition: transform 0.1s ease;
+    transform: translateY(-50%);
     background-color: rgba(255, 255, 255, 0.08);
   }
 
@@ -427,13 +423,13 @@ swiper-container {
 // Posicionamiento específico para cada botón
 .hero-swiper-button-prev {
   opacity: calc(0.2 + (var(--hero-nav-left-visibility, 0) * 0.65));
-  transform: translateY(-50%) translateX(calc((1 - var(--hero-nav-left-visibility, 0)) * -12px));
+  transform: translateY(-50%);
   left: 3.5rem; // Posición desde el borde izquierdo
 }
 
 .hero-swiper-button-next {
   opacity: calc(0.2 + (var(--hero-nav-right-visibility, 0) * 0.65));
-  transform: translateY(-50%) translateX(calc((1 - var(--hero-nav-right-visibility, 0)) * 12px));
+  transform: translateY(-50%);
   right: 3.5rem; // Posición desde el borde derecho
 }
 
