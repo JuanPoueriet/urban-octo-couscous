@@ -13,7 +13,7 @@
   max-width: 800px;
   margin: 0 auto;
   border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
+  border-radius: var(--radius-md);
   overflow: hidden; // Para los bordes del acordeón
 }
 
@@ -41,7 +41,7 @@
   font-family: var(--font-family-base);
   font-size: 1.2rem;
   font-weight: 500;
-  color: var(--text-primary);
+  color: var(--text-main);
   
   transition: background-color var(--transition-speed) ease;
 
@@ -54,7 +54,7 @@
     lucide-icon {
       width: 24px;
       height: 24px;
-      color: var(--text-secondary);
+      color: var(--text-muted);
       transition: transform 0.3s ease, color 0.3s ease;
     }
   }
@@ -67,22 +67,22 @@
 
   p {
     font-size: 1rem;
-    color: var(--text-secondary);
+    color: var(--text-muted);
     line-height: 1.8;
     max-width: 700px; // Ancho de línea cómodo
 
     // Estilos para el contenido HTML (ej. <strong>)
     strong, b {
-      color: var(--text-primary);
+      color: var(--text-main);
       font-weight: 600;
     }
     
     // Estilos para enlaces dentro de la respuesta
     a {
-      color: var(--accent-primary);
+      color: var(--primary);
       text-decoration: underline;
       &:hover {
-        color: var(--text-primary);
+        color: var(--text-main);
       }
     }
   }
@@ -91,12 +91,12 @@
 // Estilos cuando el acordeón está abierto
 .faq-item.open {
   .faq-question {
-    color: var(--accent-primary);
+    color: var(--primary);
     background-color: var(--bg-secondary);
   }
   .faq-icon lucide-icon {
     transform: rotate(180deg);
-    color: var(--accent-primary);
+    color: var(--primary);
   }
 }
 

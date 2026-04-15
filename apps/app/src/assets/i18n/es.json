@@ -96,6 +96,15 @@
     "VISIT_WEBSITE": "Visitar Sitio Web"
   },
   "HOME": {
+    "WATCH_REEL": "Ver Video",
+    "VISUAL_TRANSFORMATION": "Transformación Visual",
+    "SEE_DIFFERENCE": "Mira la Diferencia",
+    "DIFF_SUBTITLE": "De sistemas legados a interfaces modernas de alto rendimiento.",
+    "LEGACY_SYSTEM": "Sistema Legado",
+    "JSL_SOLUTION": "Solución JSL",
+    "DASHBOARD_COMP": "Comparativa de modernización de dashboard",
+    "ASSESS_TECH": "Evalúa tu Stack Tecnológico",
+    "CALC_SAVINGS": "Calcula Ahorros Potenciales",
     "HERO1_TITLE": "Moldeando el Futuro de la Innovación Digital",
     "HERO1_SUBTITLE": "Cerrando la brecha entre la consultoría y la creación de empresas (Venture Building). Ejecutando la transformación digital global con ingeniería de precisión.",
     "HERO1_CTA": "Más Información",
@@ -640,9 +649,13 @@
     "TITLE": "Centro de Seguridad",
     "SUBTITLE": "Seguridad y cumplimiento de grado empresarial.",
     "ENCRYPTION": "Encriptación de Extremo a Extremo",
+    "ENCRYPTION_DESC": "Encriptación AES-256 en reposo y TLS 1.3 en tránsito. Aseguramos que sus datos estén protegidos por los más altos estándares de la industria.",
     "BACKUPS": "Copias de Seguridad Diarias",
+    "BACKUPS_DESC": "Copias de seguridad diarias automatizadas con retención de 30 días y recuperación en un punto en el tiempo para garantizar la continuidad del negocio.",
     "DRP": "Recuperación ante Desastres",
+    "DRP_DESC": "Arquitectura de conmutación por error en varias regiones que garantiza una disponibilidad del 99,99% incluso en caso de fallos regionales catastróficos.",
     "COMPLIANCE": "Cumplimiento",
+    "COMPLIANCE_DESC": "Infraestructura que cumple con SOC 2 Tipo II, GDPR e HIPAA. Nos sometemos a auditorías periódicas de terceros.",
     "BADGES": "Certificaciones de Seguridad"
   },
   "VENTURES": {
@@ -684,6 +697,10 @@
     "SUBTITLE": "El Sistema Operativo para la Empresa Moderna.",
     "VISIT_SITE": "Visitar Sitio Oficial",
     "ECOSYSTEM_TITLE": "Una Arquitectura Unificada",
+    "ERP_CORE": "Núcleo ERP Virteex",
+    "POS": "POS",
+    "MOBILE_APP": "App Móvil",
+    "ECOMMERCE": "E-Commerce",
     "CTA_EYEBROW": "¿Listo para actualizar?",
     "CTA_TITLE": "Cámbiate a Virteex",
     "CTA_SUBTITLE": "Únete a miles de empresas que operan en nuestra nube."

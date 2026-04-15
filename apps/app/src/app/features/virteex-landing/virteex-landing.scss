@@ -1,5 +1,5 @@
 .virteex-hero {
-  background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-body) 100%);
+  background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-primary) 100%);
   padding: 6rem 0;
   text-align: center;
   margin-bottom: 4rem;
@@ -16,7 +16,7 @@
   h1 {
     font-size: 3rem;
     margin-bottom: 1rem;
-    background: linear-gradient(to right, var(--primary), var(--secondary, #3b82f6));
+    background: var(--accent-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
@@ -72,7 +72,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 30px rgba(var(--primary-rgb, 37, 99, 235), 0.2);
+    box-shadow: 0 0 30px rgba(var(--primary-rgb), 0.2);
     z-index: 2;
 
     .system-icon {

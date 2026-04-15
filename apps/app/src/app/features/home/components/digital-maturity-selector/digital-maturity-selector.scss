@@ -35,14 +35,14 @@
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   margin-bottom: 0.5rem;
   font-weight: 600;
 }
 
 .question-title {
   font-size: 1.8rem;
-  color: var(--text-primary);
+  color: var(--text-main);
   margin-bottom: 2.5rem;
   font-weight: 700;
 
@@ -75,13 +75,13 @@
   text-align: center;
 
   &:hover {
-    border-color: var(--accent-primary);
+    border-color: var(--primary);
     transform: translateY(-5px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 
     .option-icon {
-      color: var(--accent-primary);
-      background: rgba(var(--accent-primary-rgb), 0.1);
+      color: var(--primary);
+      background: rgba(var(--primary-rgb), 0.1);
     }
   }
 }
@@ -94,13 +94,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   transition: all 0.2s ease;
 }
 
 .option-label {
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-main);
   font-size: 1rem;
 }
 
@@ -124,13 +124,13 @@
 
 .result-title {
   font-size: 2rem;
-  color: var(--text-primary);
+  color: var(--text-main);
   margin-bottom: 1rem;
 }
 
 .result-desc {
   font-size: 1.1rem;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   line-height: 1.6;
   max-width: 600px;
   margin: 0 auto 2.5rem auto;
@@ -167,7 +167,7 @@
   &.secondary {
     background: transparent;
     border: 1px solid var(--border-color);
-    color: var(--text-primary);
+    color: var(--text-main);
   }
 }
 

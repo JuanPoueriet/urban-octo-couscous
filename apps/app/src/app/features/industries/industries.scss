@@ -68,7 +68,7 @@
   .industry-card__links-title {
     font-size: 0.8rem;
     font-weight: 600;
-    color: var(--text-secondary);
+    color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 0.75rem;
@@ -84,7 +84,7 @@
     a {
       font-size: 0.9rem;
       font-weight: 500;
-      color: var(--text-primary);
+      color: var(--text-main);
       padding: 0.25rem 0.5rem;
       border-radius: 4px;
       background-color: var(--bg-primary);
@@ -92,8 +92,8 @@
       transition: all var(--transition-speed) ease;
 
       &:hover {
-        color: var(--accent-primary);
-        border-color: var(--accent-primary);
+        color: var(--primary);
+        border-color: var(--primary);
         transform: translateX(4px);
       }
     }

@@ -33,7 +33,7 @@
   img {
     width: 100%;
     height: auto;
-    border-radius: var(--border-radius);
+    border-radius: var(--radius-md);
     border: 1px solid var(--border-color);
   }
 
@@ -65,13 +65,13 @@
   text-align: center;
   padding: 2rem;
   border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
+  border-radius: var(--radius-md);
   background-color: var(--bg-primary); // Ligeramente más oscuro que el fondo de la sección
   transition: transform var(--transition-speed) ease, border-color var(--transition-speed) ease;
 
   &:hover {
     transform: translateY(-5px);
-    border-color: var(--accent-primary);
+    border-color: var(--primary);
   }
 }
 
@@ -95,13 +95,13 @@
 .core-value-card__title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-main);
   margin-bottom: 1rem;
 }
 
 .core-value-card__desc {
   font-size: 0.95rem;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   line-height: 1.7;
 }
 
@@ -125,7 +125,7 @@
 
 .team-member-card {
   border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
+  border-radius: var(--radius-md);
   overflow: hidden; // Para la imagen
   text-align: center;
   background-color: var(--bg-secondary);
@@ -160,13 +160,13 @@
 .team-member-card__name {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-main);
   margin-bottom: 0.25rem;
 }
 
 .team-member-card__role {
   font-size: 0.9rem;
-  color: var(--accent-primary); // Rol destacado
+  color: var(--primary); // Rol destacado
 }
 
 .team-member-certs {
@@ -206,8 +206,8 @@
     background-color: var(--bg-primary); // Fondo más oscuro
     
     &:hover {
-      border-color: var(--accent-primary); // Hover con acento
-      box-shadow: 0 0 20px rgba(var(--accent-primary-rgb), 0.2);
+      border-color: var(--primary); // Hover con acento
+      box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.2);
     }
   }
 }
