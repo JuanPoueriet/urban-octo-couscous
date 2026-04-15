@@ -7,9 +7,9 @@
   // --- CAMBIOS CLAVE ---
   // 1. Añadido margen superior para compensar el header FIJO.
   //    Esto resuelve el problema de que el breadcrumb quede oculto.
-  margin-top: calc(var(--header-height) + var(--top-bar-height));
+  margin-top: var(--page-top-offset);
   // 2. Padding ajustado para un look más limpio.
-  padding: 4rem 0 3rem 0;
+  padding: var(--space-xl) 0 var(--space-lg) 0;
   // --- FIN CAMBIOS ---
   
   background-color: var(--bg-secondary);

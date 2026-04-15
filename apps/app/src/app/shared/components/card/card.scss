@@ -8,13 +8,11 @@
   text-decoration: none;
   color: var(--text-main);
   overflow: hidden;
-  transition: transform var(--transition-speed) ease, 
-              border-color var(--transition-speed) ease,
-              box-shadow var(--transition-speed) ease;
+  transition: var(--transition-base);
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-lg);
   }
 
   &.card--article {
@@ -118,22 +116,21 @@
 }
 
 .card__title {
-  font-size: 1.4rem;
+  font-size: var(--font-size-xl);
   font-weight: 600;
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-sm);
 
    @media (max-width: 768px) {
-    font-size: 1rem;
-    margin-bottom: 0.7rem;
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--space-xs);
   }
 }
 
 .card__description {
-  font-size: 0.95rem;
+  font-size: var(--font-size-sm);
   color: var(--text-muted);
   line-height: 1.7;
-  // flex-grow: 1; // <--- ELIMINADO: Esto causaba la altura excesiva
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-md);
 
   // --- INICIO: Truncamiento de texto ---
   // Limita el texto a 3 líneas
@@ -145,12 +142,11 @@
   // --- FIN: Truncamiento de texto ---
   
   // --- INICIO: Mejorar legibilidad en móviles ---
-  // Hacemos el texto un poco más pequeño en pantallas < 768px
   @media (max-width: 768px) {
-    font-size: 0.7rem;
+    font-size: var(--font-size-sm); // Unificado, ya no baja de 0.875rem
     line-height: 1.6;
     -webkit-line-clamp: 4; // Permitir 4 líneas en móvil
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-sm);
   }
   // --- FIN: Mejorar legibilidad ---
 }
@@ -189,9 +185,9 @@
 .card__metric-tag {
   background-color: var(--bg-tertiary);
   color: var(--primary);
-  font-size: 0.75rem;
+  font-size: var(--font-size-xs);
   font-weight: 600;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border-color);
 }

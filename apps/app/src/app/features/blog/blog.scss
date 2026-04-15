@@ -98,12 +98,12 @@
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   overflow: hidden;
-  margin-bottom: 4rem;
-  transition: all 0.3s ease;
+  margin-bottom: var(--space-2xl);
+  transition: var(--transition-base);
 
   &:hover {
     border-color: var(--primary);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-lg);
   }
 
   @media (min-width: 768px) {
