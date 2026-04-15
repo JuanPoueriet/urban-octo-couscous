@@ -120,7 +120,14 @@ export class SolutionDetail implements OnInit, OnDestroy {
     const baseUrl = this.seoService.getBaseUrl();
     const url = `${baseUrl}/${this.currentLang}/solutions/${solution.slug}`;
 
-    this.translate.get([titleKey, descKey]).subscribe(translations => {
+    this.translate.get([titleKey, descKey, 'COMMON.BREADCRUMB_HOME', 'HEADER.SERVICES']).subscribe(translations => {
+      // --- Breadcrumbs Schema ---
+      this.seoService.setBreadcrumbs([
+        { name: translations['COMMON.BREADCRUMB_HOME'], item: `/${this.currentLang}/home` },
+        { name: translations['HEADER.SERVICES'], item: `/${this.currentLang}/solutions` },
+        { name: translations[titleKey], item: `/${this.currentLang}/solutions/${solution.slug}` }
+      ]);
+
       this.seoService.updateCanonicalTag(url);
       this.seoService.updateSocialTags(
         translations[titleKey],

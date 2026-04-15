@@ -2,10 +2,11 @@ import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SUPPORTED_LANGUAGES } from '../constants/languages';
-import { BASE_URL } from '../constants/tokens';
+import { BASE_URL, RESPONSE } from '../constants/tokens';
+import { Optional } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,8 @@ export class Seo {
     private translate: TranslateService,
     @Inject(DOCUMENT) private document: Document,
     @Inject(PLATFORM_ID) private platformId: Object,
-    @Inject(BASE_URL) private baseUrl: string
+    @Inject(BASE_URL) private baseUrl: string,
+    @Optional() @Inject(RESPONSE) private response: any
   ) {
     this.defaultImageUrl = `${this.baseUrl}/assets/imgs/jsl-social-default.jpg`;
   }
@@ -39,6 +41,10 @@ export class Seo {
   init(): void {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
+      tap(() => {
+        this.setOrganizationSchema();
+        this.clearDynamicSchemas();
+      }),
       map(() => this.getDeepestRoute(this.activatedRoute)),
       filter(route => !!route.snapshot.data['title']),
       switchMap(route => {
@@ -98,6 +104,15 @@ export class Seo {
 
       // --- F. Update Robots Tag ---
       this.updateRobotsTag(robotsConfig);
+
+      // --- G. Handle HTTP Status for Noindex Routes ---
+      if (robotsConfig.includes('noindex') && this.response) {
+        if (route.snapshot.url.some(s => s.path === 'not-found') || route.snapshot.url.length === 0 && route.routeConfig?.path === '**') {
+          this.response.status(404);
+        } else if (route.snapshot.url.some(s => s.path === 'server-error')) {
+          this.response.status(500);
+        }
+      }
 
       // --- G. Actualizar Etiquetas Hreflang (¡MODIFICADO!) ---
       // Ya no está dentro de 'isPlatformBrowser', se ejecutará en el servidor.
@@ -173,8 +188,8 @@ export class Seo {
   /**
    * 8. ¡NUEVO! Gestiona scripts de Datos Estructurados (JSON-LD).
    */
-  public setJsonLd(schema: any): void {
-    const schemaName = 'structured-data';
+  public setJsonLd(schema: any, id: string = 'structured-data'): void {
+    const schemaName = id;
 
     // 8.1. Limpiar script previo (solo navegador para evitar fugas en navegación SPA)
     if (isPlatformBrowser(this.platformId)) {
@@ -190,6 +205,61 @@ export class Seo {
     script.id = schemaName;
     script.text = JSON.stringify(schema);
     this.document.head.appendChild(script);
+  }
+
+  /**
+   * Limpia esquemas dinámicos para evitar que persistan entre rutas.
+   */
+  public clearDynamicSchemas(): void {
+    const dynamicSchemas = ['breadcrumb-schema', 'structured-data'];
+    dynamicSchemas.forEach(id => {
+      const existingScript = this.document.getElementById(id);
+      if (existingScript) {
+        existingScript.remove();
+      }
+    });
+  }
+
+  /**
+   * Genera e inyecta el esquema de Organización.
+   */
+  public setOrganizationSchema(): void {
+    const organizationSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      'name': 'JSL Technology',
+      'url': this.baseUrl,
+      'logo': `${this.baseUrl}/logo.png`,
+      'sameAs': [
+        'https://www.linkedin.com/company/jsl-technology',
+        'https://twitter.com/jsl_technology'
+      ],
+      'contactPoint': {
+        '@type': 'ContactPoint',
+        'telephone': '+34-900-000-000',
+        'contactType': 'customer service',
+        'areaServed': 'Global',
+        'availableLanguage': ['Spanish', 'English']
+      }
+    };
+    this.setJsonLd(organizationSchema, 'organization-schema');
+  }
+
+  /**
+   * Genera e inyecta el esquema de BreadcrumbList.
+   */
+  public setBreadcrumbs(breadcrumbs: { name: string, item: string }[]): void {
+    const breadcrumbSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      'itemListElement': breadcrumbs.map((breadcrumb, index) => ({
+        '@type': 'ListItem',
+        'position': index + 1,
+        'name': breadcrumb.name,
+        'item': breadcrumb.item.startsWith('http') ? breadcrumb.item : `${this.baseUrl}${breadcrumb.item}`
+      }))
+    };
+    this.setJsonLd(breadcrumbSchema, 'breadcrumb-schema');
   }
 
   /**

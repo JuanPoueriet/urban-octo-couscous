@@ -249,11 +249,18 @@ export class BlogDetail
     }
 
     // Traducir título y descripción
-    this.translate.get([titleKey, excerptKey]).subscribe(translations => {
+    this.translate.get([titleKey, excerptKey, 'COMMON.BREADCRUMB_HOME', 'HEADER.BLOG']).subscribe(translations => {
       const translatedTitle = translations[titleKey] || 'Artículo de JSL Technology';
       const translatedDesc = translations[excerptKey] || 'Lee este artículo en JSL Technology';
 
       this.titleService.setTitle(`${translatedTitle} | JSL Technology Blog`);
+
+      // --- Breadcrumbs Schema ---
+      this.seoService.setBreadcrumbs([
+        { name: translations['COMMON.BREADCRUMB_HOME'], item: `/${this.currentLang}/home` },
+        { name: translations['HEADER.BLOG'], item: `/${this.currentLang}/blog` },
+        { name: translatedTitle, item: `/${this.currentLang}/blog/${this.postData?.slug}` }
+      ]);
       this.seoService.updateCanonicalTag(postUrl);
       this.seoService.updateSocialTags(
         translatedTitle,

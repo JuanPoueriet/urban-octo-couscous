@@ -87,6 +87,8 @@
             [alt]="'BLOG.' + post.key + '_TITLE' | translate"
             class="detail-page-banner"
             (load)="onImageLoad()"
+          fetchpriority="high"
+          loading="eager"
             #bannerImage
           />
           <div class="banner-overlay">

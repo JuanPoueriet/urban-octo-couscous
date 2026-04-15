@@ -2,9 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { ProductDetail } from './product-detail';
 import { TranslateModule } from '@ngx-translate/core';
-import { RouterModule } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
+import { BASE_URL } from '@core/constants/tokens';
 
 describe('ProductDetail', () => {
   let component: ProductDetail;
@@ -14,13 +15,14 @@ describe('ProductDetail', () => {
     await TestBed.configureTestingModule({
       imports: [
         ProductDetail,
-        TranslateModule.forRoot(),
-        RouterModule.forRoot([])
+        TranslateModule.forRoot()
       ],
       providers: [
         provideZonelessChangeDetection(),
         provideHttpClient(),
-        provideHttpClientTesting()
+        provideHttpClientTesting(),
+        provideRouter([]),
+        { provide: BASE_URL, useValue: 'https://www.jsl.technology' }
       ]
     })
     .compileComponents();

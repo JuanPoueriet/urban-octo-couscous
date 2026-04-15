@@ -84,7 +84,14 @@ export class ProductDetail implements OnInit, OnDestroy {
     const baseUrl = this.seoService.getBaseUrl();
     const url = `${baseUrl}/${this.currentLang}/products/${product.slug}`;
 
-    this.translate.get([titleKey, descKey]).subscribe(translations => {
+    this.translate.get([titleKey, descKey, 'COMMON.BREADCRUMB_HOME', 'HEADER.PRODUCTS']).subscribe(translations => {
+      // --- Breadcrumbs Schema ---
+      this.seoService.setBreadcrumbs([
+        { name: translations['COMMON.BREADCRUMB_HOME'], item: `/${this.currentLang}/home` },
+        { name: translations['HEADER.PRODUCTS'], item: `/${this.currentLang}/products` },
+        { name: translations[titleKey], item: `/${this.currentLang}/products/${product.slug}` }
+      ]);
+
       this.seoService.updateCanonicalTag(url);
       this.seoService.updateSocialTags(
         translations[titleKey],
@@ -92,6 +99,26 @@ export class ProductDetail implements OnInit, OnDestroy {
         url,
         `${baseUrl}/assets/imgs/jsl-social-default.jpg` // Using default social image
       );
+
+      // --- Product Schema ---
+      const productSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        'name': translations[titleKey],
+        'description': translations[descKey],
+        'brand': {
+          '@type': 'Brand',
+          'name': 'JSL Technology'
+        },
+        'offers': {
+          '@type': 'Offer',
+          'url': url,
+          'availability': 'https://schema.org/InStock',
+          'priceCurrency': 'EUR',
+          'price': '0.00' // Placeholder as it's a B2B service usually
+        }
+      };
+      this.seoService.setJsonLd(productSchema);
     });
   }
 

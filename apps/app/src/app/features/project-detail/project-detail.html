@@ -13,7 +13,11 @@
   </header>
 
   <div class="container">
-    <img [src]="project.imageUrl" [alt]="'PROJECTS.' + project.key + '_TITLE' | translate" class="detail-page-banner">
+    <img [src]="project.imageUrl"
+         [alt]="'PROJECTS.' + project.key + '_TITLE' | translate"
+         class="detail-page-banner"
+         fetchpriority="high"
+         loading="eager">
 
     <main class="detail-page-content">
       
