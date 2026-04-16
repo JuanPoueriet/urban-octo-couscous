@@ -236,6 +236,7 @@
   },
   "SOLUTIONS": {
     "TITLE": "Soluciones de Software a Medida",
+    "RELATED_TITLE": "Soluciones Relacionadas",
     "SUBTITLE": "Creamos herramientas digitales precisas que se adaptan a tus necesidades. Desde aplicaciones web complejas hasta soluciones en la nube escalables, nuestro equipo de ingeniería transforma tus desafíos en ventajas competitivas.",
     "WEB_TITLE": "Desarrollo Web",
     "WEB_DESC": "Aplicaciones web robustas, rápidas y escalables utilizando las últimas tecnologías. Creamos desde SPAs hasta portales corporativos.",
@@ -357,6 +358,7 @@
   },
   "PROJECTS": {
     "TITLE": "Casos de Éxito",
+    "RELATED_TITLE": "Proyectos Relacionados",
     "SUBTITLE": "No solo creamos software, construimos soluciones que generan resultados tangibles. Explora cómo hemos ayudado a empresas líderes a transformarse digitalmente.",
     "CASE_ERP_TITLE": "Implementación de ERP para Logística",
     "CASE_ERP_DESC": "Optimización completa de la cadena de suministro para un cliente de logística, reduciendo costos operativos en un 30% con nuestro JSL-ERP.",
