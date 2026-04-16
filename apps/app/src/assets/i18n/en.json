@@ -135,10 +135,6 @@
     "HERO_BAR_CENTER": "Fueling Digital Innovation With Creativity And Technology. We Deliver Cutting-Edge Web And Mobile Solutions.",
     "HERO_BAR_RIGHT_1": "SINCE",
     "HERO_BAR_RIGHT_2": "2023",
-    "STATS_PROJECTS": "+50 Projects Delivered",
-    "STATS_UPTIME": "99.9% Uptime",
-    "STATS_COSTS": "30% Cost Reduction",
-    "STATS_SUPPORT": "24/7 Support",
     "WELCOME_BACK": "Welcome back, Innovator!",
     "PROOF_1": "Someone from Madrid just downloaded the 2025 Whitepaper",
     "PROOF_2": "New Enterprise client from FinTech sector just onboarded",
@@ -236,6 +232,7 @@
   },
   "SOLUTIONS": {
     "TITLE": "Custom Software Solutions",
+    "RELATED_TITLE": "Related Solutions",
     "SUBTITLE": "We build precise digital tools tailored to your needs. From complex web applications to scalable cloud solutions, our engineering team transforms your challenges into competitive advantages.",
     "WEB_TITLE": "Web Development",
     "WEB_DESC": "Robust, fast, and scalable web applications using the latest technologies. We build everything from SPAs to corporate portals.",
@@ -357,6 +354,7 @@
   },
   "PROJECTS": {
     "TITLE": "Case Studies",
+    "RELATED_TITLE": "Related Projects",
     "SUBTITLE": "We don't just build software; we build solutions that deliver tangible results. Explore how we've helped industry leaders digitally transform.",
     "CASE_ERP_TITLE": "ERP Implementation for Logistics",
     "CASE_ERP_DESC": "Complete supply chain optimization for a logistics client, reducing operational costs by 30% using our JSL-ERP.",

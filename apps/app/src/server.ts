@@ -17,7 +17,7 @@ import { BASE_URL, RESPONSE } from './app/core/constants/tokens';
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
-const angularApp = new AngularNodeAppEngine();
+const angularApp = new AngularNodeAppEngine({ allowedHosts: ["127.0.0.1", "localhost", "www.jsl.technology", "jsl.technology"] });
 
 type SeoHealthSnapshot = {
   generatedAt: string;
@@ -280,6 +280,8 @@ app.use((req, res, next) => {
 
   const dynamicBaseUrl = resolveCanonicalBaseUrl(req);
   const requestHost = req.get('host');
+  const allowedHosts = ["127.0.0.1", "localhost", "127.0.0.1:4000", "localhost:4000", "127.0.0.1:4100", "localhost:4100", "www.jsl.technology", "jsl.technology"];
+  if (requestHost && !allowedHosts.includes(requestHost)) allowedHosts.push(requestHost);
 
   angularApp
     .handle(req, {
@@ -287,7 +289,7 @@ app.use((req, res, next) => {
         { provide: BASE_URL, useValue: dynamicBaseUrl },
         { provide: RESPONSE, useValue: res },
       ],
-      allowedHosts: ['127.0.0.1', 'localhost', '127.0.0.1:4000', 'localhost:4000', requestHost],
+      allowedHosts,
     })
     .then((response) =>
       response ? writeResponseToNodeResponse(response, res) : next(),
