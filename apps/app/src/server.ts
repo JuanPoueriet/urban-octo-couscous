@@ -19,6 +19,25 @@ const browserDistFolder = join(import.meta.dirname, '../browser');
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
+type SeoHealthSnapshot = {
+  generatedAt: string;
+  canonicalBaseUrl: string;
+  indexedRouteCount: number;
+  localeCount: number;
+  sitemapEntryCount: number;
+  noindexRoutes: string[];
+};
+
+let latestSeoHealthSnapshot: SeoHealthSnapshot | null = null;
+
+const CANONICAL_BASE_URL = (process.env['CANONICAL_BASE_URL'] ?? 'https://www.jsl.technology').replace(/\/+$/, '');
+const CANONICAL_HOSTS = new Set(
+  (process.env['CANONICAL_HOSTS'] ?? 'www.jsl.technology,jsl.technology')
+    .split(',')
+    .map(host => host.trim().toLowerCase())
+    .filter(Boolean),
+);
+
 // --- OPTIMIZACIÓN: Compresión Gzip/Brotli ---
 app.use(compression());
 
@@ -100,6 +119,7 @@ const defaultLang = 'en';
 
 // --- NUEVO: Fecha de última modificación para rutas estáticas (evita fluctuaciones de crawl budget) ---
 const STATIC_LASTMOD = '2025-10-30';
+const NOINDEX_ROUTES = ['/status', '/thank-you', '/server-error', '/not-found'];
 
 /**
  * Genera el XML del sitemap dinámicamente.
@@ -120,6 +140,16 @@ function generateSitemap(domain: string): string {
   xml += generateDynamicEntriesXml('blog', BLOG_POSTS, domain, now);
 
   xml += '</urlset>';
+
+  latestSeoHealthSnapshot = {
+    generatedAt: new Date().toISOString(),
+    canonicalBaseUrl: domain,
+    indexedRouteCount: staticRoutes.length + SOLUTIONS.length + PROJECTS.length + BLOG_POSTS.length,
+    localeCount: supportedLangs.length,
+    sitemapEntryCount: (staticRoutes.length + SOLUTIONS.length + PROJECTS.length + BLOG_POSTS.length) * supportedLangs.length,
+    noindexRoutes: NOINDEX_ROUTES,
+  };
+
   return xml;
 }
 
@@ -196,15 +226,34 @@ function generateUrlEntry(route: string, lastmod: string, domain: string): strin
 
 
 app.get('/sitemap.xml', (req, res) => {
-  const host = req.get('host');
-  // Usar dominio canónico en producción para evitar inconsistencias
-  const domain = (host && (host.includes('localhost') || host.includes('127.0.0.1')))
-    ? `${req.protocol}://${host}`
-    : 'https://www.jsl.technology';
+  const domain = resolveCanonicalBaseUrl(req);
 
   const sitemap = generateSitemap(domain);
   res.header('Content-Type', 'application/xml');
   res.send(sitemap);
+});
+
+app.get('/seo/health', (req, res) => {
+  const canonicalBaseUrl = resolveCanonicalBaseUrl(req);
+  if (!latestSeoHealthSnapshot) {
+    latestSeoHealthSnapshot = {
+      generatedAt: new Date(0).toISOString(),
+      canonicalBaseUrl,
+      indexedRouteCount: staticRoutes.length + SOLUTIONS.length + PROJECTS.length + BLOG_POSTS.length,
+      localeCount: supportedLangs.length,
+      sitemapEntryCount: 0,
+      noindexRoutes: NOINDEX_ROUTES,
+    };
+  }
+
+  res.json({
+    status: 'ok',
+    ...latestSeoHealthSnapshot,
+    canonicalHostPolicy: {
+      canonicalBaseUrl: CANONICAL_BASE_URL,
+      allowedHosts: Array.from(CANONICAL_HOSTS),
+    },
+  });
 });
 
 
@@ -229,10 +278,8 @@ app.use((req, res, next) => {
   res.setHeader('X-Frame-Options', 'DENY');
   // --- FIN AÑADIDO ---
 
-  const host = req.get('host');
-  const dynamicBaseUrl = (host && (host.includes('localhost') || host.includes('127.0.0.1')))
-    ? `${req.protocol}://${host}`
-    : 'https://www.jsl.technology';
+  const dynamicBaseUrl = resolveCanonicalBaseUrl(req);
+  const requestHost = req.get('host');
 
   angularApp
     .handle(req, {
@@ -240,7 +287,7 @@ app.use((req, res, next) => {
         { provide: BASE_URL, useValue: dynamicBaseUrl },
         { provide: RESPONSE, useValue: res },
       ],
-      allowedHosts: ['127.0.0.1', 'localhost', '127.0.0.1:4000', 'localhost:4000', host],
+      allowedHosts: ['127.0.0.1', 'localhost', '127.0.0.1:4000', 'localhost:4000', requestHost],
     })
     .then((response) =>
       response ? writeResponseToNodeResponse(response, res) : next(),
@@ -267,3 +314,24 @@ if (isMainModule(import.meta.url) || process.env['pm_id']) {
  * Request handler used by the Angular CLI (for dev-server and during build) or Firebase Cloud Functions.
  */
 export const reqHandler = createNodeRequestHandler(app);
+
+function resolveCanonicalBaseUrl(req: express.Request): string {
+  const host = req.get('host')?.toLowerCase() ?? '';
+  const forwardedProto = req.get('x-forwarded-proto');
+  const requestProtocol = forwardedProto?.split(',')[0]?.trim() || req.protocol || 'https';
+  const isLocalHost = host.includes('localhost') || host.includes('127.0.0.1');
+
+  if (isLocalHost && host) {
+    return `${requestProtocol}://${host}`;
+  }
+
+  if (!host) {
+    return CANONICAL_BASE_URL;
+  }
+
+  if (CANONICAL_HOSTS.has(host)) {
+    return CANONICAL_BASE_URL;
+  }
+
+  return CANONICAL_BASE_URL;
+}

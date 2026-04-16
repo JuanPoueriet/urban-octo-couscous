@@ -6,5 +6,21 @@ Disallow: /*/thank-you
 Disallow: /*/server-error
 Disallow: /*/not-found
 
+# Política para crawlers de IA (ajustar según estrategia de negocio)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
 # Sitemap
 Sitemap: https://www.jsl.technology/sitemap.xml
