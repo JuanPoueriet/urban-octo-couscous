@@ -358,6 +358,7 @@
   },
   "PROJECTS": {
     "TITLE": "Case Studies",
+    "RELATED_TITLE": "Related Projects",
     "SUBTITLE": "We don't just build software; we build solutions that deliver tangible results. Explore how we've helped industry leaders digitally transform.",
     "CASE_ERP_TITLE": "ERP Implementation for Logistics",
     "CASE_ERP_DESC": "Complete supply chain optimization for a logistics client, reducing operational costs by 30% using our JSL-ERP.",
