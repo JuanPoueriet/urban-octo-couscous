@@ -20,6 +20,8 @@ jobs:
         run: npm install --legacy-peer-deps
       - name: Build Application
         run: npx nx build app
+      - name: Validate SSR SEO output (critical routes)
+        run: npm run seo:ssr:check
       - name: Run Lighthouse Audit
         run: |
           npm install -g @lhci/cli@0.13.x
