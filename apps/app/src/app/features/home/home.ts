@@ -154,10 +154,10 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   private toastService = inject(ToastService);
 
   public stats = [
-    { valueKey: 'HOME.STATS_PROJECTS', icon: 'CheckCircle' },
-    { valueKey: 'HOME.STATS_UPTIME', icon: 'Server' },
-    { valueKey: 'HOME.STATS_COSTS', icon: 'TrendingDown' },
-    { valueKey: 'HOME.STATS_SUPPORT', icon: 'Headphones' },
+    { valueKey: 'HOME.STATS_PROJECTS', labelKey: 'HOME.STATS_PROJECTS_LABEL', icon: 'Award', subtitleKey: 'HOME.STATS_PROJECTS_SUB' },
+    { valueKey: 'HOME.STATS_UPTIME', labelKey: 'HOME.STATS_UPTIME_LABEL', icon: 'ShieldCheck', subtitleKey: 'HOME.STATS_UPTIME_SUB' },
+    { valueKey: 'HOME.STATS_COSTS', labelKey: 'HOME.STATS_COSTS_LABEL', icon: 'TrendingDown', subtitleKey: 'HOME.STATS_COSTS_SUB' },
+    { valueKey: 'HOME.STATS_SUPPORT', labelKey: 'HOME.STATS_SUPPORT_LABEL', icon: 'ThumbsUp', subtitleKey: 'HOME.STATS_SUPPORT_SUB' },
   ];
 
   public teamMembers = [
