@@ -110,14 +110,24 @@
 
 <!-- NUEVO COMPONENTE: Stats Bar (Métricas) -->
 <section class="stats-section">
+  <div class="stats-glow"></div>
   <div class="container">
+    <div class="section-header text-center" jslAnimateOnScroll>
+      <span class="section-eyebrow">{{ 'HOME.STATS_EYEBROW' | translate }}</span>
+      <h2 class="section-title text-white">{{ 'HOME.STATS_TITLE' | translate }}</h2>
+    </div>
+
     <div class="stats-grid">
       @for (stat of stats; track stat.valueKey) {
-        <div class="stat-item" jslAnimateOnScroll>
-          <div class="stat-item__icon">
-            <lucide-icon [name]="stat.icon"></lucide-icon>
+        <div class="stat-card" jslAnimateOnScroll>
+          <div class="stat-icon">
+            <lucide-icon [name]="stat.icon" [size]="32"></lucide-icon>
           </div>
-          <span class="stat-item__value">{{ stat.valueKey | translate }}</span>
+          <div class="stat-content">
+            <h3 class="stat-value">{{ stat.valueKey | translate }}</h3>
+            <p class="stat-label">{{ stat.labelKey | translate }}</p>
+            <p class="stat-sub">{{ stat.subtitleKey | translate }}</p>
+          </div>
         </div>
       }
     </div>
