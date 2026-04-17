@@ -20,6 +20,8 @@ jobs:
         run: npm install --legacy-peer-deps
       - name: Build Application
         run: npx nx build app
+      - name: Validate SEO i18n content quality
+        run: npm run seo:i18n:validate
       - name: Validate SSR SEO output (critical routes)
         run: npm run seo:ssr:check
       - name: Run Lighthouse Audit
@@ -28,3 +30,12 @@ jobs:
           npm run lighthouse
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+      - name: Upload Lighthouse artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-report-${{ github.run_id }}
+          path: |
+            .lighthouseci
+            apps/app/lighthouse-results
+          if-no-files-found: warn

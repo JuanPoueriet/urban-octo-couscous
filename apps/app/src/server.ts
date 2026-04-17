@@ -10,7 +10,7 @@ import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 
 // --- AÑADIDO: Importar los datos para el sitemap dinámico ---
-import { PROJECTS, BLOG_POSTS, SOLUTIONS } from './app/core/data/mock-data';
+import { PROJECTS, BLOG_POSTS, SOLUTIONS, PRODUCTS } from './app/core/data/mock-data';
 import { SUPPORTED_LANGUAGES } from './app/core/constants/languages';
 import { BASE_URL, RESPONSE } from './app/core/constants/tokens';
 
@@ -125,6 +125,18 @@ const NOINDEX_ROUTES = ['/status', '/thank-you', '/server-error', '/not-found'];
  * Genera el XML del sitemap dinámicamente.
  * Refactorizado para mayor escalabilidad y modularidad.
  */
+type DynamicCollection = {
+  basePath: string;
+  items: Array<{ slug: string; date?: string }>;
+};
+
+const DYNAMIC_SITEMAP_COLLECTIONS: DynamicCollection[] = [
+  { basePath: 'solutions', items: SOLUTIONS },
+  { basePath: 'products', items: PRODUCTS },
+  { basePath: 'projects', items: PROJECTS },
+  { basePath: 'blog', items: BLOG_POSTS },
+];
+
 function generateSitemap(domain: string): string {
   let xml = '<?xml version="1.0" encoding="UTF-8"?>';
   xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">';
@@ -134,19 +146,23 @@ function generateSitemap(domain: string): string {
   // 1. Rutas estáticas
   xml += generateStaticEntriesXml(domain);
 
-  // 2. Rutas dinámicas (Soluciones, Proyectos, Blog)
-  xml += generateDynamicEntriesXml('solutions', SOLUTIONS, domain, now);
-  xml += generateDynamicEntriesXml('projects', PROJECTS, domain, now);
-  xml += generateDynamicEntriesXml('blog', BLOG_POSTS, domain, now);
+  // 2. Rutas dinámicas (colecciones escalables)
+  DYNAMIC_SITEMAP_COLLECTIONS.forEach(({ basePath, items }) => {
+    xml += generateDynamicEntriesXml(basePath, items, domain, now);
+  });
 
   xml += '</urlset>';
+
+  const dynamicEntriesCount = DYNAMIC_SITEMAP_COLLECTIONS.reduce((total, collection) => total + collection.items.length, 0);
+  const indexedRouteCount = staticRoutes.length + dynamicEntriesCount;
+  const sitemapEntryCount = indexedRouteCount * supportedLangs.length;
 
   latestSeoHealthSnapshot = {
     generatedAt: new Date().toISOString(),
     canonicalBaseUrl: domain,
-    indexedRouteCount: staticRoutes.length + SOLUTIONS.length + PROJECTS.length + BLOG_POSTS.length,
+    indexedRouteCount,
     localeCount: supportedLangs.length,
-    sitemapEntryCount: (staticRoutes.length + SOLUTIONS.length + PROJECTS.length + BLOG_POSTS.length) * supportedLangs.length,
+    sitemapEntryCount,
     noindexRoutes: NOINDEX_ROUTES,
   };
 
@@ -167,7 +183,12 @@ function generateStaticEntriesXml(domain: string): string {
 /**
  * Genera las entradas XML para rutas dinámicas basadas en una colección
  */
-function generateDynamicEntriesXml(basePath: string, collection: any[], domain: string, fallbackDate: string): string {
+function generateDynamicEntriesXml(
+  basePath: string,
+  collection: Array<{ slug: string; date?: string }>,
+  domain: string,
+  fallbackDate: string,
+): string {
   let xml = '';
   collection.forEach(item => {
     xml += generateUrlEntry(`${basePath}/${item.slug}`, item.date || fallbackDate, domain);
@@ -236,10 +257,12 @@ app.get('/sitemap.xml', (req, res) => {
 app.get('/seo/health', (req, res) => {
   const canonicalBaseUrl = resolveCanonicalBaseUrl(req);
   if (!latestSeoHealthSnapshot) {
+    const dynamicEntriesCount = DYNAMIC_SITEMAP_COLLECTIONS.reduce((total, collection) => total + collection.items.length, 0);
+    const indexedRouteCount = staticRoutes.length + dynamicEntriesCount;
     latestSeoHealthSnapshot = {
       generatedAt: new Date(0).toISOString(),
       canonicalBaseUrl,
-      indexedRouteCount: staticRoutes.length + SOLUTIONS.length + PROJECTS.length + BLOG_POSTS.length,
+      indexedRouteCount,
       localeCount: supportedLangs.length,
       sitemapEntryCount: 0,
       noindexRoutes: NOINDEX_ROUTES,

@@ -9,6 +9,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { PaginationComponent } from '@shared/components/pagination/pagination';
+import { Seo } from '@core/services/seo';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'jsl-blog',
@@ -30,6 +32,7 @@ import { PaginationComponent } from '@shared/components/pagination/pagination';
 export class Blog implements OnInit {
   private translate = inject(TranslateService);
   private dataService = inject(DataService);
+  private seoService = inject(Seo);
 
   public currentLang: string;
 
@@ -109,6 +112,46 @@ export class Blog implements OnInit {
   ngOnInit() {
     this.translate.onLangChange.subscribe((event) => {
       this.currentLang = event.lang;
+      this.syncBlogStructuredData();
+    });
+
+    this.dataService.getBlogPosts().pipe(take(1)).subscribe(() => this.syncBlogStructuredData());
+  }
+
+  private syncBlogStructuredData(): void {
+    const posts = this.allPosts();
+    if (!posts.length) return;
+
+    const baseUrl = this.seoService.getBaseUrl();
+    const blogUrl = `${baseUrl}/${this.currentLang}/blog`;
+    const itemListElements = posts.map((post, index) => {
+      const titleKey = `BLOG.${post.key}_TITLE`;
+      const excerptKey = `BLOG.${post.key}_EXCERPT`;
+      const title = this.translate.instant(titleKey);
+      const excerpt = this.translate.instant(excerptKey);
+      const postUrl = `${baseUrl}/${this.currentLang}/blog/${post.slug}`;
+
+      return {
+        '@type': 'BlogPosting',
+        position: index + 1,
+        headline: title !== titleKey ? title : post.slug,
+        description: excerpt !== excerptKey ? excerpt : undefined,
+        url: postUrl,
+        datePublished: post.date,
+        dateModified: post.date,
+        author: {
+          '@type': 'Organization',
+          name: 'JSL Technology',
+        },
+      };
+    });
+
+    this.seoService.setJsonLd({
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'JSL Technology Blog',
+      url: blogUrl,
+      itemListElement: itemListElements,
     });
   }
 
