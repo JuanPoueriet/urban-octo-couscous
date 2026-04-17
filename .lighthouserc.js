@@ -14,7 +14,6 @@ module.exports = {
       },
     },
     assert: {
-      budgetsFile: './apps/app/budgets.json',
       assertions: {
         'categories:performance': ['error', { minScore: 0.9 }],
         'categories:accessibility': ['error', { minScore: 0.9 }],
