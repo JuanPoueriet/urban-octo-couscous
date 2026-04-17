@@ -282,7 +282,7 @@ export class Seo {
       ],
       'contactPoint': {
         '@type': 'ContactPoint',
-        'telephone': '+34-900-000-000',
+        'telephone': '+1-809-264-1693',
         'contactType': 'customer service',
         'areaServed': 'Global',
         'availableLanguage': ['Spanish', 'English']
