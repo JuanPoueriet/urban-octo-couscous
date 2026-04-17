@@ -1,5 +1,5 @@
-import { Component, OnInit, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, signal, computed, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, ViewChild, ElementRef, AfterViewInit, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Card } from '@shared/components/card/card';
 import { AnimateOnScroll } from '@shared/directives/animate-on-scroll';
@@ -11,6 +11,11 @@ import { LucideAngularModule } from 'lucide-angular';
 import { PaginationComponent } from '@shared/components/pagination/pagination';
 import { Seo } from '@core/services/seo';
 import { take } from 'rxjs/operators';
+
+// Swiper modules
+import { Pagination, Autoplay, Navigation, EffectFade } from 'swiper/modules';
+import { register } from 'swiper/element/bundle';
+register();
 
 @Component({
   selector: 'jsl-blog',
@@ -28,11 +33,15 @@ import { take } from 'rxjs/operators';
   templateUrl: './blog.html',
   styleUrl: './blog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class Blog implements OnInit {
+export class Blog implements OnInit, AfterViewInit {
+  @ViewChild('featuredSwiper') swiperElement!: ElementRef;
+
   private translate = inject(TranslateService);
   private dataService = inject(DataService);
   private seoService = inject(Seo);
+  private platformId = inject(PLATFORM_ID);
 
   public currentLang: string;
 
@@ -82,19 +91,37 @@ export class Blog implements OnInit {
     });
   });
 
-  // 5. Señal computada para el artículo destacado (el primero que esté marcado y filtrado)
-  public featuredPost = computed(() =>
-    this.filteredPosts().find((p) => p.featured),
+  // 5. Señal computada para los artículos destacados
+  public featuredPosts = computed(() =>
+    this.filteredPosts().filter((p) => p.featured),
   );
 
-  // 6. Señal computada para los posts regulares (todos menos el destacado)
+  // 6. Señal computada para los posts regulares (todos menos los destacados)
   public regularPosts = computed(() => {
-    const featured = this.featuredPost();
-    if (featured) {
-      return this.filteredPosts().filter((p) => p.slug !== featured.slug);
-    }
-    return this.filteredPosts(); // Si no hay destacado, mostrar todos
+    const featured = this.featuredPosts();
+    const featuredSlugs = new Set(featured.map(p => p.slug));
+    return this.filteredPosts().filter((p) => !featuredSlugs.has(p.slug));
   });
+
+  public featuredSwiperConfig = {
+    modules: [Pagination, Autoplay, Navigation, EffectFade],
+    slidesPerView: 1,
+    effect: 'fade',
+    fadeEffect: {
+      crossFade: true
+    },
+    loop: true,
+    autoplay: {
+      delay: 5000,
+      disableOnInteraction: false,
+    },
+    pagination: {
+      clickable: true,
+      dynamicBullets: true,
+    },
+    navigation: true,
+    grabCursor: true
+  };
 
   // 7. Paginated posts
   public paginatedPosts = computed(() => {
@@ -116,6 +143,13 @@ export class Blog implements OnInit {
     });
 
     this.dataService.getBlogPosts().pipe(take(1)).subscribe(() => this.syncBlogStructuredData());
+  }
+
+  ngAfterViewInit() {
+    if (isPlatformBrowser(this.platformId) && this.swiperElement) {
+      Object.assign(this.swiperElement.nativeElement, this.featuredSwiperConfig);
+      this.swiperElement.nativeElement.initialize();
+    }
   }
 
   private syncBlogStructuredData(): void {
