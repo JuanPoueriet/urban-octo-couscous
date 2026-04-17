@@ -3,59 +3,81 @@
   <p class="page-subtitle" jslAnimateOnScroll>{{ 'BLOG.SUBTITLE' | translate }}</p>
 
   <div class="blog-controls" jslAnimateOnScroll>
-    <div class="search-bar">
-      <lucide-icon name="Search"></lucide-icon>
-      <input
-        type="text"
-        [placeholder]="'Buscar artículos...' | translate"
-        (input)="onSearch($event)"
-      />
+    <div class="search-bar-wrapper">
+      <div class="search-bar">
+        <lucide-icon name="Search"></lucide-icon>
+        <input
+          type="text"
+          [placeholder]="'Buscar artículos...' | translate"
+          (input)="onSearch($event)"
+        />
+      </div>
     </div>
 
     <div class="tag-filters">
       <button
         (click)="selectTag(null)"
         [class.active]="selectedTag() === null"
+        class="tag-btn"
       >
         {{ 'Todos' | translate }}
       </button>
       @for (tag of allTags(); track tag) {
-        <button (click)="selectTag(tag)" [class.active]="selectedTag() === tag">
+        <button
+          (click)="selectTag(tag)"
+          [class.active]="selectedTag() === tag"
+          class="tag-btn"
+        >
           {{ tag | titlecase }}
         </button>
       }
     </div>
   </div>
-  @if (featuredPost(); as post) {
-    <div class="featured-post-card" jslAnimateOnScroll>
-      <a [routerLink]="['/', currentLang, 'blog', post.slug]" class="featured-post__image">
-        <img [src]="post.imageUrl" [alt]="'BLOG.' + post.key + '_TITLE' | translate" width="800" height="400" loading="eager" fetchpriority="high" />
-      </a>
-      <div class="featured-post__content">
-        <span class="featured-post__eyebrow">
-          <lucide-icon name="Star"></lucide-icon> {{ 'Artículo Destacado' | translate }}
-        </span>
-        <h2 class="featured-post__title">
-          <a [routerLink]="['/', currentLang, 'blog', post.slug]">
-            {{ 'BLOG.' + post.key + '_TITLE' | translate }}
-          </a>
-        </h2>
-        <p class="featured-post__excerpt">
-          {{ 'BLOG.' + post.key + '_EXCERPT' | translate }}
-        </p>
-        <div class="featured-post__meta">
-          <span class="meta-item">
-            <lucide-icon name="Calendar"></lucide-icon>
-            {{ post.date | date : 'longDate' }}
-          </span>
-          <span class="meta-item">
-            <lucide-icon name="Clock"></lucide-icon>
-            {{ post.readTime }} {{ 'min de lectura' | translate }}
-          </span>
-        </div>
-      </div>
+
+  @if (featuredPosts().length > 0) {
+    <div class="featured-slider-container" jslAnimateOnScroll>
+      <swiper-container #featuredSwiper init="false" class="featured-slider">
+        @for (post of featuredPosts(); track post.key) {
+          <swiper-slide>
+            <div class="featured-post-card">
+              <a [routerLink]="['/', currentLang, 'blog', post.slug]" class="featured-post__image">
+                <img [src]="post.imageUrl" [alt]="'BLOG.' + post.key + '_TITLE' | translate" width="1200" height="600" loading="eager" fetchpriority="high" />
+              </a>
+              <div class="featured-post__content">
+                <div class="featured-post__info">
+                  <span class="featured-post__eyebrow">
+                    <lucide-icon name="Star"></lucide-icon> {{ 'Artículo Destacado' | translate }}
+                  </span>
+                  <h2 class="featured-post__title">
+                    <a [routerLink]="['/', currentLang, 'blog', post.slug]">
+                      {{ 'BLOG.' + post.key + '_TITLE' | translate }}
+                    </a>
+                  </h2>
+                  <p class="featured-post__excerpt">
+                    {{ 'BLOG.' + post.key + '_EXCERPT' | translate }}
+                  </p>
+                  <div class="featured-post__meta">
+                    <span class="meta-item">
+                      <lucide-icon name="Calendar"></lucide-icon>
+                      {{ post.date | date : 'longDate' }}
+                    </span>
+                    <span class="meta-item">
+                      <lucide-icon name="Clock"></lucide-icon>
+                      {{ post.readTime }} {{ 'min de lectura' | translate }}
+                    </span>
+                  </div>
+                  <a [routerLink]="['/', currentLang, 'blog', post.slug]" class="featured-post__cta">
+                    {{ 'Leer artículo' | translate }} <lucide-icon name="ArrowRight"></lucide-icon>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </swiper-slide>
+        }
+      </swiper-container>
     </div>
   }
+
   <div class="blog-grid">
     @for (post of paginatedPosts(); track post.key) {
       <jsl-card
@@ -63,6 +85,11 @@
         [title]="'BLOG.' + post.key + '_TITLE' | translate"
         [description]="'BLOG.' + post.key + '_EXCERPT' | translate"
         [link]="['/', currentLang, 'blog', post.slug]"
+        [meta]="{
+          date: post.date,
+          readTime: post.readTime,
+          tags: post.tags
+        }"
         jslAnimateOnScroll
       >
       </jsl-card>
@@ -78,7 +105,7 @@
     </app-pagination>
   }
 
-  @if (regularPosts().length === 0 && !featuredPost()) {
+  @if (regularPosts().length === 0 && featuredPosts().length === 0) {
     <p class="no-results" jslAnimateOnScroll>
       {{ 'No se encontraron artículos con esos filtros.' | translate }}
     </p>

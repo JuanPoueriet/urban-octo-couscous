@@ -20,4 +20,9 @@ export class Card {
   @Input() link: any[] | string | null = null; 
   @Input() externalLink: string | null | undefined = null;
   @Input() metrics: string[] = [];
+  @Input() meta: {
+    date?: string;
+    readTime?: number;
+    tags?: string[];
+  } | null = null;
 }
