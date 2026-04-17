@@ -124,26 +124,31 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   };
 
   public testimonialSwiperConfig: SwiperOptions = {
-    modules: [Pagination, Autoplay, EffectCoverflow],
-    effect: 'coverflow',
-    coverflowEffect: {
-      rotate: 50,
-      stretch: 0,
-      depth: 100,
-      modifier: 1,
-      slideShadows: true,
-    },
+    modules: [Pagination, Autoplay],
     spaceBetween: 30,
     grabCursor: true,
-    centeredSlides: true,
-    slidesPerView: 'auto',
+    centeredSlides: false,
+    slidesPerView: 1,
     loop: true,
     autoplay: {
       delay: 7000,
       disableOnInteraction: false,
+      pauseOnMouseEnter: true,
     },
     pagination: {
       clickable: true,
+      dynamicBullets: true,
+    },
+    breakpoints: {
+      640: {
+        slidesPerView: 1,
+      },
+      768: {
+        slidesPerView: 2,
+      },
+      1024: {
+        slidesPerView: 3,
+      },
     },
   };
 
@@ -466,26 +471,31 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
       if (testimonialSwiperEl) {
         Object.assign(testimonialSwiperEl, {
-          modules: [Pagination, Autoplay, EffectCoverflow],
-          effect: 'coverflow',
-          coverflowEffect: {
-            rotate: 50,
-            stretch: 0,
-            depth: 100,
-            modifier: 1,
-            slideShadows: true,
-          },
+          modules: [Pagination, Autoplay],
           spaceBetween: 30,
           grabCursor: true,
-          centeredSlides: true,
-          slidesPerView: 'auto',
+          centeredSlides: false,
+          slidesPerView: 1,
           loop: true,
           autoplay: {
             delay: 7000,
             disableOnInteraction: false,
+            pauseOnMouseEnter: true,
           },
           pagination: {
             clickable: true,
+            dynamicBullets: true,
+          },
+          breakpoints: {
+            640: {
+              slidesPerView: 1,
+            },
+            768: {
+              slidesPerView: 2,
+            },
+            1024: {
+              slidesPerView: 3,
+            },
           },
         });
 

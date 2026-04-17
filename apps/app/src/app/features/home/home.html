@@ -367,31 +367,39 @@
     </div>
     <swiper-container [config]="testimonialSwiperConfig" init="true" class="testimonial-slider" [attr.dir]="directionService.isRtl() ? 'rtl' : 'ltr'">
       @for (testimonial of testimonials(); track testimonial.nameKey) {
-        <swiper-slide class="testimonial-card">
-          <div class="testimonial-card__stars">
-            @for (star of getStars(5); track $index) {
-              <lucide-icon name="Star"></lucide-icon>
-            }
-          </div>
-          <p class="testimonial-card__text">"{{ testimonial.textKey | translate }}"</p>
-          <div class="testimonial-card__author">
-            <img
-              [src]="testimonial.imageUrl"
-              [alt]="testimonial.nameKey | translate"
-              loading="lazy"
-              width="60"
-              height="60"
-            />
-            <div class="testimonial-card__author-info">
-              <span class="name">{{ testimonial.nameKey | translate }}</span>
-              <span class="role">{{ testimonial.roleKey | translate }}</span>
+        <swiper-slide class="testimonial-card-wrapper">
+          <div class="testimonial-card">
+            <div class="testimonial-card__header">
+              <div class="testimonial-card__stars">
+                @for (star of getStars(5); track $index) {
+                  <lucide-icon name="Star"></lucide-icon>
+                }
+              </div>
+              <lucide-icon name="Quote" class="testimonial-card__quote"></lucide-icon>
             </div>
-          </div>
 
-          <!-- Social Proof Badge Simulation -->
-          <div class="social-proof-badge">
-             <lucide-icon name="CheckCircle" size="14"></lucide-icon>
-             <span>Verified Review</span>
+            <p class="testimonial-card__text">"{{ testimonial.textKey | translate }}"</p>
+
+            <div class="testimonial-card__footer">
+              <div class="testimonial-card__author">
+                <img
+                  [src]="testimonial.imageUrl"
+                  [alt]="testimonial.nameKey | translate"
+                  loading="lazy"
+                  width="48"
+                  height="48"
+                />
+                <div class="testimonial-card__author-info">
+                  <span class="name">{{ testimonial.nameKey | translate }}</span>
+                  <span class="role">{{ testimonial.roleKey | translate }}</span>
+                </div>
+              </div>
+
+              <div class="testimonial-card__badge">
+                <lucide-icon name="ShieldCheck" size="14"></lucide-icon>
+                <span>{{ 'HOME.TESTIMONIALS_VERIFIED' | translate }}</span>
+              </div>
+            </div>
           </div>
         </swiper-slide>
       }

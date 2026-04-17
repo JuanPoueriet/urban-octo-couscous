@@ -503,12 +503,16 @@ swiper-container {
   // --- NUEVO: Paginación de Testimonios ---
   .testimonials-section .swiper-pagination-bullet {
     background: var(--border-color);
-    width: 10px;
-    height: 10px;
-    opacity: 1;
+    width: 8px;
+    height: 8px;
+    opacity: 0.5;
+    transition: all var(--transition-base);
   }
   .testimonials-section .swiper-pagination-bullet-active {
     background: var(--primary);
+    opacity: 1;
+    width: 24px;
+    border-radius: 4px;
   }
 }
 
@@ -680,100 +684,120 @@ swiper-container {
 
 .testimonial-slider {
   width: 100%;
-  padding-bottom: 4rem; // Espacio para la paginación
+  padding: 1rem 0 5rem 0;
+}
+
+.testimonial-card-wrapper {
+  height: auto;
+  padding: 1rem;
 }
 
 .testimonial-card {
-  background-color: var(--bg-primary); // Más oscuro que el fondo de la sección
+  height: 100%;
+  background-color: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 2.5rem 2rem;
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  position: relative; // 2. Necesario para los pseudo-elementos
-  overflow: hidden; // 3. Necesario para el glow
+  gap: 2rem;
+  transition: all var(--transition-base);
+  position: relative;
+  box-shadow: var(--shadow-sm);
 
-  // 4. Icono de comillas gigante como fondo (sutil)
-  &::before {
-    content: '“';
-    position: absolute;
-    top: -20px;
-    inset-inline-start: 1rem;
-    font-size: 150px;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.03);
-    z-index: 1;
-    line-height: 1;
+  &:hover {
+    transform: translateY(-5px);
+    border-color: rgba(var(--primary-rgb), 0.3);
+    box-shadow: var(--shadow-md);
   }
 
-  // Estilos del slide de coverflow
-  width: 100%;
-  max-width: 400px; // Ancho máximo de la tarjeta
-  height: auto;
-  
-  // Sombra y efecto 3D
-  transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  z-index: 2; // 5. Asegurar que la tarjeta esté sobre el glow
-
-  .swiper-slide-active & {
-    // La tarjeta del centro
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-    transform: scale(1.05); // 6. Hacer la activa un poco más grande
-    border-color: rgba(var(--primary-rgb), 0.5);
-  }
-}
-
-.testimonial-card__stars {
-  display: flex;
-  gap: 0.25rem;
-  color: #f39c12; // Amarillo estrella
-  z-index: 3; // Sobre el icono de comillas
-  lucide-icon {
-    width: 20px;
-    height: 20px;
-    // Rellenar la estrella
-    fill: #f39c12;
-  }
-}
-
-.testimonial-card__text {
-  font-size: 1.15rem; // 7. Un poco más grande
-  font-style: italic;
-  font-weight: 400; // 8. Más legible
-  color: var(--text-main);
-  line-height: 1.7;
-  flex-grow: 1; // Para alinear al autor abajo
-  z-index: 3; // Sobre el icono de comillas
-}
-
-.testimonial-card__author {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-top: auto;
-  z-index: 3; // Sobre el icono de comillas
-  
-  img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border: 2px solid var(--border-color);
-  }
-  
-  &-info {
+  &__header {
     display: flex;
-    flex-direction: column;
-    
-    .name {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text-main);
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__stars {
+    display: flex;
+    gap: 2px;
+    color: #f59e0b; // Amber 500
+
+    ::ng-deep svg {
+      width: 18px;
+      height: 18px;
+      fill: #f59e0b;
+      stroke-width: 1;
     }
-    .role {
-      font-size: 0.9rem;
-      color: var(--text-muted);
+  }
+
+  &__quote {
+    color: var(--primary);
+    opacity: 0.15;
+    width: 32px;
+    height: 32px;
+  }
+
+  &__text {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--text-main);
+    font-style: italic;
+    flex-grow: 1;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+  }
+
+  &__author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--bg-secondary);
+    }
+
+    &-info {
+      display: flex;
+      flex-direction: column;
+
+      .name {
+        font-weight: 600;
+        color: var(--text-main);
+        font-size: 0.95rem;
+      }
+      .role {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+    }
+  }
+
+  &__badge {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.8rem;
+    background: rgba(var(--primary-rgb), 0.05);
+    color: var(--primary);
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+
+    lucide-icon {
+      width: 14px;
+      height: 14px;
     }
   }
 }
