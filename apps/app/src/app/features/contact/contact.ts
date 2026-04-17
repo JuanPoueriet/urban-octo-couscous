@@ -56,7 +56,7 @@ export class Contact implements OnInit, OnDestroy {
   onSubmit(): void {
     if (this.contactForm.invalid) {
       this.contactForm.markAllAsTouched();
-      this.toastService.show('CONTACT.ERROR_MESSAGE', 'error');
+      this.toastService.show('CONTACT.FORM.ERROR', 'error');
       return;
     }
 
@@ -65,7 +65,7 @@ export class Contact implements OnInit, OnDestroy {
       console.warn('Bot detected via honeypot');
       this.submitSuccess = true;
       this.contactForm.reset();
-      this.toastService.show('CONTACT.SUCCESS_MESSAGE', 'success');
+      this.toastService.show('CONTACT.FORM.SUCCESS', 'success');
       return;
     }
 
@@ -86,13 +86,13 @@ export class Contact implements OnInit, OnDestroy {
           console.log('Respuesta de API:', response);
           this.submitSuccess = true;
           this.contactForm.reset();
-          this.toastService.show('CONTACT.SUCCESS_MESSAGE', 'success');
+          this.toastService.show('CONTACT.FORM.SUCCESS', 'success');
           this.router.navigate(['/thank-you']);
         },
         error: (err: any) => {
           console.error('Error al enviar formulario:', err);
           this.submitError = true;
-          this.toastService.show('CONTACT.ERROR_MESSAGE', 'error');
+          this.toastService.show('CONTACT.FORM.ERROR', 'error');
         },
       });
   }
