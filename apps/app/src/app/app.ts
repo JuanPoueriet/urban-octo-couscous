@@ -47,7 +47,7 @@ export class App implements OnInit {
     private translate: TranslateService,
     private seo: Seo,
     private directionService: DirectionService, // Inject to initialize
-    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(PLATFORM_ID) private platformId: object,
     private cookieService: CookieService,
   ) {
     this.seo.init();

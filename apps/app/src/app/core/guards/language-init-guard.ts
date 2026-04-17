@@ -9,7 +9,7 @@ export class LanguageInitService {
   constructor(
     private translate: TranslateService,
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(PLATFORM_ID) private platformId: object,
     // --- 2. INYECTAR DOCUMENT ---
     @Inject(DOCUMENT) private document: Document
   ) {}

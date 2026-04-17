@@ -10,11 +10,11 @@ test.describe('SEO Technical Audit', () => {
       await page.goto(`${baseUrl}/${lang}/home`);
 
       // Canonical
-      const canonical = await page.locator('link[rel="canonical"]');
+      const canonical = page.locator('link[rel="canonical"]');
       await expect(canonical).toHaveAttribute('href', `${baseUrl}/${lang}`);
 
       // Hreflang
-      const hreflangs = await page.locator('link[rel="alternate"][hreflang]');
+      const hreflangs = page.locator('link[rel="alternate"][hreflang]');
       await expect(hreflangs).toHaveCount(totalLangsCount);
       await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute('href', `${baseUrl}/en`);
 
@@ -22,18 +22,18 @@ test.describe('SEO Technical Audit', () => {
       const title = await page.title();
       expect(title).toContain('JSL Technology');
 
-      const description = await page.locator('meta[name="description"]');
+      const description = page.locator('meta[name="description"]');
       await expect(description).toHaveAttribute('content', /.+/); // Not empty
 
       // Robots
-      const robots = await page.locator('meta[name="robots"]');
+      const robots = page.locator('meta[name="robots"]');
       await expect(robots).toHaveAttribute('content', 'index, follow');
     });
   }
 
   test('Organization schema should be present on all pages', async ({ page }) => {
     await page.goto(`${baseUrl}/en/home`);
-    const schemaScript = await page.locator('script[type="application/ld+json"]#organization-schema');
+    const schemaScript = page.locator('script[type="application/ld+json"]#organization-schema');
     const schemaText = await schemaScript.textContent();
     const schema = JSON.parse(schemaText || '{}');
     expect(schema['@type']).toBe('Organization');
@@ -50,7 +50,7 @@ test.describe('SEO Technical Audit', () => {
     expect(title).toContain('JSL Technology');
 
     // Schema Service
-    const schemaScript = await page.locator('script[type="application/ld+json"]#structured-data');
+    const schemaScript = page.locator('script[type="application/ld+json"]#structured-data');
     const schemaText = await schemaScript.textContent();
     const schema = JSON.parse(schemaText || '{}');
     expect(schema['@type']).toBe('Service');
@@ -58,7 +58,7 @@ test.describe('SEO Technical Audit', () => {
     expect(schema['provider']['name']).toBe('JSL Technology');
 
     // Breadcrumb schema
-    const bcScript = await page.locator('script[type="application/ld+json"]#breadcrumb-schema');
+    const bcScript = page.locator('script[type="application/ld+json"]#breadcrumb-schema');
     const bcText = await bcScript.textContent();
     const bcSchema = JSON.parse(bcText || '{}');
     expect(bcSchema['@type']).toBe('BreadcrumbList');
@@ -67,7 +67,7 @@ test.describe('SEO Technical Audit', () => {
 
   test('Product detail page should have Product schema', async ({ page }) => {
     await page.goto(`${baseUrl}/en/products/jsl-erp`);
-    const schemaScript = await page.locator('script[type="application/ld+json"]#structured-data');
+    const schemaScript = page.locator('script[type="application/ld+json"]#structured-data');
     const schemaText = await schemaScript.textContent();
     const schema = JSON.parse(schemaText || '{}');
     expect(schema['@type']).toBe('Product');
@@ -77,7 +77,7 @@ test.describe('SEO Technical Audit', () => {
 
   test('Project detail page should have CreativeWork schema', async ({ page }) => {
     await page.goto(`${baseUrl}/en/projects/erp-logistics-optimization`);
-    const schemaScript = await page.locator('script[type="application/ld+json"]#structured-data');
+    const schemaScript = page.locator('script[type="application/ld+json"]#structured-data');
     const schemaText = await schemaScript.textContent();
     const schema = JSON.parse(schemaText || '{}');
     expect(schema['@type']).toBe('CreativeWork');
@@ -88,7 +88,7 @@ test.describe('SEO Technical Audit', () => {
   test('Blog detail page should have BlogPosting schema', async ({ page }) => {
     await page.goto(`${baseUrl}/en/blog/future-of-angular-ssr`);
 
-    const schemaScript = await page.locator('script[type="application/ld+json"]#structured-data');
+    const schemaScript = page.locator('script[type="application/ld+json"]#structured-data');
     const schemaText = await schemaScript.textContent();
     const schema = JSON.parse(schemaText || '{}');
     expect(schema['@type']).toBe('BlogPosting');
@@ -99,7 +99,7 @@ test.describe('SEO Technical Audit', () => {
   test('Blog listing page should expose structured editorial ItemList schema', async ({ page }) => {
     await page.goto(`${baseUrl}/en/blog`);
 
-    const schemaScript = await page.locator('script[type="application/ld+json"]#structured-data');
+    const schemaScript = page.locator('script[type="application/ld+json"]#structured-data');
     const schemaText = await schemaScript.textContent();
     const schema = JSON.parse(schemaText || '{}');
     expect(schema['@type']).toBe('ItemList');
@@ -111,7 +111,7 @@ test.describe('SEO Technical Audit', () => {
   test('FAQ page should have FAQPage schema', async ({ page }) => {
     await page.goto(`${baseUrl}/es/faq`);
 
-    const schemaScript = await page.locator('script[type="application/ld+json"]#faq-schema');
+    const schemaScript = page.locator('script[type="application/ld+json"]#faq-schema');
     const schemaText = await schemaScript.textContent();
     const schema = JSON.parse(schemaText || '{}');
     expect(schema['@type']).toBe('FAQPage');
@@ -176,13 +176,13 @@ test.describe('SEO Technical Audit', () => {
 
   test('Status page should have noindex meta tag', async ({ page }) => {
     await page.goto(`${baseUrl}/en/status`);
-    const robots = await page.locator('meta[name="robots"]');
+    const robots = page.locator('meta[name="robots"]');
     await expect(robots).toHaveAttribute('content', 'noindex, follow');
   });
 
   test('All images should have an alt attribute', async ({ page }) => {
     await page.goto(`${baseUrl}/en/home`);
-    const images = await page.locator('img');
+    const images = page.locator('img');
     const count = await images.count();
     for (let i = 0; i < count; i++) {
       const alt = await images.nth(i).getAttribute('alt');
@@ -195,7 +195,7 @@ test.describe('SEO Technical Audit', () => {
     const pages = ['/en/home', '/en/solutions', '/en/blog', '/en/about-us'];
     for (const route of pages) {
       await page.goto(`${baseUrl}${route}`);
-      const h1s = await page.locator('h1');
+      const h1s = page.locator('h1');
       await expect(h1s).toHaveCount(1);
     }
   });

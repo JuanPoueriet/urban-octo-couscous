@@ -14,7 +14,7 @@ import { BlogPost, Solution } from '@core/services/data.service';
 export class RelatedContentComponent {
   @Input() items: (BlogPost | Solution)[] = [];
   @Input() type: 'blog' | 'solution' = 'blog';
-  @Input() title: string = 'RELATED.TITLE';
+  @Input() title = 'RELATED.TITLE';
 
   getItemLink(item: any): string[] {
     if (this.type === 'blog') {

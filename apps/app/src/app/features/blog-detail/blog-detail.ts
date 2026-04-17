@@ -32,7 +32,7 @@ import { DirectionService } from '@core/services/direction.service';
 import { SocialShareComponent } from '@shared/components/social-share/social-share';
 
 // Swiper Web Components
-import { Pagination, Autoplay } from 'swiper/modules';
+import { Pagination, Autoplay, Navigation, FreeMode } from 'swiper/modules';
 import { register } from 'swiper/element/bundle';
 register();
 
@@ -71,12 +71,12 @@ export class BlogDetail
   @ViewChild('copyTooltip') copyTooltip!: ElementRef;
   @ViewChild('bannerImage') bannerImage!: ElementRef;
 
-  public currentLang: string = 'es';
+  public currentLang = 'es';
   public post$: Observable<BlogPost | undefined>;
   public relatedPosts$: Observable<BlogPost[]>;
   public author$: Observable<TeamMember | undefined>;
 
-  public scrollProgress: number = 0;
+  public scrollProgress = 0;
   private langSub: Subscription | undefined;
   private postData: BlogPost | undefined;
   private highlighted = false;
@@ -163,24 +163,22 @@ export class BlogDetail
 
       if (swiperEl) {
         Object.assign(swiperEl, {
-          modules: [Pagination, Autoplay],
-          spaceBetween: 15,
-          slidesPerView: 1.4,
-          centeredSlides: true,
+          modules: [Pagination, Autoplay, Navigation, FreeMode],
+          spaceBetween: 24,
+          slidesPerView: 'auto',
+          centeredSlides: false,
           grabCursor: true,
+          freeMode: true,
           pagination: {
             clickable: true,
             dynamicBullets: true,
           },
-          // autoplay: {
-          //   delay: 5000,
-          //   disableOnInteraction: false,
-          // },
           breakpoints: {
-            640: { slidesPerView: 1.5 },
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 2.5 },
-            1200: { slidesPerView: 3 },
+            320: { slidesPerView: 1.2, spaceBetween: 16 },
+            480: { slidesPerView: 1.5, spaceBetween: 20 },
+            768: { slidesPerView: 2.2, spaceBetween: 24 },
+            1024: { slidesPerView: 3, spaceBetween: 30 },
+            1400: { slidesPerView: 3.5, spaceBetween: 30 },
           },
         });
 

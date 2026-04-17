@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
 import { ALL_ICONS } from '@core/constants/icons';
@@ -12,11 +12,12 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrls: ['./social-share.scss']
 })
 export class SocialShareComponent {
-  @Input() url: string = '';
-  @Input() title: string = '';
-  @Input() description: string = '';
+  @Input() url = '';
+  @Input() title = '';
+  @Input() description = '';
 
   readonly icons = ALL_ICONS;
+  public copied = signal(false);
 
   get shareUrl(): string {
     // If running in browser, use window.location.href if url is not provided or relative
@@ -47,15 +48,17 @@ export class SocialShareComponent {
         break;
     }
 
-    if (shareLink) {
+    if (shareLink && typeof window !== 'undefined') {
       window.open(shareLink, '_blank', 'width=600,height=400');
     }
   }
 
   copyLink(): void {
-    navigator.clipboard.writeText(this.shareUrl).then(() => {
-      // Could show a small tooltip or just rely on user knowing it worked
-      // Or emit an event to show a toast
-    });
+    if (typeof navigator !== 'undefined') {
+      navigator.clipboard.writeText(this.shareUrl).then(() => {
+        this.copied.set(true);
+        setTimeout(() => this.copied.set(false), 2000);
+      });
+    }
   }
 }

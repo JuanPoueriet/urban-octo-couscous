@@ -15,8 +15,8 @@ import { TranslateModule } from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LogoCard {
-  @Input() imageUrl: string = '';
-  @Input() name: string = 'Technology Logo';
+  @Input() imageUrl = '';
+  @Input() name = 'Technology Logo';
   
   @Input() nameKey: string | null = null;
 }

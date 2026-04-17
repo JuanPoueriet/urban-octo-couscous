@@ -28,7 +28,7 @@ import { Seo } from '@core/services/seo';
   styleUrls: ['./solution-detail.scss'],
 })
 export class SolutionDetail implements OnInit, OnDestroy {
-  public currentLang: string = 'es';
+  public currentLang = 'es';
   // Initialize with EMPTY or a default value to satisfy strict property initialization
   public solution$: Observable<Solution | undefined> = of(undefined);
 

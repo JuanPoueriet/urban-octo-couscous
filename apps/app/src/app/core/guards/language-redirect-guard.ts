@@ -8,7 +8,7 @@ export class LanguageRedirectService {
   constructor(
     private router: Router,
     private translate: TranslateService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: object
   ) {}
 
   redirect(): boolean {
