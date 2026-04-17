@@ -14,10 +14,15 @@ import { TranslateModule } from '@ngx-translate/core';
 export class Card {
   @Input() icon: string | null = 'Settings';
   @Input() imageUrl: string | null = null;
-  @Input() title: string = 'Card Title';
-  @Input() description: string = 'Card description goes here.';
+  @Input() title = 'Card Title';
+  @Input() description = 'Card description goes here.';
   
   @Input() link: any[] | string | null = null; 
   @Input() externalLink: string | null | undefined = null;
   @Input() metrics: string[] = [];
+  @Input() meta: {
+    date?: string;
+    readTime?: number;
+    tags?: string[];
+  } | null = null;
 }
