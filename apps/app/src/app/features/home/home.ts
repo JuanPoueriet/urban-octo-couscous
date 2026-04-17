@@ -308,7 +308,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
           ],
           'contactPoint': {
             '@type': 'ContactPoint',
-            'telephone': '+1-809-555-5555',
+            'telephone': '+1-809-264-1693',
             'contactType': 'customer service',
             'areaServed': 'Global',
             'availableLanguage': ['Spanish', 'English']
