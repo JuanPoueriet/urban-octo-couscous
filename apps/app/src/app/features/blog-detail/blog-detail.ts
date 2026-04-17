@@ -71,12 +71,12 @@ export class BlogDetail
   @ViewChild('copyTooltip') copyTooltip!: ElementRef;
   @ViewChild('bannerImage') bannerImage!: ElementRef;
 
-  public currentLang: string = 'es';
+  public currentLang = 'es';
   public post$: Observable<BlogPost | undefined>;
   public relatedPosts$: Observable<BlogPost[]>;
   public author$: Observable<TeamMember | undefined>;
 
-  public scrollProgress: number = 0;
+  public scrollProgress = 0;
   private langSub: Subscription | undefined;
   private postData: BlogPost | undefined;
   private highlighted = false;
@@ -164,23 +164,27 @@ export class BlogDetail
       if (swiperEl) {
         Object.assign(swiperEl, {
           modules: [Pagination, Autoplay],
-          spaceBetween: 15,
-          slidesPerView: 1.4,
-          centeredSlides: true,
+          spaceBetween: 24,
+          slidesPerView: 1.2,
+          centeredSlides: false,
           grabCursor: true,
           pagination: {
             clickable: true,
             dynamicBullets: true,
           },
-          // autoplay: {
-          //   delay: 5000,
-          //   disableOnInteraction: false,
-          // },
           breakpoints: {
-            640: { slidesPerView: 1.5 },
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 2.5 },
-            1200: { slidesPerView: 3 },
+            640: {
+              slidesPerView: 1.5,
+              spaceBetween: 24
+            },
+            768: {
+              slidesPerView: 2,
+              spaceBetween: 32
+            },
+            1024: {
+              slidesPerView: 3,
+              spaceBetween: 32
+            },
           },
         });
 
