@@ -39,7 +39,8 @@ export class Contact implements OnInit, OnDestroy {
       email: ['', [Validators.required, Validators.email]],
       service: ['', [Validators.required]],
       message: ['', [Validators.required, Validators.minLength(10)]],
-      privacy: [false, Validators.requiredTrue]
+      privacy: [false, Validators.requiredTrue],
+      honeypot: ['']
     });
   }
 
@@ -56,6 +57,15 @@ export class Contact implements OnInit, OnDestroy {
     if (this.contactForm.invalid) {
       this.contactForm.markAllAsTouched();
       this.toastService.show('CONTACT.ERROR_MESSAGE', 'error');
+      return;
+    }
+
+    // Honeypot check
+    if (this.contactForm.value.honeypot) {
+      console.warn('Bot detected via honeypot');
+      this.submitSuccess = true;
+      this.contactForm.reset();
+      this.toastService.show('CONTACT.SUCCESS_MESSAGE', 'success');
       return;
     }
 

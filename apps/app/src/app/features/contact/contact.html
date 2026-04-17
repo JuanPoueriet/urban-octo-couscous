@@ -35,6 +35,12 @@
     <!-- Columna 2: Formulario de Contacto -->
     <form class="contact-form" [formGroup]="contactForm" (ngSubmit)="onSubmit()">
       
+      <!-- Honeypot field (hidden from users) -->
+      <div style="display: none;">
+        <label for="honeypot">Leave this field blank</label>
+        <input type="text" id="honeypot" formControlName="honeypot">
+      </div>
+
       <!-- Campo Nombre -->
       <div class="form-group">
         <label for="name">{{ 'CONTACT.FORM.NAME' | translate }}</label>
