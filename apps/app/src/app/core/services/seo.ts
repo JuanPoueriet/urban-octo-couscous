@@ -25,7 +25,7 @@ export class Seo {
     private activatedRoute: ActivatedRoute,
     private translate: TranslateService,
     @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(PLATFORM_ID) private platformId: object,
     @Inject(BASE_URL) private baseUrl: string,
     @Optional() @Inject(RESPONSE) private response: any
   ) {
@@ -201,7 +201,7 @@ export class Seo {
   /**
    * 4. ¡NUEVO! Actualiza las etiquetas Meta de Open Graph y Twitter.
    */
-  public updateSocialTags(title: string, description: string, url: string, imageUrl: string, ogType: string = 'website'): void {
+  public updateSocialTags(title: string, description: string, url: string, imageUrl: string, ogType = 'website'): void {
     // Open Graph (Facebook, LinkedIn, etc.)
     this.metaService.updateTag({ property: 'og:title', content: title });
     this.metaService.updateTag({ property: 'og:description', content: description });
@@ -234,7 +234,7 @@ export class Seo {
   /**
    * 8. ¡NUEVO! Gestiona scripts de Datos Estructurados (JSON-LD).
    */
-  public setJsonLd(schema: any, id: string = 'structured-data'): void {
+  public setJsonLd(schema: any, id = 'structured-data'): void {
     const schemaName = id;
 
     // 8.1. Limpiar script previo (solo navegador para evitar fugas en navegación SPA)

@@ -9,8 +9,8 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./skeleton-loader.component.scss']
 })
 export class SkeletonLoaderComponent {
-  @Input() width: string = '100%';
-  @Input() height: string = '20px';
+  @Input() width = '100%';
+  @Input() height = '20px';
   @Input() shape: 'rectangle' | 'circle' = 'rectangle';
-  @Input() count: number = 1;
+  @Input() count = 1;
 }

@@ -18,7 +18,7 @@ export class ToastService {
 
   constructor() {}
 
-  show(message: string, type: 'success' | 'error' | 'info' | 'warning' = 'info', duration: number = 3000): void {
+  show(message: string, type: 'success' | 'error' | 'info' | 'warning' = 'info', duration = 3000): void {
     const id = this.counter++;
     const toast: Toast = { id, message, type, duration };
     const currentToasts = this.toastsSubject.getValue();

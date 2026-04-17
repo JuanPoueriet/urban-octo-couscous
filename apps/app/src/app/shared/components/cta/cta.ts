@@ -20,10 +20,10 @@ import { AnimateOnScroll } from '@shared/directives/animate-on-scroll';
   styleUrl: './cta.scss'
 })
 export class CtaComponent {
-  @Input() eyebrowKey: string = 'HOME.CTA_EYEBROW';
-  @Input() titleKey: string = 'HOME.CTA_TITLE';
-  @Input() subtitleKey: string = 'HOME.CTA_SUBTITLE';
-  @Input() ctaTextKey: string = 'HOME.CTA_BUTTON';
+  @Input() eyebrowKey = 'HOME.CTA_EYEBROW';
+  @Input() titleKey = 'HOME.CTA_TITLE';
+  @Input() subtitleKey = 'HOME.CTA_SUBTITLE';
+  @Input() ctaTextKey = 'HOME.CTA_BUTTON';
   @Input() ctaLink: string[] = ['/', 'es', 'contact'];
 
   public currentLang: string;

@@ -25,7 +25,7 @@ import { Seo } from '@core/services/seo';
 })
 export class ProductDetail implements OnInit, OnDestroy {
   
-  public currentLang: string = 'es';
+  public currentLang = 'es';
   public product$: Observable<Product | undefined> | undefined;
   
   private langSub: Subscription | undefined;

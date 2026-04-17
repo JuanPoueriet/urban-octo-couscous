@@ -10,11 +10,11 @@ import { LucideAngularModule } from 'lucide-angular';
   styleUrls: ['./image-comparison.scss']
 })
 export class ImageComparisonComponent implements AfterViewInit {
-  @Input() beforeImage: string = '';
-  @Input() afterImage: string = '';
-  @Input() beforeLabel: string = 'Before';
-  @Input() afterLabel: string = 'After';
-  @Input() alt: string = 'Image comparison';
+  @Input() beforeImage = '';
+  @Input() afterImage = '';
+  @Input() beforeLabel = 'Before';
+  @Input() afterLabel = 'After';
+  @Input() alt = 'Image comparison';
 
   @ViewChild('container') containerRef!: ElementRef<HTMLElement>;
 

@@ -1,62 +1,187 @@
-@use 'app/styles/variables' as *;
-
 .social-share {
+  margin: 4rem 0;
   display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 24px 0;
-  border-top: 1px solid #e5e7eb;
-  margin-top: 32px;
+  justify-content: center;
+  width: 100%;
 
-  .label {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #4b5563;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  .share-container {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .share-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+
+    .header-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        var(--border-color) 50%,
+        transparent 100%);
+      opacity: 0.5;
+    }
+
+    .label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      white-space: nowrap;
+    }
   }
 
   .buttons {
     display: flex;
-    gap: 12px;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 
   .share-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #e5e7eb;
-    background: white;
-    color: #6b7280;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-muted);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(8px);
+    position: relative;
+    overflow: hidden;
 
-    &:hover {
-      transform: translateY(-2px);
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--accent-gradient);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 0;
     }
 
-    &.linkedin:hover { background: #0077b5; color: white; border-color: #0077b5; }
-    &.twitter:hover { background: #1da1f2; color: white; border-color: #1da1f2; }
-    &.facebook:hover { background: #1877f2; color: white; border-color: #1877f2; }
-    &.mail:hover { background: #ea4335; color: white; border-color: #ea4335; }
-    &.copy:hover { background: #1f2937; color: white; border-color: #1f2937; }
+    lucide-icon {
+      position: relative;
+      z-index: 1;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    &:hover {
+      transform: translateY(-5px);
+      border-color: rgba(var(--primary-rgb), 0.3);
+      color: var(--text-main);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+
+      lucide-icon {
+        transform: scale(1.1);
+      }
+    }
+
+    &.linkedin:hover {
+      color: #0077b5;
+      background: rgba(0, 119, 181, 0.1);
+    }
+    &.twitter:hover {
+      color: #1da1f2;
+      background: rgba(29, 161, 242, 0.1);
+    }
+    &.facebook:hover {
+      color: #1877f2;
+      background: rgba(24, 119, 242, 0.1);
+    }
+    &.mail:hover {
+      color: var(--primary);
+      background: rgba(var(--primary-rgb), 0.1);
+    }
+
+    &.copy {
+      &.is-copied {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: white;
+
+        lucide-icon {
+          animation: pop 0.3s ease-out;
+        }
+      }
+    }
+  }
+
+  .copy-wrapper {
+    position: relative;
+  }
+
+  .copy-tooltip {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: var(--bg-card);
+    color: var(--text-main);
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+    z-index: 10;
+
+    &.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: 50%;
+      transform: translateX(-50%) rotate(45deg);
+      width: 8px;
+      height: 8px;
+      background: var(--bg-card);
+      border-left: 1px solid var(--border-color);
+      border-top: 1px solid var(--border-color);
+    }
   }
 }
 
-// Dark Mode
-:host-context(.dark) {
-  .social-share {
-    border-color: #374151;
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
 
-    .label { color: #9ca3af; }
+@media (max-width: 480px) {
+  .social-share {
+    .buttons {
+      gap: 0.75rem;
+    }
 
     .share-btn {
-      background: #1f2937;
-      border-color: #374151;
-      color: #9ca3af;
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
     }
   }
 }

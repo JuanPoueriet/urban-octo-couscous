@@ -12,7 +12,7 @@ export class DirectionService {
   constructor(
     private translate: TranslateService,
     @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: object
   ) {
     this.init();
   }

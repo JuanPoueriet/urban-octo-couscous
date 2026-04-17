@@ -92,7 +92,7 @@ export class Header implements OnInit, OnDestroy, AfterViewInit {
     private renderer: Renderer2,
     private ngZone: NgZone,
     private cdRef: ChangeDetectorRef,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: object
   ) {
     this.currentLang = this.translate.getCurrentLang() || this.translate.defaultLang || 'es';
     this.isBrowser = isPlatformBrowser(this.platformId);
