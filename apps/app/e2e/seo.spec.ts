@@ -96,6 +96,18 @@ test.describe('SEO Technical Audit', () => {
     expect(schema['author']['name']).toBe('JSL Technology');
   });
 
+  test('Blog listing page should expose structured editorial ItemList schema', async ({ page }) => {
+    await page.goto(`${baseUrl}/en/blog`);
+
+    const schemaScript = await page.locator('script[type="application/ld+json"]#structured-data');
+    const schemaText = await schemaScript.textContent();
+    const schema = JSON.parse(schemaText || '{}');
+    expect(schema['@type']).toBe('ItemList');
+    expect(Array.isArray(schema['itemListElement'])).toBeTruthy();
+    expect(schema['itemListElement'].length).toBeGreaterThan(0);
+    expect(schema['itemListElement'][0]['@type']).toBe('BlogPosting');
+  });
+
   test('FAQ page should have FAQPage schema', async ({ page }) => {
     await page.goto(`${baseUrl}/es/faq`);
 
@@ -144,6 +156,7 @@ test.describe('SEO Technical Audit', () => {
     expect(body).toContain('<urlset');
     expect(body).toContain('<loc>');
     expect(body).toContain(`${baseUrl}/en`);
+    expect(body).toContain(`${baseUrl}/en/products/jsl-erp`);
 
     // Check that noindex routes are NOT in sitemap
     expect(body).not.toContain('<loc>' + baseUrl + '/en/status</loc>');

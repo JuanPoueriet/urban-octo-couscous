@@ -9,7 +9,8 @@
     "test": "nx test",
     "serve:ssr:app": "node dist/apps/app/server/server.mjs",
     "lighthouse": "lhci autorun --config=./.lighthouserc.js",
-    "seo:ssr:check": "node scripts/seo/ssr-smoke-check.mjs"
+    "seo:ssr:check": "node scripts/seo/ssr-smoke-check.mjs",
+    "seo:i18n:validate": "node scripts/seo/validate-seo-i18n.mjs"
   },
   "prettier": {
     "printWidth": 100,
