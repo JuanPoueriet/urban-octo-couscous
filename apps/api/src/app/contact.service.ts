@@ -1,16 +1,38 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { MailService } from './mail.service';
+import { ContactDto } from './contact.dto';
 
 @Injectable()
 export class ContactService {
   private readonly logger = new Logger(ContactService.name);
 
-  async handleContactForm(formData: any) {
+  constructor(private readonly mailService: MailService) {}
+
+  async handleContactForm(formData: ContactDto) {
     this.logger.log(`Receiving contact form: ${JSON.stringify(formData)}`);
-    // Here you would typically send an email or save to a database
-    return {
-      success: true,
-      message: 'Message received successfully'
-    };
+
+    // Simple honeypot check
+    if (formData.honeypot) {
+      this.logger.warn(`Potential bot submission detected: ${formData.email}`);
+      return {
+        success: true,
+        message: 'Message received successfully'
+      };
+    }
+
+    try {
+      await this.mailService.sendContactEmail(formData);
+      return {
+        success: true,
+        message: 'Message received and email sent successfully'
+      };
+    } catch (error) {
+      this.logger.error('Failed to send contact email', error);
+      return {
+        success: false,
+        message: 'Message received but failed to notify team'
+      };
+    }
   }
 
   async handleNewsletterSubscription(email: string) {

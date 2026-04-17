@@ -1,12 +1,13 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { ContactService } from './contact.service';
+import { ContactDto } from './contact.dto';
 
 @Controller()
 export class ContactController {
   constructor(private readonly contactService: ContactService) {}
 
   @Post('contact')
-  async sendContact(@Body() formData: any) {
+  async sendContact(@Body() formData: ContactDto) {
     return this.contactService.handleContactForm(formData);
   }
 
