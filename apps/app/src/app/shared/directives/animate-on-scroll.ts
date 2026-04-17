@@ -10,7 +10,7 @@ export class AnimateOnScroll implements OnInit, OnDestroy {
 
   constructor(
     private el: ElementRef,
-    @Inject(PLATFORM_ID) private platformId: Object // <-- 2. Inyectar PLATFORM_ID
+    @Inject(PLATFORM_ID) private platformId: object // <-- 2. Inyectar PLATFORM_ID
   ) {}
 
   ngOnInit(): void {

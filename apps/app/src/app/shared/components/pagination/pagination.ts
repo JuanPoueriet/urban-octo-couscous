@@ -11,9 +11,9 @@ import { ALL_ICONS } from '@core/constants/icons';
   styleUrls: ['./pagination.scss']
 })
 export class PaginationComponent {
-  @Input() totalItems: number = 0;
-  @Input() itemsPerPage: number = 10;
-  @Input() currentPage: number = 1;
+  @Input() totalItems = 0;
+  @Input() itemsPerPage = 10;
+  @Input() currentPage = 1;
   @Output() pageChange = new EventEmitter<number>();
 
   readonly icons = ALL_ICONS;

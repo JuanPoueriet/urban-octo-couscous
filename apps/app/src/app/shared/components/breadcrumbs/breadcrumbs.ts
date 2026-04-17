@@ -48,7 +48,7 @@ export class BreadcrumbsComponent implements OnInit {
     }
   }
 
-  private buildBreadcrumbs(route: ActivatedRoute, url: string = '', breadcrumbs: Breadcrumb[] = []): Breadcrumb[] {
+  private buildBreadcrumbs(route: ActivatedRoute, url = '', breadcrumbs: Breadcrumb[] = []): Breadcrumb[] {
     // If no route config is available we are on the root of the app
     const children: ActivatedRoute[] = route.children;
 

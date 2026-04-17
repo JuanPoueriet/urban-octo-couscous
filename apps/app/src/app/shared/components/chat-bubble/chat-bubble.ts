@@ -61,7 +61,7 @@ export class ChatBubbleComponent implements OnInit, OnDestroy {
   private hasInteracted = false;
 
   constructor(
-    @Inject(PLATFORM_ID) private platformId: Object,
+    @Inject(PLATFORM_ID) private platformId: object,
     private translate: TranslateService,
   ) {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -244,7 +244,7 @@ export class ChatBubbleComponent implements OnInit, OnDestroy {
   /**
    * Mueve el scroll del chat al último mensaje
    */
-  private scrollToBottom(force: boolean = false): void {
+  private scrollToBottom(force = false): void {
     if (this.isBrowser && this.chatBody) {
       setTimeout(() => {
         if (this.chatBody) {

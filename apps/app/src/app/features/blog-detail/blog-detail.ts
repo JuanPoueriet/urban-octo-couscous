@@ -32,7 +32,7 @@ import { DirectionService } from '@core/services/direction.service';
 import { SocialShareComponent } from '@shared/components/social-share/social-share';
 
 // Swiper Web Components
-import { Pagination, Autoplay } from 'swiper/modules';
+import { Pagination, Autoplay, Navigation, FreeMode } from 'swiper/modules';
 import { register } from 'swiper/element/bundle';
 register();
 
@@ -163,28 +163,22 @@ export class BlogDetail
 
       if (swiperEl) {
         Object.assign(swiperEl, {
-          modules: [Pagination, Autoplay],
+          modules: [Pagination, Autoplay, Navigation, FreeMode],
           spaceBetween: 24,
-          slidesPerView: 1.2,
+          slidesPerView: 'auto',
           centeredSlides: false,
           grabCursor: true,
+          freeMode: true,
           pagination: {
             clickable: true,
             dynamicBullets: true,
           },
           breakpoints: {
-            640: {
-              slidesPerView: 1.5,
-              spaceBetween: 24
-            },
-            768: {
-              slidesPerView: 2,
-              spaceBetween: 32
-            },
-            1024: {
-              slidesPerView: 3,
-              spaceBetween: 32
-            },
+            320: { slidesPerView: 1.2, spaceBetween: 16 },
+            480: { slidesPerView: 1.5, spaceBetween: 20 },
+            768: { slidesPerView: 2.2, spaceBetween: 24 },
+            1024: { slidesPerView: 3, spaceBetween: 30 },
+            1400: { slidesPerView: 3.5, spaceBetween: 30 },
           },
         });
 

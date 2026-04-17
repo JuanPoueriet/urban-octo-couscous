@@ -23,7 +23,7 @@ import { ClickOutsideDirective } from '@shared/directives/click-outside';
   styleUrl: './language-switcher.scss',
 })
 export class LanguageSwitcher implements OnInit, OnDestroy {
-  public currentLang: string = 'es';
+  public currentLang = 'es';
   public isDropdownOpen = false;
   public languages: { code: string; name: string }[] = [];
   public opensUp = false;
