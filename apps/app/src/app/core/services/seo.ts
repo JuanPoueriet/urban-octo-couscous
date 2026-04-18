@@ -14,9 +14,10 @@ import { Optional } from '@angular/core';
 })
 export class Seo {
   private baseTitle = 'JSL Technology';
-  private siteName = 'JSL Technology'; // Para Open Graph
+  private siteName = 'JSL Technology';
   private defaultImageUrl: string;
   private supportedLangs = SUPPORTED_LANGUAGES;
+  private readonly RTL_LANGS = new Set(['ar', 'he', 'fa', 'ur']);
 
   constructor(
     private titleService: Title,
@@ -202,6 +203,9 @@ export class Seo {
    * 4. ¡NUEVO! Actualiza las etiquetas Meta de Open Graph y Twitter.
    */
   public updateSocialTags(title: string, description: string, url: string, imageUrl: string, ogType = 'website'): void {
+    const currentLang = this.translate.currentLang || 'en';
+    const ogLocale = this.langToOgLocale(currentLang);
+
     // Open Graph (Facebook, LinkedIn, etc.)
     this.metaService.updateTag({ property: 'og:title', content: title });
     this.metaService.updateTag({ property: 'og:description', content: description });
@@ -209,19 +213,31 @@ export class Seo {
     this.metaService.updateTag({ property: 'og:image', content: imageUrl });
     this.metaService.updateTag({ property: 'og:site_name', content: this.siteName });
     this.metaService.updateTag({ property: 'og:type', content: ogType });
+    this.metaService.updateTag({ property: 'og:locale', content: ogLocale });
 
     // Twitter Cards
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.metaService.updateTag({ name: 'twitter:title', content: title });
     this.metaService.updateTag({ name: 'twitter:description', content: description });
     this.metaService.updateTag({ name: 'twitter:image', content: imageUrl });
+    this.metaService.updateTag({ name: 'twitter:site', content: '@jsl_technology' });
+  }
+
+  private langToOgLocale(lang: string): string {
+    const map: Record<string, string> = {
+      en: 'en_US', es: 'es_ES', fr: 'fr_FR', de: 'de_DE',
+      it: 'it_IT', pt: 'pt_BR', ja: 'ja_JP', ko: 'ko_KR',
+      zh: 'zh_CN', ar: 'ar_AE', ht: 'ht_HT',
+    };
+    return map[lang] ?? 'en_US';
   }
 
   /**
-   * 6. ¡NUEVO! Actualiza el atributo lang del html.
+   * 6. ¡NUEVO! Actualiza el atributo lang del html y dir para RTL.
    */
   private updateLanguageTag(lang: string): void {
     this.document.documentElement.lang = lang;
+    this.document.documentElement.dir = this.RTL_LANGS.has(lang) ? 'rtl' : 'ltr';
   }
 
   /**
@@ -257,7 +273,13 @@ export class Seo {
    * Limpia esquemas dinámicos para evitar que persistan entre rutas.
    */
   public clearDynamicSchemas(): void {
-    const dynamicSchemas = ['breadcrumb-schema', 'structured-data'];
+    const dynamicSchemas = [
+      'breadcrumb-schema',
+      'structured-data',
+      'article-schema',
+      'product-schema',
+      'faq-schema',
+    ];
     dynamicSchemas.forEach(id => {
       const existingScript = this.document.getElementById(id);
       if (existingScript) {
@@ -273,9 +295,15 @@ export class Seo {
     const organizationSchema = {
       '@context': 'https://schema.org',
       '@type': 'Organization',
+      '@id': `${this.baseUrl}/#organization`,
       'name': 'JSL Technology',
       'url': this.baseUrl,
-      'logo': `${this.baseUrl}/logo.png`,
+      'logo': {
+        '@type': 'ImageObject',
+        'url': `${this.baseUrl}/logo.png`,
+        'width': 512,
+        'height': 512,
+      },
       'sameAs': [
         'https://www.linkedin.com/company/jsl-technology',
         'https://twitter.com/jsl_technology'

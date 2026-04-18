@@ -303,7 +303,7 @@ export class BlogDetail
           '@id': postUrl
         }
       };
-      this.seoService.setJsonLd(articleSchema);
+      this.seoService.setJsonLd(articleSchema, 'article-schema');
     });
   }
 

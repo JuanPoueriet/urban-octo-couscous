@@ -67,8 +67,17 @@ async function checkRoute(route) {
   assertRegex(html, /<link[^>]+rel=["']canonical["'][^>]+href=["'][^"']+["'][^>]*>/i, `Missing canonical in ${route}`);
   assertRegex(html, /<meta[^>]+name=["']robots["'][^>]+content=["'][^"']+["'][^>]*>/i, `Missing robots tag in ${route}`);
   assertRegex(html, /<meta[^>]+property=["']og:title["'][^>]*>/i, `Missing OG title in ${route}`);
+  assertRegex(html, /<meta[^>]+property=["']og:locale["'][^>]*>/i, `Missing og:locale in ${route}`);
   assertRegex(html, /<meta[^>]+name=["']twitter:card["'][^>]*>/i, `Missing Twitter card in ${route}`);
+  assertRegex(html, /<meta[^>]+name=["']twitter:site["'][^>]*>/i, `Missing twitter:site in ${route}`);
   assertIncludes(html, 'application/ld+json', `Missing JSON-LD schema in ${route}`);
+  assertRegex(html, /<link[^>]+rel=["']alternate["'][^>]+hreflang=["'][^"']+["'][^>]*>/i, `Missing hreflang alternate tags in ${route}`);
+
+  // Verify no duplicate canonical tags
+  const canonicalMatches = html.match(/<link[^>]+rel=["']canonical["'][^>]*>/gi) ?? [];
+  if (canonicalMatches.length > 1) {
+    throw new Error(`Duplicate canonical tags (${canonicalMatches.length}) found in ${route}`);
+  }
 }
 
 (async () => {

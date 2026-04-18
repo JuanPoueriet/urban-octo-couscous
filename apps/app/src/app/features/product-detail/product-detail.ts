@@ -99,6 +99,7 @@ export class ProductDetail implements OnInit, OnDestroy {
       const productSchema = {
         '@context': 'https://schema.org',
         '@type': 'Product',
+        '@id': `${url}#product`,
         'name': translations[titleKey],
         'description': description,
         'brand': {
@@ -109,11 +110,15 @@ export class ProductDetail implements OnInit, OnDestroy {
           '@type': 'Offer',
           'url': url,
           'availability': 'https://schema.org/InStock',
-          'priceCurrency': 'EUR',
-          'price': '0.00' // Placeholder as it's a B2B service usually
+          'priceCurrency': 'USD',
+          'priceSpecification': {
+            '@type': 'UnitPriceSpecification',
+            'priceCurrency': 'USD',
+            'price': 'Contact for pricing',
+          }
         }
       };
-      this.seoService.setJsonLd(productSchema);
+      this.seoService.setJsonLd(productSchema, 'product-schema');
     });
   }
 

@@ -26,6 +26,7 @@ type SeoHealthSnapshot = {
   localeCount: number;
   sitemapEntryCount: number;
   noindexRoutes: string[];
+  schemaTypes: string[];
 };
 
 let latestSeoHealthSnapshot: SeoHealthSnapshot | null = null;
@@ -164,6 +165,7 @@ function generateSitemap(domain: string): string {
     localeCount: supportedLangs.length,
     sitemapEntryCount,
     noindexRoutes: NOINDEX_ROUTES,
+    schemaTypes: ['Organization', 'BreadcrumbList', 'BlogPosting', 'FAQPage', 'Product'],
   };
 
   return xml;
@@ -266,6 +268,7 @@ app.get('/seo/health', (req, res) => {
       localeCount: supportedLangs.length,
       sitemapEntryCount: 0,
       noindexRoutes: NOINDEX_ROUTES,
+      schemaTypes: ['Organization', 'BreadcrumbList', 'BlogPosting', 'FAQPage', 'Product'],
     };
   }
 
@@ -288,6 +291,15 @@ app.use(
     maxAge: '1y',
     index: false,
     redirect: false,
+    setHeaders(res, filePath) {
+      if (filePath.endsWith('.avif')) {
+        res.setHeader('Content-Type', 'image/avif');
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      } else if (filePath.endsWith('.webp')) {
+        res.setHeader('Content-Type', 'image/webp');
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      }
+    },
   }),
 );
 
@@ -295,11 +307,23 @@ app.use(
  * Handle all other requests by rendering the Angular application.
  */
 app.use((req, res, next) => {
-  // --- AÑADIDO: Cabeceras de Seguridad ---
   res.setHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'DENY');
-  // --- FIN AÑADIDO ---
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  res.setHeader(
+    'Content-Security-Policy',
+    [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline'",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' https://fonts.gstatic.com",
+      "img-src 'self' data: https:",
+      "connect-src 'self'",
+      "frame-ancestors 'none'",
+    ].join('; '),
+  );
 
   const dynamicBaseUrl = resolveCanonicalBaseUrl(req);
   const requestHost = req.get('host');
