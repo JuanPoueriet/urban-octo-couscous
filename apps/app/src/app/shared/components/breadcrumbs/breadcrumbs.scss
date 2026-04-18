@@ -1,10 +1,11 @@
 @use 'app/styles/variables' as *;
 
 .breadcrumbs {
-  padding: 16px 0;
-  margin-bottom: 24px;
-  font-size: 0.9rem;
-  color: #6b7280;
+  padding: 1rem 0;
+  margin-bottom: 2rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  animation: fadeIn 0.5s ease-out;
 
   ol {
     display: flex;
@@ -13,7 +14,7 @@
     list-style: none;
     margin: 0;
     padding: 0;
-    gap: 8px;
+    gap: 0.5rem;
   }
 
   li {
@@ -21,46 +22,87 @@
     align-items: center;
 
     &.separator {
-      color: #9ca3af;
+      color: var(--text-muted);
+      opacity: 0.6;
+      display: flex;
+      align-items: center;
     }
 
     a {
-      color: #6b7280;
+      color: var(--text-secondary);
       text-decoration: none;
-      transition: color 0.2s;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 0.35rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.5rem;
 
       &:hover {
-        color: #111827; // Primary
+        color: var(--text-primary);
+        background: rgba(var(--primary-rgb), 0.05);
+        transform: translateY(-1px);
       }
 
       &.home-link {
          display: flex;
          align-items: center;
+         padding: 0.5rem;
+
+         &:hover {
+           background: rgba(var(--primary-rgb), 0.1);
+         }
       }
     }
 
-    &.active span {
-      color: #111827;
-      font-weight: 500;
+    &.active {
+      padding: 0.25rem 0.5rem;
+
+      span {
+        color: var(--text-primary);
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
     }
   }
 }
 
-// Dark mode
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Dark mode refinements
 :host-context(.dark) {
   .breadcrumbs {
-    color: #9ca3af;
-
-    li.separator { color: #4b5563; }
-
-    li a {
-      color: #9ca3af;
-      &:hover { color: white; }
+    a:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--white);
     }
 
-    li.active span { color: white; }
+    li.active span {
+      color: var(--white);
+    }
+  }
+}
+
+// Mobile optimizations
+@media (max-width: 640px) {
+  .breadcrumbs {
+    margin-bottom: 1.5rem;
+
+    ol {
+      gap: 0.25rem;
+    }
+
+    li a, li.active {
+      padding: 0.25rem 0.4rem;
+    }
   }
 }
