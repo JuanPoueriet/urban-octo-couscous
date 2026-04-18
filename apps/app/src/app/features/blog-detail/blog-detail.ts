@@ -129,6 +129,12 @@ export class BlogDetail
     this.scrollProgress = Math.min(100, Math.max(0, scrollPercent));
   }
 
+  scrollToTop() {
+    if (isPlatformBrowser(this.platformId)) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
   // Image load handler
   onImageLoad() {
     if (this.bannerImage?.nativeElement) {

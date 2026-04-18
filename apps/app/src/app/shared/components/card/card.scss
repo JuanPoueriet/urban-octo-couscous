@@ -86,6 +86,20 @@
   height: 220px;
   overflow: hidden;
   position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, transparent 55%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 1;
+  }
+
+  .card:hover &::after {
+    opacity: 1;
+  }
 }
 
 .card__image {
@@ -95,8 +109,29 @@
   transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
 
   .card:hover & {
-    transform: scale(1.1);
+    transform: scale(1.08);
   }
+}
+
+.card__image-overlay {
+  display: none;
+}
+
+.card__category {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(var(--primary-rgb), 0.9);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.3rem 0.75rem;
+  border-radius: 99px;
+  z-index: 2;
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .card__icon {

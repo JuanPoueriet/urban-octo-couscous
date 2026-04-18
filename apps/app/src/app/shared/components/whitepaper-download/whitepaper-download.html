@@ -1,28 +1,48 @@
 <div class="whitepaper-card">
-  <div class="icon-container">
-    <lucide-icon name="FileText" size="32"></lucide-icon>
+  <div class="whitepaper-card__glow"></div>
+
+  <div class="whitepaper-card__header">
+    <div class="whitepaper-icon-wrap">
+      <lucide-icon name="FileText" size="28"></lucide-icon>
+    </div>
+    <span class="whitepaper-card__badge">PDF Gratuito</span>
   </div>
-  <div class="content">
-    <h3>{{ titleKey | translate }}</h3>
-    <p>{{ descriptionKey | translate }}</p>
+
+  <div class="whitepaper-card__body">
+    <h3 class="whitepaper-card__title">{{ titleKey | translate }}</h3>
+    <p class="whitepaper-card__desc">{{ descriptionKey | translate }}</p>
 
     @if (!isSubmitted) {
-      <form (submit)="onSubmit()" class="download-form">
-        <input
-          type="email"
-          [(ngModel)]="email"
-          name="email"
-          [placeholder]="'WHITEPAPER.EMAIL_PLACEHOLDER' | translate"
-          required
-        >
-        <button type="submit" class="btn-download">
+      <form (submit)="onSubmit()" class="whitepaper-form">
+        <div class="whitepaper-form__group">
+          <lucide-icon name="Mail" size="15" class="input-icon"></lucide-icon>
+          <input
+            type="email"
+            [(ngModel)]="email"
+            name="email"
+            [placeholder]="'WHITEPAPER.EMAIL_PLACEHOLDER' | translate"
+            required
+            class="whitepaper-form__input"
+          >
+        </div>
+        <button type="submit" class="whitepaper-form__btn">
+          <lucide-icon name="Download" size="16"></lucide-icon>
           {{ 'WHITEPAPER.DOWNLOAD_BTN' | translate }}
         </button>
       </form>
+      <p class="whitepaper-privacy">
+        <lucide-icon name="Shield" size="12"></lucide-icon>
+        Sin spam. Nunca compartimos tu email.
+      </p>
     } @else {
-      <div class="success-message">
-        <lucide-icon name="CheckCircle"></lucide-icon>
-        <span>{{ 'WHITEPAPER.SENT_MSG' | translate }}</span>
+      <div class="whitepaper-success">
+        <div class="whitepaper-success__icon">
+          <lucide-icon name="CheckCircle" size="26"></lucide-icon>
+        </div>
+        <div>
+          <p class="whitepaper-success__title">{{ 'WHITEPAPER.SENT_MSG' | translate }}</p>
+          <p class="whitepaper-success__sub">Revisa tu bandeja de entrada</p>
+        </div>
       </div>
     }
   </div>
