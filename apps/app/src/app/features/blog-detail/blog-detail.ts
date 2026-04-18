@@ -20,7 +20,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { Subscription, Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
 import { DataService, BlogPost, TeamMember } from '@core/services/data.service';
 import { Title } from '@angular/platform-browser';
 import { AnimateOnScroll } from '@shared/directives/animate-on-scroll';
@@ -253,58 +253,71 @@ export class BlogDetail
     }
 
     // Traducir título y descripción
-    this.translate.get([titleKey, excerptKey, 'COMMON.BREADCRUMB_HOME', 'HEADER.BLOG', 'COMMON.DEFAULT_DESCRIPTION']).subscribe(translations => {
-      const translatedTitle = translations[titleKey] && translations[titleKey] !== titleKey ? translations[titleKey] : 'Artículo de JSL Technology';
-      const translatedDesc = translations[excerptKey] && translations[excerptKey] !== excerptKey ? translations[excerptKey] : translations['COMMON.DEFAULT_DESCRIPTION'];
+    this.translate.get([titleKey, excerptKey, 'COMMON.BREADCRUMB_HOME', 'HEADER.BLOG', 'COMMON.DEFAULT_DESCRIPTION']).pipe(
+      switchMap(translations => {
+        const translatedTitle = translations[titleKey] && translations[titleKey] !== titleKey ? translations[titleKey] : 'Artículo de JSL Technology';
+        const translatedDesc = translations[excerptKey] && translations[excerptKey] !== excerptKey ? translations[excerptKey] : translations['COMMON.DEFAULT_DESCRIPTION'];
 
-      const title = `${translatedTitle} | JSL Technology Blog`;
-      this.seoService.updateTitleAndDescription(title, translatedDesc);
+        const title = `${translatedTitle} | JSL Technology Blog`;
+        this.seoService.updateTitleAndDescription(title, translatedDesc);
 
-      // --- Breadcrumbs Schema ---
-      this.seoService.setBreadcrumbs([
-        { name: translations['COMMON.BREADCRUMB_HOME'], item: `/${this.currentLang}/home` },
-        { name: translations['HEADER.BLOG'], item: `/${this.currentLang}/blog` },
-        { name: translatedTitle, item: `/${this.currentLang}/blog/${this.postData?.slug}` }
-      ]);
-      this.seoService.updateCanonicalTag(postUrl);
-      this.seoService.updateSocialTags(
-        title,
-        translatedDesc,
-        postUrl,
-        imageUrl,
-        'article'
-      );
+        // --- Breadcrumbs Schema ---
+        this.seoService.setBreadcrumbs([
+          { name: translations['COMMON.BREADCRUMB_HOME'], item: `/${this.currentLang}/home` },
+          { name: translations['HEADER.BLOG'], item: `/${this.currentLang}/blog` },
+          { name: translatedTitle, item: `/${this.currentLang}/blog/${this.postData?.slug}` }
+        ]);
+        this.seoService.updateCanonicalTag(postUrl);
 
-      // --- Datos Estructurados: Article ---
-      const articleSchema = {
-        '@context': 'https://schema.org',
-        '@type': 'BlogPosting',
-        'headline': translatedTitle,
-        'description': translatedDesc,
-        'image': imageUrl,
-        'datePublished': this.postData?.date,
-        'dateModified': this.postData?.date,
-        'author': {
-          '@type': 'Organization',
-          'name': 'JSL Technology',
-          'url': baseUrl
-        },
-        'publisher': {
-          '@type': 'Organization',
-          'name': 'JSL Technology',
-          'logo': {
-            '@type': 'ImageObject',
-            'url': `${baseUrl}/logo.png`
-          }
-        },
-        'url': postUrl,
-        'mainEntityOfPage': {
-          '@type': 'WebPage',
-          '@id': postUrl
-        }
-      };
-      this.seoService.setJsonLd(articleSchema);
-    });
+        return this.author$.pipe(
+          map(author => {
+            const authorName = author ? this.translate.instant(author.nameKey) : 'JSL Technology Team';
+
+            this.seoService.updateSocialTags(
+              title,
+              translatedDesc,
+              postUrl,
+              imageUrl,
+              'article',
+              [
+                { property: 'article:published_time', content: this.postData?.date || '' },
+                { property: 'article:author', content: authorName }
+              ]
+            );
+
+            // --- Datos Estructurados: Article ---
+            const articleSchema = {
+              '@context': 'https://schema.org',
+              '@type': 'Article',
+              'headline': translatedTitle,
+              'description': translatedDesc,
+              'image': imageUrl,
+              'datePublished': this.postData?.date,
+              'dateModified': this.postData?.date,
+              'author': {
+                '@type': 'Person',
+                'name': authorName,
+                'url': `${baseUrl}/${this.currentLang}/about-us`
+              },
+              'publisher': {
+                '@type': 'Organization',
+                'name': 'JSL Technology',
+                'logo': {
+                  '@type': 'ImageObject',
+                  'url': `${baseUrl}/logo.png`
+                }
+              },
+              'url': postUrl,
+              'mainEntityOfPage': {
+                '@type': 'WebPage',
+                '@id': postUrl
+              }
+            };
+            this.seoService.setJsonLd(articleSchema);
+          })
+        );
+      })
+    ).subscribe();
   }
 
   trackBySlug(index: number, post: BlogPost): string {

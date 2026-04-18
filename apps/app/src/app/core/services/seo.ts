@@ -61,17 +61,20 @@ export class Seo {
           descriptionKey = 'COMMON.DEFAULT_DESCRIPTION';
         }
 
-        return this.translate.get([titleKey, descriptionKey]).pipe(
+        return this.translate.get([titleKey, descriptionKey, 'COMMON.DEFAULT_DESCRIPTION']).pipe(
           map(translations => {
             let translatedTitle = translations[titleKey];
             let translatedDesc = translations[descriptionKey];
+            const defaultDesc = translations['COMMON.DEFAULT_DESCRIPTION'];
 
             // Robust fallback if translation is missing (ngx-translate returns the key)
             if (translatedTitle === titleKey || !translatedTitle) {
               translatedTitle = this.baseTitle;
             }
             if (translatedDesc === descriptionKey || !translatedDesc) {
-              translatedDesc = 'Expert software development and digital transformation solutions.';
+              translatedDesc = defaultDesc && defaultDesc !== 'COMMON.DEFAULT_DESCRIPTION'
+                ? defaultDesc
+                : 'Expert software development and digital transformation solutions.';
             }
 
             return {
@@ -201,14 +204,32 @@ export class Seo {
   /**
    * 4. ¡NUEVO! Actualiza las etiquetas Meta de Open Graph y Twitter.
    */
-  public updateSocialTags(title: string, description: string, url: string, imageUrl: string, ogType = 'website'): void {
+  public updateSocialTags(
+    title: string,
+    description: string,
+    url: string,
+    imageUrl: string,
+    ogType = 'website',
+    additionalTags: { property: string, content: string }[] = []
+  ): void {
     // Open Graph (Facebook, LinkedIn, etc.)
     this.metaService.updateTag({ property: 'og:title', content: title });
     this.metaService.updateTag({ property: 'og:description', content: description });
     this.metaService.updateTag({ property: 'og:url', content: url });
     this.metaService.updateTag({ property: 'og:image', content: imageUrl });
+    this.metaService.updateTag({ property: 'og:image:width', content: '1200' });
+    this.metaService.updateTag({ property: 'og:image:height', content: '630' });
     this.metaService.updateTag({ property: 'og:site_name', content: this.siteName });
     this.metaService.updateTag({ property: 'og:type', content: ogType });
+
+    // Clean up dynamic social tags (like article:author)
+    const existingArticleTags = this.document.querySelectorAll('meta[property^="article:"]');
+    existingArticleTags.forEach(tag => tag.remove());
+
+    // Additional tags (e.g., article:published_time, article:author)
+    additionalTags.forEach(tag => {
+      this.metaService.updateTag({ property: tag.property, content: tag.content });
+    });
 
     // Twitter Cards
     this.metaService.updateTag({ name: 'twitter:card', content: 'summary_large_image' });

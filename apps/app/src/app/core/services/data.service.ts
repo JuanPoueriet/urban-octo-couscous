@@ -201,6 +201,13 @@ export class DataService {
     return this.getProducts().pipe(map(products => products.find(p => p.slug === slug)));
   }
 
+  // --- Método para productos relacionados ---
+  getRelatedProducts(currentSlug: string): Observable<Product[]> {
+    return this.getProducts().pipe(
+      map(products => products.filter(p => p.slug !== currentSlug).slice(0, 3))
+    );
+  }
+
   // --- Métodos de Proyectos (Casos de Éxito) ---
   getProjects(): Observable<Project[]> {
     if (this.isServer) return of(PROJECTS);

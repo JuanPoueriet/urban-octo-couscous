@@ -133,11 +133,12 @@
   </main>
 
   <div class="container mb-24">
-    <app-related-content
+    <jsl-related-content
       [items]="otherSolutions"
       type="solution"
-      title="RELATED.SOLUTIONS">
-    </app-related-content>
+      title="RELATED.SOLUTIONS"
+      [currentLang]="currentLang">
+    </jsl-related-content>
   </div>
 
   <jsl-cta-section></jsl-cta-section>
