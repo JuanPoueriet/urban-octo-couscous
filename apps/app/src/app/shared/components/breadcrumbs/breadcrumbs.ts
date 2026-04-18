@@ -24,11 +24,7 @@ export class BreadcrumbsComponent implements OnInit {
   readonly icons = ALL_ICONS;
   private supportedLanguages = SUPPORTED_LANGUAGES;
 
-  constructor(
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private translate: TranslateService
-  ) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
     this.router.events.pipe(
@@ -79,10 +75,6 @@ export class BreadcrumbsComponent implements OnInit {
       if (label === 'dynamic' || (child.snapshot.url.length > 0 && child.snapshot.routeConfig?.path?.startsWith(':'))) {
         const lastSegment = child.snapshot.url[child.snapshot.url.length - 1]?.path;
         if (lastSegment) {
-          // Check if we can find a translation for this specific dynamic item
-          // For blog, we might have BLOG.key_TITLE
-          // But here we only have the slug.
-          // A simple approach is formatting the slug, as done before.
           label = lastSegment.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
         }
       }

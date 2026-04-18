@@ -1,6 +1,14 @@
 @if (product$ | async; as product) {
   <header class="detail-page-header">
     <div class="container">
+      <div class="detail-page-breadcrumb">
+        <a [routerLink]="['/', currentLang, 'home']">{{ 'COMMON.BREADCRUMB_HOME' | translate }}</a>
+        <lucide-icon name="ChevronRight"></lucide-icon>
+        <a [routerLink]="['/', currentLang, 'products']">{{ 'HEADER.PRODUCTS' | translate }}</a>
+        <lucide-icon name="ChevronRight"></lucide-icon>
+        <span>{{ 'PRODUCTS.' + product.key + '_TITLE' | translate }}</span>
+      </div>
+
       <h1 class="detail-page-title">{{ 'PRODUCTS.' + product.key + '_TITLE' | translate }}</h1>
       <p class="page-subtitle">{{ 'PRODUCTS.' + product.key + '_DESC' | translate }}</p>
     </div>

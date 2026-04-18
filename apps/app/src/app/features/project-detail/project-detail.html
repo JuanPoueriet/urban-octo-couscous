@@ -1,6 +1,13 @@
 @if (project$ | async; as project) {
   <header class="detail-page-header">
     <div class="container">
+      <div class="detail-page-breadcrumb">
+        <a [routerLink]="['/', currentLang, 'home']">{{ 'COMMON.BREADCRUMB_HOME' | translate }}</a>
+        <lucide-icon name="ChevronRight"></lucide-icon>
+        <a [routerLink]="['/', currentLang, 'projects']">{{ 'HEADER.PROJECTS' | translate }}</a>
+        <lucide-icon name="ChevronRight"></lucide-icon>
+        <span>{{ 'PROJECTS.' + project.key + '_TITLE' | translate }}</span>
+      </div>
       <h1 class="detail-page-title">{{ 'PROJECTS.' + project.key + '_TITLE' | translate }}</h1>
     </div>
   </header>
