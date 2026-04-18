@@ -5,6 +5,7 @@ import { filter, distinctUntilChanged } from 'rxjs/operators';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { ALL_ICONS } from '@core/constants/icons';
+import { SUPPORTED_LANGUAGES } from '@core/constants/languages';
 
 export interface Breadcrumb {
   label: string;
@@ -21,8 +22,13 @@ export interface Breadcrumb {
 export class BreadcrumbsComponent implements OnInit {
   breadcrumbs: Breadcrumb[] = [];
   readonly icons = ALL_ICONS;
+  private supportedLanguages = SUPPORTED_LANGUAGES;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private translate: TranslateService
+  ) {}
 
   ngOnInit() {
     this.router.events.pipe(
@@ -49,7 +55,6 @@ export class BreadcrumbsComponent implements OnInit {
   }
 
   private buildBreadcrumbs(route: ActivatedRoute, url = '', breadcrumbs: Breadcrumb[] = []): Breadcrumb[] {
-    // If no route config is available we are on the root of the app
     const children: ActivatedRoute[] = route.children;
 
     if (children.length === 0) {
@@ -58,26 +63,34 @@ export class BreadcrumbsComponent implements OnInit {
 
     for (const child of children) {
       const routeURL: string = child.snapshot.url.map(segment => segment.path).join('/');
+
+      // Skip language segments
+      if (this.supportedLanguages.includes(routeURL)) {
+        return this.buildBreadcrumbs(child, `/${routeURL}`, breadcrumbs);
+      }
+
       if (routeURL !== '') {
         url += `/${routeURL}`;
       }
 
-      // We allow the route data to specify a 'title' or we fallback to the path
       let label = child.snapshot.data['title'] || routeURL;
 
-      // Handle dynamic routes like :slug
-      if (routeURL.includes(':') || (child.snapshot.url.length > 0 && child.snapshot.routeConfig?.path?.startsWith(':'))) {
-         // Try to find a meaningful label (e.g., store it in a service or use the slug format)
-         // For now, we format the slug: 'my-solution' -> 'My Solution'
-         const lastSegment = child.snapshot.url[child.snapshot.url.length - 1].path;
-         label = lastSegment.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      // If title is dynamic, we try to format the slug or wait for more data
+      if (label === 'dynamic' || (child.snapshot.url.length > 0 && child.snapshot.routeConfig?.path?.startsWith(':'))) {
+        const lastSegment = child.snapshot.url[child.snapshot.url.length - 1]?.path;
+        if (lastSegment) {
+          // Check if we can find a translation for this specific dynamic item
+          // For blog, we might have BLOG.key_TITLE
+          // But here we only have the slug.
+          // A simple approach is formatting the slug, as done before.
+          label = lastSegment.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        }
       }
 
-      // Check if this breadcrumb is already present (e.g. for Home if redirected)
       const existing = breadcrumbs.find(b => b.url === url);
 
-      if (!existing && label) {
-          breadcrumbs.push({ label, url });
+      if (!existing && label && label !== 'dynamic') {
+        breadcrumbs.push({ label, url });
       }
 
       return this.buildBreadcrumbs(child, url, breadcrumbs);

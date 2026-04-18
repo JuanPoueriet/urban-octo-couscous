@@ -7,19 +7,6 @@
       </div>
 
       <div class="container">
-        <nav class="detail-page-breadcrumb" jslAnimateOnScroll>
-          <a [routerLink]="['/', currentLang, 'home']" class="breadcrumb-link">
-            <lucide-icon name="Home"></lucide-icon>
-            {{ 'COMMON.BREADCRUMB_HOME' | translate }}
-          </a>
-          <lucide-icon name="ChevronRight" class="breadcrumb-separator"></lucide-icon>
-          <a [routerLink]="['/', currentLang, 'blog']" class="breadcrumb-link">
-            {{ 'HEADER.BLOG' | translate }}
-          </a>
-          <lucide-icon name="ChevronRight" class="breadcrumb-separator"></lucide-icon>
-          <span class="breadcrumb-current">{{ truncateText('BLOG.' + post.key + '_TITLE' | translate, 30) }}</span>
-        </nav>
-
         <div class="title-section" jslAnimateOnScroll>
           <div class="post-badge">
             <span class="badge-dot"></span>
