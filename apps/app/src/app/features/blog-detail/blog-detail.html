@@ -38,7 +38,9 @@
         <div class="detail-page-meta" jslAnimateOnScroll>
           <div class="meta-row">
             <div class="meta-item">
-              <img [src]="(author$ | async)?.imageUrl || 'assets/images/default-avatar.png'" class="meta-author-img" alt="Author" />
+              <img [src]="(author$ | async)?.imageUrl || 'assets/images/default-avatar.png'"
+                   class="meta-author-img"
+                   [alt]="(author$ | async)?.nameKey ? ((author$ | async)?.nameKey | translate) : 'Author'" />
               <div class="meta-text">
                 <span class="meta-label">{{ 'COMMON.AUTHOR' | translate }}</span>
                 <span class="meta-value">{{ post.authorKey | translate }}</span>

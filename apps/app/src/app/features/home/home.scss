@@ -71,6 +71,10 @@ swiper-container {
     color: var(--text-main);
     margin-bottom: 1.5rem;
     animation: fadeInDown 1s ease-out both;
+
+    &.h2-style {
+      font-size: 2.8rem;
+    }
   }
 
   &__subtitle {

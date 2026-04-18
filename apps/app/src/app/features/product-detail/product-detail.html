@@ -39,6 +39,19 @@
       }
 
     </main>
+
+    @if (relatedProducts$ | async; as relatedItems) {
+      @if (relatedItems.length > 0) {
+        <section class="related-content-section" style="margin-top: 4rem; margin-bottom: 4rem;">
+          <jsl-related-content
+            [items]="relatedItems"
+            type="product"
+            title="PRODUCTS.RELATED_TITLE"
+            [currentLang]="currentLang">
+          </jsl-related-content>
+        </section>
+      }
+    }
   </div>
 
   <jsl-cta-section></jsl-cta-section>
