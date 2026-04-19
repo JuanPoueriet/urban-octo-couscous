@@ -1,32 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8" />
-    <title>JSL Technology</title>
+    <title>JSL Technology — Expert Software Development & Digital Transformation</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+    <!-- Primary meta — English fallback (Angular SSR overwrites dynamically per route/lang) -->
     <meta
       name="description"
-      content="JSL Technology: Soluciones de software a medida, ERP, POS y desarrollo móvil para impulsar tu negocio."
+      content="JSL Technology: Custom software development, ERP, POS, and mobile solutions to accelerate your business growth worldwide."
     />
     <meta name="robots" content="index, follow" />
 
-    <!-- Fallback SEO social tags before Angular runtime/SSR hydration -->
-    <meta property="og:title" content="JSL Technology" />
+    <!-- Google Search Console site verification -->
+    <!-- Replace the content value with your actual GSC verification token -->
+    <meta name="google-site-verification" content="REPLACE_WITH_GSC_VERIFICATION_TOKEN" />
+
+    <!-- Fallback social tags — SSR/Angular overrides these per route -->
+    <meta property="og:title" content="JSL Technology — Expert Software Development" />
     <meta
       property="og:description"
-      content="JSL Technology: Soluciones de software a medida, ERP, POS y desarrollo móvil para impulsar tu negocio."
+      content="JSL Technology: Custom software development, ERP, POS, and mobile solutions to accelerate your business growth worldwide."
     />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="JSL Technology" />
     <meta property="og:url" content="https://www.jsl.technology/en" />
     <meta property="og:image" content="https://www.jsl.technology/assets/imgs/jsl-social-default.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="JSL Technology" />
+    <meta name="twitter:site" content="@jsl_technology" />
+    <meta name="twitter:creator" content="@jsl_technology" />
+    <meta name="twitter:title" content="JSL Technology — Expert Software Development" />
     <meta
       name="twitter:description"
-      content="JSL Technology: Soluciones de software a medida, ERP, POS y desarrollo móvil para impulsar tu negocio."
+      content="JSL Technology: Custom software development, ERP, POS, and mobile solutions to accelerate your business growth worldwide."
     />
     <meta name="twitter:image" content="https://www.jsl.technology/assets/imgs/jsl-social-default.jpg" />
 
@@ -35,15 +45,44 @@
 
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
+    <!-- Performance: preconnect to critical third-party origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+
+    <!-- Preload critical above-the-fold hero image (LCP optimization) -->
+    <link rel="preload" as="image" href="assets/imgs/Avif/img-2.avif" type="image/avif" fetchpriority="high" />
 
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+
+    <!-- WebSite schema — static fallback for crawlers before Angular hydration -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "@id": "https://www.jsl.technology/#website",
+      "url": "https://www.jsl.technology",
+      "name": "JSL Technology",
+      "description": "Expert software development and digital transformation solutions for businesses worldwide.",
+      "publisher": {
+        "@id": "https://www.jsl.technology/#organization"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://www.jsl.technology/en/blog?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
   </head>
   <body>
     <jsl-root></jsl-root>

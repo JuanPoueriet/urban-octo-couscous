@@ -378,6 +378,21 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     };
 
     this.seoService.setJsonLd(schema);
+
+    // WebSite schema with SearchAction (Sitelinks Searchbox)
+    this.seoService.setWebSiteSchema();
+
+    // AggregateRating + Review schema from testimonial data
+    const testimonialData = this.testimonials();
+    if (testimonialData && testimonialData.length > 0) {
+      const resolvedReviews = testimonialData.map((t: any) => ({
+        authorName: this.translate.instant(t.nameKey),
+        reviewBody: this.translate.instant(t.textKey),
+        ratingValue: t.ratingValue ?? 5,
+        datePublished: t.datePublished ?? '2025-10-01',
+      }));
+      this.seoService.setReviewSchema(resolvedReviews);
+    }
   }
 
   ngAfterViewInit(): void {

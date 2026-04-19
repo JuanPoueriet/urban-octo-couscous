@@ -115,6 +115,44 @@ const staticRoutes = [
   'security'
 ];
 
+// Priority and changefreq per static route (influences crawl budget allocation)
+const ROUTE_META: Record<string, { priority: string; changefreq: string }> = {
+  '':                   { priority: '1.0', changefreq: 'weekly' },
+  'solutions':          { priority: '0.9', changefreq: 'monthly' },
+  'products':           { priority: '0.9', changefreq: 'monthly' },
+  'blog':               { priority: '0.9', changefreq: 'weekly' },
+  'projects':           { priority: '0.8', changefreq: 'monthly' },
+  'about-us':           { priority: '0.8', changefreq: 'monthly' },
+  'contact':            { priority: '0.8', changefreq: 'yearly' },
+  'careers':            { priority: '0.7', changefreq: 'weekly' },
+  'faq':                { priority: '0.7', changefreq: 'monthly' },
+  'pricing':            { priority: '0.7', changefreq: 'monthly' },
+  'industries':         { priority: '0.7', changefreq: 'monthly' },
+  'tech-stack':         { priority: '0.6', changefreq: 'monthly' },
+  'ventures':           { priority: '0.6', changefreq: 'monthly' },
+  'investors':          { priority: '0.6', changefreq: 'monthly' },
+  'process':            { priority: '0.6', changefreq: 'monthly' },
+  'virteex-ecosystem':  { priority: '0.6', changefreq: 'monthly' },
+  'events':             { priority: '0.5', changefreq: 'weekly' },
+  'news':               { priority: '0.5', changefreq: 'weekly' },
+  'partners':           { priority: '0.5', changefreq: 'monthly' },
+  'developers':         { priority: '0.5', changefreq: 'monthly' },
+  'roadmap':            { priority: '0.5', changefreq: 'monthly' },
+  'press':              { priority: '0.5', changefreq: 'monthly' },
+  'life-at-jsl':        { priority: '0.5', changefreq: 'monthly' },
+  'security':           { priority: '0.4', changefreq: 'yearly' },
+  'privacy-policy':     { priority: '0.3', changefreq: 'yearly' },
+  'terms-of-service':   { priority: '0.3', changefreq: 'yearly' },
+  'cookie-policy':      { priority: '0.3', changefreq: 'yearly' },
+};
+
+const DYNAMIC_ROUTE_META: Record<string, { priority: string; changefreq: string }> = {
+  'solutions':  { priority: '0.8', changefreq: 'monthly' },
+  'products':   { priority: '0.8', changefreq: 'monthly' },
+  'projects':   { priority: '0.7', changefreq: 'monthly' },
+  'blog':       { priority: '0.8', changefreq: 'weekly' },
+};
+
 const supportedLangs = SUPPORTED_LANGUAGES;
 const defaultLang = 'en';
 
@@ -165,7 +203,7 @@ function generateSitemap(domain: string): string {
     localeCount: supportedLangs.length,
     sitemapEntryCount,
     noindexRoutes: NOINDEX_ROUTES,
-    schemaTypes: ['Organization', 'BreadcrumbList', 'BlogPosting', 'FAQPage', 'Product'],
+    schemaTypes: ['Organization', 'LocalBusiness', 'WebSite', 'BreadcrumbList', 'BlogPosting', 'FAQPage', 'Product', 'Service', 'JobPosting', 'Review', 'AggregateRating'],
   };
 
   return xml;
@@ -177,7 +215,8 @@ function generateSitemap(domain: string): string {
 function generateStaticEntriesXml(domain: string): string {
   let xml = '';
   staticRoutes.forEach(route => {
-    xml += generateUrlEntry(route, STATIC_LASTMOD, domain);
+    const meta = ROUTE_META[route] ?? { priority: '0.5', changefreq: 'monthly' };
+    xml += generateUrlEntry(route, STATIC_LASTMOD, domain, meta.priority, meta.changefreq);
   });
   return xml;
 }
@@ -191,39 +230,54 @@ function generateDynamicEntriesXml(
   domain: string,
   fallbackDate: string,
 ): string {
+  const meta = DYNAMIC_ROUTE_META[basePath] ?? { priority: '0.6', changefreq: 'monthly' };
   let xml = '';
   collection.forEach(item => {
-    xml += generateUrlEntry(`${basePath}/${item.slug}`, item.date || fallbackDate, domain);
+    xml += generateUrlEntry(
+      `${basePath}/${item.slug}`,
+      item.date || fallbackDate,
+      domain,
+      meta.priority,
+      meta.changefreq,
+    );
   });
   return xml;
 }
 
 /**
- * Helper para generar una entrada <url> con sus <xhtml:link>
+ * Helper para generar una entrada <url> con sus <xhtml:link>, priority y changefreq
  */
-function generateUrlEntry(route: string, lastmod: string, domain: string): string {
+function generateUrlEntry(
+  route: string,
+  lastmod: string,
+  domain: string,
+  priority = '0.5',
+  changefreq = 'monthly',
+): string {
   let entryXml = '';
-  
+
   supportedLangs.forEach(lang => {
     const url = `${domain}/${lang}${route ? '/' + route : ''}`;
 
     entryXml += '<url>';
     entryXml += `<loc>${url}</loc>`;
     entryXml += `<lastmod>${lastmod}</lastmod>`;
+    entryXml += `<changefreq>${changefreq}</changefreq>`;
+    entryXml += `<priority>${priority}</priority>`;
 
-    // Añadir las alternativas hreflang
+    // hreflang alternates
     supportedLangs.forEach(altLang => {
       const altUrl = `${domain}/${altLang}${route ? '/' + route : ''}`;
       entryXml += `<xhtml:link rel="alternate" hreflang="${altLang}" href="${altUrl}" />`;
     });
 
-    // Añadir el x-default
+    // x-default
     const defaultUrl = `${domain}/${defaultLang}${route ? '/' + route : ''}`;
     entryXml += `<xhtml:link rel="alternate" hreflang="x-default" href="${defaultUrl}" />`;
 
     entryXml += '</url>';
   });
-  
+
   return entryXml;
 }
 // --- FIN: Funciones para generar el Sitemap ---
@@ -316,11 +370,11 @@ app.use((req, res, next) => {
     'Content-Security-Policy',
     [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
+      "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
-      "img-src 'self' data: https:",
-      "connect-src 'self'",
+      "img-src 'self' data: https: https://www.google-analytics.com",
+      "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com",
       "frame-ancestors 'none'",
     ].join('; '),
   );

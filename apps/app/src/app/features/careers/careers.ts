@@ -5,7 +5,9 @@ import { LucideAngularModule } from 'lucide-angular';
 import { AnimateOnScroll } from '@shared/directives/animate-on-scroll';
 import { CtaComponent } from '@shared/components/cta/cta';
 import { DataService, CareerPosition } from '@core/services/data.service';
+import { Seo } from '@core/services/seo';
 import { Observable } from 'rxjs';
+import { switchMap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'jsl-careers',
@@ -25,6 +27,8 @@ import { Observable } from 'rxjs';
 export class Careers implements OnInit {
 
   private dataService = inject(DataService);
+  private translate = inject(TranslateService);
+  private seo = inject(Seo);
   public positions$!: Observable<CareerPosition[]>;
 
   // Beneficios de trabajar en JSL
@@ -35,9 +39,30 @@ export class Careers implements OnInit {
     { key: 'BENEFIT_4', icon: 'Plane' }
   ];
 
-  constructor() { }
-
   ngOnInit() {
     this.positions$ = this.dataService.getCareersPositions();
+    this.injectJobPostingsSchema();
+  }
+
+  private injectJobPostingsSchema(): void {
+    this.dataService.getCareersPositions().pipe(
+      switchMap((positions: CareerPosition[]) => {
+        const keys = positions.flatMap(p => [
+          `CAREERS.${p.key}_TITLE`,
+          `CAREERS.${p.key}_DESC`,
+        ]);
+        return this.translate.get(keys).pipe(
+          map(translations => positions.map(p => ({
+            title: translations[`CAREERS.${p.key}_TITLE`] || p.key,
+            description: translations[`CAREERS.${p.key}_DESC`] || '',
+            employmentType: (p.typeKey === 'CAREERS.TYPE_FULLTIME' ? 'FULL_TIME' : 'PART_TIME') as 'FULL_TIME' | 'PART_TIME',
+            jobLocationType: (p.locationKey === 'CAREERS.LOCATION_REMOTE' ? 'TELECOMMUTE' : 'ONSITE') as 'TELECOMMUTE' | 'ONSITE',
+            datePosted: new Date().toISOString().split('T')[0],
+          })))
+        );
+      })
+    ).subscribe(enrichedJobs => {
+      this.seo.setJobPostingsSchema(enrichedJobs);
+    });
   }
 }

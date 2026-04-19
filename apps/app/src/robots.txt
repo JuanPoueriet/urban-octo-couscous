@@ -1,12 +1,59 @@
 User-agent: *
 Allow: /
-Disallow: /assets/sounds/
-Disallow: /*/status
-Disallow: /*/thank-you
-Disallow: /*/server-error
-Disallow: /*/not-found
 
-# AI crawlers — permitir indexación de contenido público
+# Block non-indexable utility routes (explicit per language to avoid broken wildcard syntax)
+Disallow: /en/status
+Disallow: /es/status
+Disallow: /ar/status
+Disallow: /de/status
+Disallow: /fr/status
+Disallow: /it/status
+Disallow: /ja/status
+Disallow: /ko/status
+Disallow: /pt/status
+Disallow: /zh/status
+Disallow: /ht/status
+
+Disallow: /en/thank-you
+Disallow: /es/thank-you
+Disallow: /ar/thank-you
+Disallow: /de/thank-you
+Disallow: /fr/thank-you
+Disallow: /it/thank-you
+Disallow: /ja/thank-you
+Disallow: /ko/thank-you
+Disallow: /pt/thank-you
+Disallow: /zh/thank-you
+Disallow: /ht/thank-you
+
+Disallow: /en/server-error
+Disallow: /es/server-error
+Disallow: /ar/server-error
+Disallow: /de/server-error
+Disallow: /fr/server-error
+Disallow: /it/server-error
+Disallow: /ja/server-error
+Disallow: /ko/server-error
+Disallow: /pt/server-error
+Disallow: /zh/server-error
+Disallow: /ht/server-error
+
+Disallow: /en/not-found
+Disallow: /es/not-found
+Disallow: /ar/not-found
+Disallow: /de/not-found
+Disallow: /fr/not-found
+Disallow: /it/not-found
+Disallow: /ja/not-found
+Disallow: /ko/not-found
+Disallow: /pt/not-found
+Disallow: /zh/not-found
+Disallow: /ht/not-found
+
+# Block sound assets from indexing
+Disallow: /assets/sounds/
+
+# AI crawlers — allow indexing of all public content
 User-agent: GPTBot
 Allow: /
 

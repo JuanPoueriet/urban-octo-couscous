@@ -229,6 +229,8 @@ export const TESTIMONIALS = [
     nameKey: 'HOME.TESTIMONIAL_1_NAME',
     roleKey: 'HOME.TESTIMONIAL_1_ROLE',
     imageUrl: 'https://images.unsplash.com/photo-1573496359112-58e11a3b1a9e?fit=crop&w=100&q=80',
+    ratingValue: 5,
+    datePublished: '2025-09-12',
   },
   {
     key: 'TESTIMONIAL_2',
@@ -236,6 +238,8 @@ export const TESTIMONIALS = [
     nameKey: 'HOME.TESTIMONIAL_2_NAME',
     roleKey: 'HOME.TESTIMONIAL_2_ROLE',
     imageUrl: 'https://images.unsplash.com/photo-1603415526960-f6e0328909af?fit=crop&w=100&q=80',
+    ratingValue: 5,
+    datePublished: '2025-10-05',
   },
   {
     key: 'TESTIMONIAL_3',
@@ -243,6 +247,8 @@ export const TESTIMONIALS = [
     nameKey: 'HOME.TESTIMONIAL_3_NAME',
     roleKey: 'HOME.TESTIMONIAL_3_ROLE',
     imageUrl: 'assets/imgs/photo-1580489944761-15a19d654956.avif',
+    ratingValue: 5,
+    datePublished: '2025-10-28',
   },
 ];
 

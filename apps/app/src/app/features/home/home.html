@@ -139,17 +139,19 @@
   </div>
 </section>
 
-<!-- NUEVO: Partners / Clients Section -->
-<section class="partners-section">
+<!-- Partners / Clients Section -->
+<section class="partners-section" aria-label="Trusted partners">
   <div class="container">
-     <p class="partners-title">{{ 'HOME.PARTNERS_TITLE' | translate }}</p>
-     <div class="partners-grid">
-        @for (partner of partners(); track partner.name) {
-           <div class="partner-logo">
-              <img [src]="partner.imageUrl" [alt]="partner.name" loading="lazy" width="150" height="60">
-           </div>
-        }
-     </div>
+    <div class="partners-header">
+      <span class="partners-title">{{ 'HOME.PARTNERS_TITLE' | translate }}</span>
+    </div>
+    <div class="partners-grid">
+      @for (partner of partners(); track partner.name) {
+        <div class="partner-logo">
+          <img [src]="partner.imageUrl" [alt]="partner.name" loading="lazy" width="150" height="60">
+        </div>
+      }
+    </div>
   </div>
 </section>
 

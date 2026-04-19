@@ -45,6 +45,7 @@ export class Seo {
       filter(event => event instanceof NavigationEnd),
       tap(() => {
         this.setOrganizationSchema();
+        this.setWebSiteSchema();
         this.setResourceHints();
         this.clearDynamicSchemas();
         this.setPaginationLinks(); // limpia prev/next en cada navegación
@@ -222,6 +223,7 @@ export class Seo {
     this.metaService.updateTag({ name: 'twitter:description', content: description });
     this.metaService.updateTag({ name: 'twitter:image', content: imageUrl });
     this.metaService.updateTag({ name: 'twitter:site', content: '@jsl_technology' });
+    this.metaService.updateTag({ name: 'twitter:creator', content: '@jsl_technology' });
   }
 
   private langToOgLocale(lang: string): string {
@@ -282,6 +284,12 @@ export class Seo {
       'service-schema',
       'project-schema',
       'faq-schema',
+      'review-schema',
+      'job-posting-schema-0',
+      'job-posting-schema-1',
+      'job-posting-schema-2',
+      'job-posting-schema-3',
+      'job-posting-schema-4',
     ];
     dynamicSchemas.forEach(id => {
       const existingScript = this.document.getElementById(id);
@@ -418,6 +426,147 @@ export class Seo {
       }))
     };
     this.setJsonLd(breadcrumbSchema, 'breadcrumb-schema');
+  }
+
+  /**
+   * Inject WebSite schema with SearchAction for Sitelinks Searchbox.
+   * Call once from the root component or on home navigation.
+   */
+  public setWebSiteSchema(): void {
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      '@id': `${this.baseUrl}/#website`,
+      'url': this.baseUrl,
+      'name': this.siteName,
+      'description': 'Expert software development and digital transformation solutions for businesses worldwide.',
+      'publisher': { '@id': `${this.baseUrl}/#organization` },
+      'potentialAction': {
+        '@type': 'SearchAction',
+        'target': {
+          '@type': 'EntryPoint',
+          'urlTemplate': `${this.baseUrl}/en/blog?q={search_term_string}`,
+        },
+        'query-input': 'required name=search_term_string',
+      },
+    };
+    this.setJsonLd(schema, 'website-schema');
+  }
+
+  /**
+   * Inject AggregateRating + Review schema from testimonial data.
+   * @param reviews Array of resolved (already-translated) review objects.
+   */
+  public setReviewSchema(reviews: Array<{
+    authorName: string;
+    reviewBody: string;
+    ratingValue: number;
+    datePublished: string;
+  }>): void {
+    if (!reviews || reviews.length === 0) return;
+
+    const totalRating = reviews.reduce((sum, r) => sum + r.ratingValue, 0);
+    const avgRating = (totalRating / reviews.length).toFixed(1);
+
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      '@id': `${this.baseUrl}/#organization`,
+      'name': this.siteName,
+      'url': this.baseUrl,
+      'aggregateRating': {
+        '@type': 'AggregateRating',
+        'ratingValue': avgRating,
+        'bestRating': '5',
+        'worstRating': '1',
+        'ratingCount': String(reviews.length),
+        'reviewCount': String(reviews.length),
+      },
+      'review': reviews.map(r => ({
+        '@type': 'Review',
+        'author': {
+          '@type': 'Person',
+          'name': r.authorName,
+        },
+        'reviewRating': {
+          '@type': 'Rating',
+          'ratingValue': String(r.ratingValue),
+          'bestRating': '5',
+          'worstRating': '1',
+        },
+        'reviewBody': r.reviewBody,
+        'datePublished': r.datePublished,
+        'publisher': { '@id': `${this.baseUrl}/#organization` },
+      })),
+    };
+    this.setJsonLd(schema, 'review-schema');
+  }
+
+  /**
+   * Inject JobPosting schema for career positions.
+   * @param jobs Array of resolved job posting data.
+   */
+  public setJobPostingsSchema(jobs: Array<{
+    title: string;
+    description: string;
+    employmentType: 'FULL_TIME' | 'PART_TIME' | 'CONTRACTOR' | 'INTERN';
+    jobLocationType: 'TELECOMMUTE' | 'ONSITE' | 'HYBRID';
+    datePosted: string;
+    validThrough?: string;
+  }>): void {
+    if (!jobs || jobs.length === 0) return;
+
+    jobs.forEach((job, index) => {
+      const schema: Record<string, unknown> = {
+        '@context': 'https://schema.org',
+        '@type': 'JobPosting',
+        'title': job.title,
+        'description': job.description,
+        'datePosted': job.datePosted,
+        'employmentType': job.employmentType,
+        'jobLocationType': job.jobLocationType,
+        'hiringOrganization': {
+          '@type': 'Organization',
+          '@id': `${this.baseUrl}/#organization`,
+          'name': this.siteName,
+          'sameAs': this.baseUrl,
+          'logo': `${this.baseUrl}/logo.png`,
+        },
+        'jobLocation': {
+          '@type': 'Place',
+          'address': {
+            '@type': 'PostalAddress',
+            'addressCountry': 'DO',
+            'addressRegion': 'Santo Domingo',
+          },
+        },
+        'applicantLocationRequirements': {
+          '@type': 'Country',
+          'name': 'Worldwide',
+        },
+      };
+
+      if (job.validThrough) {
+        schema['validThrough'] = job.validThrough;
+      }
+
+      this.setJsonLd(schema, `job-posting-schema-${index}`);
+    });
+  }
+
+  /**
+   * Inject a <link rel="preload"> hint for a critical resource (e.g. hero image).
+   * Safe to call multiple times — deduplicates by href.
+   */
+  public preloadResource(href: string, as: string, type?: string): void {
+    if (this.document.querySelector(`link[rel="preload"][href="${href}"]`)) return;
+    const link = this.document.createElement('link');
+    link.rel = 'preload';
+    link.setAttribute('href', href);
+    link.setAttribute('as', as);
+    link.setAttribute('fetchpriority', 'high');
+    if (type) link.setAttribute('type', type);
+    this.document.head.appendChild(link);
   }
 
   /**
