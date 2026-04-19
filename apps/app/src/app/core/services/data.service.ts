@@ -52,6 +52,7 @@ export interface Product {
   key: string;
   slug: string;
   icon: string;
+  imageUrl?: string;
   externalUrl?: string;
 }
 

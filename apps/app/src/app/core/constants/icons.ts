@@ -89,6 +89,16 @@ import {
   ChevronsLeftRight,
   Calculator,
   DollarSign,
+  FileKey,
+  Scale,
+  WifiOff,
+  Puzzle,
+  Shield,
+  Receipt,
+  ShoppingBag,
+  Factory,
+  FolderKanban,
+  BarChart3,
 } from 'lucide-angular';
 
 // Agrupación de iconos por propósito
@@ -147,6 +157,16 @@ export const ICON_LIST = {
     HardDrive,
     Loader2,
     ChevronsLeftRight,
+    FileKey,
+    Scale,
+    WifiOff,
+    Puzzle,
+    Shield,
+    Receipt,
+    ShoppingBag,
+    Factory,
+    FolderKanban,
+    BarChart3,
   },
   // Redes sociales
   Social: {

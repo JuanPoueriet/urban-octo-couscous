@@ -8,12 +8,12 @@
     [attr.dir]="directionService.isRtl() ? 'rtl' : 'ltr'"
   >
     <swiper-slide class="hero-slide">
-      <img
-        ngSrc="assets/imgs/Avif/img-2.avif"
-        fill
-        priority
+      <jsl-picture
+        avifSrc="assets/imgs/Avif/img-2.avif"
+        [fill]="true"
+        [priority]="true"
         alt="JSL Technology - Innovación Digital y Desarrollo de Software"
-      />
+      ></jsl-picture>
 
       <div class="hero-slide__overlay"></div>
       <div class="hero-slide__content container">
@@ -36,7 +36,11 @@
 
     <swiper-slide class="hero-slide">
       <!-- <img ngSrc="https://images.unsplash.com/photo-1587620962725-abab7fe55159?fit=crop&w=1920&q=80"  -->
-      <img ngSrc="assets/imgs/Avif/photo-1587620962725-abab7fe55159.avif" fill alt="Software ERP para Gestión Empresarial - JSL Technology" />
+      <jsl-picture
+        avifSrc="assets/imgs/Avif/photo-1587620962725-abab7fe55159.avif"
+        [fill]="true"
+        alt="Software ERP para Gestión Empresarial - JSL Technology"
+      ></jsl-picture>
 
       <div class="hero-slide__overlay"></div>
       <div class="hero-slide__content container">
@@ -50,7 +54,11 @@
 
     <swiper-slide class="hero-slide">
       <!-- <img ngSrc="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?fit=crop&w=1920&q=80"  -->
-      <img ngSrc="assets/imgs/Avif/photo-1517694712202-14dd9538aa97.avif" fill alt="Soluciones de Software a Medida y Transformación Digital" />
+      <jsl-picture
+        avifSrc="assets/imgs/Avif/photo-1517694712202-14dd9538aa97.avif"
+        [fill]="true"
+        alt="Soluciones de Software a Medida y Transformación Digital"
+      ></jsl-picture>
 
       <div class="hero-slide__overlay"></div>
       <div class="hero-slide__content container">

@@ -66,7 +66,7 @@ test.describe('SEO Technical Audit', () => {
   });
 
   test('Product detail page should have Product schema', async ({ page }) => {
-    await page.goto(`${baseUrl}/en/products/jsl-erp`);
+    await page.goto(`${baseUrl}/en/products/virtex`);
     const schemaScript = page.locator('script[type="application/ld+json"]#structured-data');
     const schemaText = await schemaScript.textContent();
     const schema = JSON.parse(schemaText || '{}');
@@ -156,7 +156,7 @@ test.describe('SEO Technical Audit', () => {
     expect(body).toContain('<urlset');
     expect(body).toContain('<loc>');
     expect(body).toContain(`${baseUrl}/en`);
-    expect(body).toContain(`${baseUrl}/en/products/jsl-erp`);
+    expect(body).toContain(`${baseUrl}/en/products/virtex`);
 
     // Check that noindex routes are NOT in sitemap
     expect(body).not.toContain('<loc>' + baseUrl + '/en/status</loc>');

@@ -1,0 +1,14 @@
+<picture>
+  <source [attr.srcset]="avifSrc" type="image/avif">
+  @if (webpSrc) {
+    <source [attr.srcset]="webpSrc" type="image/webp">
+  }
+  <img
+    [src]="resolvedFallbackSrc"
+    [alt]="alt"
+    [attr.fetchpriority]="priority ? 'high' : null"
+    [attr.loading]="priority ? 'eager' : 'lazy'"
+    [attr.width]="!fill && width ? width : null"
+    [attr.height]="!fill && height ? height : null"
+  >
+</picture>

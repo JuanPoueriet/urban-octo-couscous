@@ -14,9 +14,9 @@ import { RouterLink } from '@angular/router';
 })
 export class Developers {
   exampleCode = `
-import { VirteexClient } from '@virteex/sdk';
+import { VirtexClient } from '@virtex/sdk';
 
-const client = new VirteexClient({
+const client = new VirtexClient({
   apiKey: 'vtx_live_51M...',
 });
 

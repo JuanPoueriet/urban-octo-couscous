@@ -13,7 +13,7 @@ import { CtaComponent } from '@shared/components/cta/cta';
 export class Events {
   upcomingEvents = [
     {
-      title: 'Virteex ERP 2.0 Demo',
+      title: 'virtex ERP 2.0 Demo',
       date: 'Nov 15, 2024 - 2:00 PM EST',
       description: 'See the new features of our flagship ERP system in action.',
       image: 'https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&q=80&w=800'

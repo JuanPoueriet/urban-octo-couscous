@@ -1,47 +1,300 @@
 @if (product$ | async; as product) {
-  <header class="detail-page-header">
+
+  <!-- ============================================================
+       HERO
+  ============================================================ -->
+  <section class="pd-hero">
+    <div class="pd-hero__bg-glow"></div>
+
     <div class="container">
-      <div class="detail-page-breadcrumb">
+
+      <!-- Breadcrumb -->
+      <nav class="pd-breadcrumb" aria-label="breadcrumb">
         <a [routerLink]="['/', currentLang, 'home']">{{ 'COMMON.BREADCRUMB_HOME' | translate }}</a>
-        <lucide-icon name="ChevronRight"></lucide-icon>
+        <lucide-icon name="ChevronRight" [size]="14"></lucide-icon>
         <a [routerLink]="['/', currentLang, 'products']">{{ 'HEADER.PRODUCTS' | translate }}</a>
-        <lucide-icon name="ChevronRight"></lucide-icon>
+        <lucide-icon name="ChevronRight" [size]="14"></lucide-icon>
         <span>{{ 'PRODUCTS.' + product.key + '_TITLE' | translate }}</span>
+      </nav>
+
+      <div class="pd-hero__content">
+
+        <!-- Badge -->
+        <div class="pd-hero__badge">
+          <lucide-icon [name]="product.icon" [size]="16"></lucide-icon>
+          <span>{{ extras ? extras.brandName : ('PRODUCTS.' + product.key + '_TITLE' | translate) }}</span>
+        </div>
+
+        <!-- Title -->
+        <h1 class="pd-hero__title">
+          @if (extras) {
+            <span class="gradient-text">{{ extras.brandName }}</span>
+          } @else {
+            {{ 'PRODUCTS.' + product.key + '_TITLE' | translate }}
+          }
+        </h1>
+
+        <!-- Tagline -->
+        <p class="pd-hero__tagline">
+          @if (extras) {
+            {{ extras.tagline }}
+          } @else {
+            {{ 'PRODUCTS.' + product.key + '_DESC' | translate }}
+          }
+        </p>
+
+        <!-- CTAs -->
+        <div class="pd-hero__actions">
+          @if (product.externalUrl) {
+            <a [href]="product.externalUrl" target="_blank" rel="noopener" class="btn-primary">
+              <lucide-icon name="ExternalLink" [size]="18"></lucide-icon>
+              {{ extras ? ('Visit ' + extras.brandName + '.com') : ('PRODUCTS.VIEW_DEDICATED_PAGE' | translate) }}
+            </a>
+          }
+          <a [routerLink]="['/', currentLang, 'contact']" class="btn-ghost">
+            <lucide-icon name="Calendar" [size]="18"></lucide-icon>
+            {{ 'HOME.STICKY_CTA' | translate }}
+          </a>
+        </div>
       </div>
-
-      <h1 class="detail-page-title">{{ 'PRODUCTS.' + product.key + '_TITLE' | translate }}</h1>
-      <p class="page-subtitle">{{ 'PRODUCTS.' + product.key + '_DESC' | translate }}</p>
     </div>
-  </header>
 
-  <div class="container">
-    <main class="detail-page-content" style="max-width: 900px; grid-template-columns: 1fr;">
-      
-      <h2>{{ 'COMMON.PLACEHOLDER_TITLE' | translate }}</h2>
-      <p [innerHTML]="'PRODUCTS.' + product.key + '_DETAIL_CONTENT' | translate"></p>
-      
-      @if (product.externalUrl) {
-        <a [href]="product.externalUrl"
-           target="_blank"
-           class="hero-slide__cta"
-           style="margin-top: 2rem; margin-right: auto; background: var(--accent-gradient); gap: 0.5rem;">
-          <lucide-icon name="ExternalLink" style="width: 18px;"></lucide-icon>
-          <span>{{ 'PRODUCTS.VIEW_DEDICATED_PAGE' | translate }}</span>
+    <!-- Stats bar (ERP only) -->
+    @if (extras) {
+      <div class="pd-stats">
+        <div class="container">
+          <div class="pd-stats__grid">
+            @for (stat of extras.stats; track stat.label) {
+              <div class="pd-stats__item">
+                <lucide-icon [name]="stat.icon" [size]="20"></lucide-icon>
+                <strong>{{ stat.value }}</strong>
+                <span>{{ stat.label }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  </section>
+
+  <!-- ============================================================
+       ERP RICH LAYOUT
+  ============================================================ -->
+  @if (extras) {
+
+    <!-- Overview -->
+    <section class="pd-overview container">
+      <div class="pd-overview__text">
+        <span class="section-eyebrow">Overview</span>
+        <h2 class="section-title">What is {{ extras.brandName }}?</h2>
+        <p class="pd-overview__desc">{{ extras.overview }}</p>
+        <a [href]="product.externalUrl" target="_blank" rel="noopener" class="pd-overview__link">
+          Learn more at virtex.com
+          <lucide-icon name="ArrowRight" [size]="16"></lucide-icon>
         </a>
-      } @else {
-        <a [href]="'PRODUCTS.' + product.key + '_MARKETING_URL' | translate"
-           target="_blank"
-           class="hero-slide__cta"
-           style="margin-top: 2rem; margin-right: auto; background: var(--accent-gradient); gap: 0.5rem;">
-          <lucide-icon name="ExternalLink" style="width: 18px;"></lucide-icon>
-          <span>{{ 'PRODUCTS.VIEW_DEDICATED_PAGE' | translate }}</span>
-        </a>
-      }
+      </div>
+      <div class="pd-overview__visual">
+        <div class="pd-ecosystem-core">
+          <lucide-icon [name]="product.icon" [size]="40"></lucide-icon>
+          <span>{{ extras.brandName }}</span>
+          <small>ERP Core</small>
+        </div>
+        <div class="pd-ecosystem-orbits">
+          @for (platform of extras.platforms.slice(0, 4); track platform.name) {
+            <div class="pd-ecosystem-orbit">
+              <lucide-icon [name]="platform.icon" [size]="18"></lucide-icon>
+              <span>{{ platform.name }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
 
-    </main>
-  </div>
+    <!-- Modules -->
+    <section class="pd-section pd-modules">
+      <div class="container">
+        <div class="pd-section__header">
+          <span class="section-eyebrow">Modular Architecture</span>
+          <h2 class="section-title">Functional Modules</h2>
+          <p class="section-subtitle">Activate only the modules your business needs — all seamlessly integrated.</p>
+        </div>
+        <div class="pd-modules__grid">
+          @for (mod of extras.modules; track mod.name) {
+            <div class="pd-module-card">
+              <div class="pd-module-card__icon">
+                <lucide-icon [name]="mod.icon" [size]="22"></lucide-icon>
+              </div>
+              <h3>{{ mod.name }}</h3>
+              <p>{{ mod.desc }}</p>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
 
-  <jsl-cta-section></jsl-cta-section>
+    <!-- Platforms -->
+    <section class="pd-section pd-platforms">
+      <div class="container">
+        <div class="pd-section__header">
+          <span class="section-eyebrow">Omnichannel</span>
+          <h2 class="section-title">Multi-Platform Ecosystem</h2>
+          <p class="section-subtitle">One backend, five front-ends — a consistent experience on every surface.</p>
+        </div>
+        <div class="pd-platforms__grid">
+          @for (platform of extras.platforms; track platform.name) {
+            <div class="pd-platform-card">
+              <div class="pd-platform-card__icon">
+                <lucide-icon [name]="platform.icon" [size]="28"></lucide-icon>
+              </div>
+              <h3>{{ platform.name }}</h3>
+              <span class="pd-platform-card__tech">{{ platform.tech }}</span>
+              <p>{{ platform.desc }}</p>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Country Readiness -->
+    <section class="pd-section pd-countries">
+      <div class="container">
+        <div class="pd-section__header">
+          <span class="section-eyebrow">Tax Localization</span>
+          <h2 class="section-title">Country Readiness</h2>
+          <p class="section-subtitle">Built for the fiscal complexity of the Americas, with country-specific e-invoicing out of the box.</p>
+        </div>
+        <div class="pd-countries__grid">
+          @for (country of extras.countries; track country.name) {
+            <div class="pd-country-card">
+              <span class="pd-country-card__flag" role="img" [attr.aria-label]="country.name">{{ country.flag }}</span>
+              <div class="pd-country-card__info">
+                <div class="pd-country-card__header">
+                  <strong>{{ country.name }}</strong>
+                  <span class="pd-badge" [class]="statusClass(country.status)">{{ country.status }}</span>
+                </div>
+                <p>{{ country.detail }}</p>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section class="pd-section pd-tech">
+      <div class="container">
+        <div class="pd-section__header">
+          <span class="section-eyebrow">Engineering</span>
+          <h2 class="section-title">World-Class Tech Stack</h2>
+          <p class="section-subtitle">Clean Architecture, Domain-Driven Design, and cutting-edge tooling.</p>
+        </div>
+        <div class="pd-tech__pills">
+          @for (tech of extras.coreTech; track tech) {
+            <span class="pd-tech__pill">{{ tech }}</span>
+          }
+        </div>
+        <div class="pd-tech__highlights">
+          <div class="pd-tech__highlight">
+            <lucide-icon name="Layers" [size]="24"></lucide-icon>
+            <div>
+              <strong>Clean Architecture + DDD</strong>
+              <p>Strict separation of Domain, Application, Infrastructure and Presentation layers.</p>
+            </div>
+          </div>
+          <div class="pd-tech__highlight">
+            <lucide-icon name="Share2" [size]="24"></lucide-icon>
+            <div>
+              <strong>GraphQL Federation</strong>
+              <p>Decoupled microservices exposing a unified data graph via Apollo Gateway.</p>
+            </div>
+          </div>
+          <div class="pd-tech__highlight">
+            <lucide-icon name="WifiOff" [size]="24"></lucide-icon>
+            <div>
+              <strong>Offline-First Mobile</strong>
+              <p>SQLite local database with bidirectional delta sync when back online.</p>
+            </div>
+          </div>
+          <div class="pd-tech__highlight">
+            <lucide-icon name="Puzzle" [size]="24"></lucide-icon>
+            <div>
+              <strong>Plugin Marketplace</strong>
+              <p>V8 Isolates + WebAssembly sandboxing for safe third-party extensions.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Security -->
+    <section class="pd-section pd-security">
+      <div class="container">
+        <div class="pd-section__header">
+          <span class="section-eyebrow">Enterprise-Grade</span>
+          <h2 class="section-title">Security & Compliance</h2>
+          <p class="section-subtitle">Zero-Trust model with automated governance, end-to-end encryption, and full observability.</p>
+        </div>
+        <div class="pd-security__grid">
+          @for (feat of extras.securityFeatures; track feat.title) {
+            <div class="pd-security-card">
+              <div class="pd-security-card__icon">
+                <lucide-icon [name]="feat.icon" [size]="22"></lucide-icon>
+              </div>
+              <h3>{{ feat.title }}</h3>
+              <p>{{ feat.desc }}</p>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="pd-final-cta">
+      <div class="container">
+        <div class="pd-final-cta__card">
+          <span class="section-eyebrow">Ready to modernize?</span>
+          <h2>Start your {{ extras.brandName }} journey</h2>
+          <p>Talk to our team and get a personalized demo for your industry.</p>
+          <div class="pd-final-cta__actions">
+            <a [href]="product.externalUrl" target="_blank" rel="noopener" class="btn-primary">
+              <lucide-icon name="ExternalLink" [size]="18"></lucide-icon>
+              Visit {{ extras.brandName }}.com
+            </a>
+            <a [routerLink]="['/', currentLang, 'contact']" class="btn-ghost">
+              <lucide-icon name="MessageSquare" [size]="18"></lucide-icon>
+              Contact Sales
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  } @else {
+
+    <!-- ============================================================
+         FALLBACK LAYOUT (POS, Mobile Apps, future products)
+    ============================================================ -->
+    <div class="container pd-simple">
+      <main class="pd-simple__content">
+        <p [innerHTML]="'PRODUCTS.' + product.key + '_DETAIL_CONTENT' | translate"></p>
+
+        @if (product.externalUrl) {
+          <a [href]="product.externalUrl" target="_blank" rel="noopener" class="btn-primary">
+            <lucide-icon name="ExternalLink" [size]="18"></lucide-icon>
+            {{ 'PRODUCTS.VIEW_DEDICATED_PAGE' | translate }}
+          </a>
+        } @else {
+          <a [href]="'PRODUCTS.' + product.key + '_MARKETING_URL' | translate" target="_blank" rel="noopener" class="btn-primary">
+            <lucide-icon name="ExternalLink" [size]="18"></lucide-icon>
+            {{ 'PRODUCTS.VIEW_DEDICATED_PAGE' | translate }}
+          </a>
+        }
+      </main>
+    </div>
+
+    <jsl-cta-section></jsl-cta-section>
+  }
+
 } @else {
   <div class="page-container container">
     <h2 class="page-title h1">{{ 'NOT_FOUND.PRODUCT_TITLE' | translate }}</h2>

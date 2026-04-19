@@ -47,6 +47,7 @@ export class Seo {
         this.setOrganizationSchema();
         this.setResourceHints();
         this.clearDynamicSchemas();
+        this.setPaginationLinks(); // limpia prev/next en cada navegación
       }),
       map(() => this.getDeepestRoute(this.activatedRoute)),
       filter(route => !!route.snapshot.data['title']),
@@ -278,6 +279,8 @@ export class Seo {
       'structured-data',
       'article-schema',
       'product-schema',
+      'service-schema',
+      'project-schema',
       'faq-schema',
     ];
     dynamicSchemas.forEach(id => {
@@ -289,12 +292,12 @@ export class Seo {
   }
 
   /**
-   * Genera e inyecta el esquema de Organización.
+   * Genera e inyecta el esquema de Organización con LocalBusiness embebido.
    */
   public setOrganizationSchema(): void {
     const organizationSchema = {
       '@context': 'https://schema.org',
-      '@type': 'Organization',
+      '@type': ['Organization', 'LocalBusiness'],
       '@id': `${this.baseUrl}/#organization`,
       'name': 'JSL Technology',
       'url': this.baseUrl,
@@ -304,19 +307,69 @@ export class Seo {
         'width': 512,
         'height': 512,
       },
+      'image': `${this.baseUrl}/assets/imgs/jsl-social-default.jpg`,
+      'description': 'Expert software development and digital transformation solutions for businesses worldwide.',
+      'address': {
+        '@type': 'PostalAddress',
+        'addressCountry': 'DO',
+        'addressRegion': 'Santo Domingo'
+      },
+      'geo': {
+        '@type': 'GeoCoordinates',
+        'latitude': 18.4861,
+        'longitude': -69.9312
+      },
+      'telephone': '+1-809-264-1693',
+      'priceRange': '$$',
+      'openingHoursSpecification': {
+        '@type': 'OpeningHoursSpecification',
+        'dayOfWeek': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        'opens': '09:00',
+        'closes': '18:00'
+      },
       'sameAs': [
         'https://www.linkedin.com/company/jsl-technology',
         'https://twitter.com/jsl_technology'
       ],
-      'contactPoint': {
-        '@type': 'ContactPoint',
-        'telephone': '+1-809-264-1693',
-        'contactType': 'customer service',
-        'areaServed': 'Global',
-        'availableLanguage': ['Spanish', 'English']
-      }
+      'contactPoint': [
+        {
+          '@type': 'ContactPoint',
+          'telephone': '+1-809-264-1693',
+          'contactType': 'customer service',
+          'areaServed': 'Global',
+          'availableLanguage': ['Spanish', 'English', 'French', 'Portuguese']
+        },
+        {
+          '@type': 'ContactPoint',
+          'contactType': 'sales',
+          'areaServed': 'Global',
+          'availableLanguage': ['Spanish', 'English']
+        }
+      ]
     };
     this.setJsonLd(organizationSchema, 'organization-schema');
+  }
+
+  /**
+   * Inyecta rel="prev" / rel="next" para contenido paginado.
+   * Llamar con undefined para limpiar los links existentes.
+   */
+  public setPaginationLinks(prevUrl?: string, nextUrl?: string): void {
+    this.document.querySelectorAll('link[rel="prev"], link[rel="next"]').forEach(el => el.remove());
+
+    if (prevUrl) {
+      const prev = this.document.createElement('link');
+      prev.setAttribute('rel', 'prev');
+      prev.setAttribute('href', prevUrl.startsWith('http') ? prevUrl : `${this.baseUrl}${prevUrl}`);
+      this.document.head.appendChild(prev);
+    }
+
+    if (nextUrl) {
+      const next = this.document.createElement('link');
+      next.setAttribute('rel', 'next');
+      next.setAttribute('href', nextUrl.startsWith('http') ? nextUrl : `${this.baseUrl}${nextUrl}`);
+      this.document.head.appendChild(next);
+    }
   }
 
   /**

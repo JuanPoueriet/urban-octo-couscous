@@ -9,11 +9,11 @@ export const VENTURES: Venture[] = [
   {
     key: 'VIRTEEX',
     slug: 'virteex-ecosystem',
-    name: 'Virteex',
+    name: 'virtex',
     descriptionKey: 'VENTURES.VIRTEEX_DESC',
     logoUrl: 'assets/imgs/logos/virteex.svg',
     status: 'Scale',
-    website: 'https://virteex.com'
+    website: 'https://virtex.com'
   },
   {
     key: 'PAYFLOW',
@@ -129,21 +129,24 @@ export const SOLUTIONS = [
 export const PRODUCTS = [
   {
     key: 'ERP',
-    slug: 'jsl-erp',
+    slug: 'virtex',
     icon: 'Database',
-    externalUrl: 'https://virteex.com',
+    imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?fit=crop&w=1200&q=80',
+    externalUrl: 'https://virtex.com',
   },
   {
     key: 'POS',
     slug: 'jsl-pos',
     icon: 'ShoppingCart',
-    externalUrl: 'https://pos.jsl.technology',
+    imageUrl: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?fit=crop&w=1200&q=80',
+    externalUrl: 'https://pos.virtex.com',
   },
   {
     key: 'MOBILE_APPS',
     slug: 'proprietary-apps',
     icon: 'Smartphone',
-    externalUrl: 'https://apps.jsl.technology',
+    imageUrl: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?fit=crop&w=1200&q=80',
+    externalUrl: 'https://apps.virtex.com',
   },
 ];
 

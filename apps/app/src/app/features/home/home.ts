@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import { SearchUiService } from '@core/services/search-ui.service';
 import { DirectionService } from '@core/services/direction.service';
-import { CommonModule, isPlatformBrowser, NgOptimizedImage, DOCUMENT } from '@angular/common';
+import { CommonModule, isPlatformBrowser, DOCUMENT } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { RouterLink } from '@angular/router';
@@ -33,6 +33,7 @@ import { ExitIntentModal } from './components/exit-intent-modal/exit-intent-moda
 import { ImageComparisonComponent } from '@shared/components/image-comparison/image-comparison';
 import { SkeletonLoaderComponent } from '@shared/components/skeleton-loader/skeleton-loader.component';
 import { RoiCalculatorComponent } from '@shared/components/roi-calculator/roi-calculator.component';
+import { PictureComponent } from '@shared/components/picture/picture';
 import { computed } from '@angular/core';
 
 // Swiper Web Components
@@ -46,7 +47,6 @@ register();
   standalone: true,
   imports: [
     CommonModule,
-    NgOptimizedImage,
     TranslateModule,
     LucideAngularModule,
     RouterLink,
@@ -58,7 +58,8 @@ register();
     ExitIntentModal,
     ImageComparisonComponent,
     SkeletonLoaderComponent,
-    RoiCalculatorComponent
+    RoiCalculatorComponent,
+    PictureComponent
   ],
   templateUrl: './home.html',
   styleUrl: './home.scss',

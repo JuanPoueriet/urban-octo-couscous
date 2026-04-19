@@ -15,7 +15,7 @@ export class Roadmap {
   roadmapItems: TimelineItem[] = [
     {
       date: 'Q4 2024',
-      titleKey: 'Virteex AI Assistant',
+      titleKey: 'virtex AI Assistant',
       descKey: 'AI-powered insights for ERP data.',
       status: 'planned'
     },

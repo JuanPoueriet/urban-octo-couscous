@@ -6,7 +6,7 @@ const routes = [
   '/en/home',
   '/es/home',
   '/en/solutions/web-development',
-  '/en/products/jsl-erp',
+  '/en/products/virtex',
   '/en/blog/future-of-angular-ssr',
   '/en/faq',
 ];
@@ -92,7 +92,7 @@ async function checkRoute(route) {
     const sitemapRes = await fetch(`${baseUrl}/sitemap.xml`);
     const sitemapText = await sitemapRes.text();
     assertIncludes(sitemapText, '<urlset', 'Sitemap is invalid');
-    assertIncludes(sitemapText, `${baseUrl}/en/products/jsl-erp`, 'Sitemap is missing product detail URL');
+    assertIncludes(sitemapText, `${baseUrl}/en/products/virtex`, 'Sitemap is missing product detail URL');
 
     const healthRes = await fetch(`${baseUrl}/seo/health`);
     if (!healthRes.ok) {

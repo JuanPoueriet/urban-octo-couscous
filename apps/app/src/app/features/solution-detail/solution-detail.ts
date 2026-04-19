@@ -146,7 +146,7 @@ export class SolutionDetail implements OnInit, OnDestroy {
         'image': solution.heroImage,
         'url': url
       };
-      this.seoService.setJsonLd(serviceSchema);
+      this.seoService.setJsonLd(serviceSchema, 'service-schema');
     });
   }
 }

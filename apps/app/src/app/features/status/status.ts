@@ -13,7 +13,7 @@ import { CtaComponent } from '@shared/components/cta/cta';
 })
 export class Status {
   systems = [
-    { name: 'Virteex Cloud Platform', uptime: 99.99 },
+    { name: 'virtex Cloud Platform', uptime: 99.99 },
     { name: 'JSL API Gateway', uptime: 100 },
     { name: 'Auth Service', uptime: 100 },
     { name: 'Website & Documentation', uptime: 100 },

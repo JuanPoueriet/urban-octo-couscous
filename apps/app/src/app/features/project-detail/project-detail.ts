@@ -107,7 +107,7 @@ export class ProjectDetail implements OnInit, OnDestroy {
           'name': 'JSL Technology'
         }
       };
-      this.seoService.setJsonLd(projectSchema);
+      this.seoService.setJsonLd(projectSchema, 'project-schema');
     });
   }
 
