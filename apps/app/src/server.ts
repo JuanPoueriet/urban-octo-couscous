@@ -12,7 +12,7 @@ import rateLimit from 'express-rate-limit';
 // --- AÑADIDO: Importar los datos para el sitemap dinámico ---
 import { PROJECTS, BLOG_POSTS, SOLUTIONS, PRODUCTS } from './app/core/data/mock-data';
 import { SUPPORTED_LANGUAGES } from './app/core/constants/languages';
-import { BASE_URL, RESPONSE } from './app/core/constants/tokens';
+import { BASE_URL, RESPONSE, GA_MEASUREMENT_ID, GSC_VERIFICATION_TOKEN } from './app/core/constants/tokens';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
@@ -32,6 +32,8 @@ type SeoHealthSnapshot = {
 let latestSeoHealthSnapshot: SeoHealthSnapshot | null = null;
 
 const CANONICAL_BASE_URL = (process.env['CANONICAL_BASE_URL'] ?? 'https://www.jsl.technology').replace(/\/+$/, '');
+const ENV_GA_MEASUREMENT_ID = process.env['GA_MEASUREMENT_ID'] ?? '';
+const ENV_GSC_VERIFICATION_TOKEN = process.env['GSC_VERIFICATION_TOKEN'] ?? '';
 const CANONICAL_HOSTS = new Set(
   (process.env['CANONICAL_HOSTS'] ?? 'www.jsl.technology,jsl.technology')
     .split(',')
@@ -164,9 +166,11 @@ const NOINDEX_ROUTES = ['/status', '/thank-you', '/server-error', '/not-found'];
  * Genera el XML del sitemap dinámicamente.
  * Refactorizado para mayor escalabilidad y modularidad.
  */
+type SitemapImage = { loc: string; title?: string; caption?: string };
+
 type DynamicCollection = {
   basePath: string;
-  items: Array<{ slug: string; date?: string }>;
+  items: Array<{ slug: string; date?: string; imageUrl?: string; key?: string }>;
 };
 
 const DYNAMIC_SITEMAP_COLLECTIONS: DynamicCollection[] = [
@@ -178,7 +182,7 @@ const DYNAMIC_SITEMAP_COLLECTIONS: DynamicCollection[] = [
 
 function generateSitemap(domain: string): string {
   let xml = '<?xml version="1.0" encoding="UTF-8"?>';
-  xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">';
+  xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">';
 
   const now = new Date().toISOString().split('T')[0];
 
@@ -222,30 +226,36 @@ function generateStaticEntriesXml(domain: string): string {
 }
 
 /**
- * Genera las entradas XML para rutas dinámicas basadas en una colección
+ * Genera las entradas XML para rutas dinámicas basadas en una colección.
+ * Incluye extensión image:image cuando el ítem tiene imageUrl absoluta.
  */
 function generateDynamicEntriesXml(
   basePath: string,
-  collection: Array<{ slug: string; date?: string }>,
+  collection: Array<{ slug: string; date?: string; imageUrl?: string; key?: string }>,
   domain: string,
   fallbackDate: string,
 ): string {
   const meta = DYNAMIC_ROUTE_META[basePath] ?? { priority: '0.6', changefreq: 'monthly' };
   let xml = '';
   collection.forEach(item => {
+    const images: SitemapImage[] = [];
+    if (item.imageUrl && item.imageUrl.startsWith('http')) {
+      images.push({ loc: item.imageUrl, title: item.key ?? item.slug });
+    }
     xml += generateUrlEntry(
       `${basePath}/${item.slug}`,
       item.date || fallbackDate,
       domain,
       meta.priority,
       meta.changefreq,
+      images,
     );
   });
   return xml;
 }
 
 /**
- * Helper para generar una entrada <url> con sus <xhtml:link>, priority y changefreq
+ * Helper para generar una entrada <url> con hreflang, priority, changefreq e image:image opcionales.
  */
 function generateUrlEntry(
   route: string,
@@ -253,6 +263,7 @@ function generateUrlEntry(
   domain: string,
   priority = '0.5',
   changefreq = 'monthly',
+  images: SitemapImage[] = [],
 ): string {
   let entryXml = '';
 
@@ -264,6 +275,17 @@ function generateUrlEntry(
     entryXml += `<lastmod>${lastmod}</lastmod>`;
     entryXml += `<changefreq>${changefreq}</changefreq>`;
     entryXml += `<priority>${priority}</priority>`;
+
+    // image:image extensions (only on the canonical lang entry to avoid duplication)
+    if (lang === defaultLang && images.length > 0) {
+      images.forEach(img => {
+        entryXml += '<image:image>';
+        entryXml += `<image:loc>${escapeXml(img.loc)}</image:loc>`;
+        if (img.title) entryXml += `<image:title>${escapeXml(img.title)}</image:title>`;
+        if (img.caption) entryXml += `<image:caption>${escapeXml(img.caption)}</image:caption>`;
+        entryXml += '</image:image>';
+      });
+    }
 
     // hreflang alternates
     supportedLangs.forEach(altLang => {
@@ -279,6 +301,15 @@ function generateUrlEntry(
   });
 
   return entryXml;
+}
+
+function escapeXml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
 }
 // --- FIN: Funciones para generar el Sitemap ---
 
@@ -387,6 +418,8 @@ app.use((req, res, next) => {
       providers: [
         { provide: BASE_URL, useValue: dynamicBaseUrl },
         { provide: RESPONSE, useValue: res },
+        { provide: GA_MEASUREMENT_ID, useValue: ENV_GA_MEASUREMENT_ID },
+        { provide: GSC_VERIFICATION_TOKEN, useValue: ENV_GSC_VERIFICATION_TOKEN },
       ],
       allowedHosts: ['127.0.0.1', 'localhost', '127.0.0.1:4000', 'localhost:4000', requestHost],
     })

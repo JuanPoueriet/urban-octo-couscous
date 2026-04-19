@@ -1,7 +1,8 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID, Optional } from '@angular/core';
 import { isPlatformBrowser, DOCUMENT } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { GA_MEASUREMENT_ID } from '../constants/tokens';
 
 declare global {
   interface Window {
@@ -12,20 +13,16 @@ declare global {
 
 @Injectable({ providedIn: 'root' })
 export class AnalyticsService {
-  /**
-   * Replace with your actual GA4 Measurement ID (G-XXXXXXXXXX).
-   * Set via environment variable ANALYTICS_MEASUREMENT_ID at build time,
-   * or replace the default placeholder here.
-   */
-  private readonly measurementId = 'G-XXXXXXXXXX';
-
   private initialized = false;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: object,
     @Inject(DOCUMENT) private document: Document,
     private router: Router,
-  ) {}
+    @Optional() @Inject(GA_MEASUREMENT_ID) private measurementId: string,
+  ) {
+    this.measurementId = measurementId || '';
+  }
 
   /**
    * Bootstrap GA4. Call once from AppComponent or app initializer.
@@ -34,8 +31,8 @@ export class AnalyticsService {
   init(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     if (this.initialized) return;
-    if (this.measurementId === 'G-XXXXXXXXXX') {
-      console.warn('[Analytics] GA4 Measurement ID not configured. Update AnalyticsService.measurementId.');
+    if (!this.measurementId || !this.measurementId.startsWith('G-')) {
+      console.warn('[Analytics] GA4 Measurement ID not configured. Set GA_MEASUREMENT_ID env var on the server.');
       return;
     }
 

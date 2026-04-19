@@ -208,5 +208,14 @@ export class Blog implements OnInit, AfterViewInit {
   onPageChange(page: number): void {
     this.currentPage.set(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    this.updatePaginationLinks(page);
+  }
+
+  private updatePaginationLinks(page: number): void {
+    const totalPages = Math.ceil(this.totalItems() / this.itemsPerPage);
+    const base = `/${this.currentLang}/blog`;
+    const prev = page > 1 ? `${base}?page=${page - 1}` : undefined;
+    const next = page < totalPages ? `${base}?page=${page + 1}` : undefined;
+    this.seoService.setPaginationLinks(prev, next);
   }
 }

@@ -23,6 +23,7 @@ import { Card } from '@shared/components/card/card';
 import { AnimateOnScroll } from '@shared/directives/animate-on-scroll';
 import { DataService, Technology } from '@core/services/data.service';
 import { Seo } from '@core/services/seo';
+import { AnalyticsService } from '@core/services/analytics.service';
 import { ToastService } from '@core/services/toast.service';
 import { SwiperOptions } from 'swiper/types';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -237,6 +238,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   private document = inject(DOCUMENT);
   private searchUiService = inject(SearchUiService);
   private seoService = inject(Seo);
+  private analyticsService = inject(AnalyticsService);
   public directionService = inject(DirectionService);
   private unlistenExitIntent: (() => void) | null = null;
   private unlistenHeroMouseMove: (() => void) | null = null;
@@ -381,6 +383,16 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
     // WebSite schema with SearchAction (Sitelinks Searchbox)
     this.seoService.setWebSiteSchema();
+
+    // VideoObject schema for the demo reel
+    this.seoService.setVideoSchema({
+      name: 'JSL Technology — Product Demo Reel',
+      description: 'Watch how JSL Technology builds custom ERP, POS, and mobile solutions that transform businesses worldwide.',
+      thumbnailUrl: `${baseUrl}/assets/imgs/jsl-social-default.jpg`,
+      uploadDate: '2025-10-01',
+      duration: 'PT3M',
+      embedUrl: this.demoVideoUrl,
+    });
 
     // AggregateRating + Review schema from testimonial data
     const testimonialData = this.testimonials();
@@ -619,6 +631,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
   openBookingModal() {
     this.isBookingModalOpen.set(true);
+    this.analyticsService.trackEvent('booking_modal_open', { source: 'home' });
   }
 
   closeBookingModal() {

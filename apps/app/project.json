@@ -53,7 +53,8 @@
           "outputHashing": "all",
           "optimization": {
             "fonts": false
-          }
+          },
+          "serviceWorker": "apps/app/src/ngsw-config.json"
         },
         "development": {
           "optimization": false,

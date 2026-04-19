@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { ApiService } from '@core/services/api.service';
 import { ToastService } from '@core/services/toast.service';
+import { AnalyticsService } from '@core/services/analytics.service';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil, finalize } from 'rxjs/operators';
@@ -30,6 +31,7 @@ export class Contact implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private apiService: ApiService,
     private toastService: ToastService,
+    private analytics: AnalyticsService,
     private router: Router
   ) {}
 
@@ -87,6 +89,8 @@ export class Contact implements OnInit, OnDestroy {
           this.submitSuccess = true;
           this.contactForm.reset();
           this.toastService.show('CONTACT.FORM.SUCCESS', 'success');
+          this.analytics.trackConversion('contact_form_submit');
+          this.analytics.trackEvent('generate_lead', { method: 'contact_form' });
           this.router.navigate(['/thank-you']);
         },
         error: (err: any) => {

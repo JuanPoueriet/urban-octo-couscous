@@ -6,7 +6,7 @@ import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SUPPORTED_LANGUAGES } from '../constants/languages';
-import { BASE_URL, RESPONSE } from '../constants/tokens';
+import { BASE_URL, RESPONSE, GSC_VERIFICATION_TOKEN } from '../constants/tokens';
 import { Optional } from '@angular/core';
 
 @Injectable({
@@ -28,7 +28,8 @@ export class Seo {
     @Inject(DOCUMENT) private document: Document,
     @Inject(PLATFORM_ID) private platformId: object,
     @Inject(BASE_URL) private baseUrl: string,
-    @Optional() @Inject(RESPONSE) private response: any
+    @Optional() @Inject(RESPONSE) private response: any,
+    @Optional() @Inject(GSC_VERIFICATION_TOKEN) private gscToken: string,
   ) {
     this.defaultImageUrl = `${this.baseUrl}/assets/imgs/jsl-social-default.jpg`;
   }
@@ -41,6 +42,7 @@ export class Seo {
   }
 
   init(): void {
+    this.injectGscVerificationTag();
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
       tap(() => {
@@ -285,6 +287,11 @@ export class Seo {
       'project-schema',
       'faq-schema',
       'review-schema',
+      'video-schema',
+      'event-schema',
+      'event-schema-0',
+      'event-schema-1',
+      'event-schema-2',
       'job-posting-schema-0',
       'job-posting-schema-1',
       'job-posting-schema-2',
@@ -567,6 +574,90 @@ export class Seo {
     link.setAttribute('fetchpriority', 'high');
     if (type) link.setAttribute('type', type);
     this.document.head.appendChild(link);
+  }
+
+  /**
+   * Inject Google Search Console HTML verification meta tag from token.
+   * No-op if the token is not configured.
+   */
+  private injectGscVerificationTag(): void {
+    if (!this.gscToken || this.gscToken.length < 10) return;
+    if (this.document.querySelector('meta[name="google-site-verification"]')) return;
+    const meta = this.document.createElement('meta');
+    meta.setAttribute('name', 'google-site-verification');
+    meta.setAttribute('content', this.gscToken);
+    this.document.head.appendChild(meta);
+  }
+
+  /**
+   * Inject VideoObject schema for an embedded video.
+   * @param video Video metadata. thumbnailUrl must be absolute.
+   */
+  public setVideoSchema(video: {
+    name: string;
+    description: string;
+    thumbnailUrl: string;
+    uploadDate: string;
+    duration?: string;
+    embedUrl?: string;
+    contentUrl?: string;
+  }): void {
+    const schema: Record<string, unknown> = {
+      '@context': 'https://schema.org',
+      '@type': 'VideoObject',
+      'name': video.name,
+      'description': video.description,
+      'thumbnailUrl': video.thumbnailUrl,
+      'uploadDate': video.uploadDate,
+      'publisher': { '@id': `${this.baseUrl}/#organization` },
+    };
+    if (video.duration) schema['duration'] = video.duration;
+    if (video.embedUrl) schema['embedUrl'] = video.embedUrl;
+    if (video.contentUrl) schema['contentUrl'] = video.contentUrl;
+    this.setJsonLd(schema, 'video-schema');
+  }
+
+  /**
+   * Inject Event schema for a single event.
+   * @param event Event data with ISO 8601 dates.
+   */
+  public setEventSchema(event: {
+    name: string;
+    description: string;
+    startDate: string;
+    endDate?: string;
+    image: string;
+    organizerName: string;
+    locationName: string;
+    locationUrl?: string;
+    eventStatus?: 'EventScheduled' | 'EventPostponed' | 'EventCancelled' | 'EventRescheduled';
+    eventAttendanceMode?: 'OfflineEventAttendanceMode' | 'OnlineEventAttendanceMode' | 'MixedEventAttendanceMode';
+    url?: string;
+  }, id = 'event-schema'): void {
+    const schema: Record<string, unknown> = {
+      '@context': 'https://schema.org',
+      '@type': 'Event',
+      'name': event.name,
+      'description': event.description,
+      'startDate': event.startDate,
+      'image': [event.image],
+      'eventStatus': `https://schema.org/${event.eventStatus ?? 'EventScheduled'}`,
+      'eventAttendanceMode': `https://schema.org/${event.eventAttendanceMode ?? 'OnlineEventAttendanceMode'}`,
+      'organizer': {
+        '@type': 'Organization',
+        '@id': `${this.baseUrl}/#organization`,
+        'name': event.organizerName,
+        'url': this.baseUrl,
+      },
+      'location': {
+        '@type': event.eventAttendanceMode === 'OfflineEventAttendanceMode' ? 'Place' : 'VirtualLocation',
+        'name': event.locationName,
+        ...(event.locationUrl ? { 'url': event.locationUrl } : {}),
+      },
+    };
+    if (event.endDate) schema['endDate'] = event.endDate;
+    if (event.url) schema['url'] = event.url;
+    this.setJsonLd(schema, id);
   }
 
   /**

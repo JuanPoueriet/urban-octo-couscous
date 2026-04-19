@@ -3,9 +3,11 @@ import {
   importProvidersFrom,
   provideZonelessChangeDetection,
   PLATFORM_ID,
+  isDevMode,
 } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideServiceWorker } from '@angular/service-worker';
 import { BASE_URL } from './core/constants/tokens';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { TranslateLoader, provideTranslateService } from '@ngx-translate/core';
@@ -90,5 +92,9 @@ export const appConfig: ApplicationConfig = {
     }),
     importProvidersFrom(LucideAngularModule.pick(ALL_ICONS)),
     CookieService,
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
   ],
 };
