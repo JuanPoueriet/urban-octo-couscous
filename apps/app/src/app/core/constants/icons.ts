@@ -85,6 +85,7 @@ import {
   Building,
   Layers,
   HardDrive,
+  Infinity,
   Loader2,
   ChevronsLeftRight,
   Calculator,
@@ -167,6 +168,7 @@ export const ICON_LIST = {
     Factory,
     FolderKanban,
     BarChart3,
+    Infinity,
   },
   // Redes sociales
   Social: {

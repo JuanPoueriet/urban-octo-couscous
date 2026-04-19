@@ -116,26 +116,23 @@
   </div>
 </section>
 
-<!-- NUEVO COMPONENTE: Stats Bar (Métricas) -->
+<!-- Stats Section -->
 <section class="stats-section">
-  <div class="stats-glow"></div>
   <div class="container">
-    <div class="section-header text-center" jslAnimateOnScroll>
+    <div class="stats-section__header" jslAnimateOnScroll>
       <span class="section-eyebrow">{{ 'HOME.STATS_EYEBROW' | translate }}</span>
-      <h2 class="section-title text-white">{{ 'HOME.STATS_TITLE' | translate }}</h2>
+      <h2 class="section-title">{{ 'HOME.STATS_TITLE' | translate }}</h2>
     </div>
 
     <div class="stats-grid">
       @for (stat of stats; track stat.valueKey) {
         <div class="stat-card" jslAnimateOnScroll>
-          <div class="stat-icon">
-            <lucide-icon [name]="stat.icon" [size]="32"></lucide-icon>
+          <div class="stat-card__icon">
+            <lucide-icon [name]="stat.icon" [size]="24"></lucide-icon>
           </div>
-          <div class="stat-content">
-            <h3 class="stat-value">{{ stat.valueKey | translate }}</h3>
-            <p class="stat-label">{{ stat.labelKey | translate }}</p>
-            <p class="stat-sub">{{ stat.subtitleKey | translate }}</p>
-          </div>
+          <h3 class="stat-card__value">{{ stat.valueKey | translate }}</h3>
+          <p class="stat-card__label">{{ stat.labelKey | translate }}</p>
+          <p class="stat-card__sub">{{ stat.subtitleKey | translate }}</p>
         </div>
       }
     </div>
