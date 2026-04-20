@@ -27,7 +27,7 @@
   // Alinear el contenido en lados opuestos (opcional, pero con "sazón")
   &:nth-child(odd) {
     .process-item__content {
-      text-align: left;
+      text-align: start;
     }
   }
   &:nth-child(even) {
@@ -35,7 +35,7 @@
 
     .process-item__content {
       order: -1; // Mover contenido a la izquierda
-      text-align: right;
+      text-align: end;
     }
     .process-item__icon-wrapper {
       order: 1;
@@ -71,7 +71,7 @@
 .process-item__line {
   position: absolute;
   top: 80px; // Debajo del ícono
-  left: 50%;
+  inset-inline-start: 50%;
   width: 2px;
   height: 100%; // Se extiende hasta el final del padding-bottom
   background: var(--border-color);
@@ -129,7 +129,7 @@
   .process-item__content,
   .process-item:nth-child(even) .process-item__content {
     order: 0;
-    text-align: left;
+    text-align: start;
   }
   
   .process-item__icon-wrapper,
