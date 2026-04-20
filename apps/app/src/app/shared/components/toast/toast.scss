@@ -78,16 +78,8 @@
 }
 
 @keyframes slideIn {
-  from { transform: translateX(100%); opacity: 0; }
+  from { transform: translateX(calc(var(--dir, 1) * 100%)); opacity: 0; }
   to   { transform: translateX(0);    opacity: 1; }
-}
-
-// In RTL the toast is on the left, so it slides in from the left
-[dir="rtl"] .toast { animation-name: slideInRtl; }
-
-@keyframes slideInRtl {
-  from { transform: translateX(-100%); opacity: 0; }
-  to   { transform: translateX(0);     opacity: 1; }
 }
 
 // Dark mode support

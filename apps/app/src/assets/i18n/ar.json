@@ -15,7 +15,16 @@
     "VIEW_ALL_SERVICES": "عرض جميع الحلول",
     "VIEW_ALL_PRODUCTS": "عرض جميع المنتجات",
     "VENTURES": "Ventures",
-    "INVESTORS": "Investors"
+    "INVESTORS": "Investors",
+    "LOGIN": "تسجيل الدخول",
+    "LOGIN_VIRTEEX": "سحابة Virteex",
+    "LOGIN_CLIENT": "بوابة الفوترة",
+    "LOGIN_SUPPORT": "الدعم التقني",
+    "PARTNERS": "الشركاء",
+    "PRESS": "المركز الصحفي",
+    "SECURITY": "الثقة والأمان",
+    "SUPPORT": "الدعم",
+    "CLIENT_PORTAL": "بوابة العملاء"
   },
   "TOP_BAR": {
     "PORTFOLIO": "ملف الأعمال",
@@ -85,7 +94,9 @@
     "BREADCRUMB_HOME": "الرئيسية",
     "AUTHOR": "المؤلف",
     "PUBLISHED_DATE": "نشر في",
-    "PLACEHOLDER_TITLE": "مزيد من المعلومات قريبا"
+    "PLACEHOLDER_TITLE": "مزيد من المعلومات قريبا",
+    "COPIED": "تم النسخ!",
+    "VISIT_WEBSITE": "زيارة الموقع"
   },
   "HOME": {
     "HERO1_TITLE": "تشكيل مستقبل الابتكار الرقمي",
@@ -139,7 +150,8 @@
     "CTA_EYEBROW": "هل لديك فكرة؟",
     "CTA_TITLE": "لنتحدث عن مشروعك القادم",
     "CTA_SUBTITLE": "فريقنا من مهندسي الحلول على استعداد لتحويل رؤيتك إلى واقع رقمي عملي ومستقبلي.",
-    "CTA_BUTTON": "اتصل بنا الآن"
+    "CTA_BUTTON": "اتصل بنا الآن",
+    "STICKY_CTA": "احجز مكالمة استراتيجية مجانية"
   },
   "CONTACT": {
     "TITLE": "لنتحدث عن مشروعك",
@@ -296,7 +308,22 @@
     "TERMS_SECTION_3_TITLE": "الملكية الفكرية",
     "TERMS_SECTION_3_P1": "جميع المحتويات الموجودة على هذا الموقع ، بما في ذلك النصوص والرسومات والشعارات والصور ، هي ملك لشركة JSL Technology وهي محمية بموجب قوانين حقوق النشر.",
     "COOKIE_TITLE": "Cookie Policy",
-    "COOKIE_INTRO": "At JSL Technology, we use cookies and similar technologies to enhance your experience, analyze traffic, and personalize content. This policy explains what cookies are, how we use them, and your options for controlling them."
+    "COOKIE_INTRO": "At JSL Technology, we use cookies and similar technologies to enhance your experience, analyze traffic, and personalize content. This policy explains what cookies are, how we use them, and your options for controlling them.",
+    "COOKIE_SECTION_1_TITLE": "ما هي ملفات تعريف الارتباط؟",
+    "COOKIE_SECTION_1_P1": "ملفات تعريف الارتباط هي ملفات نصية صغيرة تُخزَّن على جهازك عند زيارة موقع ويب. تساعد الموقع على العمل بشكل صحيح، وتعزز الأمان، وتوفر معلومات لأصحاب الموقع.",
+    "COOKIE_SECTION_2_TITLE": "كيف نستخدم ملفات تعريف الارتباط؟",
+    "COOKIE_SECTION_2_P1": "نستخدم ملفات تعريف الارتباط لتذكر تفضيلاتك، وفهم كيفية تفاعلك مع موقعنا، وتحسين خدماتنا. بعض هذه الملفات ضروري لتشغيل الموقع، بينما يساعد البعض الآخر في تحسين تجربتك.",
+    "COOKIE_SECTION_3_TITLE": "أنواع ملفات تعريف الارتباط التي نستخدمها",
+    "COOKIE_SECTION_3_LI1_T": "ضرورية للغاية",
+    "COOKIE_SECTION_3_LI1_D": "ضرورية لتصفح الموقع واستخدام ميزاته.",
+    "COOKIE_SECTION_3_LI2_T": "الأداء والتحليلات",
+    "COOKIE_SECTION_3_LI2_D": "تجمع معلومات حول كيفية استخدام الزوار للموقع حتى نتمكن من تحسينه.",
+    "COOKIE_SECTION_3_LI3_T": "الوظائف",
+    "COOKIE_SECTION_3_LI3_D": "تسمح للموقع بتذكر اختياراتك (مثل اسم المستخدم أو اللغة).",
+    "COOKIE_SECTION_3_LI4_T": "الإعلان أو التسويق",
+    "COOKIE_SECTION_3_LI4_D": "تُستخدم لعرض إعلانات أكثر صلة بك وباهتماماتك.",
+    "COOKIE_SECTION_4_TITLE": "التحكم في ملفات تعريف الارتباط",
+    "COOKIE_SECTION_4_P1": "يمكنك التحكم في ملفات تعريف الارتباط و/أو حذفها عبر إعدادات المتصفح. يرجى ملاحظة أنه إذا قمت بتعطيلها، فقد لا تعمل بعض أجزاء موقعنا بشكل صحيح."
   },
   "NOT_FOUND": {
     "TITLE": "الصفحة غير موجودة (404)",

@@ -7,6 +7,9 @@ const SUPPORTED_LANGS = ['en', 'es', 'fr', 'de', 'it', 'pt', 'ja', 'ko', 'zh', '
 
 const TITLE_MIN_LENGTH = 15;
 const DESCRIPTION_MIN_LENGTH = 50;
+const I18N_COVERAGE_GOAL = 0.95;
+const I18N_MIN_COVERAGE_DEFAULT = Number.parseFloat(process.env.I18N_MIN_COVERAGE_DEFAULT ?? '0.55');
+const I18N_MIN_COVERAGE_AR = Number.parseFloat(process.env.I18N_MIN_COVERAGE_AR ?? '0.55');
 
 function extractSeoKeys(routesSource) {
   const keyRegex = /(title|description):\s*'([^']+)'/g;
@@ -66,11 +69,15 @@ async function main() {
 
   const errors = [];
   const warnings = [];
+  let enFlat = null;
 
   for (const lang of SUPPORTED_LANGS) {
     const langFile = path.join(I18N_DIR, `${lang}.json`);
     const langJson = JSON.parse(await readFile(langFile, 'utf8'));
     const flat = flattenJson(langJson);
+    if (lang === 'en') {
+      enFlat = flat;
+    }
 
     const titleValues = {};
     const descriptionValues = {};
@@ -109,6 +116,37 @@ async function main() {
     collectDuplicates(descriptionValues).forEach((keys) => {
       warnings.push(`[${lang}] Duplicate SEO description value used in keys: ${keys.join(', ')}`);
     });
+  }
+
+  if (!enFlat) {
+    errors.push('Base language [en] was not loaded, cannot compute i18n coverage.');
+  } else {
+    const enKeys = Object.keys(enFlat);
+    for (const lang of SUPPORTED_LANGS) {
+      if (lang === 'en') continue;
+      const langFile = path.join(I18N_DIR, `${lang}.json`);
+      const langJson = JSON.parse(await readFile(langFile, 'utf8'));
+      const flat = flattenJson(langJson);
+      const presentKeys = enKeys.filter((key) => {
+        const value = flat[key];
+        return typeof value === 'string' && value.trim().length > 0 && value !== key;
+      });
+      const coverage = presentKeys.length / enKeys.length;
+      const hardMin = lang === 'ar' ? I18N_MIN_COVERAGE_AR : I18N_MIN_COVERAGE_DEFAULT;
+      const coveragePct = (coverage * 100).toFixed(1);
+      const hardMinPct = (hardMin * 100).toFixed(1);
+      const goalPct = (I18N_COVERAGE_GOAL * 100).toFixed(1);
+
+      if (coverage < hardMin) {
+        errors.push(
+          `[${lang}] i18n coverage too low (${coveragePct}%). Minimum required is ${hardMinPct}% (${presentKeys.length}/${enKeys.length} keys).`
+        );
+      } else if (coverage < I18N_COVERAGE_GOAL) {
+        warnings.push(
+          `[${lang}] i18n coverage below target (${coveragePct}%). Target is ${goalPct}% (${presentKeys.length}/${enKeys.length} keys).`
+        );
+      }
+    }
   }
 
   if (errors.length) {
