@@ -66,8 +66,7 @@
       content: '';
       position: absolute;
       top: 0;
-      left: 0;
-      right: 0;
+      inset-inline: 0;
       bottom: 0;
       background: var(--accent-gradient);
       opacity: 0;
@@ -129,7 +128,7 @@
   .copy-tooltip {
     position: absolute;
     bottom: -40px;
-    left: 50%;
+    inset-inline-start: 50%;
     transform: translateX(-50%) translateY(10px);
     background: var(--bg-card);
     color: var(--text-main);
@@ -155,12 +154,12 @@
       content: '';
       position: absolute;
       top: -4px;
-      left: 50%;
+      inset-inline-start: 50%;
       transform: translateX(-50%) rotate(45deg);
       width: 8px;
       height: 8px;
       background: var(--bg-card);
-      border-left: 1px solid var(--border-color);
+      border-inline-start: 1px solid var(--border-color);
       border-top: 1px solid var(--border-color);
     }
   }

@@ -1,13 +1,13 @@
 import { Injectable, Inject, signal, WritableSignal, PLATFORM_ID } from '@angular/core';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { TranslateService, LangChangeEvent } from '@ngx-translate/core';
+import { isRtlLanguage } from '@core/constants/languages';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DirectionService {
   public isRtl: WritableSignal<boolean> = signal(false);
-  private readonly RTL_LANGUAGES = ['ar', 'he', 'fa', 'ur'];
 
   constructor(
     private translate: TranslateService,
@@ -19,16 +19,16 @@ export class DirectionService {
 
   private init(): void {
     // Initial check
-    this.updateDirection(this.translate.currentLang || this.translate.getDefaultLang() || 'en');
+    this.syncDirection(this.translate.currentLang || this.translate.getDefaultLang() || 'en');
 
     // Subscribe to language changes
     this.translate.onLangChange.subscribe((event: LangChangeEvent) => {
-      this.updateDirection(event.lang);
+      this.syncDirection(event.lang);
     });
   }
 
-  private updateDirection(lang: string): void {
-    const isRtl = this.RTL_LANGUAGES.includes(lang);
+  public syncDirection(lang: string): void {
+    const isRtl = isRtlLanguage(lang);
     this.isRtl.set(isRtl);
 
     if (isPlatformBrowser(this.platformId)) {

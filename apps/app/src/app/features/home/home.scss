@@ -174,7 +174,7 @@ swiper-container {
   .arrow {
     width: 10px;
     height: 10px;
-    border-right: 2px solid rgba(255,255,255,0.6);
+    border-inline-end: 2px solid rgba(255,255,255,0.6);
     border-bottom: 2px solid rgba(255,255,255,0.6);
     transform: rotate(45deg);
     animation: scrollArrow 2s infinite;
@@ -343,7 +343,7 @@ swiper-container {
   &--right {
     font-size: 1.5rem;
     font-weight: 700;
-    text-align: right;
+    text-align: end;
     color: var(--text-main);
     flex-shrink: 0;
     p:first-child {
@@ -1101,8 +1101,8 @@ swiper-container {
       content: '';
       position: absolute;
       top: 0;
-      left: 20%;
-      right: 20%;
+      inset-inline-start: 20%;
+      inset-inline-end: 20%;
       height: 2px;
       background: var(--accent-gradient);
       border-radius: 0 0 3px 3px;
@@ -1429,7 +1429,7 @@ swiper-container {
   font-weight: 600;
   font-size: 1.1rem;
   cursor: pointer;
-  text-align: left;
+  text-align: start;
 
   &:hover {
     background-color: var(--bg-secondary);
@@ -1478,8 +1478,7 @@ swiper-container {
     content: '';
     position: absolute;
     top: 0;
-    left: 0;
-    right: 0;
+    inset-inline: 0;
     height: 1px;
     background: linear-gradient(90deg, transparent 0%, var(--border-color) 25%, var(--border-color) 75%, transparent 100%);
   }
@@ -1488,8 +1487,7 @@ swiper-container {
     content: '';
     position: absolute;
     bottom: 0;
-    left: 0;
-    right: 0;
+    inset-inline: 0;
     height: 1px;
     background: linear-gradient(90deg, transparent 0%, var(--border-color) 25%, var(--border-color) 75%, transparent 100%);
   }

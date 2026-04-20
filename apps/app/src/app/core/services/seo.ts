@@ -8,6 +8,7 @@ import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { SUPPORTED_LANGUAGES } from '../constants/languages';
 import { BASE_URL, RESPONSE, GSC_VERIFICATION_TOKEN } from '../constants/tokens';
 import { Optional } from '@angular/core';
+import { DirectionService } from './direction.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,6 @@ export class Seo {
   private siteName = 'JSL Technology';
   private defaultImageUrl: string;
   private supportedLangs = SUPPORTED_LANGUAGES;
-  private readonly RTL_LANGS = new Set(['ar', 'he', 'fa', 'ur']);
 
   constructor(
     private titleService: Title,
@@ -25,6 +25,7 @@ export class Seo {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private translate: TranslateService,
+    private directionService: DirectionService,
     @Inject(DOCUMENT) private document: Document,
     @Inject(PLATFORM_ID) private platformId: object,
     @Inject(BASE_URL) private baseUrl: string,
@@ -241,8 +242,7 @@ export class Seo {
    * 6. ¡NUEVO! Actualiza el atributo lang del html y dir para RTL.
    */
   private updateLanguageTag(lang: string): void {
-    this.document.documentElement.lang = lang;
-    this.document.documentElement.dir = this.RTL_LANGS.has(lang) ? 'rtl' : 'ltr';
+    this.directionService.syncDirection(lang);
   }
 
   /**
