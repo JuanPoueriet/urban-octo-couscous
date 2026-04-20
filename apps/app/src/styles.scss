@@ -167,8 +167,8 @@ lucide-icon {
 }
 
 // Utility Classes (Minimal set to avoid full framework)
-.mx-auto { margin-left: auto; margin-right: auto; }
-.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.mx-auto { margin-inline: auto; }
+.px-4 { padding-inline: 1rem; }
 .mt-20 { margin-top: 5rem; }
 .text-center { text-align: center; }
 
@@ -176,12 +176,29 @@ lucide-icon {
   .lg\:mt-24 { margin-top: 6rem; }
 }
 
-/* RTL Support */
+/* ─── RTL Support ──────────────────────────────────────────────── */
+
+// CSS direction multiplier: 1 in LTR, -1 in RTL
+// Use with: transform: translateX(calc(var(--dir) * Xpx))
+:root { --dir: 1; }
+[dir="rtl"] { --dir: -1; }
+
 [dir="rtl"] {
+  // Mirror directional icons
   lucide-icon[name="ArrowRight"],
   lucide-icon[name="ArrowLeft"],
   lucide-icon[name="ChevronRight"],
-  lucide-icon[name="ChevronLeft"] {
+  lucide-icon[name="ChevronLeft"],
+  lucide-icon[name="ArrowRightCircle"],
+  lucide-icon[name="ArrowLeftCircle"],
+  lucide-icon[name="MoveRight"],
+  lucide-icon[name="MoveLeft"] {
     transform: scaleX(-1);
+  }
+
+  // Reverse card hover arrow animations
+  .card--article .card__link lucide-icon,
+  .card--service .card__link lucide-icon {
+    &[style*="translateX(4px)"] { transform: translateX(-4px) !important; }
   }
 }

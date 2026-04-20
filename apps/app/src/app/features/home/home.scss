@@ -424,13 +424,13 @@ swiper-container {
 .hero-swiper-button-prev {
   opacity: calc(0.2 + (var(--hero-nav-left-visibility, 0) * 0.65));
   transform: translateY(-50%);
-  left: 3.5rem; // Posición desde el borde izquierdo
+  inset-inline-start: 3.5rem;
 }
 
 .hero-swiper-button-next {
   opacity: calc(0.2 + (var(--hero-nav-right-visibility, 0) * 0.65));
   transform: translateY(-50%);
-  right: 3.5rem; // Posición desde el borde derecho
+  inset-inline-end: 3.5rem;
 }
 
 // --- NUEVO: Detección de proximidad del cursor (opcional, para mejor UX) ---
@@ -1348,7 +1348,7 @@ swiper-container {
       content: '';
       position: absolute;
       top: 5px;
-      right: -10px; // Page thickness
+      inset-inline-end: -10px; // Page thickness
       width: 10px;
       height: calc(100% - 10px);
       background: #fff;
@@ -1360,7 +1360,7 @@ swiper-container {
       content: '';
       position: absolute;
       bottom: -10px; // Bottom thickness
-      left: 5px;
+      inset-inline-start: 5px;
       width: 100%;
       height: 10px;
       background: #fff;

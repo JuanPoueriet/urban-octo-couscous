@@ -52,8 +52,7 @@
   margin-bottom: 1rem;
   line-height: 1.2;
   max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
+  margin-inline: auto;
 }
 
 .detail-page-meta {
@@ -152,7 +151,7 @@
   }
   
   ul, ol {
-    padding-left: 2rem;
+    padding-inline-start: 2rem;
   }
   
   li {
