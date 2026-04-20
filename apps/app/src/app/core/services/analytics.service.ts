@@ -1,4 +1,4 @@
-import { Injectable, Inject, PLATFORM_ID, Optional } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID, Optional, isDevMode } from '@angular/core';
 import { isPlatformBrowser, DOCUMENT } from '@angular/common';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -31,6 +31,7 @@ export class AnalyticsService {
   init(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     if (this.initialized) return;
+    if (isDevMode()) return;
     if (!this.measurementId || !this.measurementId.startsWith('G-')) {
       console.warn('[Analytics] GA4 Measurement ID not configured. Set GA_MEASUREMENT_ID env var on the server.');
       return;
@@ -98,7 +99,16 @@ export class AnalyticsService {
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe((event) => {
-        this.trackPageView(event.urlAfterRedirects);
+        const url = event.urlAfterRedirects;
+        const lang = url.split('/')[1] || 'en';
+        if (!isPlatformBrowser(this.platformId) || !this.initialized) return;
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'page_view', {
+            page_location: `${this.document.location.origin}${url}`,
+            page_path: url,
+            language: lang,
+          });
+        }
       });
   }
 }

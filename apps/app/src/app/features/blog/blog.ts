@@ -173,8 +173,8 @@ export class Blog implements OnInit, AfterViewInit {
         datePublished: post.date,
         dateModified: post.date,
         author: {
-          '@type': 'Organization',
-          name: 'JSL Technology',
+          '@type': 'Person',
+          name: 'JSL Technology Team',
         },
       };
     });
@@ -214,8 +214,13 @@ export class Blog implements OnInit, AfterViewInit {
   private updatePaginationLinks(page: number): void {
     const totalPages = Math.ceil(this.totalItems() / this.itemsPerPage);
     const base = `/${this.currentLang}/blog`;
-    const prev = page > 1 ? `${base}?page=${page - 1}` : undefined;
-    const next = page < totalPages ? `${base}?page=${page + 1}` : undefined;
+    const params = new URLSearchParams();
+    if (this.searchTerm()) params.set('q', this.searchTerm());
+    if (this.selectedTag()) params.set('tag', this.selectedTag()!);
+    const queryStr = params.toString() ? `?${params.toString()}` : '';
+    const sep = queryStr ? '&' : '?';
+    const prev = page > 1 ? `${base}${queryStr}${sep}page=${page - 1}` : undefined;
+    const next = page < totalPages ? `${base}${queryStr}${sep}page=${page + 1}` : undefined;
     this.seoService.setPaginationLinks(prev, next);
   }
 }

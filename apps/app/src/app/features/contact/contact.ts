@@ -6,6 +6,7 @@ import { LucideAngularModule } from 'lucide-angular';
 import { ApiService } from '@core/services/api.service';
 import { ToastService } from '@core/services/toast.service';
 import { AnalyticsService } from '@core/services/analytics.service';
+import { Seo } from '@core/services/seo';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil, finalize } from 'rxjs/operators';
@@ -32,10 +33,12 @@ export class Contact implements OnInit, OnDestroy {
     private apiService: ApiService,
     private toastService: ToastService,
     private analytics: AnalyticsService,
-    private router: Router
+    private router: Router,
+    private seo: Seo
   ) {}
 
   ngOnInit(): void {
+    this.seo.setOrganizationSchema();
     this.contactForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],

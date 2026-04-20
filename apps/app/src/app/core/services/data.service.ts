@@ -128,6 +128,7 @@ export interface CareerPosition {
   key: string;
   locationKey: string;
   typeKey: string;
+  postedDate?: string;
 }
 
 // Interface para Items de FAQ

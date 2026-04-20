@@ -426,11 +426,13 @@ export const CAREER_POSITIONS = [
     key: 'POS_1',
     locationKey: 'CAREERS.LOCATION_REMOTE',
     typeKey: 'CAREERS.TYPE_FULLTIME',
+    postedDate: '2025-01-15',
   },
   {
     key: 'POS_2',
     locationKey: 'CAREERS.LOCATION_HYBRID',
     typeKey: 'CAREERS.TYPE_FULLTIME',
+    postedDate: '2025-02-01',
   },
 ];
 

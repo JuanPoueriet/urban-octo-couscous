@@ -253,9 +253,10 @@ export class Seo {
   }
 
   /**
-   * 8. ¡NUEVO! Gestiona scripts de Datos Estructurados (JSON-LD).
+   * 8. Gestiona scripts de Datos Estructurados (JSON-LD).
+   * Pass dynamic=false for permanent schemas (Organization, WebSite) that persist across routes.
    */
-  public setJsonLd(schema: any, id = 'structured-data'): void {
+  public setJsonLd(schema: any, id = 'structured-data', dynamic = true): void {
     const schemaName = id;
 
     // 8.1. Limpiar script previo (solo navegador para evitar fugas en navegación SPA)
@@ -271,39 +272,18 @@ export class Seo {
     script.type = 'application/ld+json';
     script.id = schemaName;
     script.text = JSON.stringify(schema);
+    if (dynamic) {
+      script.setAttribute('data-dynamic', 'true');
+    }
     this.document.head.appendChild(script);
   }
 
   /**
-   * Limpia esquemas dinámicos para evitar que persistan entre rutas.
+   * Limpia todos los schemas dinámicos usando el atributo data-dynamic="true".
    */
   public clearDynamicSchemas(): void {
-    const dynamicSchemas = [
-      'breadcrumb-schema',
-      'structured-data',
-      'article-schema',
-      'product-schema',
-      'service-schema',
-      'project-schema',
-      'faq-schema',
-      'review-schema',
-      'video-schema',
-      'event-schema',
-      'event-schema-0',
-      'event-schema-1',
-      'event-schema-2',
-      'job-posting-schema-0',
-      'job-posting-schema-1',
-      'job-posting-schema-2',
-      'job-posting-schema-3',
-      'job-posting-schema-4',
-    ];
-    dynamicSchemas.forEach(id => {
-      const existingScript = this.document.getElementById(id);
-      if (existingScript) {
-        existingScript.remove();
-      }
-    });
+    this.document.querySelectorAll('script[type="application/ld+json"][data-dynamic="true"]')
+      .forEach(el => el.remove());
   }
 
   /**
@@ -362,7 +342,7 @@ export class Seo {
         }
       ]
     };
-    this.setJsonLd(organizationSchema, 'organization-schema');
+    this.setJsonLd(organizationSchema, 'organization-schema', false);
   }
 
   /**
@@ -440,6 +420,7 @@ export class Seo {
    * Call once from the root component or on home navigation.
    */
   public setWebSiteSchema(): void {
+    const lang = this.translate.currentLang || 'en';
     const schema = {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
@@ -452,12 +433,12 @@ export class Seo {
         '@type': 'SearchAction',
         'target': {
           '@type': 'EntryPoint',
-          'urlTemplate': `${this.baseUrl}/en/blog?q={search_term_string}`,
+          'urlTemplate': `${this.baseUrl}/${lang}/blog?q={search_term_string}`,
         },
         'query-input': 'required name=search_term_string',
       },
     };
-    this.setJsonLd(schema, 'website-schema');
+    this.setJsonLd(schema, 'website-schema', false);
   }
 
   /**

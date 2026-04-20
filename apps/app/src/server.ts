@@ -159,7 +159,7 @@ const supportedLangs = SUPPORTED_LANGUAGES;
 const defaultLang = 'en';
 
 // --- NUEVO: Fecha de última modificación para rutas estáticas (evita fluctuaciones de crawl budget) ---
-const STATIC_LASTMOD = '2025-10-30';
+const STATIC_LASTMOD = process.env['BUILD_DATE'] || new Date().toISOString().split('T')[0];
 const NOINDEX_ROUTES = ['/status', '/thank-you', '/server-error', '/not-found'];
 
 /**
@@ -397,6 +397,7 @@ app.use((req, res, next) => {
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  res.setHeader('Vary', 'Accept-Language');
   res.setHeader(
     'Content-Security-Policy',
     [

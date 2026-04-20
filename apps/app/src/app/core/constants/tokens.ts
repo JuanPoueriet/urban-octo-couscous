@@ -14,3 +14,9 @@ export const GSC_VERIFICATION_TOKEN = new InjectionToken<string>('GSC_VERIFICATI
   providedIn: 'root',
   factory: () => '',
 });
+
+/** Site display name — single source of truth for branding across the app. */
+export const SITE_NAME = new InjectionToken<string>('SITE_NAME', {
+  providedIn: 'root',
+  factory: () => 'JSL Technology',
+});

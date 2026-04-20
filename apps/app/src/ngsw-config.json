@@ -1,6 +1,10 @@
 {
   "$schema": "../../node_modules/@angular/service-worker/config/schema.json",
   "index": "/index.html",
+  "navigationFallback": {
+    "index": "/index.html",
+    "blacklistedUrls": ["/**/*.*"]
+  },
   "assetGroups": [
     {
       "name": "app-shell",
@@ -33,7 +37,7 @@
       "urls": ["/assets/i18n/**"],
       "cacheConfig": {
         "maxSize": 20,
-        "maxAge": "7d",
+        "maxAge": "1d",
         "timeout": "5s",
         "strategy": "performance"
       }

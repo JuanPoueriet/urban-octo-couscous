@@ -56,8 +56,13 @@ export class Careers implements OnInit {
             title: translations[`CAREERS.${p.key}_TITLE`] || p.key,
             description: translations[`CAREERS.${p.key}_DESC`] || '',
             employmentType: (p.typeKey === 'CAREERS.TYPE_FULLTIME' ? 'FULL_TIME' : 'PART_TIME') as 'FULL_TIME' | 'PART_TIME',
-            jobLocationType: (p.locationKey === 'CAREERS.LOCATION_REMOTE' ? 'TELECOMMUTE' : 'ONSITE') as 'TELECOMMUTE' | 'ONSITE',
-            datePosted: new Date().toISOString().split('T')[0],
+            jobLocationType: ((): 'TELECOMMUTE' | 'ONSITE' | 'HYBRID' => {
+              const loc = p.locationKey || '';
+              if (loc.includes('REMOTE')) return 'TELECOMMUTE';
+              if (loc.includes('HYBRID')) return 'HYBRID';
+              return 'ONSITE';
+            })(),
+            datePosted: p.postedDate || '2025-01-01',
           })))
         );
       })
