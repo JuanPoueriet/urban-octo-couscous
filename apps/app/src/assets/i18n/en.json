@@ -33,7 +33,9 @@
     "CONTACT": "Contact Us",
     "CAREERS": "Careers",
     "FAQ": "FAQ",
-    "BLOG": "Blog"
+    "BLOG": "Blog",
+    "ESC": "ESC",
+    "TOP": "TOP"
   },
   "LANG": {
     "ES": "Spanish",
@@ -96,7 +98,8 @@
     "PUBLISHED_DATE": "Published on",
     "COPIED": "Copied!",
     "PLACEHOLDER_TITLE": "More Information Coming Soon",
-    "VISIT_WEBSITE": "Visit Website"
+    "VISIT_WEBSITE": "Visit Website",
+    "BRAND_NAME": "JSL Technology"
   },
   "HOME": {
     "WATCH_REEL": "Watch Reel",
@@ -106,8 +109,8 @@
     "LEGACY_SYSTEM": "Legacy System",
     "JSL_SOLUTION": "JSL Solution",
     "DASHBOARD_COMP": "Dashboard modernization comparison",
-    "ASSESS_TECH": "Assess your Tech Stack",
-    "CALC_SAVINGS": "Calculate Potential Savings",
+    "ASSESS_TECH": "Assess Your Tech",
+    "CALC_SAVINGS": "Calculate Your Savings",
     "HERO1_TITLE": "Shaping The Future Of Digital Innovation",
     "HERO1_SUBTITLE": "Bridging the gap between Consultancy and Venture Building. We orchestrate digital transformation.",
     "HERO1_CTA": "More Info",
@@ -171,13 +174,13 @@
     "PROCESS_EYEBROW": "Our Methodology",
     "PROCESS_TITLE": "From Idea to Impact",
     "PROCESS_SUBTITLE": "We have an agile and transparent 4-step process that ensures digital excellence and aligns results with your business goals.",
-    "PROCESS_STEP1_TITLE": "1. Discovery & Strategy",
+    "PROCESS_STEP1_TITLE": "Discovery & Strategy",
     "PROCESS_STEP1_DESC": "We analyze your goals, define the scope, and create a strategic roadmap to ensure the project's success.",
-    "PROCESS_STEP2_TITLE": "2. UI/UX Design & Engineering",
+    "PROCESS_STEP2_TITLE": "UI/UX Design & Engineering",
     "PROCESS_STEP2_DESC": "Our engineers and designers collaborate to build a robust architecture and an intuitive user interface.",
-    "PROCESS_STEP3_TITLE": "3. Deployment & Quality",
+    "PROCESS_STEP3_TITLE": "Deployment & Quality",
     "PROCESS_STEP3_DESC": "We implement rigorous testing (QA) and deploy your solution on scalable, secure infrastructure.",
-    "PROCESS_STEP4_TITLE": "4. Support & Growth",
+    "PROCESS_STEP4_TITLE": "Support & Growth",
     "PROCESS_STEP4_DESC": "We offer ongoing support and analyze metrics to evolve your product, ensuring a long-term impact.",
     "CTA_EYEBROW": "Have an idea?",
     "CTA_TITLE": "Let's Talk About Your Next Project",
@@ -188,6 +191,8 @@
     "LEAD_MAGNET_SUBTITLE": "Discover the key strategies leading companies are using to scale operations and reduce costs. Download our exclusive Whitepaper.",
     "LEAD_MAGNET_BTN": "Download PDF",
     "LEAD_MAGNET_DISCLAIMER": "By downloading, you agree to receive our occasional newsletter.",
+    "LEAD_MAGNET_PLACEHOLDER": "you@email.com",
+    "LEAD_MAGNET_BADGE": "Whitepaper 2025",
     "TEAM_TEASER_EYEBROW": "Leadership",
     "TEAM_TEASER_TITLE": "Meet the Experts",
     "TEAM_TEASER_SUBTITLE": "A multidisciplinary team of engineers, designers, and strategists committed to your success.",
@@ -195,7 +200,20 @@
     "FAQ_PREVIEW_TITLE": "Frequently Asked Questions",
     "FAQ_PREVIEW_LINK": "View all questions",
     "PARTNERS_TITLE": "Trusted by Innovative Companies",
-    "STICKY_CTA": "Book a Free Strategy Call"
+    "STICKY_CTA": "Book a Free Strategy Call",
+    "VERIFIED_REVIEW": "Verified Review",
+    "ON_CLUTCH": "on Clutch",
+    "ON_GOOGLE": "on Google",
+    "HERO1_ALT": "JSL Technology - Digital Innovation and Software Development",
+    "HERO2_ALT": "ERP Software for Business Management - JSL Technology",
+    "HERO3_ALT": "Custom Software Solutions and Digital Transformation",
+    "LEARN_MORE": "Learn more about us",
+    "VIEW_PRODUCTS": "View our products",
+    "EXPLORE_SOLUTIONS": "Explore our custom solutions",
+    "BLOG_EYEBROW": "Insights & News",
+    "BLOG_TITLE": "From Our Blog",
+    "CLUTCH_SCORE": "4.9/5",
+    "GOOGLE_SCORE": "5.0/5"
   },
   "EXIT_MODAL": {
     "TITLE": "Wait! Don't leave empty-handed",
@@ -222,6 +240,7 @@
       "SERVICE_OTHER": "Other",
       "MESSAGE": "Your Message",
       "SUBMIT": "Send Message",
+      "HONEYPOT_LABEL": "Leave this field blank",
       "ERRORS": {
         "REQUIRED": "This field is required.",
         "EMAIL": "Please enter a valid email address.",
@@ -229,7 +248,10 @@
       },
       "SUCCESS": "Message sent! Thank you for contacting us. We will get back to you soon.",
       "ERROR": "There was an error sending your message. Please try again later."
-    }
+    },
+    "LOCATION_ADDRESS": "Santo Domingo, Dominican Republic",
+    "PHONE_DISPLAY": "+1 (809) 264-1693",
+    "EMAIL_DISPLAY": "info@jsl.technology"
   },
   "SOLUTIONS": {
     "TITLE": "Custom Software Solutions",
@@ -333,9 +355,42 @@
     "CLOUD_SECTION_BENEFITS_3_TITLE": "High Availability",
     "CLOUD_SECTION_BENEFITS_3_DESC": "Geographically distributed redundant systems ensuring your service is always online.",
     "CLOUD_SECTION_BENEFITS_4_TITLE": "Rapid Innovation",
-    "CLOUD_SECTION_BENEFITS_4_DESC": "Instant access to advanced services like AI, Machine Learning, and Big Data without upfront investment."
+    "CLOUD_SECTION_BENEFITS_4_DESC": "Instant access to advanced services like AI, Machine Learning, and Big Data without upfront investment.",
+    "RELATED": "Related Solutions"
   },
   "PRODUCTS": {
+    "OVERVIEW": "Overview",
+    "MODULAR_ARCH": "Modular Architecture",
+    "FUNCTIONAL_MODULES": "Functional Modules",
+    "FUNCTIONAL_MODULES_SUB": "Activate only the modules your business needs — all seamlessly integrated.",
+    "OMNICHANNEL": "Omnichannel",
+    "MULTI_PLATFORM": "Multi-Platform Ecosystem",
+    "MULTI_PLATFORM_SUB": "One backend, five front-ends — a consistent experience on every surface.",
+    "TAX_LOCALIZATION": "Tax Localization",
+    "COUNTRY_READINESS": "Country Readiness",
+    "COUNTRY_READINESS_SUB": "Built for the fiscal complexity of the Americas, with country-specific e-invoicing out of the box.",
+    "ENGINEERING": "Engineering",
+    "TECH_STACK_TITLE": "World-Class Tech Stack",
+    "TECH_STACK_SUB": "Clean Architecture, Domain-Driven Design, and cutting-edge tooling.",
+    "CLEAN_ARCH_DDD": "Clean Architecture + DDD",
+    "CLEAN_ARCH_DDD_DESC": "Strict separation of Domain, Application, Infrastructure and Presentation layers.",
+    "GRAPHQL_FED": "GraphQL Federation",
+    "GRAPHQL_FED_DESC": "Decoupled microservices exposing a unified data graph via Apollo Gateway.",
+    "OFFLINE_FIRST": "Offline-First Mobile",
+    "OFFLINE_FIRST_DESC": "SQLite local database with bidirectional delta sync when back online.",
+    "PLUGIN_MARKET": "Plugin Marketplace",
+    "PLUGIN_MARKET_DESC": "V8 Isolates + WebAssembly sandboxing for safe third-party extensions.",
+    "ENTERPRISE_GRADE": "Enterprise-Grade",
+    "SECURITY_COMPLIANCE": "Security & Compliance",
+    "SECURITY_COMPLIANCE_SUB": "Zero-Trust model with automated governance, end-to-end encryption, and full observability.",
+    "READY_MODERNIZE": "Ready to modernize?",
+    "START_JOURNEY": "Start your {{brand}} journey",
+    "JOURNEY_DESC": "Talk to our team and get a personalized demo for your industry.",
+    "CONTACT_SALES": "Contact Sales",
+    "VISIT_BRAND_SITE": "Visit {{brand}}.com",
+    "WHAT_IS_BRAND": "What is {{brand}}?",
+    "LEARN_MORE_AT": "Learn more at {{brand}}.com",
+    "ERP_CORE_LABEL": "ERP Core",
     "TITLE": "Our Proprietary Software",
     "SUBTITLE": "Years of engineering experience have allowed us to build a robust ecosystem of products, designed for maximum efficiency and scalability.",
     "ERP_TITLE": "virtex (ERP System)",
@@ -408,11 +463,18 @@
     "TEAM_MEMBER_4_BIO": "Specialist in native and cross-platform mobile development.",
     "CTA_EYEBROW": "Want to know us better?",
     "CTA_TITLE": "We Are Your Strategic Partner",
-    "CTA_SUBTITLE": "Our team is ready to collaborate with you and take your vision to the next level."
+    "CTA_SUBTITLE": "Our team is ready to collaborate with you and take your vision to the next level.",
+    "HERO_ALT": "JSL Technology team working on software architecture and digital solutions"
   },
   "BLOG": {
     "TITLE": "JSL Technology Blog",
     "RELATED_POSTS": "Related Articles",
+    "FEATURED_ARTICLE": "Featured Article",
+    "READ_TIME": "Reading time",
+    "BACK_TO_TOP": "Back to top",
+    "WRITTEN_BY": "Written by",
+    "MIGHT_INTEREST_YOU": "You might be interested",
+    "BACK_TO_BLOG": "Back to blog",
     "SUBTITLE": "Insights, tutorials, and news from our engineering team on the world of software development, cloud, and technology.",
     "POST_1_TITLE": "The Future of Angular SSR: Why It's Faster Than Ever",
     "POST_1_EXCERPT": "Angular 17+ has redefined Server-Side Rendering. We analyze the changes in hydration and how it's beating other frameworks in performance.",
@@ -434,7 +496,13 @@
     "POST_6_CONTENT": "<p>Serverless architecture doesn't mean 'no servers'; it means 'not worrying about servers'. AWS Lambda allows us to run code in response to events (like an image upload to S3 or an API call) without provisioning or managing a server.</p><h3>Key Benefits</h3><ol><li><strong>Cost-Effective:</strong> You pay only for the milliseconds your code runs.</li><li><strong>Automatic Scaling:</strong> AWS handles scaling to thousands of requests in parallel.</li><li><strong>Reduced Maintenance:</strong> No more OS security patches.</li></ol><p>It's a key piece of our 'Cloud Architecture' strategy for many clients.</p>",
     "CTA_EYEBROW": "Interested in more insights?",
     "CTA_TITLE": "Let's Talk Technology",
-    "CTA_SUBTITLE": "Our team is always exploring new ideas. Contact us if you'd like to discuss how technology can power your business."
+    "CTA_SUBTITLE": "Our team is always exploring new ideas. Contact us if you'd like to discuss how technology can power your business.",
+    "FEATURED_BADGE": "Featured Article",
+    "SEARCH_PLACEHOLDER": "Search articles...",
+    "READ_TIME_UNIT": "min read",
+    "NO_RESULTS": "No articles found with those filters.",
+    "EYEBROW": "Latest Updates",
+    "BLOG_TITLE": "From Our Blog"
   },
   "LEGAL": {
     "PRIVACY_TITLE": "Privacy Policy",
@@ -488,11 +556,15 @@
   },
   "ERRORS": {
     "500_TITLE": "Server Error (500)",
-    "500_DESC": "We are experiencing technical difficulties. Please try again later."
+    "500_DESC": "We are experiencing technical difficulties. Please try again later.",
+    "GO_HOME": "Go Home"
   },
   "THANK_YOU": {
     "TITLE": "Thank You",
-    "MESSAGE": "Your request has been received. We will get back to you shortly."
+    "MESSAGE": "Your request has been received. We will get back to you shortly.",
+    "GO_HOME": "Back to Home",
+    "MSG_TITLE": "Message Sent Successfully",
+    "MSG_DESC": "We have received your message and will get back to you shortly."
   },
   "NOT_FOUND": {
     "TITLE": "Page Not Found (404)",
@@ -505,7 +577,9 @@
     "PROJECT_TITLE": "Case Study Not Found",
     "PROJECT_SUBTITLE": "We couldn't find the project you're looking for. You can see all our case studies on the",
     "BLOG_TITLE": "Article Not Found",
-    "BLOG_SUBTITLE": "We couldn't find the article you're looking for. You can return to the"
+    "BLOG_SUBTITLE": "We couldn't find the article you're looking for. You can return to the",
+    "ALT": "Page Not Found Illustration",
+    "EYEBROW": "Error 404"
   },
   "PROCESS": {
     "TITLE": "Our Process: From Idea to Impact",
@@ -605,7 +679,8 @@
     "PLACEHOLDER": "Type your message...",
     "SEND": "Send",
     "OPEN": "Open chat",
-    "CLOSE": "Close chat"
+    "CLOSE": "Close chat",
+    "AVATAR_TEXT": "JSL"
   },
   "COOKIE": {
     "TITLE": "We value your privacy",
@@ -614,6 +689,16 @@
     "DECLINE": "Decline All"
   },
   "MATURITY": {
+    "ROI_CALCULATOR": {
+      "TITLE": "ROI Calculator",
+      "SUBTITLE": "Estimate your potential savings with automation.",
+      "HOURS_SAVED": "Hours saved per week (per employee)",
+      "HOURLY_RATE": "Hourly Rate (avg)",
+      "EMPLOYEES": "Number of Employees",
+      "MONTHLY_SAVINGS": "Monthly Savings",
+      "ANNUAL_SAVINGS": "Annual Savings",
+      "DISCLAIMER": "* Estimates based on provided inputs. Actual savings may vary."
+    },
     "EYEBROW": "Quick Diagnosis",
     "TITLE": "Measure Your Digital Maturity",
     "SUBTITLE": "Answer 3 questions and discover which solution best fits your current stage.",
@@ -642,6 +727,7 @@
     "TITLE": "Developer Hub",
     "SUBTITLE": "Build the future with our open APIs and SDKs.",
     "API_DOCS": "API Documentation",
+    "API_DESC": "Explore our powerful APIs to integrate virtex into your applications. Our SDKs are available for Node.js, Python, and PHP.",
     "GET_KEY": "Get API Key",
     "STATUS": "System Status"
   },
@@ -657,7 +743,8 @@
     "SUBTITLE": "Join our live sessions and learn from the experts.",
     "UPCOMING": "Upcoming Events",
     "PAST": "Past Recordings",
-    "REGISTER": "Register"
+    "REGISTER": "Register",
+    "WATCH_RECORDING": "Watch Recording"
   },
   "STATUS": {
     "TITLE": "System Status",
@@ -686,7 +773,30 @@
     "WIZARD_STEP_1": "Project Type",
     "WIZARD_STEP_2": "Scale",
     "WIZARD_STEP_3": "Features",
-    "ESTIMATE": "Your Estimate"
+    "ESTIMATE": "Your Estimate",
+    "CALCULATE": "Calculate",
+    "DISCLAIMER": "This is a rough estimate. Contact us for a precise quote.",
+    "RESTART": "Start Over",
+    "VS_OTHERS": "virtex vs Others",
+    "OTHERS": "Others",
+    "FEATURE": "Feature",
+    "WEB_APP": "Web App",
+    "MOBILE_APP": "Mobile App",
+    "CUSTOM_ERP": "Custom ERP",
+    "STARTUP": "MVP / Startup",
+    "SMB": "SMB Growth",
+    "ENTERPRISE": "Enterprise",
+    "ADVANCED_UI": "Advanced UI/UX",
+    "COMPLEX_BACKEND": "Complex Backend",
+    "CLOUD_INFRA": "Cloud Infrastructure",
+    "AI_INTEGRATION": "AI Integration",
+    "CLOUD_NATIVE": "Cloud Native",
+    "PAID_ADDON": "Paid Add-on",
+    "SUPPORT_24_7": "24/7 Support",
+    "CUSTOMIZABLE": "Customizable",
+    "OPEN_API": "Open API",
+    "ANNUAL_SAVINGS": "Annual Savings",
+    "PRODUCT_NAME": "virtex"
   },
   "SECURITY_CENTER": {
     "TITLE": "Security Center",
@@ -699,7 +809,11 @@
     "DRP_DESC": "Multi-region failover architecture ensuring 99.99% availability even in the event of catastrophic regional failures.",
     "COMPLIANCE": "Compliance",
     "COMPLIANCE_DESC": "SOC 2 Type II, GDPR, and HIPAA compliant infrastructure. We undergo regular third-party audits.",
-    "BADGES": "Security Certifications"
+    "BADGES": "Security Certifications",
+    "BADGE_SOC2": "SOC 2 Type II",
+    "BADGE_ISO": "ISO 27001",
+    "BADGE_GDPR": "GDPR Compliant",
+    "BADGE_HIPAA": "HIPAA Ready"
   },
   "VENTURES": {
     "TITLE": "Ventures & Innovation Lab",
@@ -733,7 +847,10 @@
     "STAT_CLIENTS": "Enterprise Clients",
     "CTA_EYEBROW": "Investor Relations",
     "CTA_TITLE": "Request Financial Report",
-    "CTA_SUBTITLE": "Qualified investors can access our detailed performance reports."
+    "CTA_SUBTITLE": "Qualified investors can access our detailed performance reports.",
+    "STAT_YEARS_VAL": "5+",
+    "STAT_GROWTH_VAL": "30%",
+    "STAT_CLIENTS_VAL": "50+"
   },
   "VIRTEEX": {
     "TITLE": "virtex Ecosystem",
@@ -754,6 +871,56 @@
     "EMAIL_PLACEHOLDER": "Enter your work email",
     "DOWNLOAD_BTN": "Download PDF",
     "SUCCESS_MSG": "Download link sent!",
-    "SENT_MSG": "Check your inbox for the download link."
+    "SENT_MSG": "Check your inbox for the download link.",
+    "BADGE": "Free PDF",
+    "NO_SPAM": "No spam. We never share your email.",
+    "CHECK_INBOX": "Check your inbox"
+  },
+  "SHARE": {
+    "LABEL": "Share this article",
+    "LINKEDIN": "LinkedIn",
+    "TWITTER": "Twitter",
+    "FACEBOOK": "Facebook",
+    "EMAIL": "Email",
+    "SHARE_LINKEDIN": "Share on LinkedIn",
+    "SHARE_TWITTER": "Share on Twitter",
+    "SHARE_FACEBOOK": "Share on Facebook",
+    "SHARE_EMAIL": "Share via Email",
+    "COPY_LINK": "Copy Link"
+  },
+  "ARIA": {
+    "BREADCRUMB": "Breadcrumb",
+    "PREVIOUS_PAGE": "Previous page",
+    "NEXT_PAGE": "Next page",
+    "SEARCH": "Search",
+    "CLOSE": "Close",
+    "CLOSE_MODAL": "Close modal",
+    "WATCH_REEL": "Watch our video reel",
+    "PREVIOUS_SLIDE": "Previous slide",
+    "NEXT_SLIDE": "Next slide",
+    "PARTNERS": "Trusted partners",
+    "TOGGLE_MENU": "Toggle menu",
+    "CLOSE_MENU": "Close menu",
+    "SELECT_LANGUAGE": "Select language",
+    "HOME_LINK": "JSL Technology Home",
+    "DESKTOP_NAV": "Desktop Navigation"
+  },
+  "SEARCH": {
+    "PLACEHOLDER": "Search...",
+    "NO_RESULTS": "No results found.",
+    "ALL": "All",
+    "BLOG": "Blog",
+    "PRODUCTS": "Products",
+    "PROJECTS": "Projects",
+    "VENTURES": "Ventures"
+  },
+  "ALT": {
+    "AUTHOR": "Author",
+    "GOVERNANCE": "Corporate Governance",
+    "LIFE_AT_JSL": "Life at JSL"
+  },
+  "SOCIAL": {
+    "GITHUB": "GitHub",
+    "INSTAGRAM": "Instagram"
   }
 }

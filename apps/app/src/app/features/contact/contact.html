@@ -13,21 +13,21 @@
         <lucide-icon name="Mail"></lucide-icon>
         <div>
           <h4>{{ 'CONTACT.EMAIL' | translate }}</h4>
-          <a href="mailto:info@jsltechnology.com">info@jsltechnology.com</a>
+          <a href="mailto:info@jsl.technology">{{ 'CONTACT.EMAIL_DISPLAY' | translate }}</a>
         </div>
       </div>
       <div class="contact-info__item">
         <lucide-icon name="Phone"></lucide-icon>
         <div>
           <h4>{{ 'CONTACT.PHONE' | translate }}</h4>
-          <a href="tel:+18092641693">+1 (809) 264-1693</a>
+          <a href="tel:+18092641693">{{ 'CONTACT.PHONE_DISPLAY' | translate }}</a>
         </div>
       </div>
       <div class="contact-info__item">
         <lucide-icon name="MapPin"></lucide-icon>
         <div>
           <h4>{{ 'CONTACT.LOCATION' | translate }}</h4>
-          <p>Santo Domingo, República Dominicana</p>
+          <p>{{ 'CONTACT.LOCATION_ADDRESS' | translate }}</p>
         </div>
       </div>
     </div>
@@ -37,7 +37,7 @@
       
       <!-- Honeypot field (hidden from users) -->
       <div style="display: none;">
-        <label for="honeypot">Leave this field blank</label>
+        <label for="honeypot">{{ 'CONTACT.FORM.HONEYPOT_LABEL' | translate }}</label>
         <input type="text" id="honeypot" formControlName="honeypot">
       </div>
 

@@ -1,7 +1,7 @@
 @if (solution$ | async; as solution) {
   <header class="detail-page-header">
     <div class="container">
-      <nav class="detail-page-breadcrumb" aria-label="breadcrumb">
+      <nav class="detail-page-breadcrumb" [attr.aria-label]="'ARIA.BREADCRUMB' | translate">
         <a [routerLink]="['/', currentLang, 'home']">{{ 'COMMON.BREADCRUMB_HOME' | translate }}</a>
         <lucide-icon name="ChevronRight"></lucide-icon>
         <a [routerLink]="['/', currentLang, 'solutions']">{{ 'HEADER.SERVICES' | translate }}</a>
@@ -136,7 +136,7 @@
     <app-related-content
       [items]="otherSolutions"
       type="solution"
-      title="RELATED.SOLUTIONS">
+      [title]="'SOLUTIONS.RELATED' | translate">
     </app-related-content>
   </div>
 

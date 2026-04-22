@@ -8,36 +8,36 @@
 
     <div class="buttons">
       <button (click)="share('linkedin')"
-              aria-label="Share on LinkedIn"
+              [attr.aria-label]="'SHARE.SHARE_LINKEDIN' | translate"
               class="share-btn linkedin"
-              title="LinkedIn">
+              [attr.title]="'SHARE.LINKEDIN' | translate">
         <lucide-icon [name]="icons.Linkedin" [size]="20"></lucide-icon>
       </button>
 
       <button (click)="share('twitter')"
-              aria-label="Share on Twitter"
+              [attr.aria-label]="'SHARE.SHARE_TWITTER' | translate"
               class="share-btn twitter"
-              title="Twitter">
+              [attr.title]="'SHARE.TWITTER' | translate">
         <lucide-icon [name]="icons.Twitter" [size]="20"></lucide-icon>
       </button>
 
       <button (click)="share('facebook')"
-              aria-label="Share on Facebook"
+              [attr.aria-label]="'SHARE.SHARE_FACEBOOK' | translate"
               class="share-btn facebook"
-              title="Facebook">
+              [attr.title]="'SHARE.FACEBOOK' | translate">
         <lucide-icon [name]="icons.Facebook" [size]="20"></lucide-icon>
       </button>
 
       <button (click)="share('mail')"
-              aria-label="Share via Email"
+              [attr.aria-label]="'SHARE.SHARE_EMAIL' | translate"
               class="share-btn mail"
-              title="Email">
+              [attr.title]="'SHARE.EMAIL' | translate">
         <lucide-icon [name]="icons.Mail" [size]="20"></lucide-icon>
       </button>
 
       <div class="copy-wrapper">
         <button (click)="copyLink()"
-                aria-label="Copy Link"
+                [attr.aria-label]="'SHARE.COPY_LINK' | translate"
                 class="share-btn copy"
                 [class.is-copied]="copied()">
           <lucide-icon [name]="copied() ? icons.Check : icons.Link" [size]="20"></lucide-icon>

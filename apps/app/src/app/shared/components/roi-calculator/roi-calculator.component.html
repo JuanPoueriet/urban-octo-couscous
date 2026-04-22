@@ -3,8 +3,8 @@
     <div class="icon-wrapper">
       <lucide-icon [name]="icons.Calculator"></lucide-icon>
     </div>
-    <h3>ROI Calculator</h3>
-    <p>Estimate your potential savings with automation.</p>
+    <h3>{{ 'MATURITY.ROI_CALCULATOR.TITLE' | translate }}</h3>
+    <p>{{ 'MATURITY.ROI_CALCULATOR.SUBTITLE' | translate }}</p>
   </div>
 
   <div class="roi-content">
@@ -12,7 +12,7 @@
       <div class="input-group">
         <label>
           <lucide-icon [name]="icons.Clock" size="16"></lucide-icon>
-          Hours saved per week (per employee)
+          {{ 'MATURITY.ROI_CALCULATOR.HOURS_SAVED' | translate }}
         </label>
         <div class="range-wrapper">
           <input
@@ -27,7 +27,7 @@
       <div class="input-group">
         <label>
           <lucide-icon [name]="icons.DollarSign" size="16"></lucide-icon>
-          Hourly Rate (avg)
+          {{ 'MATURITY.ROI_CALCULATOR.HOURLY_RATE' | translate }}
         </label>
         <div class="range-wrapper">
           <input
@@ -42,7 +42,7 @@
       <div class="input-group">
         <label>
           <lucide-icon [name]="icons.Users" size="16"></lucide-icon>
-          Number of Employees
+          {{ 'MATURITY.ROI_CALCULATOR.EMPLOYEES' | translate }}
         </label>
         <div class="range-wrapper">
           <input
@@ -57,15 +57,15 @@
 
     <div class="results-section">
       <div class="result-item">
-        <span class="label">Monthly Savings</span>
+        <span class="label">{{ 'MATURITY.ROI_CALCULATOR.MONTHLY_SAVINGS' | translate }}</span>
         <span class="amount">{{ formatCurrency(monthlySavings()) }}</span>
       </div>
       <div class="result-item highlight">
-        <span class="label">Annual Savings</span>
+        <span class="label">{{ 'MATURITY.ROI_CALCULATOR.ANNUAL_SAVINGS' | translate }}</span>
         <span class="amount">{{ formatCurrency(annualSavings()) }}</span>
       </div>
       <p class="disclaimer">
-        * Estimates based on provided inputs. Actual savings may vary.
+        {{ 'MATURITY.ROI_CALCULATOR.DISCLAIMER' | translate }}
       </p>
     </div>
   </div>

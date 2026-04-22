@@ -1,7 +1,7 @@
 @if (isOpen) {
   <div class="modal-overlay" @overlayAnimation (click)="onClose()">
     <div class="modal-container" @modalAnimation (click)="$event.stopPropagation()">
-      <button class="modal-close" (click)="onClose()" aria-label="Close modal">
+      <button class="modal-close" (click)="onClose()" [attr.aria-label]="'ARIA.CLOSE_MODAL' | translate">
         <lucide-icon name="X"></lucide-icon>
       </button>
 
