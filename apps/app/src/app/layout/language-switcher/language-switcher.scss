@@ -1,21 +1,16 @@
 /* src/app/layout/language-switcher/language-switcher.scss */
 
 .lang-switcher {
-  position: relative; // Contexto de posicionamiento para el dropdown
+  position: relative;
 }
 
 .lang-switcher__button {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  
-  // --- ESTILOS MEJORADOS ---
   background-color: transparent;
-  border: none; // <--- 1. Sin bordes
-  padding: 0.5rem 0.75rem; // <--- 2. Padding ajustado (más vertical) para mejor centrado
-  // border-radius: var(--radius-md);
-  // --- FIN CAMBIOS ---
-
+  border: none;
+  padding: 0.5rem 0.75rem;
   color: var(--text-main);
   cursor: pointer;
   transition: all var(--transition-speed) ease;
@@ -28,29 +23,26 @@
     height: 16px;
   }
 
-  // Icono de Globo
   lucide-icon:first-of-type {
     color: var(--text-muted);
     transition: color var(--transition-speed) ease;
   }
   
-  // Icono de Chevron
   lucide-icon:last-of-type {
     color: var(--text-muted);
-    transition: transform 0.3s ease; // Transición para girar
+    transition: transform 0.3s ease;
   }
 
-  // Estado cuando el dropdown está abierto
   &.is-open {
-    background-color: var(--bg-secondary); // Mantenemos el fondo
+    background-color: var(--bg-secondary);
     
     lucide-icon:last-of-type {
-      transform: rotate(180deg); // Girar el chevron
+      transform: rotate(180deg);
     }
   }
 
-  &:hover:not(.is-open) { // Hover solo si NO está abierto
-    background-color: var(--bg-secondary); // Mantenemos el fondo en hover
+  &:hover:not(.is-open) {
+    background-color: var(--bg-secondary);
     
     lucide-icon:first-of-type {
       color: var(--text-main);
@@ -60,22 +52,24 @@
 
 .lang-switcher__dropdown {
   position: absolute;
-  top: calc(100% + 10px); // Se posiciona 10px por debajo del botón
+  top: calc(100% + 10px);
   inset-inline-end: 0;
-  width: 160px;
+  width: 180px;
+  max-height: 280px;
+  overflow-y: auto;
   background-color: var(--bg-secondary);
-  border: 1px solid var(--border-color); // El dropdown mantiene su borde
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  z-index: 1010; // Asegura que esté por encima de otros elementos
-  overflow: hidden; // Para que los bordes redondeados se apliquen a los `<a>`
+  box-shadow: var(--shadow-lg);
+  z-index: 1010;
   display: flex;
   flex-direction: column;
+  padding: 0.5rem;
 
-  // --- ANIMACIÓN DE APERTURA ---
+  // Animation
   opacity: 0;
   transform: translateY(-10px);
-  pointer-events: none; // Evita clics mientras está oculto
+  pointer-events: none;
   transition: opacity 0.3s ease, transform 0.3s ease;
 
   &.is-open {
@@ -84,35 +78,69 @@
     pointer-events: auto;
   }
 
-  // --- Style for opening upwards ---
   &.opens-up {
     top: auto;
     bottom: calc(100% + 10px);
-    // Adjust animation for upward opening
     transform: translateY(10px);
     &.is-open {
       transform: translateY(0);
     }
   }
-  // --- FIN ANIMACIÓN ---
+
+  // Custom Scrollbar for dropdown
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: var(--radius-full);
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+  }
 
   a {
-    padding: 0.8rem 1rem;
-    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.85rem;
     color: var(--text-muted);
     transition: all var(--transition-speed) ease;
     text-decoration: none;
+    border-radius: var(--radius-sm);
+    margin-bottom: 2px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    span {
+      flex: 1;
+    }
+
+    lucide-icon {
+      width: 14px;
+      height: 14px;
+      color: var(--primary);
+    }
 
     &:hover {
-      background-color: var(--border-color);
+      background-color: var(--bg-tertiary);
       color: var(--text-main);
     }
 
-    // Estilo para el idioma actualmente activo
     &.active {
       color: var(--primary);
       font-weight: 600;
-      background-color: rgba(255, 75, 43, 0.1);
+      background-color: rgba(var(--primary-rgb), 0.1);
+
+      &:hover {
+        background-color: rgba(var(--primary-rgb), 0.15);
+      }
     }
   }
 }
