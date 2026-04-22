@@ -30,32 +30,42 @@
             routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: true }"
             (click)="closeMobileMenu()"
-            >{{ 'HEADER.VIEW_ALL_SERVICES' | translate }}</a
           >
+            <lucide-icon name="LayoutGrid" size="18"></lucide-icon>
+            {{ 'HEADER.VIEW_ALL_SERVICES' | translate }}
+          </a>
           <a
             [routerLink]="[currentLang, 'solutions', 'web-development']"
             routerLinkActive="active"
             (click)="closeMobileMenu()"
-            >{{ 'SERVICES_LIST.WEB' | translate }}</a
           >
+            <lucide-icon name="Monitor" size="18"></lucide-icon>
+            {{ 'SERVICES_LIST.WEB' | translate }}
+          </a>
           <a
             [routerLink]="[currentLang, 'solutions', 'mobile-apps']"
             routerLinkActive="active"
             (click)="closeMobileMenu()"
-            >{{ 'SERVICES_LIST.MOBILE' | translate }}</a
           >
+            <lucide-icon name="Smartphone" size="18"></lucide-icon>
+            {{ 'SERVICES_LIST.MOBILE' | translate }}
+          </a>
           <a
             [routerLink]="[currentLang, 'solutions', 'desktop-software']"
             routerLinkActive="active"
             (click)="closeMobileMenu()"
-            >{{ 'SERVICES_LIST.DESKTOP' | translate }}</a
           >
+            <lucide-icon name="Laptop" size="18"></lucide-icon>
+            {{ 'SERVICES_LIST.DESKTOP' | translate }}
+          </a>
           <a
             [routerLink]="[currentLang, 'solutions', 'cloud-architecture']"
             routerLinkActive="active"
             (click)="closeMobileMenu()"
-            >{{ 'SERVICES_LIST.CLOUD' | translate }}</a
           >
+            <lucide-icon name="CloudCog" size="18"></lucide-icon>
+            {{ 'SERVICES_LIST.CLOUD' | translate }}
+          </a>
         </div>
       </li>
       
@@ -76,26 +86,34 @@
             routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: true }"
             (click)="closeMobileMenu()"
-            >{{ 'HEADER.VIEW_ALL_PRODUCTS' | translate }}</a
           >
+            <lucide-icon name="Package" size="18"></lucide-icon>
+            {{ 'HEADER.VIEW_ALL_PRODUCTS' | translate }}
+          </a>
           <a
             href="https://virtex.com"
             target="_blank"
             (click)="closeMobileMenu()"
-            >{{ 'PRODUCTS_LIST.ERP' | translate }} <lucide-icon name="ExternalLink" size="14"></lucide-icon></a
           >
+            <lucide-icon name="ExternalLink" size="18"></lucide-icon>
+            {{ 'PRODUCTS_LIST.ERP' | translate }}
+          </a>
           <a
             href="https://pos.jsl.technology"
             target="_blank"
             (click)="closeMobileMenu()"
-            >{{ 'PRODUCTS_LIST.POS' | translate }} <lucide-icon name="ExternalLink" size="14"></lucide-icon></a
           >
+            <lucide-icon name="ExternalLink" size="18"></lucide-icon>
+            {{ 'PRODUCTS_LIST.POS' | translate }}
+          </a>
           <a
             href="https://apps.jsl.technology"
             target="_blank"
             (click)="closeMobileMenu()"
-            >{{ 'PRODUCTS_LIST.MOBILE' | translate }} <lucide-icon name="ExternalLink" size="14"></lucide-icon></a
           >
+            <lucide-icon name="ExternalLink" size="18"></lucide-icon>
+            {{ 'PRODUCTS_LIST.MOBILE' | translate }}
+          </a>
         </div>
       </li>
 
@@ -115,39 +133,51 @@
             [routerLink]="[currentLang, 'about-us']"
             routerLinkActive="active"
             (click)="closeMobileMenu()"
-            >{{ 'HEADER.ABOUT' | translate }}</a
           >
+            <lucide-icon name="Users" size="18"></lucide-icon>
+            {{ 'HEADER.ABOUT' | translate }}
+          </a>
           <a
             [routerLink]="[currentLang, 'process']"
             routerLinkActive="active"
             (click)="closeMobileMenu()"
-            >{{ 'HEADER.PROCESS' | translate }}</a
           >
+            <lucide-icon name="Workflow" size="18"></lucide-icon>
+            {{ 'HEADER.PROCESS' | translate }}
+          </a>
           <a
             [routerLink]="[currentLang, 'projects']"
             routerLinkActive="active"
             (click)="closeMobileMenu()"
-            >{{ 'HEADER.PROJECTS' | translate }}</a
           >
+            <lucide-icon name="Lightbulb" size="18"></lucide-icon>
+            {{ 'HEADER.PROJECTS' | translate }}
+          </a>
           <a
             [routerLink]="[currentLang, 'blog']"
             routerLinkActive="active"
             (click)="closeMobileMenu()"
-            >{{ 'HEADER.BLOG' | translate }}</a
           >
+            <lucide-icon name="Newspaper" size="18"></lucide-icon>
+            {{ 'HEADER.BLOG' | translate }}
+          </a>
           <div class="dropdown-divider"></div>
           <a
             href="https://portal.jsl.technology"
             target="_blank"
             (click)="closeMobileMenu()"
-            >{{ 'HEADER.LOGIN' | translate }} <lucide-icon name="ExternalLink" size="14"></lucide-icon></a
           >
+            <lucide-icon name="ExternalLink" size="18"></lucide-icon>
+            {{ 'HEADER.LOGIN' | translate }}
+          </a>
           <a
             [routerLink]="[currentLang, 'faq']"
             routerLinkActive="active"
             (click)="closeMobileMenu()"
-            >{{ 'HEADER.FAQ' | translate }}</a
           >
+            <lucide-icon name="HelpCircle" size="18"></lucide-icon>
+            {{ 'HEADER.FAQ' | translate }}
+          </a>
         </div>
       </li>
 
@@ -162,18 +192,14 @@
           {{ 'HEADER.CONTACT' | translate }}
         </a>
       </li>
-      <li>
-        <button class="header__search-btn" (click)="toggleSearch()" [attr.aria-label]="'ARIA.SEARCH' | translate">
-          <lucide-icon name="Search" [size]="20"></lucide-icon>
-        </button>
-      </li>
     </ul>
     
-    <!-- Controles móviles -->
+    <!-- Header Controls -->
     <div class="header__controls">
-      <button class="header__search-btn-mobile" (click)="toggleSearch()" [attr.aria-label]="'ARIA.SEARCH' | translate">
+      <button class="header__search-btn" (click)="toggleSearch()" [attr.aria-label]="'ARIA.SEARCH' | translate">
         <lucide-icon name="Search" [size]="20"></lucide-icon>
       </button>
+
       <jsl-language-switcher class="header__mobile-lang-switcher"></jsl-language-switcher>
       <button
         class="header__mobile-toggle"
