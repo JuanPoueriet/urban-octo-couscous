@@ -1,5 +1,5 @@
-import { Component, OnInit, inject, signal, computed, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, signal, computed, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA, ViewChild, ElementRef, AfterViewInit, PLATFORM_ID, Inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Card } from '@shared/components/card/card';
 import { AnimateOnScroll } from '@shared/directives/animate-on-scroll';
@@ -38,6 +38,7 @@ register();
 export class Blog implements OnInit, AfterViewInit {
   @ViewChild('featuredSwiper') swiperElement!: ElementRef;
 
+  private platformId = inject(PLATFORM_ID);
   private translate = inject(TranslateService);
   private dataService = inject(DataService);
   private seoService = inject(Seo);
@@ -145,7 +146,7 @@ export class Blog implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (this.swiperElement) {
+    if (isPlatformBrowser(this.platformId) && this.swiperElement) {
       Object.assign(this.swiperElement.nativeElement, this.featuredSwiperConfig);
       this.swiperElement.nativeElement.initialize();
     }

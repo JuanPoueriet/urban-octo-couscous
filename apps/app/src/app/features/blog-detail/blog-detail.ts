@@ -184,7 +184,7 @@ export class BlogDetail
     if (!this.swiperInitialized) {
       const swiperEl = this.el.nativeElement.querySelector('swiper-container');
       const slides = swiperEl?.querySelectorAll('swiper-slide');
-      if (swiperEl && slides && slides.length > 0) {
+      if (swiperEl && slides && slides.length > 0 && typeof swiperEl.initialize === 'function') {
         this.swiperInitialized = true;
         Object.assign(swiperEl, {
           modules: [Pagination, Autoplay, Navigation, FreeMode],
