@@ -9,22 +9,22 @@
           [placeholder]="'SEARCH.PLACEHOLDER' | translate"
           [(ngModel)]="query"
           (ngModelChange)="onSearchInput($event)"
-          aria-label="Search"
+          [attr.aria-label]="'ARIA.SEARCH' | translate"
         />
         <button *ngIf="query" (click)="query = ''; onSearchInput('')" class="clear-btn">
           <lucide-icon name="X"></lucide-icon>
         </button>
       </div>
-      <button (click)="closeOverlay()" class="close-btn">Esc</button>
+      <button (click)="closeOverlay()" class="close-btn">{{ 'TOP_BAR.ESC' | translate }}</button>
     </header>
 
     <!-- Filter Tabs -->
     <div class="search-filters" *ngIf="results.length > 0">
-      <button [class.active]="activeFilter === 'all'" (click)="setFilter('all')">All</button>
-      <button [class.active]="activeFilter === 'project'" (click)="setFilter('project')">Projects</button>
-      <button [class.active]="activeFilter === 'venture'" (click)="setFilter('venture')">Ventures</button>
-      <button [class.active]="activeFilter === 'product'" (click)="setFilter('product')">Products</button>
-      <button [class.active]="activeFilter === 'blog'" (click)="setFilter('blog')">Blog</button>
+      <button [class.active]="activeFilter === 'all'" (click)="setFilter('all')">{{ 'SEARCH.ALL' | translate }}</button>
+      <button [class.active]="activeFilter === 'project'" (click)="setFilter('project')">{{ 'SEARCH.PROJECTS' | translate }}</button>
+      <button [class.active]="activeFilter === 'venture'" (click)="setFilter('venture')">{{ 'SEARCH.VENTURES' | translate }}</button>
+      <button [class.active]="activeFilter === 'product'" (click)="setFilter('product')">{{ 'SEARCH.PRODUCTS' | translate }}</button>
+      <button [class.active]="activeFilter === 'blog'" (click)="setFilter('blog')">{{ 'SEARCH.BLOG' | translate }}</button>
     </div>
 
     <div class="search-results" *ngIf="filteredResults.length > 0; else noResults">

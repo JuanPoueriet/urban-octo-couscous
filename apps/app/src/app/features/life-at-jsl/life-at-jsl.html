@@ -10,7 +10,7 @@
     <h2>{{ 'LIFE_AT_JSL.GALLERY' | translate }}</h2>
     <div class="gallery-grid">
       <div class="gallery-item" *ngFor="let img of moments">
-        <img [src]="img" alt="Life at JSL" loading="lazy" width="600" height="400">
+        <img [src]="img" [alt]="'ALT.LIFE_AT_JSL' | translate" loading="lazy" width="600" height="400">
       </div>
     </div>
   </div>

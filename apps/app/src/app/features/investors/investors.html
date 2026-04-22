@@ -26,7 +26,7 @@
       </ul>
     </div>
     <div class="image">
-      <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?fit=crop&w=800&q=80" alt="Corporate Governance" width="800" height="500" loading="lazy">
+      <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?fit=crop&w=800&q=80" [alt]="'ALT.GOVERNANCE' | translate" width="800" height="500" loading="lazy">
     </div>
   </section>
 
@@ -35,15 +35,15 @@
     <h2>{{ 'INVESTORS.FINANCIAL_TITLE' | translate }}</h2>
     <div class="financial-grid">
       <div class="stat-card">
-        <span class="stat-value">5+</span>
+        <span class="stat-value">{{ 'INVESTORS.STAT_YEARS_VAL' | translate }}</span>
         <span class="stat-label">{{ 'INVESTORS.STAT_YEARS' | translate }}</span>
       </div>
       <div class="stat-card">
-        <span class="stat-value">30%</span>
+        <span class="stat-value">{{ 'INVESTORS.STAT_GROWTH_VAL' | translate }}</span>
         <span class="stat-label">{{ 'INVESTORS.STAT_GROWTH' | translate }}</span>
       </div>
       <div class="stat-card">
-        <span class="stat-value">50+</span>
+        <span class="stat-value">{{ 'INVESTORS.STAT_CLIENTS_VAL' | translate }}</span>
         <span class="stat-label">{{ 'INVESTORS.STAT_CLIENTS' | translate }}</span>
       </div>
     </div>

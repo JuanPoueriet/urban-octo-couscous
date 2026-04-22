@@ -2,7 +2,7 @@
   <button
     class="lang-switcher__button"
     (click)="toggleDropdown()"
-    aria-label="Select language"
+    [attr.aria-label]="'ARIA.SELECT_LANGUAGE' | translate"
     [class.is-open]="isDropdownOpen"
   >
     <lucide-icon name="Globe"></lucide-icon>

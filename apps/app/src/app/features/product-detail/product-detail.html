@@ -9,7 +9,7 @@
     <div class="container">
 
       <!-- Breadcrumb -->
-      <nav class="pd-breadcrumb" aria-label="breadcrumb">
+      <nav class="pd-breadcrumb" [attr.aria-label]="'ARIA.BREADCRUMB' | translate">
         <a [routerLink]="['/', currentLang, 'home']">{{ 'COMMON.BREADCRUMB_HOME' | translate }}</a>
         <lucide-icon name="ChevronRight" [size]="14"></lucide-icon>
         <a [routerLink]="['/', currentLang, 'products']">{{ 'HEADER.PRODUCTS' | translate }}</a>
@@ -48,7 +48,7 @@
           @if (product.externalUrl) {
             <a [href]="product.externalUrl" target="_blank" rel="noopener" class="btn-primary">
               <lucide-icon name="ExternalLink" [size]="18"></lucide-icon>
-              {{ extras ? ('Visit ' + extras.brandName + '.com') : ('PRODUCTS.VIEW_DEDICATED_PAGE' | translate) }}
+              {{ extras ? ( 'PRODUCTS.VISIT_BRAND_SITE' | translate:{brand: extras.brandName} ) : ('PRODUCTS.VIEW_DEDICATED_PAGE' | translate) }}
             </a>
           }
           <a [routerLink]="['/', currentLang, 'contact']" class="btn-ghost">
@@ -85,11 +85,11 @@
     <!-- Overview -->
     <section class="pd-overview container">
       <div class="pd-overview__text">
-        <span class="section-eyebrow">Overview</span>
-        <h2 class="section-title">What is {{ extras.brandName }}?</h2>
+        <span class="section-eyebrow">{{ 'PRODUCTS.OVERVIEW' | translate }}</span>
+        <h2 class="section-title">{{ 'PRODUCTS.WHAT_IS_BRAND' | translate:{brand: extras.brandName} }}</h2>
         <p class="pd-overview__desc">{{ extras.overview }}</p>
         <a [href]="product.externalUrl" target="_blank" rel="noopener" class="pd-overview__link">
-          Learn more at virtex.com
+          {{ 'PRODUCTS.LEARN_MORE_AT' | translate:{brand: extras.brandName} }}
           <lucide-icon name="ArrowRight" [size]="16"></lucide-icon>
         </a>
       </div>
@@ -97,7 +97,7 @@
         <div class="pd-ecosystem-core">
           <lucide-icon [name]="product.icon" [size]="40"></lucide-icon>
           <span>{{ extras.brandName }}</span>
-          <small>ERP Core</small>
+          <small>{{ 'PRODUCTS.ERP_CORE_LABEL' | translate }}</small>
         </div>
         <div class="pd-ecosystem-orbits">
           @for (platform of extras.platforms.slice(0, 4); track platform.name) {
@@ -114,9 +114,9 @@
     <section class="pd-section pd-modules">
       <div class="container">
         <div class="pd-section__header">
-          <span class="section-eyebrow">Modular Architecture</span>
-          <h2 class="section-title">Functional Modules</h2>
-          <p class="section-subtitle">Activate only the modules your business needs — all seamlessly integrated.</p>
+          <span class="section-eyebrow">{{ 'PRODUCTS.MODULAR_ARCH' | translate }}</span>
+          <h2 class="section-title">{{ 'PRODUCTS.FUNCTIONAL_MODULES' | translate }}</h2>
+          <p class="section-subtitle">{{ 'PRODUCTS.FUNCTIONAL_MODULES_SUB' | translate }}</p>
         </div>
         <div class="pd-modules__grid">
           @for (mod of extras.modules; track mod.name) {
@@ -136,9 +136,9 @@
     <section class="pd-section pd-platforms">
       <div class="container">
         <div class="pd-section__header">
-          <span class="section-eyebrow">Omnichannel</span>
-          <h2 class="section-title">Multi-Platform Ecosystem</h2>
-          <p class="section-subtitle">One backend, five front-ends — a consistent experience on every surface.</p>
+          <span class="section-eyebrow">{{ 'PRODUCTS.OMNICHANNEL' | translate }}</span>
+          <h2 class="section-title">{{ 'PRODUCTS.MULTI_PLATFORM' | translate }}</h2>
+          <p class="section-subtitle">{{ 'PRODUCTS.MULTI_PLATFORM_SUB' | translate }}</p>
         </div>
         <div class="pd-platforms__grid">
           @for (platform of extras.platforms; track platform.name) {
@@ -159,9 +159,9 @@
     <section class="pd-section pd-countries">
       <div class="container">
         <div class="pd-section__header">
-          <span class="section-eyebrow">Tax Localization</span>
-          <h2 class="section-title">Country Readiness</h2>
-          <p class="section-subtitle">Built for the fiscal complexity of the Americas, with country-specific e-invoicing out of the box.</p>
+          <span class="section-eyebrow">{{ 'PRODUCTS.TAX_LOCALIZATION' | translate }}</span>
+          <h2 class="section-title">{{ 'PRODUCTS.COUNTRY_READINESS' | translate }}</h2>
+          <p class="section-subtitle">{{ 'PRODUCTS.COUNTRY_READINESS_SUB' | translate }}</p>
         </div>
         <div class="pd-countries__grid">
           @for (country of extras.countries; track country.name) {
@@ -184,9 +184,9 @@
     <section class="pd-section pd-tech">
       <div class="container">
         <div class="pd-section__header">
-          <span class="section-eyebrow">Engineering</span>
-          <h2 class="section-title">World-Class Tech Stack</h2>
-          <p class="section-subtitle">Clean Architecture, Domain-Driven Design, and cutting-edge tooling.</p>
+          <span class="section-eyebrow">{{ 'PRODUCTS.ENGINEERING' | translate }}</span>
+          <h2 class="section-title">{{ 'PRODUCTS.TECH_STACK_TITLE' | translate }}</h2>
+          <p class="section-subtitle">{{ 'PRODUCTS.TECH_STACK_SUB' | translate }}</p>
         </div>
         <div class="pd-tech__pills">
           @for (tech of extras.coreTech; track tech) {
@@ -197,29 +197,29 @@
           <div class="pd-tech__highlight">
             <lucide-icon name="Layers" [size]="24"></lucide-icon>
             <div>
-              <strong>Clean Architecture + DDD</strong>
-              <p>Strict separation of Domain, Application, Infrastructure and Presentation layers.</p>
+              <strong>{{ 'PRODUCTS.CLEAN_ARCH_DDD' | translate }}</strong>
+              <p>{{ 'PRODUCTS.CLEAN_ARCH_DDD_DESC' | translate }}</p>
             </div>
           </div>
           <div class="pd-tech__highlight">
             <lucide-icon name="Share2" [size]="24"></lucide-icon>
             <div>
-              <strong>GraphQL Federation</strong>
-              <p>Decoupled microservices exposing a unified data graph via Apollo Gateway.</p>
+              <strong>{{ 'PRODUCTS.GRAPHQL_FED' | translate }}</strong>
+              <p>{{ 'PRODUCTS.GRAPHQL_FED_DESC' | translate }}</p>
             </div>
           </div>
           <div class="pd-tech__highlight">
             <lucide-icon name="WifiOff" [size]="24"></lucide-icon>
             <div>
-              <strong>Offline-First Mobile</strong>
-              <p>SQLite local database with bidirectional delta sync when back online.</p>
+              <strong>{{ 'PRODUCTS.OFFLINE_FIRST' | translate }}</strong>
+              <p>{{ 'PRODUCTS.OFFLINE_FIRST_DESC' | translate }}</p>
             </div>
           </div>
           <div class="pd-tech__highlight">
             <lucide-icon name="Puzzle" [size]="24"></lucide-icon>
             <div>
-              <strong>Plugin Marketplace</strong>
-              <p>V8 Isolates + WebAssembly sandboxing for safe third-party extensions.</p>
+              <strong>{{ 'PRODUCTS.PLUGIN_MARKET' | translate }}</strong>
+              <p>{{ 'PRODUCTS.PLUGIN_MARKET_DESC' | translate }}</p>
             </div>
           </div>
         </div>
@@ -230,9 +230,9 @@
     <section class="pd-section pd-security">
       <div class="container">
         <div class="pd-section__header">
-          <span class="section-eyebrow">Enterprise-Grade</span>
-          <h2 class="section-title">Security & Compliance</h2>
-          <p class="section-subtitle">Zero-Trust model with automated governance, end-to-end encryption, and full observability.</p>
+          <span class="section-eyebrow">{{ 'PRODUCTS.ENTERPRISE_GRADE' | translate }}</span>
+          <h2 class="section-title">{{ 'PRODUCTS.SECURITY_COMPLIANCE' | translate }}</h2>
+          <p class="section-subtitle">{{ 'PRODUCTS.SECURITY_COMPLIANCE_SUB' | translate }}</p>
         </div>
         <div class="pd-security__grid">
           @for (feat of extras.securityFeatures; track feat.title) {
@@ -252,17 +252,17 @@
     <section class="pd-final-cta">
       <div class="container">
         <div class="pd-final-cta__card">
-          <span class="section-eyebrow">Ready to modernize?</span>
-          <h2>Start your {{ extras.brandName }} journey</h2>
-          <p>Talk to our team and get a personalized demo for your industry.</p>
+          <span class="section-eyebrow">{{ 'PRODUCTS.READY_MODERNIZE' | translate }}</span>
+          <h2>{{ 'PRODUCTS.START_JOURNEY' | translate:{brand: extras.brandName} }}</h2>
+          <p>{{ 'PRODUCTS.JOURNEY_DESC' | translate }}</p>
           <div class="pd-final-cta__actions">
             <a [href]="product.externalUrl" target="_blank" rel="noopener" class="btn-primary">
               <lucide-icon name="ExternalLink" [size]="18"></lucide-icon>
-              Visit {{ extras.brandName }}.com
+              {{ 'PRODUCTS.VISIT_BRAND_SITE' | translate:{brand: extras.brandName} }}
             </a>
             <a [routerLink]="['/', currentLang, 'contact']" class="btn-ghost">
               <lucide-icon name="MessageSquare" [size]="18"></lucide-icon>
-              Contact Sales
+              {{ 'PRODUCTS.CONTACT_SALES' | translate }}
             </a>
           </div>
         </div>

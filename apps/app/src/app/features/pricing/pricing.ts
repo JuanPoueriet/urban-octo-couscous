@@ -20,30 +20,30 @@ export class Pricing {
   };
 
   types = [
-    { id: 'web', name: 'Web App', basePrice: 10000 },
-    { id: 'mobile', name: 'Mobile App', basePrice: 15000 },
-    { id: 'erp', name: 'Custom ERP', basePrice: 25000 }
+    { id: 'web', name: 'PRICING.WEB_APP', basePrice: 10000 },
+    { id: 'mobile', name: 'PRICING.MOBILE_APP', basePrice: 15000 },
+    { id: 'erp', name: 'PRICING.CUSTOM_ERP', basePrice: 25000 }
   ];
 
   scales = [
-    { id: 'startup', name: 'MVP / Startup', multiplier: 1 },
-    { id: 'smb', name: 'SMB Growth', multiplier: 1.5 },
-    { id: 'enterprise', name: 'Enterprise', multiplier: 2.5 }
+    { id: 'startup', name: 'PRICING.STARTUP', multiplier: 1 },
+    { id: 'smb', name: 'PRICING.SMB', multiplier: 1.5 },
+    { id: 'enterprise', name: 'PRICING.ENTERPRISE', multiplier: 2.5 }
   ];
 
   features = [
-    { id: 'design', name: 'Advanced UI/UX', price: 5000 },
-    { id: 'backend', name: 'Complex Backend', price: 8000 },
-    { id: 'cloud', name: 'Cloud Infrastructure', price: 4000 },
-    { id: 'ai', name: 'AI Integration', price: 10000 }
+    { id: 'design', name: 'PRICING.ADVANCED_UI', price: 5000 },
+    { id: 'backend', name: 'PRICING.COMPLEX_BACKEND', price: 8000 },
+    { id: 'cloud', name: 'PRICING.CLOUD_INFRA', price: 4000 },
+    { id: 'ai', name: 'PRICING.AI_INTEGRATION', price: 10000 }
   ];
 
   comparison = [
-    { feature: 'Cloud Native', virteex: true, others: false },
-    { feature: 'AI Integration', virteex: true, others: 'Paid Add-on' },
-    { feature: '24/7 Support', virteex: true, others: false },
-    { feature: 'Customizable', virteex: true, others: true },
-    { feature: 'Open API', virteex: true, others: false }
+    { feature: 'PRICING.CLOUD_NATIVE', virteex: true, others: false },
+    { feature: 'PRICING.AI_INTEGRATION', virteex: true, others: 'PRICING.PAID_ADDON' },
+    { feature: 'PRICING.SUPPORT_24_7', virteex: true, others: false },
+    { feature: 'PRICING.CUSTOMIZABLE', virteex: true, others: true },
+    { feature: 'PRICING.OPEN_API', virteex: true, others: false }
   ];
 
   estimatedPrice = 0;

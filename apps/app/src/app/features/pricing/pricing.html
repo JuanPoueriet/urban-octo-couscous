@@ -13,7 +13,7 @@
         <h2>{{ 'PRICING.WIZARD_STEP_1' | translate }}</h2>
         <div class="options-grid">
           <button *ngFor="let type of types" class="option-btn" (click)="selectType(type)">
-            {{ type.name }}
+            {{ type.name | translate }}
           </button>
         </div>
       </div>
@@ -23,7 +23,7 @@
         <h2>{{ 'PRICING.WIZARD_STEP_2' | translate }}</h2>
         <div class="options-grid">
           <button *ngFor="let scale of scales" class="option-btn" (click)="selectScale(scale)">
-            {{ scale.name }}
+            {{ scale.name | translate }}
           </button>
         </div>
       </div>
@@ -35,10 +35,10 @@
           <button *ngFor="let feat of features" class="option-btn"
                   [class.selected]="selections.features.includes(feat)"
                   (click)="toggleFeature(feat)">
-            {{ feat.name }}
+            {{ feat.name | translate }}
           </button>
         </div>
-        <button class="btn-primary mt-4" (click)="nextStep()">Calculate</button>
+        <button class="btn-primary mt-4" (click)="nextStep()">{{ 'PRICING.CALCULATE' | translate }}</button>
       </div>
 
       <!-- Step 4: Result -->
@@ -47,8 +47,8 @@
         <div class="price-display">
           ${{ estimatedPrice | number }} - ${{ (estimatedPrice * 1.2) | number }}
         </div>
-        <p>This is a rough estimate. Contact us for a precise quote.</p>
-        <button class="btn-outline" (click)="restart()">Start Over</button>
+        <p>{{ 'PRICING.DISCLAIMER' | translate }}</p>
+        <button class="btn-outline" (click)="restart()">{{ 'PRICING.RESTART' | translate }}</button>
       </div>
 
       <!-- Progress Dots -->
@@ -64,24 +64,24 @@
 
 <section class="comparison-section">
   <div class="container">
-    <h2>virtex vs Others</h2>
+    <h2>{{ 'PRICING.VS_OTHERS' | translate }}</h2>
     <div class="comparison-table">
       <div class="header-row">
-        <div class="cell feature">Feature</div>
-        <div class="cell virteex">virtex</div>
-        <div class="cell others">Others</div>
+        <div class="cell feature">{{ 'PRICING.FEATURE' | translate }}</div>
+        <div class="cell virteex">{{ 'PRICING.PRODUCT_NAME' | translate }}</div>
+        <div class="cell others">{{ 'PRICING.OTHERS' | translate }}</div>
       </div>
       <div class="row" *ngFor="let row of comparison">
-        <div class="cell feature">{{ row.feature }}</div>
+        <div class="cell feature">{{ row.feature | translate }}</div>
         <div class="cell virteex">
           <span *ngIf="row.virteex === true">✅</span>
           <span *ngIf="row.virteex === false">❌</span>
-          <span *ngIf="row.virteex !== true && row.virteex !== false">{{ row.virteex }}</span>
+          <span *ngIf="row.virteex !== true && row.virteex !== false">{{ row.virteex | translate }}</span>
         </div>
         <div class="cell others">
           <span *ngIf="row.others === true">✅</span>
           <span *ngIf="row.others === false">❌</span>
-          <span *ngIf="row.others !== true && row.others !== false">{{ row.others }}</span>
+          <span *ngIf="row.others !== true && row.others !== false">{{ row.others | translate }}</span>
         </div>
       </div>
     </div>

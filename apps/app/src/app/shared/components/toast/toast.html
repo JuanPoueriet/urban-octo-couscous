@@ -11,7 +11,7 @@
         }
       </div>
       <div class="toast-message">{{ toast.message | translate }}</div>
-      <button class="toast-close" (click)="remove(toast.id)" aria-label="Close">
+      <button class="toast-close" (click)="remove(toast.id)" [attr.aria-label]="'ARIA.CLOSE' | translate">
         <lucide-icon [name]="icons.X" [size]="16"></lucide-icon>
       </button>
     </div>

@@ -8,8 +8,9 @@
         <lucide-icon name="Search"></lucide-icon>
         <input
           type="text"
-          [placeholder]="'Buscar artículos...' | translate"
+          [placeholder]="'BLOG.SEARCH_PLACEHOLDER' | translate"
           (input)="onSearch($event)"
+          [attr.aria-label]="'ARIA.SEARCH' | translate"
         />
       </div>
     </div>
@@ -20,7 +21,7 @@
         [class.active]="selectedTag() === null"
         class="tag-btn"
       >
-        {{ 'Todos' | translate }}
+        {{ 'SEARCH.ALL' | translate }}
       </button>
       @for (tag of allTags(); track tag) {
         <button
@@ -46,7 +47,7 @@
               <div class="featured-post__content">
                 <div class="featured-post__info">
                   <span class="featured-post__eyebrow">
-                    <lucide-icon name="Star"></lucide-icon> {{ 'Artículo Destacado' | translate }}
+                    <lucide-icon name="Star"></lucide-icon> {{ 'BLOG.FEATURED_BADGE' | translate }}
                   </span>
                   <h2 class="featured-post__title">
                     <a [routerLink]="['/', currentLang, 'blog', post.slug]">
@@ -63,11 +64,11 @@
                     </span>
                     <span class="meta-item">
                       <lucide-icon name="Clock"></lucide-icon>
-                      {{ post.readTime }} {{ 'min de lectura' | translate }}
+                      {{ post.readTime }} {{ 'BLOG.READ_TIME_UNIT' | translate }}
                     </span>
                   </div>
                   <a [routerLink]="['/', currentLang, 'blog', post.slug]" class="featured-post__cta">
-                    {{ 'Leer artículo' | translate }} <lucide-icon name="ArrowRight"></lucide-icon>
+                    {{ 'COMMON.READ_MORE' | translate }} <lucide-icon name="ArrowRight"></lucide-icon>
                   </a>
                 </div>
               </div>
@@ -107,7 +108,7 @@
 
   @if (regularPosts().length === 0 && featuredPosts().length === 0) {
     <p class="no-results" jslAnimateOnScroll>
-      {{ 'No se encontraron artículos con esos filtros.' | translate }}
+      {{ 'BLOG.NO_RESULTS' | translate }}
     </p>
   }
   </div>

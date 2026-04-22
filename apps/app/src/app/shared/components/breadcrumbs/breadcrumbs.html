@@ -1,10 +1,10 @@
 @if (breadcrumbs.length > 0) {
-  <nav aria-label="Breadcrumb" class="breadcrumbs">
+  <nav [attr.aria-label]="'ARIA.BREADCRUMB' | translate" class="breadcrumbs">
     <ol>
       <li>
         <a routerLink="/" class="home-link">
           <lucide-icon [name]="icons.Home" [size]="16"></lucide-icon>
-          <span class="sr-only">Home</span>
+          <span class="sr-only">{{ 'COMMON.BREADCRUMB_HOME' | translate }}</span>
         </a>
       </li>
       @for (crumb of breadcrumbs; track crumb.url; let last = $last) {

@@ -5,7 +5,7 @@
     <div class="whitepaper-icon-wrap">
       <lucide-icon name="FileText" size="28"></lucide-icon>
     </div>
-    <span class="whitepaper-card__badge">PDF Gratuito</span>
+    <span class="whitepaper-card__badge">{{ 'WHITEPAPER.BADGE' | translate }}</span>
   </div>
 
   <div class="whitepaper-card__body">
@@ -32,7 +32,7 @@
       </form>
       <p class="whitepaper-privacy">
         <lucide-icon name="Shield" size="12"></lucide-icon>
-        Sin spam. Nunca compartimos tu email.
+        {{ 'WHITEPAPER.NO_SPAM' | translate }}
       </p>
     } @else {
       <div class="whitepaper-success">
@@ -41,7 +41,7 @@
         </div>
         <div>
           <p class="whitepaper-success__title">{{ 'WHITEPAPER.SENT_MSG' | translate }}</p>
-          <p class="whitepaper-success__sub">Revisa tu bandeja de entrada</p>
+          <p class="whitepaper-success__sub">{{ 'WHITEPAPER.CHECK_INBOX' | translate }}</p>
         </div>
       </div>
     }
