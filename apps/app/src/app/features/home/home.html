@@ -108,7 +108,7 @@
   </div>
 
   <!-- NUEVO: Scroll Down Indicator -->
-  <div class="scroll-indicator">
+  <div class="scroll-indicator" [class.hidden]="!showScrollIndicator()">
     <div class="mouse">
       <div class="wheel"></div>
     </div>
