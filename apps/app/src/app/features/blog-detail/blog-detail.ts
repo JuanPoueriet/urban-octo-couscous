@@ -80,6 +80,7 @@ export class BlogDetail
   private langSub: Subscription | undefined;
   private postData: BlogPost | undefined;
   private highlighted = false;
+  private swiperInitialized = false;
 
   constructor() {
     this.currentLang =
@@ -89,6 +90,7 @@ export class BlogDetail
       switchMap((params) => {
         this.highlighted = false;
         this.scrollProgress = 0;
+        this.swiperInitialized = false;
         const slug = params.get('slug');
         return slug ? this.dataService.getPostBySlug(slug) : of(undefined);
       })
@@ -160,14 +162,30 @@ export class BlogDetail
     });
   }
 
-  // Swiper initialization
-  ngAfterViewInit(): void {
+  ngAfterViewInit(): void {}
+
+  // Prism code highlighting + Swiper initialization (after slides are rendered)
+  ngAfterViewChecked(): void {
     if (!isPlatformBrowser(this.platformId)) return;
 
-    setTimeout(() => {
-      const swiperEl = this.el.nativeElement.querySelector('swiper-container');
+    if (!this.highlighted) {
+      const hasContent = this.el.nativeElement.querySelector('.blog-content p');
+      if (hasContent) {
+        import('prismjs').then(Prism => {
+          setTimeout(() => {
+            const prismModule = (Prism as any).default || Prism;
+            prismModule.highlightAll();
+            this.highlighted = true;
+          }, 500);
+        }).catch(err => console.error('Error loading PrismJS', err));
+      }
+    }
 
-      if (swiperEl) {
+    if (!this.swiperInitialized) {
+      const swiperEl = this.el.nativeElement.querySelector('swiper-container');
+      const slides = swiperEl?.querySelectorAll('swiper-slide');
+      if (swiperEl && slides && slides.length > 0) {
+        this.swiperInitialized = true;
         Object.assign(swiperEl, {
           modules: [Pagination, Autoplay, Navigation, FreeMode],
           spaceBetween: 24,
@@ -175,10 +193,7 @@ export class BlogDetail
           centeredSlides: false,
           grabCursor: true,
           freeMode: true,
-          pagination: {
-            clickable: true,
-            dynamicBullets: true,
-          },
+          pagination: { clickable: true, dynamicBullets: true },
           breakpoints: {
             320: { slidesPerView: 1.2, spaceBetween: 16 },
             480: { slidesPerView: 1.5, spaceBetween: 20 },
@@ -187,25 +202,7 @@ export class BlogDetail
             1400: { slidesPerView: 3.5, spaceBetween: 30 },
           },
         });
-
         swiperEl.initialize();
-      }
-    }, 0);
-  }
-
-  // Prism code highlighting
-  ngAfterViewChecked(): void {
-    if (isPlatformBrowser(this.platformId) && !this.highlighted) {
-      const hasContent = this.el.nativeElement.querySelector('.blog-content p');
-      if (hasContent) {
-        // Usamos import() dinámico para cargar prismjs solo en el navegador
-        import('prismjs').then(Prism => {
-          setTimeout(() => {
-            const prismModule = (Prism as any).default || Prism;
-            prismModule.highlightAll();
-            this.highlighted = true;
-          }, 500);
-        }).catch(err => console.error('Error loading PrismJS', err));
       }
     }
   }
