@@ -24,16 +24,22 @@
           "apps/app/src/assets",
           "apps/app/src/robots.txt"
         ],
-        "styles": ["apps/app/src/styles.scss"],
+        "styles": [
+          "apps/app/src/styles.scss"
+        ],
         "stylePreprocessorOptions": {
-          "includePaths": ["apps/app/src"]
+          "includePaths": [
+            "apps/app/src"
+          ]
         },
         "server": "apps/app/src/main.server.ts",
         "outputMode": "server",
         "ssr": {
           "entry": "apps/app/src/server.ts"
         },
-        "allowedCommonJsDependencies": ["prismjs"],
+        "allowedCommonJsDependencies": [
+          "prismjs"
+        ],
         "outputPath": "dist/apps/app"
       },
       "configurations": {
@@ -63,7 +69,9 @@
         }
       },
       "defaultConfiguration": "production",
-      "outputs": ["{options.outputPath}"]
+      "outputs": [
+        "{options.outputPath}"
+      ]
     },
     "serve": {
       "executor": "@angular/build:dev-server",
@@ -75,7 +83,10 @@
           "buildTarget": "app:build:development"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "options": {
+        "prebundle": false
+      }
     },
     "extract-i18n": {
       "executor": "@angular/build:extract-i18n"
@@ -93,9 +104,13 @@
           "apps/app/src/assets",
           "apps/app/src/robots.txt"
         ],
-        "styles": ["apps/app/src/styles.scss"],
+        "styles": [
+          "apps/app/src/styles.scss"
+        ],
         "stylePreprocessorOptions": {
-          "includePaths": ["apps/app/src"]
+          "includePaths": [
+            "apps/app/src"
+          ]
         }
       }
     }
