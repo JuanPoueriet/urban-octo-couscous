@@ -1,4 +1,4 @@
-import { Component, HostListener, Inject, PLATFORM_ID, OnInit } from '@angular/core';
+import { Component, HostListener, Inject, PLATFORM_ID, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -13,6 +13,7 @@ import { SUPPORTED_LANGUAGES } from '@core/constants/languages';
 import { ToastComponent } from './shared/components/toast/toast';
 import { CookieBannerComponent } from './shared/components/cookie-banner/cookie-banner';
 import { BreadcrumbsComponent } from './shared/components/breadcrumbs/breadcrumbs';
+import Lenis from 'lenis';
 
 @Component({
   selector: 'jsl-root',
@@ -30,10 +31,12 @@ import { BreadcrumbsComponent } from './shared/components/breadcrumbs/breadcrumb
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App implements OnInit {
+export class App implements OnInit, OnDestroy {
   title = 'jsl-technology-web';
   isScrolled = false;
   private isBrowser: boolean;
+  private lenis: Lenis | null = null;
+  private rafId: number | null = null;
 
   // Swipe blocker variables
   private edgeThreshold = 24;
@@ -69,7 +72,36 @@ export class App implements OnInit {
   ngOnInit() {
     if (this.isBrowser) {
       this.initSwipeBlocker();
+      this.initLenis();
     }
+  }
+
+  ngOnDestroy() {
+    if (this.lenis) {
+      this.lenis.destroy();
+    }
+    if (this.rafId) {
+      cancelAnimationFrame(this.rafId);
+    }
+  }
+
+  private initLenis() {
+    this.lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
+    });
+
+    const raf = (time: number) => {
+      this.lenis?.raf(time);
+      this.rafId = requestAnimationFrame(raf);
+    };
+
+    this.rafId = requestAnimationFrame(raf);
   }
 
   private checkPassiveSupport() {

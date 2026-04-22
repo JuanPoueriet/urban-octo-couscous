@@ -150,6 +150,13 @@ swiper-container {
   gap: 0.5rem;
   z-index: 15;
   opacity: 0.7;
+  transition: opacity 1s ease, visibility 1s ease;
+
+  &.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
 
   .mouse {
     width: 30px;

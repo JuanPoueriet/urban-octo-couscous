@@ -232,6 +232,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   public isReturningVisitor = signal(false);
   public isSubmitting = signal(false);
   public isLoading = signal(true); // For skeleton loader demo
+  public showScrollIndicator = signal(true);
 
   private el = inject(ElementRef);
   private renderer = inject(Renderer2);
@@ -244,6 +245,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   private unlistenHeroMouseMove: (() => void) | null = null;
   private unlistenHeroMouseLeave: (() => void) | null = null;
   private socialProofInterval: any;
+  private scrollIndicatorTimeout: any;
   private isBrowser: boolean;
 
   @Inject(PLATFORM_ID) private platformId = inject(PLATFORM_ID);
@@ -260,6 +262,11 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     });
 
     if (isPlatformBrowser(this.platformId)) {
+      const scrollIndicatorSeen = localStorage.getItem('jsl_scroll_indicator_seen');
+      if (scrollIndicatorSeen) {
+        this.showScrollIndicator.set(false);
+      }
+
       const visited = localStorage.getItem('jsl_visited');
       if (visited) {
         this.isReturningVisitor.set(true);
@@ -288,6 +295,9 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     }
     if (this.socialProofInterval) {
       clearInterval(this.socialProofInterval);
+    }
+    if (this.scrollIndicatorTimeout) {
+      clearTimeout(this.scrollIndicatorTimeout);
     }
   }
 
@@ -531,6 +541,14 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
       // Start Social Proof Toasts
       this.startSocialProofSimulation();
+
+      // Desaparecer indicador de scroll después de 5 segundos
+      this.scrollIndicatorTimeout = setTimeout(() => {
+        if (this.showScrollIndicator()) {
+          this.showScrollIndicator.set(false);
+          localStorage.setItem('jsl_scroll_indicator_seen', 'true');
+        }
+      }, 5000);
     }, 100); // Aumentado a 100ms para asegurar que el DOM esté listo
   }
 
