@@ -20,7 +20,8 @@
       (click)="setLanguage(lang.code); closeDropdown()"
       [class.active]="currentLang === lang.code"
     >
-      {{ lang.name | translate }}
+      <span>{{ lang.name | translate }}</span>
+      <lucide-icon *ngIf="currentLang === lang.code" name="Check"></lucide-icon>
     </a>
   </div>
 </div>

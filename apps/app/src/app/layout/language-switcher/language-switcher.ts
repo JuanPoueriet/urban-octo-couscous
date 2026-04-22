@@ -92,11 +92,15 @@ export class LanguageSwitcher implements OnInit, OnDestroy {
     const elementRect = this.elementRef.nativeElement.getBoundingClientRect();
     const spaceBelow = window.innerHeight - elementRect.bottom;
 
+    // Max height set in SCSS
+    const MAX_DROPDOWN_HEIGHT = 280;
+
     // Estimate dropdown height based on number of languages
-    // (approx. 40px per item + some padding)
-    const dropdownHeight = this.languages.length * 40 + 20; 
+    // (approx. 38px per item + some padding)
+    const estimatedHeight = this.languages.length * 38 + 16;
+    const actualHeight = Math.min(estimatedHeight, MAX_DROPDOWN_HEIGHT);
 
     // If not enough space below, open upwards
-    this.opensUp = spaceBelow < dropdownHeight;
+    this.opensUp = spaceBelow < actualHeight;
   }
 }
