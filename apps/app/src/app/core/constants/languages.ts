@@ -11,3 +11,17 @@ export const SUPPORTED_LANGUAGES: string[] = [
   'zh',
   'ht',
 ];
+
+/**
+ * Keep RTL languages centralized so all services/components share
+ * the exact same source of truth.
+ */
+export const RTL_LANGUAGES: readonly string[] = ['ar'];
+
+export function isRtlLanguage(lang: string | null | undefined): boolean {
+  if (!lang) {
+    return false;
+  }
+
+  return RTL_LANGUAGES.includes(lang);
+}

@@ -14,7 +14,7 @@
   &__glow {
     position: absolute;
     top: -40%;
-    right: -10%;
+    inset-inline-end: -10%;
     width: 220px;
     height: 220px;
     background: radial-gradient(circle, rgba(var(--primary-rgb), 0.12), transparent 70%);
@@ -93,7 +93,7 @@
 
     .input-icon {
       position: absolute;
-      left: 1rem;
+      inset-inline-start: 1rem;
       top: 50%;
       transform: translateY(-50%);
       color: var(--text-muted);
