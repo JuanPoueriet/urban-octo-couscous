@@ -14,9 +14,9 @@
     width: 40px;
     height: 40px;
     border-radius: 8px;
-    border: 1px solid #e5e7eb;
-    background: white;
-    color: #4b5563;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    color: var(--text-muted);
     cursor: pointer;
     transition: all 0.2s ease;
 
@@ -26,8 +26,9 @@
     }
 
     &:not(:disabled):hover {
-      background: #f3f4f6;
-      border-color: #d1d5db;
+      background: var(--bg-secondary);
+      border-color: var(--primary);
+      color: var(--text-main);
     }
   }
 
@@ -45,52 +46,24 @@
       border-radius: 8px;
       border: 1px solid transparent;
       background: transparent;
-      color: #4b5563;
+      color: var(--text-muted);
       cursor: pointer;
       font-weight: 500;
       transition: all 0.2s ease;
 
       &:hover {
-        background: #f3f4f6;
+        background: var(--bg-secondary);
+        color: var(--text-main);
       }
 
       &.active {
-        background: #111827; // Primary
+        background: var(--primary);
         color: white;
       }
     }
 
     .ellipsis {
-      color: #9ca3af;
-    }
-  }
-}
-
-// Dark Mode
-:host-context(.dark) {
-  .pagination {
-    .page-btn {
-      background: #1f2937;
-      border-color: #374151;
-      color: #9ca3af;
-
-      &:not(:disabled):hover {
-        background: #374151;
-        color: white;
-      }
-    }
-
-    .pages {
-      .page-number {
-        color: #9ca3af;
-
-        &:hover { background: #374151; color: white; }
-
-        &.active {
-          background: white;
-          color: #111827;
-        }
-      }
+      color: var(--text-muted);
     }
   }
 }
