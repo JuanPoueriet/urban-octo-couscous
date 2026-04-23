@@ -28,7 +28,7 @@ import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
     .video-modal-overlay {
       position: fixed;
       top: 0;
-      inset-inline-start: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, 0.8);
@@ -60,7 +60,7 @@ import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
       iframe {
         position: absolute;
         top: 0;
-        inset-inline-start: 0;
+        left: 0;
         width: 100%;
         height: 100%;
       }
@@ -69,7 +69,7 @@ import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
     .close-btn {
       position: absolute;
       top: -3rem;
-      inset-inline-end: 0;
+      right: 0;
       background: none;
       border: none;
       color: white;
@@ -87,7 +87,7 @@ import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
 
       @media (min-width: 768px) {
         top: 1rem;
-        inset-inline-end: 1rem;
+        right: 1rem;
         background: rgba(0,0,0,0.5);
         border-radius: 50%;
         z-index: 10;

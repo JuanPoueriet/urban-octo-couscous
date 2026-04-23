@@ -213,13 +213,13 @@ lucide-icon {
   lucide-icon[name="ArrowRightCircle"],
   lucide-icon[name="ArrowLeftCircle"],
   lucide-icon[name="MoveRight"],
-  lucide-icon[name="MoveLeft"],
-  lucide-icon[name="ChevronsLeftRight"] {
+  lucide-icon[name="MoveLeft"] {
     transform: scaleX(-1);
   }
 
-  // Fix for dynamic icons in breadcrumbs/pagination that might use [name]
-  .lucide-chevron-right, .lucide-chevron-left, .lucide-arrow-right, .lucide-arrow-left {
-    transform: scaleX(-1);
+  // Reverse card hover arrow animations
+  .card--article .card__link lucide-icon,
+  .card--service .card__link lucide-icon {
+    &[style*="translateX(4px)"] { transform: translateX(-4px) !important; }
   }
 }

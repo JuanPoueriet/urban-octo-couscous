@@ -15,7 +15,6 @@ import {
   inject,
 } from '@angular/core';
 import { SearchUiService } from '@core/services/search-ui.service';
-import { DirectionService } from '@core/services/direction.service';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
@@ -40,7 +39,6 @@ import { SearchOverlayComponent } from '../../shared/components/search-overlay/s
   styleUrl: './header.scss',
 })
 export class Header implements OnInit, OnDestroy, AfterViewInit {
-  private directionService = inject(DirectionService);
   isMobileMenuOpen = false;
   public currentLang: string;
   public openDropdown: string | null = null;
@@ -138,7 +136,7 @@ export class Header implements OnInit, OnDestroy, AfterViewInit {
     
     if (this.menuElement) {
       this.menuWidth = this.menuElement.offsetWidth || 320;
-      this.menuTranslateX = this.directionService.isRtl() ? this.menuWidth : -this.menuWidth;
+      this.menuTranslateX = -this.menuWidth;
       this.cdRef.detectChanges();
     }
   }
@@ -183,7 +181,7 @@ export class Header implements OnInit, OnDestroy, AfterViewInit {
     } else if (!this.isDesktop && wasDesktop && this.menuElement) {
       setTimeout(() => {
         this.menuWidth = this.menuElement!.offsetWidth || 320;
-        this.menuTranslateX = this.directionService.isRtl() ? this.menuWidth : -this.menuWidth;
+        this.menuTranslateX = -this.menuWidth;
         this.cdRef.detectChanges();
       }, 100);
     }
@@ -255,7 +253,7 @@ export class Header implements OnInit, OnDestroy, AfterViewInit {
     this.isAnimating = true;
     this.isMobileMenuOpen = false;
     this.menuTransition = 'transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)';
-    this.menuTranslateX = this.directionService.isRtl() ? this.menuWidth : -this.menuWidth;
+    this.menuTranslateX = -this.menuWidth;
     
     if (this.isBrowser) {
       document.body.classList.remove('no-scroll');
@@ -399,25 +397,15 @@ export class Header implements OnInit, OnDestroy, AfterViewInit {
     event.stopPropagation();
     
     let translateX = diffX;
-    const isRtl = this.directionService.isRtl();
     
     // Aplicar resistencia si intenta arrastrar más allá de los límites
-    if (!isRtl) {
-      if (translateX > this.MAX_OVERDRAG) {
-        translateX = this.MAX_OVERDRAG + (translateX - this.MAX_OVERDRAG) * 0.3;
-      }
+    if (translateX > this.MAX_OVERDRAG) {
+      translateX = this.MAX_OVERDRAG + (translateX - this.MAX_OVERDRAG) * 0.3;
+    }
 
-      if (translateX < -this.menuWidth - this.MAX_OVERDRAG) {
-        const overPull = -this.menuWidth - this.MAX_OVERDRAG - translateX;
-        translateX = -this.menuWidth - this.MAX_OVERDRAG + overPull * 0.3;
-      }
-    } else {
-      if (translateX < -this.MAX_OVERDRAG) {
-        translateX = -this.MAX_OVERDRAG + (translateX + this.MAX_OVERDRAG) * 0.3;
-      }
-      if (translateX > this.menuWidth + this.MAX_OVERDRAG) {
-        translateX = this.menuWidth + this.MAX_OVERDRAG + (translateX - this.menuWidth - this.MAX_OVERDRAG) * 0.3;
-      }
+    if (translateX < -this.menuWidth - this.MAX_OVERDRAG) {
+      const overPull = -this.menuWidth - this.MAX_OVERDRAG - translateX;
+      translateX = -this.menuWidth - this.MAX_OVERDRAG + overPull * 0.3;
     }
     
     this.menuTranslateX = translateX;
@@ -449,11 +437,9 @@ export class Header implements OnInit, OnDestroy, AfterViewInit {
     
     let shouldOpen = false;
     
-    const isRtl = this.directionService.isRtl();
-
     // Factor 1: Velocidad del gesto
     if (velocity > this.VELOCITY_THRESHOLD) {
-      shouldOpen = isRtl ? diffX < 0 : diffX > 0;
+      shouldOpen = diffX > 0;
     } 
     // Factor 2: Progreso actual
     else if (currentProgress > this.OPEN_THRESHOLD) {
@@ -461,7 +447,7 @@ export class Header implements OnInit, OnDestroy, AfterViewInit {
     }
     // Factor 3: Distancia del gesto
     else if (Math.abs(diffX) > this.MIN_SWIPE_DISTANCE) {
-      shouldOpen = isRtl ? diffX < 0 : diffX > 0;
+      shouldOpen = diffX > 0;
     }
     // Factor 4: Estado actual
     else {
@@ -488,11 +474,8 @@ export class Header implements OnInit, OnDestroy, AfterViewInit {
     const startX = touch.clientX;
     const startY = touch.clientY;
     
-    const isRtl = this.directionService.isRtl();
-    const isEdge = isRtl ? (startX > window.innerWidth - this.EDGE_THRESHOLD) : (startX < this.EDGE_THRESHOLD);
-
-    // Verificar si el toque comienza en la zona de borde
-    if (isEdge) {
+    // Verificar si el toque comienza en la zona de borde izquierdo
+    if (startX < this.EDGE_THRESHOLD) {
       event.preventDefault();
       event.stopPropagation();
       
@@ -546,21 +529,16 @@ export class Header implements OnInit, OnDestroy, AfterViewInit {
       }
     }
     
-    const isRtl = this.directionService.isRtl();
-    const isValidDirection = isRtl ? diffX < 0 : diffX > 0;
-
-    // Solo permitir movimiento hacia adentro para abrir si es gesto horizontal
-    if (this.isHorizontalGesture && isValidDirection) {
+    // Solo permitir movimiento hacia la derecha para abrir si es gesto horizontal
+    if (this.isHorizontalGesture && diffX > 0) {
       event.preventDefault();
       event.stopPropagation();
       
-      let translateX = isRtl ? (this.menuWidth + diffX) : (-this.menuWidth + diffX);
+      let translateX = -this.menuWidth + diffX;
       
       // Aplicar resistencia si supera el límite
-      if (!isRtl && translateX > this.MAX_OVERDRAG) {
+      if (translateX > this.MAX_OVERDRAG) {
         translateX = this.MAX_OVERDRAG + (translateX - this.MAX_OVERDRAG) * 0.3;
-      } else if (isRtl && translateX < -this.MAX_OVERDRAG) {
-        translateX = -this.MAX_OVERDRAG + (translateX + this.MAX_OVERDRAG) * 0.3;
       }
       
       this.menuTranslateX = translateX;
@@ -617,8 +595,7 @@ export class Header implements OnInit, OnDestroy, AfterViewInit {
       this.openMobileMenu();
     } else {
       this.menuTransition = 'transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1)';
-      const isRtl = this.directionService.isRtl();
-      this.menuTranslateX = isRtl ? this.menuWidth : -this.menuWidth;
+      this.menuTranslateX = -this.menuWidth;
       
       setTimeout(() => {
         this.cdRef.detectChanges();
@@ -638,7 +615,7 @@ export class Header implements OnInit, OnDestroy, AfterViewInit {
     
     this.isDragging = false;
     this.isHorizontalGesture = false;
-    this.menuTranslateX = this.directionService.isRtl() ? this.menuWidth : -this.menuWidth;
+    this.menuTranslateX = -this.menuWidth;
   }
 
   @HostListener('document:click', ['$event'])
