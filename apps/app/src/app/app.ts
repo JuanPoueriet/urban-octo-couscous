@@ -123,12 +123,38 @@ export class App implements OnInit, OnDestroy {
     document.addEventListener('touchcancel', this.onTouchEnd.bind(this), addOpts as any);
   }
 
+  /**
+   * Returns true when a touch origin falls within the swipe-sensitive edge zone.
+   * LTR: left edge (browser back gesture). RTL: right edge (mirrored back gesture).
+   */
+  static detectEdge(clientX: number, screenWidth: number, threshold: number, isRtl: boolean): boolean {
+    return isRtl
+      ? clientX >= screenWidth - threshold   // RTL: swipe in from right edge
+      : clientX <= threshold;                // LTR: swipe in from left edge
+  }
+
+  /**
+   * Returns true when the touch delta describes the gesture that should be blocked.
+   * LTR: rightward horizontal swipe. RTL: leftward horizontal swipe.
+   * Requires horizontal movement to dominate over vertical.
+   */
+  static shouldBlockGesture(dx: number, dy: number, minHorizontalMove: number, isRtl: boolean): boolean {
+    const horizontalDominates = Math.abs(dx) > Math.abs(dy);
+    const towardsCenter = isRtl ? dx < -minHorizontalMove : dx > minHorizontalMove;
+    return towardsCenter && horizontalDominates;
+  }
+
   private onTouchStart(e: TouchEvent) {
     if (!e.touches || e.touches.length === 0) return;
     const t = e.touches[0];
     this.startX = t.clientX;
     this.startY = t.clientY;
-    this.maybeEdge = this.startX <= this.edgeThreshold;
+    this.maybeEdge = App.detectEdge(
+      this.startX,
+      window.innerWidth,
+      this.edgeThreshold,
+      this.directionService.isRtl()
+    );
     this.touchId = t.identifier;
   }
 
@@ -148,8 +174,7 @@ export class App implements OnInit, OnDestroy {
     const dx = t.clientX - this.startX;
     const dy = t.clientY - this.startY;
 
-    // Sólo nos importa movimiento horizontal dominando sobre vertical, y hacia la derecha.
-    if (dx > this.minHorizontalMove && Math.abs(dx) > Math.abs(dy)) {
+    if (App.shouldBlockGesture(dx, dy, this.minHorizontalMove, this.directionService.isRtl())) {
       try {
         if (e.cancelable) {
           e.preventDefault();

@@ -144,7 +144,12 @@
     inset: 0;
     background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.4));
     @media (min-width: 992px) {
-        background: linear-gradient(to right, transparent, rgba(0,0,0,0.6));
+      // Image left, content right in LTR — gradient covers the join between them.
+      background: linear-gradient(to right, transparent, rgba(0,0,0,0.6));
+      [dir="rtl"] & {
+        // In RTL flex-row, image appears on the right and content on the left.
+        background: linear-gradient(to left, transparent, rgba(0,0,0,0.6));
+      }
     }
   }
 
