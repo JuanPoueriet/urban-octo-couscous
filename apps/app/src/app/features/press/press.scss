@@ -1,15 +1,15 @@
 .press-hero {
   padding: 8rem 0 4rem;
   text-align: center;
-  background: linear-gradient(to bottom, #111, #000);
+  background: linear-gradient(to bottom, var(--bg-secondary), var(--bg-primary));
 
-  h1 { font-size: 3rem; margin-bottom: 1rem; }
-  .subtitle { font-size: 1.25rem; color: rgba(255,255,255,0.7); }
+  h1 { font-size: 3rem; margin-bottom: 1rem; color: var(--text-main); }
+  .subtitle { font-size: 1.25rem; color: var(--text-muted); }
 }
 
 .assets-section {
   padding: 4rem 0;
-  h2 { margin-bottom: 2rem; font-size: 1.75rem; }
+  h2 { margin-bottom: 2rem; font-size: 1.75rem; color: var(--text-main); }
 
   .assets-grid {
     display: grid;
@@ -18,10 +18,10 @@
   }
 
   .asset-card {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--bg-card);
     padding: 1.5rem;
-    border-radius: 0.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -31,17 +31,17 @@
     .asset-icon {
       width: 64px;
       height: 64px;
-      background: rgba(255, 255, 255, 0.1);
+      background: var(--bg-secondary);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--primary-color, #00ff9d);
+      color: var(--primary);
     }
 
     .asset-info {
-      h3 { font-size: 1.125rem; margin-bottom: 0.25rem; }
-      .meta { font-size: 0.875rem; color: rgba(255, 255, 255, 0.5); }
+      h3 { font-size: 1.125rem; margin-bottom: 0.25rem; color: var(--text-main); }
+      .meta { font-size: 0.875rem; color: var(--text-muted); }
     }
 
     .btn-download {
@@ -50,15 +50,15 @@
       gap: 0.5rem;
       padding: 0.5rem 1rem;
       background: transparent;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: white;
-      border-radius: 0.25rem;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      border-radius: var(--radius-sm);
       cursor: pointer;
       transition: all 0.2s;
 
       &:hover {
-        border-color: var(--primary-color, #00ff9d);
-        color: var(--primary-color, #00ff9d);
+        border-color: var(--primary);
+        color: var(--primary);
       }
     }
   }
@@ -66,15 +66,15 @@
 
 .mentions-section {
   padding: 4rem 0;
-  background: rgba(255, 255, 255, 0.02);
-  h2 { margin-bottom: 2rem; font-size: 1.75rem; }
+  background: var(--bg-secondary);
+  h2 { margin-bottom: 2rem; font-size: 1.75rem; color: var(--text-main); }
 
   .mention-item {
     display: grid;
     grid-template-columns: 150px 1fr auto;
     gap: 2rem;
     padding: 1.5rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--border-color);
     align-items: center;
 
     @media (max-width: 768px) {
@@ -82,8 +82,8 @@
       gap: 0.5rem;
     }
 
-    .outlet { font-weight: 700; color: white; }
-    .title { color: rgba(255, 255, 255, 0.9); }
-    .date { color: rgba(255, 255, 255, 0.5); font-size: 0.875rem; }
+    .outlet { font-weight: 700; color: var(--text-main); }
+    .title { color: var(--text-main); opacity: 0.9; }
+    .date { color: var(--text-muted); font-size: 0.875rem; }
   }
 }

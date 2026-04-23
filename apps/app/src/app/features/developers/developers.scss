@@ -7,14 +7,14 @@
     font-size: 3rem;
     font-weight: 700;
     margin-bottom: 1rem;
-    background: linear-gradient(to right, white, #aaa);
+    background: linear-gradient(to right, var(--text-main), var(--text-muted));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
   .subtitle {
     font-size: 1.25rem;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--text-muted);
     margin-bottom: 2rem;
   }
 
@@ -23,16 +23,16 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
     border-radius: 999px;
-    color: white;
+    color: var(--text-main);
     font-size: 0.875rem;
     text-decoration: none;
     transition: background 0.2s;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: var(--bg-card);
     }
 
     .dot {
@@ -65,7 +65,7 @@
       margin-bottom: 1rem;
     }
     p {
-      color: rgba(255, 255, 255, 0.7);
+      color: var(--text-muted);
       margin-bottom: 2rem;
       line-height: 1.6;
     }

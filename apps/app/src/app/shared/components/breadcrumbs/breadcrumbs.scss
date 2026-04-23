@@ -4,7 +4,7 @@
   padding: 16px 0;
   margin-bottom: 24px;
   font-size: 0.9rem;
-  color: #6b7280;
+  color: var(--text-muted);
 
   ol {
     display: flex;
@@ -21,11 +21,11 @@
     align-items: center;
 
     &.separator {
-      color: #9ca3af;
+      color: var(--border-color);
     }
 
     a {
-      color: #6b7280;
+      color: var(--text-muted);
       text-decoration: none;
       transition: color 0.2s;
       display: flex;
@@ -33,7 +33,7 @@
       gap: 4px;
 
       &:hover {
-        color: #111827; // Primary
+        color: var(--text-main);
       }
 
       &.home-link {
@@ -43,24 +43,8 @@
     }
 
     &.active span {
-      color: #111827;
+      color: var(--text-main);
       font-weight: 500;
     }
-  }
-}
-
-// Dark mode
-:host-context(.dark) {
-  .breadcrumbs {
-    color: #9ca3af;
-
-    li.separator { color: #4b5563; }
-
-    li a {
-      color: #9ca3af;
-      &:hover { color: white; }
-    }
-
-    li.active span { color: white; }
   }
 }

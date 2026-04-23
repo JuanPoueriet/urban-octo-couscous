@@ -288,6 +288,19 @@ swiper-container {
   .maturity-cta {
     text-align: center;
     margin-top: 3rem;
+
+    .welcome-section__cta {
+      background: var(--accent-gradient);
+      color: white;
+      border: none;
+      padding: 1rem 2.5rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(var(--primary-rgb), 0.3);
+      }
+    }
   }
 }
 
@@ -635,15 +648,20 @@ swiper-container {
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--text-main);
+  background: transparent;
   border: 2px solid var(--border-color);
   padding: 0.8rem 1.8rem;
   border-radius: var(--radius-md);
   transition: all var(--transition-speed) ease;
+  cursor: pointer;
+  font-family: inherit;
+
   lucide-icon {
     transition: transform var(--transition-speed) ease;
   }
   &:hover {
     background-color: var(--border-color);
+    border-color: var(--primary);
     lucide-icon {
       transform: translateX(5px);
     }
@@ -1595,8 +1613,9 @@ swiper-container {
   inset-inline-start: 0;
   width: 100%;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.1); // Glassmorphism base if supported, else solid
-  backdrop-filter: blur(10px);
+  background: rgba(13, 13, 13, 0.6); // Darker base for glassmorphism
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   z-index: 99;
   display: flex;
