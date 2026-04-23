@@ -6,7 +6,7 @@
 .page-subtitle {
   text-align: center;
   max-width: 700px;
-  margin: 0 auto 4rem auto;
+  margin: 0 auto 4rem;
 }
 
 .faq-list {
@@ -62,7 +62,7 @@
 
 .faq-answer {
   background-color: var(--bg-primary);
-  padding: 0 1.5rem 1.5rem 1.5rem;
+  padding: 0 1.5rem 1.5rem;
   animation: fadeInAnswer 0.4s ease-out;
 
   p {

@@ -212,7 +212,7 @@ swiper-container {
   .offerings-header {
     text-align: center;
     max-width: 800px;
-    margin: 0 auto 3rem auto;
+    margin: 0 auto 3rem;
   }
 
   .offerings-tabs-container {
@@ -699,7 +699,7 @@ swiper-container {
 .testimonials-header {
   text-align: center;
   max-width: 750px;
-  margin: 0 auto 4rem auto;
+  margin: 0 auto 4rem;
 }
 
 .testimonial-slider {
@@ -814,7 +814,7 @@ swiper-container {
 .featured-projects__header {
   text-align: center;
   max-width: 750px;
-  margin: 0 auto 2rem auto;
+  margin: 0 auto 2rem;
 }
 
 .projects-filter {
@@ -857,7 +857,7 @@ swiper-container {
 .process-header {
   text-align: center;
   max-width: 750px;
-  margin: 0 auto 4rem auto;
+  margin: 0 auto 4rem;
 }
 
 .process-grid {
@@ -886,7 +886,7 @@ swiper-container {
 .process-step__icon {
   width: 50px;
   height: 50px;
-  margin: 0 auto 1.5rem auto;
+  margin: 0 auto 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -939,7 +939,7 @@ swiper-container {
 .latest-insights__header {
   text-align: center;
   max-width: 750px;
-  margin: 0 auto 4rem auto;
+  margin: 0 auto 4rem;
 }
 
 .insights-grid {
@@ -1465,7 +1465,7 @@ swiper-container {
   transition: max-height 0.3s ease-out;
 
   &-inner {
-    padding: 0 1.5rem 1.5rem 1.5rem;
+    padding: 0 1.5rem 1.5rem;
     color: var(--text-muted);
     line-height: 1.6;
   }
