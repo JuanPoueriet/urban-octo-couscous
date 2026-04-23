@@ -635,10 +635,14 @@ swiper-container {
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--text-main);
+  background: transparent;
   border: 2px solid var(--border-color);
   padding: 0.8rem 1.8rem;
   border-radius: var(--radius-md);
   transition: all var(--transition-speed) ease;
+  cursor: pointer;
+  font-family: inherit;
+
   lucide-icon {
     transition: transform var(--transition-speed) ease;
   }

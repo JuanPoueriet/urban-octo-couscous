@@ -7,7 +7,9 @@ import { provideZonelessChangeDetection } from '@angular/core';
 import { ALL_ICONS } from '@core/constants/icons';
 
 class MockToastService {
-  show(message: string, type: string) {}
+  show() {
+    // Mock implementation
+  }
 }
 
 describe('WhitepaperDownloadComponent', () => {

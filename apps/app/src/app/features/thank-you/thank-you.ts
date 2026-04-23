@@ -12,5 +12,5 @@ import { LucideAngularModule } from 'lucide-angular';
   styleUrls: ['./thank-you.scss']
 })
 export class ThankYou {
-  constructor() {}
+
 }
