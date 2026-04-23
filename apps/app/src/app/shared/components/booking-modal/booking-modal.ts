@@ -50,19 +50,19 @@ import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
       width: 100%;
       max-width: 800px;
       height: 80vh;
-      background: var(--bg-card, #fff);
-      border-radius: 12px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
       display: flex;
       flex-direction: column;
       overflow: hidden;
       animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      border: 1px solid var(--border-color, #e5e7eb);
+      border: 1px solid var(--border-color);
     }
 
     .booking-modal-header {
       padding: 1rem 1.5rem;
-      border-bottom: 1px solid var(--border-color, #e5e7eb);
+      border-bottom: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -71,7 +71,7 @@ import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
         margin: 0;
         font-size: 1.25rem;
         font-weight: 600;
-        color: var(--text-primary, #111);
+        color: var(--text-main);
       }
     }
 
@@ -80,13 +80,16 @@ import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
       border: none;
       cursor: pointer;
       padding: 0.5rem;
-      color: var(--text-secondary, #666);
+      color: var(--text-muted);
       border-radius: 50%;
-      transition: background 0.2s;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       &:hover {
-        background: var(--bg-secondary, #f3f4f6);
-        color: var(--text-primary, #111);
+        background: var(--bg-secondary);
+        color: var(--text-main);
       }
     }
 
