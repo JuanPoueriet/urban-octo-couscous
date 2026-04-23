@@ -12,5 +12,5 @@ import { LucideAngularModule } from 'lucide-angular';
   styleUrls: ['./server-error.scss']
 })
 export class ServerError {
-
+  constructor() {}
 }

@@ -35,6 +35,7 @@ export class Faq implements OnInit, OnDestroy {
   private langSub: Subscription | undefined;
   private faqItems: FaqItem[] = [];
 
+  constructor() { }
 
   ngOnInit() {
     this.faqItems$ = this.dataService.getFaqItems();

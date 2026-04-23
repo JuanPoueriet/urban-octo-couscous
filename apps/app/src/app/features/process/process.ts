@@ -25,5 +25,5 @@ export class Process {
   private dataService = inject(DataService);
   public processSteps = toSignal(this.dataService.getProcessSteps(), { initialValue: [] });
 
-
+  constructor() {}
 }
