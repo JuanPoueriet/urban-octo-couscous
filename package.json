@@ -10,7 +10,8 @@
     "serve:ssr:app": "node dist/apps/app/server/server.mjs",
     "lighthouse": "npx lhci autorun --config=./.lighthouserc.js",
     "seo:ssr:check": "node scripts/seo/ssr-smoke-check.mjs",
-    "seo:i18n:validate": "node scripts/seo/validate-seo-i18n.mjs"
+    "seo:i18n:validate": "node scripts/seo/validate-seo-i18n.mjs",
+    "i18n:check": "node scripts/i18n/validate-i18n.mjs"
   },
   "prettier": {
     "printWidth": 100,
