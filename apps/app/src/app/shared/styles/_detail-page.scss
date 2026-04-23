@@ -9,7 +9,7 @@
   //    Esto resuelve el problema de que el breadcrumb quede oculto.
   margin-top: var(--page-top-offset);
   // 2. Padding ajustado para un look más limpio.
-  padding: var(--space-xl) 0 var(--space-lg) 0;
+  padding: var(--space-xl) 0 var(--space-lg);
   // --- FIN CAMBIOS ---
   
   background-color: var(--bg-secondary);
@@ -115,7 +115,7 @@
   gap: 0;
   max-width: 800px;
   // 1. Más espacio entre la imagen y el contenido.
-  margin: 5rem auto 0 auto; 
+  margin: 5rem auto 0;
 
   .content-block {
     margin-bottom: 3rem;
@@ -140,7 +140,7 @@
     font-size: 1.5rem;
     font-weight: 600;
     color: var(--text-main);
-    margin: 2rem 0 1rem 0;
+    margin: 2rem 0 1rem;
   }
 
   p, li {

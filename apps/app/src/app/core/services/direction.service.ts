@@ -31,11 +31,13 @@ export class DirectionService {
     const isRtl = isRtlLanguage(lang);
     this.isRtl.set(isRtl);
 
+    const dir = isRtl ? 'rtl' : 'ltr';
+    this.document.documentElement.setAttribute('dir', dir);
+    this.document.documentElement.setAttribute('lang', lang);
+
     if (isPlatformBrowser(this.platformId)) {
-      const dir = isRtl ? 'rtl' : 'ltr';
-      this.document.documentElement.setAttribute('dir', dir);
-      this.document.documentElement.setAttribute('lang', lang);
       this.document.body.setAttribute('dir', dir);
+      this.document.body.style.setProperty('--dir', isRtl ? '-1' : '1');
     }
   }
 }
