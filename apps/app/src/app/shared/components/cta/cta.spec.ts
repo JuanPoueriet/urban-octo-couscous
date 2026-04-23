@@ -1,4 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideZonelessChangeDetection, importProvidersFrom } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { provideRouter } from '@angular/router';
+import { LucideAngularModule, Mail } from 'lucide-angular';
 
 import { CtaComponent } from './cta';
 
@@ -8,7 +12,15 @@ describe('CtaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CtaComponent]
+      imports: [
+        CtaComponent,
+        LucideAngularModule.pick({ Mail }),
+        TranslateModule.forRoot()
+      ],
+      providers: [
+        provideZonelessChangeDetection(),
+        provideRouter([])
+      ]
     })
     .compileComponents();
 
