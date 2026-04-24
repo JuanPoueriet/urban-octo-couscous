@@ -6,10 +6,12 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { provideZonelessChangeDetection, importProvidersFrom } from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { ALL_ICONS } from '../../core/constants/icons';
+import { MenuService } from '@core/services/menu.service';
 
 describe('Header', () => {
   let component: Header;
   let fixture: ComponentFixture<Header>;
+  let menuService: MenuService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -18,13 +20,15 @@ describe('Header', () => {
         provideRouter([]), // Mock
         provideTranslateService(), // Mock
         provideZonelessChangeDetection(),
-        importProvidersFrom(LucideAngularModule.pick(ALL_ICONS))
+        importProvidersFrom(LucideAngularModule.pick(ALL_ICONS)),
+        MenuService
       ]
     })
     .compileComponents();
 
     fixture = TestBed.createComponent(Header);
     component = fixture.componentInstance;
+    menuService = TestBed.inject(MenuService);
     fixture.detectChanges();
   });
 
@@ -37,22 +41,20 @@ describe('Header', () => {
   });
 
   it('should toggle mobile menu on toggleMobileMenu()', () => {
-    expect(component.isMobileMenuOpen).toBe(false);
-    component.isDesktop = false; // Asegurar que no está en modo desktop
+    expect(menuService.isMobileMenuOpen()).toBe(false);
 
     component.toggleMobileMenu();
-    expect(component.isMobileMenuOpen).toBe(true);
-
-    // Reset isAnimating para permitir el cierre inmediato en el test
-    (component as any).isAnimating = false;
+    expect(menuService.isMobileMenuOpen()).toBe(true);
 
     component.toggleMobileMenu();
-    expect(component.isMobileMenuOpen).toBe(false);
+    expect(menuService.isMobileMenuOpen()).toBe(false);
   });
 
   it('should close mobile menu on closeMobileMenu()', () => {
-    component.isMobileMenuOpen = true; // Forzar estado abierto
+    menuService.open();
+    expect(menuService.isMobileMenuOpen()).toBe(true);
+
     component.closeMobileMenu();
-    expect(component.isMobileMenuOpen).toBe(false);
+    expect(menuService.isMobileMenuOpen()).toBe(false);
   });
 });
