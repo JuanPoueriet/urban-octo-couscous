@@ -19,7 +19,7 @@
     </div>
 
     <div class="rc-slider-wrap">
-      <swiper-container init="false" class="rc-swiper">
+      <swiper-container init="false" class="rc-swiper" [attr.dir]="directionService.isRtl() ? 'rtl' : 'ltr'">
         @for (item of items; track item.slug) {
           <swiper-slide class="rc-slide">
             <a [routerLink]="getItemLink(item)" class="rc-card">

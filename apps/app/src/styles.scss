@@ -22,6 +22,8 @@
 
   // Tipografía
   --font-family-base: 'Poppins', sans-serif;
+  // Arabic font stack: Noto Sans Arabic for Arabic glyphs, Poppins for Latin/numeric fallback
+  --font-family-arabic: 'Noto Sans Arabic', 'Poppins', sans-serif;
 
   // Layout & Spacing
   --max-width: 1200px;
@@ -197,15 +199,61 @@ lucide-icon {
   .lg\:mt-24 { margin-top: 6rem; }
 }
 
-/* ─── RTL Support ──────────────────────────────────────────────── */
+/* ─── RTL / Bidirectional Support ─────────────────────────────── */
 
-// CSS direction multiplier: 1 in LTR, -1 in RTL
-// Use with: transform: translateX(calc(var(--dir) * Xpx))
+// ── Direction multiplier token ────────────────────────────────────────────────
+// Use in transforms: translateX(calc(var(--dir) * Xpx))
+// 1 = LTR (default), -1 = RTL
 :root { --dir: 1; }
-[dir="rtl"] { --dir: -1; }
 
 [dir="rtl"] {
-  // Mirror directional icons
+  // Token override — consumed by DirectionService and any calc()-based rules
+  --dir: -1;
+
+  // ── Font family ─────────────────────────────────────────────────────────────
+  // Override the base font token so every element that uses var(--font-family-base)
+  // automatically picks up the Arabic font stack. Poppins remains as Latin/numeric
+  // fallback inside the Arabic stack, keeping numbers and Latin words styled.
+  --font-family-base: var(--font-family-arabic);
+
+  // ── Arabic typography ───────────────────────────────────────────────────────
+  // Arabic script has tall ascenders/descenders that need extra leading.
+  // 1.9 prevents clipping without breaking card/badge layouts.
+  p, li, dt, dd, blockquote, td, th, label, figcaption,
+  .body-text, .lead, .description, .section-subtitle, .section-text {
+    line-height: 1.9;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.4;
+    // Arabic has no inter-character spacing; positive letter-spacing breaks the script.
+    letter-spacing: 0;
+  }
+
+  // Arabic is a connected script — never break mid-word.
+  p, li, blockquote {
+    word-break: normal;
+    overflow-wrap: break-word;
+    hyphens: none;
+  }
+
+  // ── Form inputs ──────────────────────────────────────────────────────────────
+  // unicode-bidi: plaintext lets the browser infer direction from the first
+  // strongly-directional character, enabling natural mixed-language typing.
+  // direction: rtl sets the base direction for the placeholder and caret.
+  input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='color']):not([type='file']):not([type='image']):not([type='submit']):not([type='reset']):not([type='button']),
+  textarea,
+  select,
+  [contenteditable='true'],
+  [contenteditable=''] {
+    direction: rtl;
+    unicode-bidi: plaintext;
+    text-align: start;
+  }
+
+  // ── Directional icon mirroring ───────────────────────────────────────────────
+  // scaleX(-1) is preferred over rotate(180deg): it preserves the icon's
+  // vertical centre, prevents layout shift, and works with currentColor.
   lucide-icon[name="ArrowRight"],
   lucide-icon[name="ArrowLeft"],
   lucide-icon[name="ChevronRight"],
@@ -218,8 +266,9 @@ lucide-icon {
     transform: scaleX(-1);
   }
 
-  // Fix for dynamic icons in breadcrumbs/pagination that might use [name]
-  .lucide-chevron-right, .lucide-chevron-left, .lucide-arrow-right, .lucide-arrow-left {
+  // CSS-class-based icon selectors (breadcrumbs, pagination rendered without [name])
+  .lucide-chevron-right, .lucide-chevron-left,
+  .lucide-arrow-right,  .lucide-arrow-left {
     transform: scaleX(-1);
   }
 }

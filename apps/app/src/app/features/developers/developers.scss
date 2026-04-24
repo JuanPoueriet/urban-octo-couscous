@@ -86,3 +86,16 @@
     }
   }
 }
+
+// ─── RTL overrides ──────────────────────────────────────────────────────────
+
+[dir='rtl'] {
+  // Hero h1 text-gradient: flip direction so the bright colour starts on
+  // the inline-end side (right in LTR, left in RTL).
+  .developers-hero h1 {
+    background: linear-gradient(to left, var(--text-main), var(--text-muted));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}

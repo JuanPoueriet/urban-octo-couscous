@@ -13,6 +13,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { BlogPost, Solution } from '@core/services/data.service';
 import { LucideAngularModule } from 'lucide-angular';
 import { AnimateOnScroll } from '@shared/directives/animate-on-scroll';
+import { DirectionService } from '@core/services/direction.service';
 
 import { Pagination, Navigation, A11y } from 'swiper/modules';
 import { register } from 'swiper/element/bundle';
@@ -31,6 +32,7 @@ export class RelatedContentComponent implements AfterViewChecked {
   @Input() type: 'blog' | 'solution' = 'blog';
   @Input() title = 'RELATED.TITLE';
 
+  public directionService = inject(DirectionService);
   private platformId = inject(PLATFORM_ID);
   private el = inject(ElementRef);
   private swiperReady = false;

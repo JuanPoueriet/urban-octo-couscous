@@ -195,8 +195,7 @@
 .rc-card-body {
   position: absolute;
   bottom: 0;
-  left: 0;
-  right: 0;
+  inset-inline: 0;
   z-index: 2;
   padding: 20px;
   background: rgba(0, 0, 0, 0.55);
