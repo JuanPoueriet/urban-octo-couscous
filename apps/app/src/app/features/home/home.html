@@ -179,18 +179,17 @@
     </a>
   </div>
 
-  <!-- MODIFICADO: Team Teaser (Elemento Humano) en lugar de imagen estática -->
-  <div class="welcome-section__image team-teaser">
-    <div class="team-grid">
-       @for (member of teamMembers; track member.nameKey) {
-        <div class="team-card">
-           <img [src]="member.image" [alt]="member.nameKey | translate" class="team-card__img" width="150" height="150" loading="lazy" />
-           <div class="team-card__info">
-              <span class="name">{{ member.nameKey | translate }}</span>
-              <span class="role">{{ member.roleKey | translate }}</span>
-           </div>
-        </div>
-       }
+  <div class="welcome-section__image welcome-photo-block">
+    <div class="welcome-photo-frame">
+      <img
+        src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?fit=crop&w=900&q=85"
+        [alt]="'HOME.WELCOME_TITLE' | translate"
+        class="welcome-photo"
+        loading="lazy"
+        width="900"
+        height="600"
+      />
+      <div class="welcome-photo-overlay"></div>
     </div>
   </div>
 </section>

@@ -210,7 +210,7 @@
     "LEARN_MORE": "Saiba mais sobre nós",
     "VIEW_PRODUCTS": "Ver nossos produtos",
     "EXPLORE_SOLUTIONS": "Explore nossas soluções personalizadas",
-    "BLOG_EYEBROW": "Insights & News",
+    "BLOG_EYEBROW": "Insights e Notícias",
     "BLOG_TITLE": "Do Nosso Blog",
     "CLUTCH_SCORE": "4.9/5",
     "GOOGLE_SCORE": "5.0/5"
@@ -356,7 +356,9 @@
     "CLOUD_SECTION_BENEFITS_3_DESC": "Economize até 40% em custos de infraestrutura através da alocação inteligente de recursos.",
     "CLOUD_SECTION_BENEFITS_4_TITLE": "Agilidade de Negócios",
     "CLOUD_SECTION_BENEFITS_4_DESC": "Sua infraestrutura evolui com seu negócio, adaptando-se a cada fase.",
-    "RELATED": "Soluções Relacionadas"
+    "RELATED": "Soluções Relacionadas",
+    "RELATED_EYEBROW": "Mais Serviços",
+    "EXPLORE": "Explorar"
   },
   "PRODUCTS": {
     "OVERVIEW": "Visão Geral",
@@ -431,7 +433,7 @@
     "CTA_EYEBROW": "Pronto para ser nossa próxima história de sucesso?",
     "CTA_TITLE": "Vamos Transformar o Seu Negócio",
     "CTA_SUBTITLE": "Explore como nossas soluções personalizadas capacitaram outras empresas e vamos discutir como podemos fazer o mesmo por você.",
-    "METRICS_TITLE": "Impact Metrics"
+    "METRICS_TITLE": "Métricas de Impacto"
   },
   "ABOUT": {
     "TITLE": "Sobre a JSL Technology",
@@ -557,7 +559,7 @@
   "ERRORS": {
     "500_TITLE": "Erro do Servidor (500)",
     "500_DESC": "Estamos enfrentando dificuldades técnicas. Por favor, tente novamente mais tarde.",
-    "GO_HOME": "Go Home"
+    "GO_HOME": "Ir para o Início"
   },
   "THANK_YOU": {
     "TITLE": "Obrigado!",
@@ -816,7 +818,7 @@
     "BADGE_HIPAA": "Pronto para HIPAA"
   },
   "VENTURES": {
-    "TITLE": "Ventures & Innovation Lab",
+    "TITLE": "Ventures & Laboratório de Inovação",
     "SUBTITLE": "Da Incubação de Ideias à Escala de Saídas. Construímos a próxima geração de empresas SaaS.",
     "LIFECYCLE_TITLE": "Nosso Processo de Construção de Ventures",
     "STEP1_TITLE": "Incubar",
@@ -915,9 +917,9 @@
     "VENTURES": "Empresas"
   },
   "ALT": {
-    "AUTHOR": "Author",
-    "GOVERNANCE": "Corporate Governance",
-    "LIFE_AT_JSL": "Life at JSL"
+    "AUTHOR": "Autor",
+    "GOVERNANCE": "Governança Corporativa",
+    "LIFE_AT_JSL": "Vida na JSL"
   },
   "SOCIAL": {
     "GITHUB": "GitHub",

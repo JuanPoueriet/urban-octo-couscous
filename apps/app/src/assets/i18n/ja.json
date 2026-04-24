@@ -204,13 +204,13 @@
     "VERIFIED_REVIEW": "認証済みレビュー",
     "ON_CLUTCH": "Clutch",
     "ON_GOOGLE": "Google",
-    "HERO1_ALT": "JSL Technology - Digital Innovation and Software Development",
-    "HERO2_ALT": "ERP Software for Business Management - JSL Technology",
+    "HERO1_ALT": "JSL Technology - デジタルイノベーションとソフトウェア開発",
+    "HERO2_ALT": "企業管理のためのERPソフトウェア - JSL Technology",
     "HERO3_ALT": "カスタムソフトウェアソリューションとデジタルトランスフォーメーション",
-    "LEARN_MORE": "Learn more about us",
+    "LEARN_MORE": "私たちについてもっと知る",
     "VIEW_PRODUCTS": "製品を見る",
     "EXPLORE_SOLUTIONS": "カスタムソリューションを探索する",
-    "BLOG_EYEBROW": "Insights & News",
+    "BLOG_EYEBROW": "インサイト＆ニュース",
     "BLOG_TITLE": "ブログより",
     "CLUTCH_SCORE": "4.9/5",
     "GOOGLE_SCORE": "5.0/5"
@@ -356,7 +356,9 @@
     "CLOUD_SECTION_BENEFITS_3_DESC": "インテリジェントなリソース割り当てにより、インフラコストを最大40%節約。",
     "CLOUD_SECTION_BENEFITS_4_TITLE": "ビジネスアジリティ",
     "CLOUD_SECTION_BENEFITS_4_DESC": "インフラストラクチャはビジネスと共に進化し、各段階に適応します。",
-    "RELATED": "Related Solutions"
+    "RELATED": "関連ソリューション",
+    "RELATED_EYEBROW": "その他のサービス",
+    "EXPLORE": "詳しく見る"
   },
   "PRODUCTS": {
     "OVERVIEW": "概要",
@@ -431,7 +433,7 @@
     "CTA_EYEBROW": "次の成功事例になる準備はできましたか？",
     "CTA_TITLE": "あなたのビジネスを変革しましょう",
     "CTA_SUBTITLE": "当社のカスタムソリューションが他の企業をどのように支援したかをご覧になり、お客様のために同じことができるかどうかについて話し合いましょう。",
-    "METRICS_TITLE": "Impact Metrics"
+    "METRICS_TITLE": "成果指標"
   },
   "ABOUT": {
     "TITLE": "JSLテクノロジーについて",
@@ -464,7 +466,7 @@
     "CTA_EYEBROW": "もっと知りたいですか？",
     "CTA_TITLE": "私たちはあなたの戦略的パートナーです",
     "CTA_SUBTITLE": "私たちのチームはあなたと協力し、あなたのビジョンを次のレベルに引き上げる準備ができています。",
-    "HERO_ALT": "JSL Technology team working on software architecture and digital solutions"
+    "HERO_ALT": "JSL Technologyチームがソフトウェアアーキテクチャとデジタルソリューションに取り組んでいます"
   },
   "BLOG": {
     "TITLE": "JSL Technology ブログ",
@@ -497,11 +499,11 @@
     "CTA_EYEBROW": "さらに詳しい情報に興味がありますか？",
     "CTA_TITLE": "テクノロジーについて話しましょう",
     "CTA_SUBTITLE": "私たちのチームは常に新しいアイデアを探求しています。テクノロジーがあなたのビジネスをどのように強化できるかについて話し合いたい場合は、お問い合わせください。",
-    "FEATURED_BADGE": "Featured Article",
-    "SEARCH_PLACEHOLDER": "Search articles...",
-    "READ_TIME_UNIT": "min read",
+    "FEATURED_BADGE": "注目記事",
+    "SEARCH_PLACEHOLDER": "記事を検索...",
+    "READ_TIME_UNIT": "分で読める",
     "NO_RESULTS": "それらのフィルターで見つかった記事はありません。",
-    "EYEBROW": "Latest Updates",
+    "EYEBROW": "最新情報",
     "BLOG_TITLE": "ブログより"
   },
   "LEGAL": {
@@ -557,13 +559,13 @@
   "ERRORS": {
     "500_TITLE": "サーバーエラー (500)",
     "500_DESC": "技術的な問題が発生しています。しばらくしてからもう一度お試しください。",
-    "GO_HOME": "Go Home"
+    "GO_HOME": "ホームへ"
   },
   "THANK_YOU": {
     "TITLE": "ありがとうございます！",
     "MESSAGE": "メッセージを受け取りました。まもなくご連絡いたします。",
-    "GO_HOME": "Back to Home",
-    "MSG_TITLE": "Message Sent Successfully",
+    "GO_HOME": "ホームに戻る",
+    "MSG_TITLE": "メッセージが正常に送信されました",
     "MSG_DESC": "メッセージを受け取りました。間もなくご連絡いたします。"
   },
   "NOT_FOUND": {
@@ -578,7 +580,7 @@
     "PROJECT_SUBTITLE": "お探しのプロジェクトが見つかりませんでした。すべてのケーススタディは",
     "BLOG_TITLE": "記事が見つかりません",
     "BLOG_SUBTITLE": "お探しの記事が見つかりませんでした。に戻ることができます",
-    "ALT": "Page Not Found Illustration",
+    "ALT": "ページが見つかりません",
     "EYEBROW": "Error 404"
   },
   "PROCESS": {
@@ -778,7 +780,7 @@
     "DISCLAIMER": "これは概算です。正確な見積もりについてはお問い合わせください。",
     "RESTART": "最初からやり直す",
     "VS_OTHERS": "virtex と他社の比較",
-    "OTHERS": "Others",
+    "OTHERS": "その他",
     "FEATURE": "機能",
     "WEB_APP": "ウェブアプリ",
     "MOBILE_APP": "モバイルアプリ",
@@ -816,7 +818,7 @@
     "BADGE_HIPAA": "HIPAA対応"
   },
   "VENTURES": {
-    "TITLE": "Ventures & Innovation Lab",
+    "TITLE": "ベンチャーズ＆イノベーションラボ",
     "SUBTITLE": "アイデアのインキュベーションからエグジットのスケーリングまで。次世代のSaaS企業を構築します。",
     "LIFECYCLE_TITLE": "当社のベンチャー構築プロセス",
     "STEP1_TITLE": "インキュベート",
@@ -877,47 +879,47 @@
     "CHECK_INBOX": "受信トレイを確認してください"
   },
   "SHARE": {
-    "LABEL": "Share this article",
+    "LABEL": "この記事をシェアする",
     "LINKEDIN": "LinkedIn",
     "TWITTER": "Twitter",
     "FACEBOOK": "Facebook",
     "EMAIL": "Email",
-    "SHARE_LINKEDIN": "Share on LinkedIn",
-    "SHARE_TWITTER": "Share on Twitter",
-    "SHARE_FACEBOOK": "Share on Facebook",
-    "SHARE_EMAIL": "Share via Email",
-    "COPY_LINK": "Copy Link"
+    "SHARE_LINKEDIN": "LinkedInでシェア",
+    "SHARE_TWITTER": "Twitterでシェア",
+    "SHARE_FACEBOOK": "Facebookでシェア",
+    "SHARE_EMAIL": "メールでシェア",
+    "COPY_LINK": "リンクをコピー"
   },
   "ARIA": {
-    "BREADCRUMB": "Breadcrumb",
-    "PREVIOUS_PAGE": "Previous page",
-    "NEXT_PAGE": "Next page",
-    "SEARCH": "Search",
-    "CLOSE": "Close",
-    "CLOSE_MODAL": "Close modal",
+    "BREADCRUMB": "パンくずリスト",
+    "PREVIOUS_PAGE": "前のページ",
+    "NEXT_PAGE": "次のページ",
+    "SEARCH": "検索",
+    "CLOSE": "閉じる",
+    "CLOSE_MODAL": "モーダルを閉じる",
     "WATCH_REEL": "ビデオをリールを見る",
-    "PREVIOUS_SLIDE": "Previous slide",
-    "NEXT_SLIDE": "Next slide",
-    "PARTNERS": "Trusted partners",
-    "TOGGLE_MENU": "Toggle menu",
-    "CLOSE_MENU": "Close menu",
-    "SELECT_LANGUAGE": "Select language",
-    "HOME_LINK": "JSL Technology Home",
-    "DESKTOP_NAV": "Desktop Navigation"
+    "PREVIOUS_SLIDE": "前のスライド",
+    "NEXT_SLIDE": "次のスライド",
+    "PARTNERS": "信頼できるパートナー",
+    "TOGGLE_MENU": "メニューを切り替える",
+    "CLOSE_MENU": "メニューを閉じる",
+    "SELECT_LANGUAGE": "言語を選択",
+    "HOME_LINK": "JSL Technology ホーム",
+    "DESKTOP_NAV": "デスクトップナビゲーション"
   },
   "SEARCH": {
-    "PLACEHOLDER": "Search...",
-    "NO_RESULTS": "No results found.",
-    "ALL": "All",
+    "PLACEHOLDER": "検索...",
+    "NO_RESULTS": "結果が見つかりませんでした。",
+    "ALL": "すべて",
     "BLOG": "Blog",
-    "PRODUCTS": "Products",
-    "PROJECTS": "Projects",
-    "VENTURES": "Ventures"
+    "PRODUCTS": "製品",
+    "PROJECTS": "プロジェクト",
+    "VENTURES": "ベンチャー"
   },
   "ALT": {
-    "AUTHOR": "Author",
-    "GOVERNANCE": "Corporate Governance",
-    "LIFE_AT_JSL": "Life at JSL"
+    "AUTHOR": "著者",
+    "GOVERNANCE": "コーポレートガバナンス",
+    "LIFE_AT_JSL": "JSLでの生活"
   },
   "SOCIAL": {
     "GITHUB": "GitHub",

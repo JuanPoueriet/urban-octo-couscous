@@ -204,13 +204,13 @@
     "VERIFIED_REVIEW": "인증된 리뷰",
     "ON_CLUTCH": "Clutch",
     "ON_GOOGLE": "Google",
-    "HERO1_ALT": "JSL Technology - Digital Innovation and Software Development",
-    "HERO2_ALT": "ERP Software for Business Management - JSL Technology",
+    "HERO1_ALT": "JSL Technology - 디지털 혁신 및 소프트웨어 개발",
+    "HERO2_ALT": "비즈니스 관리를 위한 ERP 소프트웨어 - JSL Technology",
     "HERO3_ALT": "맞춤형 소프트웨어 솔루션 및 디지털 전환",
-    "LEARN_MORE": "Learn more about us",
+    "LEARN_MORE": "저희에 대해 더 알아보기",
     "VIEW_PRODUCTS": "제품 보기",
     "EXPLORE_SOLUTIONS": "맞춤형 솔루션 탐색",
-    "BLOG_EYEBROW": "Insights & News",
+    "BLOG_EYEBROW": "인사이트 & 뉴스",
     "BLOG_TITLE": "블로그 소식",
     "CLUTCH_SCORE": "4.9/5",
     "GOOGLE_SCORE": "5.0/5"
@@ -356,7 +356,9 @@
     "CLOUD_SECTION_BENEFITS_3_DESC": "지능형 리소스 할당을 통해 인프라 비용을 최대 40% 절감.",
     "CLOUD_SECTION_BENEFITS_4_TITLE": "비즈니스 민첩성",
     "CLOUD_SECTION_BENEFITS_4_DESC": "인프라는 비즈니스와 함께 진화하며 각 단계에 적응합니다.",
-    "RELATED": "Related Solutions"
+    "RELATED": "관련 솔루션",
+    "RELATED_EYEBROW": "더 많은 서비스",
+    "EXPLORE": "자세히 보기"
   },
   "PRODUCTS": {
     "OVERVIEW": "개요",
@@ -431,7 +433,7 @@
     "CTA_EYEBROW": "다음 성공 사례가 될 준비가 되셨습니까?",
     "CTA_TITLE": "귀하의 비즈니스를 변화시키자",
     "CTA_SUBTITLE": "우리의 맞춤형 솔루션이 다른 회사를 어떻게 지원했는지 알아보고 우리가 당신을 위해 똑같이 할 수 있는 방법에 대해 논의해 봅시다.",
-    "METRICS_TITLE": "Impact Metrics"
+    "METRICS_TITLE": "성과 지표"
   },
   "ABOUT": {
     "TITLE": "JSL 기술 정보",
@@ -464,7 +466,7 @@
     "CTA_EYEBROW": "우리를 더 잘 알고 싶으십니까?",
     "CTA_TITLE": "우리는 당신의 전략적 파트너입니다",
     "CTA_SUBTITLE": "우리 팀은 당신과 협력하고 당신의 비전을 다음 단계로 끌어올릴 준비가 되어 있습니다.",
-    "HERO_ALT": "JSL Technology team working on software architecture and digital solutions"
+    "HERO_ALT": "JSL Technology 팀이 소프트웨어 아키텍처와 디지털 솔루션 작업 중"
   },
   "BLOG": {
     "TITLE": "JSL Technology 블로그",
@@ -497,11 +499,11 @@
     "CTA_EYEBROW": "더 많은 통찰력에 관심이 있으십니까?",
     "CTA_TITLE": "기술에 대해 이야기합시다",
     "CTA_SUBTITLE": "우리 팀은 항상 새로운 아이디어를 탐색하고 있습니다. 기술이 비즈니스를 어떻게 지원할 수 있는지 논의하고 싶다면 저희에게 연락하십시오.",
-    "FEATURED_BADGE": "Featured Article",
-    "SEARCH_PLACEHOLDER": "Search articles...",
-    "READ_TIME_UNIT": "min read",
+    "FEATURED_BADGE": "주요 기사",
+    "SEARCH_PLACEHOLDER": "기사 검색...",
+    "READ_TIME_UNIT": "분 읽기",
     "NO_RESULTS": "해당 필터로 검색된 기사가 없습니다.",
-    "EYEBROW": "Latest Updates",
+    "EYEBROW": "최신 업데이트",
     "BLOG_TITLE": "블로그 소식"
   },
   "LEGAL": {
@@ -557,13 +559,13 @@
   "ERRORS": {
     "500_TITLE": "서버 오류 (500)",
     "500_DESC": "기술적인 문제가 발생했습니다. 나중에 다시 시도해 주세요.",
-    "GO_HOME": "Go Home"
+    "GO_HOME": "홈으로"
   },
   "THANK_YOU": {
     "TITLE": "감사합니다!",
     "MESSAGE": "메시지가 접수되었습니다. 곧 연락드리겠습니다.",
-    "GO_HOME": "Back to Home",
-    "MSG_TITLE": "Message Sent Successfully",
+    "GO_HOME": "홈으로 돌아가기",
+    "MSG_TITLE": "메시지가 성공적으로 전송되었습니다",
     "MSG_DESC": "메시지가 접수되었습니다. 곧 연락드리겠습니다."
   },
   "NOT_FOUND": {
@@ -578,7 +580,7 @@
     "PROJECT_SUBTITLE": "찾고 있는 프로젝트를 찾을 수 없습니다. 모든 사례 연구는",
     "BLOG_TITLE": "기사를 찾을 수 없음",
     "BLOG_SUBTITLE": "찾고 있는 기사를 찾을 수 없습니다. 다음으로 돌아갈 수 있습니다.",
-    "ALT": "Page Not Found Illustration",
+    "ALT": "페이지를 찾을 수 없음",
     "EYEBROW": "Error 404"
   },
   "PROCESS": {
@@ -778,7 +780,7 @@
     "DISCLAIMER": "이것은 대략적인 추정치입니다. 정확한 견적은 문의해 주세요.",
     "RESTART": "다시 시작",
     "VS_OTHERS": "virtex 대 기타 제품",
-    "OTHERS": "Others",
+    "OTHERS": "기타",
     "FEATURE": "기능",
     "WEB_APP": "웹 앱",
     "MOBILE_APP": "모바일 앱",
@@ -816,7 +818,7 @@
     "BADGE_HIPAA": "HIPAA 준비"
   },
   "VENTURES": {
-    "TITLE": "Ventures & Innovation Lab",
+    "TITLE": "벤처스 & 이노베이션 랩",
     "SUBTITLE": "아이디어 인큐베이팅부터 엑싯 확장까지. 차세대 SaaS 기업을 구축합니다.",
     "LIFECYCLE_TITLE": "당사의 벤처 빌딩 프로세스",
     "STEP1_TITLE": "인큐베이트",
@@ -877,47 +879,47 @@
     "CHECK_INBOX": "이메일 수신함을 확인하세요"
   },
   "SHARE": {
-    "LABEL": "Share this article",
+    "LABEL": "이 기사 공유하기",
     "LINKEDIN": "LinkedIn",
     "TWITTER": "Twitter",
     "FACEBOOK": "Facebook",
     "EMAIL": "Email",
-    "SHARE_LINKEDIN": "Share on LinkedIn",
-    "SHARE_TWITTER": "Share on Twitter",
-    "SHARE_FACEBOOK": "Share on Facebook",
-    "SHARE_EMAIL": "Share via Email",
-    "COPY_LINK": "Copy Link"
+    "SHARE_LINKEDIN": "LinkedIn에서 공유",
+    "SHARE_TWITTER": "Twitter에서 공유",
+    "SHARE_FACEBOOK": "Facebook에서 공유",
+    "SHARE_EMAIL": "이메일로 공유",
+    "COPY_LINK": "링크 복사"
   },
   "ARIA": {
-    "BREADCRUMB": "Breadcrumb",
-    "PREVIOUS_PAGE": "Previous page",
-    "NEXT_PAGE": "Next page",
-    "SEARCH": "Search",
-    "CLOSE": "Close",
-    "CLOSE_MODAL": "Close modal",
+    "BREADCRUMB": "탐색 경로",
+    "PREVIOUS_PAGE": "이전 페이지",
+    "NEXT_PAGE": "다음 페이지",
+    "SEARCH": "검색",
+    "CLOSE": "닫기",
+    "CLOSE_MODAL": "모달 닫기",
     "WATCH_REEL": "비디오 릴 보기",
-    "PREVIOUS_SLIDE": "Previous slide",
-    "NEXT_SLIDE": "Next slide",
-    "PARTNERS": "Trusted partners",
-    "TOGGLE_MENU": "Toggle menu",
-    "CLOSE_MENU": "Close menu",
-    "SELECT_LANGUAGE": "Select language",
-    "HOME_LINK": "JSL Technology Home",
-    "DESKTOP_NAV": "Desktop Navigation"
+    "PREVIOUS_SLIDE": "이전 슬라이드",
+    "NEXT_SLIDE": "다음 슬라이드",
+    "PARTNERS": "신뢰할 수 있는 파트너",
+    "TOGGLE_MENU": "메뉴 열기/닫기",
+    "CLOSE_MENU": "메뉴 닫기",
+    "SELECT_LANGUAGE": "언어 선택",
+    "HOME_LINK": "JSL Technology 홈",
+    "DESKTOP_NAV": "데스크톱 내비게이션"
   },
   "SEARCH": {
-    "PLACEHOLDER": "Search...",
-    "NO_RESULTS": "No results found.",
-    "ALL": "All",
+    "PLACEHOLDER": "검색...",
+    "NO_RESULTS": "결과를 찾을 수 없습니다.",
+    "ALL": "전체",
     "BLOG": "Blog",
-    "PRODUCTS": "Products",
-    "PROJECTS": "Projects",
-    "VENTURES": "Ventures"
+    "PRODUCTS": "제품",
+    "PROJECTS": "프로젝트",
+    "VENTURES": "벤처"
   },
   "ALT": {
-    "AUTHOR": "Author",
-    "GOVERNANCE": "Corporate Governance",
-    "LIFE_AT_JSL": "Life at JSL"
+    "AUTHOR": "저자",
+    "GOVERNANCE": "기업 지배구조",
+    "LIFE_AT_JSL": "JSL에서의 생활"
   },
   "SOCIAL": {
     "GITHUB": "GitHub",

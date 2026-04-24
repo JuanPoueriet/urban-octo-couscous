@@ -356,7 +356,9 @@
     "CLOUD_SECTION_BENEFITS_3_DESC": "Geographically distributed redundant systems ensuring your service is always online.",
     "CLOUD_SECTION_BENEFITS_4_TITLE": "Rapid Innovation",
     "CLOUD_SECTION_BENEFITS_4_DESC": "Instant access to advanced services like AI, Machine Learning, and Big Data without upfront investment.",
-    "RELATED": "Related Solutions"
+    "RELATED": "Related Solutions",
+    "RELATED_EYEBROW": "More Services",
+    "EXPLORE": "Explore"
   },
   "PRODUCTS": {
     "OVERVIEW": "Overview",

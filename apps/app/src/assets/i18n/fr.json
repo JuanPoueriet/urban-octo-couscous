@@ -210,7 +210,7 @@
     "LEARN_MORE": "En savoir plus sur nous",
     "VIEW_PRODUCTS": "Voir nos produits",
     "EXPLORE_SOLUTIONS": "Explorez nos solutions personnalisées",
-    "BLOG_EYEBROW": "Insights & News",
+    "BLOG_EYEBROW": "Actualités & Insights",
     "BLOG_TITLE": "De notre blog",
     "CLUTCH_SCORE": "4.9/5",
     "GOOGLE_SCORE": "5.0/5"
@@ -356,7 +356,9 @@
     "CLOUD_SECTION_BENEFITS_3_DESC": "Économisez jusqu'à 40 % sur les coûts d'infrastructure grâce à une allocation intelligente des ressources.",
     "CLOUD_SECTION_BENEFITS_4_TITLE": "Agilité commerciale",
     "CLOUD_SECTION_BENEFITS_4_DESC": "Votre infrastructure évolue avec votre entreprise, en s'adaptant à chaque étape.",
-    "RELATED": "Solutions Connexes"
+    "RELATED": "Solutions Connexes",
+    "RELATED_EYEBROW": "Plus de Services",
+    "EXPLORE": "Explorer"
   },
   "PRODUCTS": {
     "OVERVIEW": "Aperçu",
@@ -431,7 +433,7 @@
     "CTA_EYEBROW": "Prêt à être notre prochaine success story?",
     "CTA_TITLE": "Transformons Votre Entreprise",
     "CTA_SUBTITLE": "Découvrez comment nos solutions sur mesure ont renforcé d'autres entreprises, et discutons de la manière dont nous pouvons faire de même pour vous.",
-    "METRICS_TITLE": "Impact Metrics"
+    "METRICS_TITLE": "Métriques d'impact"
   },
   "ABOUT": {
     "TITLE": "À Propos de JSL Technology",
@@ -557,7 +559,7 @@
   "ERRORS": {
     "500_TITLE": "Erreur serveur (500)",
     "500_DESC": "Nous rencontrons des difficultés techniques. Veuillez réessayer plus tard.",
-    "GO_HOME": "Go Home"
+    "GO_HOME": "Aller à l'accueil"
   },
   "THANK_YOU": {
     "TITLE": "Merci !",
@@ -816,7 +818,7 @@
     "BADGE_HIPAA": "Prêt pour HIPAA"
   },
   "VENTURES": {
-    "TITLE": "Ventures & Innovation Lab",
+    "TITLE": "Ventures & Laboratoire d'Innovation",
     "SUBTITLE": "De l'incubation d'idées à la sortie d'échelle. Nous construisons la prochaine génération de sociétés SaaS.",
     "LIFECYCLE_TITLE": "Notre processus de création d'entreprise",
     "STEP1_TITLE": "Incuber",
@@ -915,9 +917,9 @@
     "VENTURES": "Entreprises"
   },
   "ALT": {
-    "AUTHOR": "Author",
-    "GOVERNANCE": "Corporate Governance",
-    "LIFE_AT_JSL": "Life at JSL"
+    "AUTHOR": "Auteur",
+    "GOVERNANCE": "Gouvernance d'entreprise",
+    "LIFE_AT_JSL": "La vie chez JSL"
   },
   "SOCIAL": {
     "GITHUB": "GitHub",

@@ -204,13 +204,13 @@
     "VERIFIED_REVIEW": "مراجعة موثقة",
     "ON_CLUTCH": "على Clutch",
     "ON_GOOGLE": "على Google",
-    "HERO1_ALT": "JSL Technology - Digital Innovation and Software Development",
-    "HERO2_ALT": "ERP Software for Business Management - JSL Technology",
+    "HERO1_ALT": "JSL Technology - الابتكار الرقمي وتطوير البرمجيات",
+    "HERO2_ALT": "برنامج ERP لإدارة الأعمال - JSL Technology",
     "HERO3_ALT": "حلول برمجية مخصصة وتحول رقمي",
-    "LEARN_MORE": "Learn more about us",
+    "LEARN_MORE": "اعرف المزيد عنا",
     "VIEW_PRODUCTS": "عرض منتجاتنا",
     "EXPLORE_SOLUTIONS": "استكشف حلولنا المخصصة",
-    "BLOG_EYEBROW": "Insights & News",
+    "BLOG_EYEBROW": "رؤى وأخبار",
     "BLOG_TITLE": "من مدونتنا",
     "CLUTCH_SCORE": "4.9/5",
     "GOOGLE_SCORE": "5.0/5"
@@ -356,7 +356,9 @@
     "CLOUD_SECTION_BENEFITS_3_DESC": "وفر ما يصل إلى 40% من تكاليف البنية التحتية من خلال تخصيص الموارد الذكي.",
     "CLOUD_SECTION_BENEFITS_4_TITLE": "رشاكة الأعمال",
     "CLOUD_SECTION_BENEFITS_4_DESC": "تتطور بنيتك التحتية مع عملك، وتتكيف مع كل مرحلة.",
-    "RELATED": "Related Solutions"
+    "RELATED": "حلول ذات صلة",
+    "RELATED_EYEBROW": "المزيد من الخدمات",
+    "EXPLORE": "استكشاف"
   },
   "PRODUCTS": {
     "OVERVIEW": "نظرة عامة",
@@ -431,7 +433,7 @@
     "CTA_EYEBROW": "هل أنت مستعد لتكون قصة نجاحنا التالية؟",
     "CTA_TITLE": "دعنا نغير عملك",
     "CTA_SUBTITLE": "استكشف كيف مكنت حلولنا المخصصة الشركات الأخرى ، ودعنا نناقش كيف يمكننا أن نفعل الشيء نفسه من أجلك.",
-    "METRICS_TITLE": "Impact Metrics"
+    "METRICS_TITLE": "مقاييس الأثر"
   },
   "ABOUT": {
     "TITLE": "حول JSL Technology",
@@ -464,7 +466,7 @@
     "CTA_EYEBROW": "هل تريد أن تعرفنا بشكل أفضل؟",
     "CTA_TITLE": "نحن شريكك الاستراتيجي",
     "CTA_SUBTITLE": "فريقنا على استعداد للتعاون معك والارتقاء برؤيتك إلى المستوى التالي.",
-    "HERO_ALT": "JSL Technology team working on software architecture and digital solutions"
+    "HERO_ALT": "فريق JSL Technology يعمل على هندسة البرمجيات والحلول الرقمية"
   },
   "BLOG": {
     "TITLE": "مدونة JSL Technology",
@@ -497,11 +499,11 @@
     "CTA_EYEBROW": "هل أنت مهتم بمزيد من الأفكار؟",
     "CTA_TITLE": "لنتحدث عن التكنولوجيا",
     "CTA_SUBTITLE": "يستكشف فريقنا دائمًا أفكارًا جديدة. اتصل بنا إذا كنت ترغب في مناقشة كيف يمكن للتكنولوجيا أن تدعم عملك.",
-    "FEATURED_BADGE": "Featured Article",
-    "SEARCH_PLACEHOLDER": "Search articles...",
-    "READ_TIME_UNIT": "min read",
+    "FEATURED_BADGE": "مقال مميز",
+    "SEARCH_PLACEHOLDER": "البحث في المقالات...",
+    "READ_TIME_UNIT": "دقيقة قراءة",
     "NO_RESULTS": "لم يتم العثور على مقالات بهذه الفلاتر.",
-    "EYEBROW": "Latest Updates",
+    "EYEBROW": "آخر التحديثات",
     "BLOG_TITLE": "من مدونتنا"
   },
   "LEGAL": {
@@ -557,13 +559,13 @@
   "ERRORS": {
     "500_TITLE": "خطأ في الخادم (500)",
     "500_DESC": "نواجه صعوبات تقنية. يرجى المحاولة مرة أخرى لاحقاً.",
-    "GO_HOME": "Go Home"
+    "GO_HOME": "العودة للرئيسية"
   },
   "THANK_YOU": {
     "TITLE": "شكراً لك!",
     "MESSAGE": "لقد تلقينا رسالتك وسنتصل بك قريباً.",
-    "GO_HOME": "Back to Home",
-    "MSG_TITLE": "Message Sent Successfully",
+    "GO_HOME": "العودة للرئيسية",
+    "MSG_TITLE": "تم إرسال الرسالة بنجاح",
     "MSG_DESC": "لقد استلمنا رسالتك وسنعاود الاتصال بك قريبًا."
   },
   "NOT_FOUND": {
@@ -578,7 +580,7 @@
     "PROJECT_SUBTITLE": "لم نتمكن من العثور على المشروع الذي تبحث عنه. يمكنك الاطلاع على جميع دراسات الحالة الخاصة بنا على",
     "BLOG_TITLE": "المقالة غير موجودة",
     "BLOG_SUBTITLE": "لم نتمكن من العثور على المقالة التي تبحث عنها. يمكنك العودة إلى",
-    "ALT": "Page Not Found Illustration",
+    "ALT": "صورة الصفحة غير الموجودة",
     "EYEBROW": "Error 404"
   },
   "PROCESS": {
@@ -778,7 +780,7 @@
     "DISCLAIMER": "هذا تقدير تقريبي. اتصل بنا للحصول على عرض سعر دقيق.",
     "RESTART": "ابدأ من جديد",
     "VS_OTHERS": "virtex مقابل الآخرين",
-    "OTHERS": "Others",
+    "OTHERS": "أخرى",
     "FEATURE": "ميزة",
     "WEB_APP": "تطبيق ويب",
     "MOBILE_APP": "تطبيق جوال",
@@ -816,7 +818,7 @@
     "BADGE_HIPAA": "جاهز لـ HIPAA"
   },
   "VENTURES": {
-    "TITLE": "Ventures & Innovation Lab",
+    "TITLE": "المشاريع الريادية ومختبر الابتكار",
     "SUBTITLE": "من احتضان الأفكار إلى توسيع نطاق التخارج. نحن نبني الجيل القادم من شركات SaaS.",
     "LIFECYCLE_TITLE": "عملية بناء المشاريع لدينا",
     "STEP1_TITLE": "احتضان",
@@ -877,47 +879,47 @@
     "CHECK_INBOX": "تحقق من صندوق الوارد الخاص بك"
   },
   "SHARE": {
-    "LABEL": "Share this article",
+    "LABEL": "شارك هذا المقال",
     "LINKEDIN": "LinkedIn",
     "TWITTER": "Twitter",
     "FACEBOOK": "Facebook",
     "EMAIL": "Email",
-    "SHARE_LINKEDIN": "Share on LinkedIn",
-    "SHARE_TWITTER": "Share on Twitter",
-    "SHARE_FACEBOOK": "Share on Facebook",
-    "SHARE_EMAIL": "Share via Email",
-    "COPY_LINK": "Copy Link"
+    "SHARE_LINKEDIN": "شارك على LinkedIn",
+    "SHARE_TWITTER": "شارك على Twitter",
+    "SHARE_FACEBOOK": "شارك على Facebook",
+    "SHARE_EMAIL": "شارك عبر البريد الإلكتروني",
+    "COPY_LINK": "نسخ الرابط"
   },
   "ARIA": {
-    "BREADCRUMB": "Breadcrumb",
-    "PREVIOUS_PAGE": "Previous page",
-    "NEXT_PAGE": "Next page",
-    "SEARCH": "Search",
-    "CLOSE": "Close",
-    "CLOSE_MODAL": "Close modal",
+    "BREADCRUMB": "مسار التنقل",
+    "PREVIOUS_PAGE": "الصفحة السابقة",
+    "NEXT_PAGE": "الصفحة التالية",
+    "SEARCH": "بحث",
+    "CLOSE": "إغلاق",
+    "CLOSE_MODAL": "إغلاق النافذة",
     "WATCH_REEL": "شاهد فيديو الريل الخاص بنا",
-    "PREVIOUS_SLIDE": "Previous slide",
-    "NEXT_SLIDE": "Next slide",
-    "PARTNERS": "Trusted partners",
-    "TOGGLE_MENU": "Toggle menu",
-    "CLOSE_MENU": "Close menu",
-    "SELECT_LANGUAGE": "Select language",
-    "HOME_LINK": "JSL Technology Home",
-    "DESKTOP_NAV": "Desktop Navigation"
+    "PREVIOUS_SLIDE": "الشريحة السابقة",
+    "NEXT_SLIDE": "الشريحة التالية",
+    "PARTNERS": "شركاء موثوقون",
+    "TOGGLE_MENU": "تبديل القائمة",
+    "CLOSE_MENU": "إغلاق القائمة",
+    "SELECT_LANGUAGE": "اختر اللغة",
+    "HOME_LINK": "الصفحة الرئيسية لـ JSL Technology",
+    "DESKTOP_NAV": "تنقل سطح المكتب"
   },
   "SEARCH": {
-    "PLACEHOLDER": "Search...",
-    "NO_RESULTS": "No results found.",
-    "ALL": "All",
+    "PLACEHOLDER": "بحث...",
+    "NO_RESULTS": "لم يتم العثور على نتائج.",
+    "ALL": "الكل",
     "BLOG": "Blog",
-    "PRODUCTS": "Products",
-    "PROJECTS": "Projects",
-    "VENTURES": "Ventures"
+    "PRODUCTS": "المنتجات",
+    "PROJECTS": "المشاريع",
+    "VENTURES": "المشاريع الريادية"
   },
   "ALT": {
-    "AUTHOR": "Author",
-    "GOVERNANCE": "Corporate Governance",
-    "LIFE_AT_JSL": "Life at JSL"
+    "AUTHOR": "المؤلف",
+    "GOVERNANCE": "حوكمة الشركات",
+    "LIFE_AT_JSL": "الحياة في JSL"
   },
   "SOCIAL": {
     "GITHUB": "GitHub",

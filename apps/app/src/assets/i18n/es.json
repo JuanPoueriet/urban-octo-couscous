@@ -210,7 +210,7 @@
     "LEARN_MORE": "Conoce más sobre nosotros",
     "VIEW_PRODUCTS": "Ver nuestros productos",
     "EXPLORE_SOLUTIONS": "Explore nuestras soluciones personalizadas",
-    "BLOG_EYEBROW": "Insights & News",
+    "BLOG_EYEBROW": "Ideas y Noticias",
     "BLOG_TITLE": "De Nuestro Blog",
     "CLUTCH_SCORE": "4.9/5",
     "GOOGLE_SCORE": "5.0/5"
@@ -356,7 +356,9 @@
     "CLOUD_SECTION_BENEFITS_3_DESC": "Sistemas redundantes distribuidos geográficamente que garantizan que tu servicio esté siempre en línea.",
     "CLOUD_SECTION_BENEFITS_4_TITLE": "Innovación Rápida",
     "CLOUD_SECTION_BENEFITS_4_DESC": "Acceso instantáneo a servicios avanzados como IA, Machine Learning y Big Data sin inversión inicial.",
-    "RELATED": "Soluciones Relacionadas"
+    "RELATED": "Soluciones Relacionadas",
+    "RELATED_EYEBROW": "Más Servicios",
+    "EXPLORE": "Explorar"
   },
   "PRODUCTS": {
     "OVERVIEW": "Resumen",
@@ -431,7 +433,7 @@
     "CTA_EYEBROW": "¿Listo para ser nuestro próximo caso de éxito?",
     "CTA_TITLE": "Transformemos tu Negocio",
     "CTA_SUBTITLE": "Explora cómo nuestras soluciones a medida han impulsado a otras empresas y hablemos de cómo podemos hacerlo por ti.",
-    "METRICS_TITLE": "Impact Metrics"
+    "METRICS_TITLE": "Métricas de Impacto"
   },
   "ABOUT": {
     "TITLE": "Sobre JSL Technology",
@@ -557,7 +559,7 @@
   "ERRORS": {
     "500_TITLE": "Error del servidor (500)",
     "500_DESC": "Estamos experimentando dificultades técnicas. Por favor, inténtelo de nuevo más tarde.",
-    "GO_HOME": "Go Home"
+    "GO_HOME": "Ir al Inicio"
   },
   "THANK_YOU": {
     "TITLE": "Gracias",
@@ -795,7 +797,7 @@
     "SUPPORT_24_7": "Soporte 24/7",
     "CUSTOMIZABLE": "Personalizable",
     "OPEN_API": "API Abierta",
-    "ANNUAL_SAVINGS": "Annual Savings",
+    "ANNUAL_SAVINGS": "Ahorro Anual",
     "PRODUCT_NAME": "virtex"
   },
   "SECURITY_CENTER": {
@@ -816,7 +818,7 @@
     "BADGE_HIPAA": "Preparado para HIPAA"
   },
   "VENTURES": {
-    "TITLE": "Ventures & Innovation Lab",
+    "TITLE": "Ventures & Laboratorio de Innovación",
     "SUBTITLE": "Desde la Incubación de Ideas hasta el Escalamiento y Salida. Construimos la próxima generación de compañías SaaS.",
     "LIFECYCLE_TITLE": "Nuestro Proceso de Venture Building",
     "STEP1_TITLE": "Incubar",
@@ -915,9 +917,9 @@
     "VENTURES": "Empresas"
   },
   "ALT": {
-    "AUTHOR": "Author",
-    "GOVERNANCE": "Corporate Governance",
-    "LIFE_AT_JSL": "Life at JSL"
+    "AUTHOR": "Autor",
+    "GOVERNANCE": "Gobierno Corporativo",
+    "LIFE_AT_JSL": "Vida en JSL"
   },
   "SOCIAL": {
     "GITHUB": "GitHub",

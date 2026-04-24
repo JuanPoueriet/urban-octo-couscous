@@ -1187,55 +1187,43 @@ swiper-container {
   }
 }
 
-// --- NUEVO COMPONENTE: Team Teaser (Integrated in Welcome) ---
-.team-teaser.welcome-section__image {
-  img {
-    display: none; // Ocultar imagen anterior si existe
-  }
-}
-
-.team-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); // 2 columnas para 3 items (uno abajo centrado o 2x2)
-  gap: 1.5rem;
-
-  // Si son 3 items, el ultimo ocupa todo el ancho o ajustamos
-  @media (max-width: 576px) {
-    grid-template-columns: 1fr;
-  }
-}
-
-.team-card {
+// --- Welcome photo block ---
+.welcome-photo-block {
   display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  background-color: var(--bg-card);
-  padding: 1rem;
-  border-radius: var(--radius-md);
+  align-items: stretch;
+}
+
+.welcome-photo-frame {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
   border: 1px solid var(--border-color);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.18);
+}
 
-  &__img {
-    width: 100%;
-    aspect-ratio: 1/1;
-    object-fit: cover;
-    border-radius: calc(var(--radius-md) - 4px);
-    background-color: var(--bg-secondary); // Placeholder bg
-    display: block !important; // Forzar display
-  }
+.welcome-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  min-height: 340px;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
-  &__info {
-    .name {
-      display: block;
-      font-weight: 600;
-      color: var(--text-main);
-      font-size: 1rem;
-    }
-    .role {
-      display: block;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
+  .welcome-photo-frame:hover & {
+    transform: scale(1.03);
   }
+}
+
+.welcome-photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--primary-rgb), 0.08) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
 }
 
 // --- NUEVO COMPONENTE: Lead Magnet ---
