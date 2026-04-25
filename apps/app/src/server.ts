@@ -17,7 +17,14 @@ import { BASE_URL, RESPONSE, GA_MEASUREMENT_ID, GSC_VERIFICATION_TOKEN } from '.
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
-const angularApp = new AngularNodeAppEngine();
+const angularApp = new AngularNodeAppEngine({
+  allowedHosts: [
+    'localhost',
+    '127.0.0.1',
+    'jsl.technology',
+    'www.jsl.technology',
+  ],
+});
 
 type SeoHealthSnapshot = {
   generatedAt: string;
@@ -440,7 +447,6 @@ app.use((req, res, next) => {
         { provide: GA_MEASUREMENT_ID, useValue: ENV_GA_MEASUREMENT_ID },
         { provide: GSC_VERIFICATION_TOKEN, useValue: ENV_GSC_VERIFICATION_TOKEN },
       ],
-      allowedHosts: ['127.0.0.1', 'localhost', '127.0.0.1:4000', 'localhost:4000', requestHost],
     })
     .then((response) =>
       response ? writeResponseToNodeResponse(response, res) : next(),

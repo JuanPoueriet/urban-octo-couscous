@@ -128,7 +128,7 @@ export const routes: Routes = [
         path: 'virteex-ecosystem',
         loadComponent: () => import('./features/virteex-landing/virteex-landing').then(c => c.VirteexLanding),
         data: {
-          title: 'SEO.HOME', // Or VIRTEEX.TITLE if it's long enough, but SEO.HOME is a good fallback for main brand landing
+          title: 'SEO.VIRTEEX',
           description: 'VIRTEEX.SUBTITLE',
           robots: 'index, follow'
         }
@@ -236,7 +236,7 @@ export const routes: Routes = [
         path: 'news',
         loadComponent: () => import('./features/news/news').then(c => c.News),
         data: {
-          title: 'SEO.HOME', // Fallback or a specific long title
+          title: 'SEO.NEWS',
           description: 'NEWS_PAGE.SUBTITLE',
           robots: 'index, follow'
         }
@@ -290,7 +290,7 @@ export const routes: Routes = [
         path: 'press',
         loadComponent: () => import('./features/press/press').then(c => c.Press),
         data: {
-          title: 'SEO.HOME', // Fallback
+          title: 'SEO.PRESS',
           description: 'PRESS.SUBTITLE',
           robots: 'index, follow'
         }
