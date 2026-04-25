@@ -273,8 +273,20 @@ export class BlogDetail
         translatedDesc,
         postUrl,
         imageUrl,
-        'article'
+        'article',
+        translations[titleKey] || translatedTitle
       );
+
+      // --- article:* Open Graph meta tags ---
+      this.seoService.updateArticleTags({
+        publishedTime: this.postData?.date || '',
+        modifiedTime: this.postData?.date || '',
+        author: `${baseUrl}/en/about-us`,
+        section: (this.postData?.tags && this.postData.tags.length > 0)
+          ? this.postData.tags[0]
+          : 'Technology',
+        tags: this.postData?.tags || [],
+      });
 
       // --- Datos Estructurados: Article ---
       const articleSchema = {

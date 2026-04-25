@@ -44,6 +44,17 @@ const CANONICAL_HOSTS = new Set(
 // --- OPTIMIZACIÓN: Compresión Gzip/Brotli ---
 app.use(compression());
 
+// --- SEO: Canonical host redirect (non-www → www, production only) ---
+// Runs before all route handlers so redirects are issued before any work is done.
+app.use((req, res, next) => {
+  const host = req.get('host')?.toLowerCase() ?? '';
+  if (host === 'jsl.technology') {
+    const proto = req.get('x-forwarded-proto')?.split(',')[0]?.trim() || req.protocol || 'https';
+    return res.redirect(301, `${proto}://www.jsl.technology${req.url}`);
+  }
+  return next();
+});
+
 // --- SEGURIDAD: Rate Limiting ---
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutos
@@ -398,6 +409,13 @@ app.use((req, res, next) => {
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
   res.setHeader('Vary', 'Accept-Language');
+
+  // Defense-in-depth: X-Robots-Tag for noindex routes (supplements meta robots tag)
+  const isNoindexRoute = NOINDEX_ROUTES.some(route => req.path.includes(route));
+  if (isNoindexRoute) {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  }
+
   res.setHeader(
     'Content-Security-Policy',
     [

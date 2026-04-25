@@ -60,17 +60,18 @@ export class Seo {
         let descriptionKey = route.snapshot.data['description'];
 
         if (titleKey === 'dynamic') {
-          return of({ route, translatedTitle: null, translatedDesc: null });
+          return of({ route, translatedTitle: null, translatedDesc: null, breadcrumbHome: '' });
         }
 
         if (!descriptionKey || descriptionKey === '') {
           descriptionKey = 'COMMON.DEFAULT_DESCRIPTION';
         }
 
-        return this.translate.get([titleKey, descriptionKey]).pipe(
+        return this.translate.get([titleKey, descriptionKey, 'COMMON.BREADCRUMB_HOME']).pipe(
           map(translations => {
             let translatedTitle = translations[titleKey];
             let translatedDesc = translations[descriptionKey];
+            const breadcrumbHome = translations['COMMON.BREADCRUMB_HOME'] || 'Home';
 
             // Robust fallback if translation is missing (ngx-translate returns the key)
             if (translatedTitle === titleKey || !translatedTitle) {
@@ -83,12 +84,13 @@ export class Seo {
             return {
               route,
               translatedTitle,
-              translatedDesc
+              translatedDesc,
+              breadcrumbHome
             };
           })
         );
       })
-    ).subscribe(({ route, translatedTitle, translatedDesc }) => {
+    ).subscribe(({ route, translatedTitle, translatedDesc, breadcrumbHome }) => {
       // --- 0. Leer Robots Meta de la Ruta ---
       const robotsConfig = route.snapshot.data['robots'] || 'index, follow';
 
@@ -170,6 +172,17 @@ export class Seo {
         this.updateHreflangTags(this.baseUrl, canonicalPath);
         this.updateLanguageTag(currentLang);
       }
+
+      // --- H. Limpiar article:* meta tags (no son artículo de blog) ---
+      this.clearArticleTags();
+
+      // --- I. Auto-breadcrumbs para páginas estáticas (no-home) ---
+      if (currentLang && canonicalPath) {
+        this.setBreadcrumbs([
+          { name: breadcrumbHome, item: `/${currentLang}` },
+          { name: translatedTitle, item: `/${currentLang}/${canonicalPath}` }
+        ]);
+      }
     });
   }
 
@@ -207,15 +220,17 @@ export class Seo {
   /**
    * 4. ¡NUEVO! Actualiza las etiquetas Meta de Open Graph y Twitter.
    */
-  public updateSocialTags(title: string, description: string, url: string, imageUrl: string, ogType = 'website'): void {
+  public updateSocialTags(title: string, description: string, url: string, imageUrl: string, ogType = 'website', imageAlt = ''): void {
     const currentLang = this.translate.currentLang || 'en';
     const ogLocale = this.langToOgLocale(currentLang);
+    const resolvedAlt = imageAlt || title;
 
     // Open Graph (Facebook, LinkedIn, etc.)
     this.metaService.updateTag({ property: 'og:title', content: title });
     this.metaService.updateTag({ property: 'og:description', content: description });
     this.metaService.updateTag({ property: 'og:url', content: url });
     this.metaService.updateTag({ property: 'og:image', content: imageUrl });
+    this.metaService.updateTag({ property: 'og:image:alt', content: resolvedAlt });
     this.metaService.updateTag({ property: 'og:site_name', content: this.siteName });
     this.metaService.updateTag({ property: 'og:type', content: ogType });
     this.metaService.updateTag({ property: 'og:locale', content: ogLocale });
@@ -225,6 +240,7 @@ export class Seo {
     this.metaService.updateTag({ name: 'twitter:title', content: title });
     this.metaService.updateTag({ name: 'twitter:description', content: description });
     this.metaService.updateTag({ name: 'twitter:image', content: imageUrl });
+    this.metaService.updateTag({ name: 'twitter:image:alt', content: resolvedAlt });
     this.metaService.updateTag({ name: 'twitter:site', content: '@jsl_technology' });
     this.metaService.updateTag({ name: 'twitter:creator', content: '@jsl_technology' });
   }
@@ -639,6 +655,41 @@ export class Seo {
     if (event.endDate) schema['endDate'] = event.endDate;
     if (event.url) schema['url'] = event.url;
     this.setJsonLd(schema, id);
+  }
+
+  /**
+   * Sets article:* Open Graph meta tags for blog posts.
+   * Clears any existing article:* tags first to avoid stale values.
+   */
+  public updateArticleTags(params: {
+    publishedTime: string;
+    modifiedTime?: string;
+    author?: string;
+    section?: string;
+    tags?: string[];
+  }): void {
+    this.clearArticleTags();
+
+    this.metaService.addTag({ property: 'article:published_time', content: params.publishedTime });
+    this.metaService.addTag({ property: 'article:modified_time', content: params.modifiedTime || params.publishedTime });
+
+    if (params.author) {
+      this.metaService.addTag({ property: 'article:author', content: params.author });
+    }
+    if (params.section) {
+      this.metaService.addTag({ property: 'article:section', content: params.section });
+    }
+    if (params.tags?.length) {
+      params.tags.forEach(tag => this.metaService.addTag({ property: 'article:tag', content: tag }));
+    }
+  }
+
+  /**
+   * Removes all article:* Open Graph meta tags from the document head.
+   * Called automatically on every non-article route transition.
+   */
+  public clearArticleTags(): void {
+    this.document.querySelectorAll('meta[property^="article:"]').forEach(el => el.remove());
   }
 
   /**
