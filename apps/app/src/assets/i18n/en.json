@@ -113,7 +113,7 @@
     "ASSESS_TECH": "Assess Your Tech",
     "CALC_SAVINGS": "Calculate Your Savings",
     "HERO1_TITLE": "Shaping The Future Of Digital Innovation",
-    "HERO1_SUBTITLE": "Bridging the gap between Consultancy and Venture Building. We orchestrate digital transformation.",
+    "HERO1_SUBTITLE": "Bridging the gap between Consultancy and Venture Building. We orchestrate digital transformation with precision engineering for global leaders.",
     "HERO1_CTA": "More Info",
     "HERO2_TITLE": "ERP Software that Drives Your Growth",
     "HERO2_SUBTITLE": "Discover our enterprise software solutions (ERP & POS) designed to optimize and scale your business.",
@@ -548,7 +548,7 @@
     "CONTENT": "Become a strategic partner and grow with us. We offer exclusive benefits for certified partners."
   },
   "NEWS_PAGE": {
-    "TITLE": "Press Room",
+    "TITLE": "Company News & Updates",
     "SUBTITLE": "Latest corporate news and announcements from JSL Technology.",
     "CONTENT": "Stay updated with our latest milestones, acquisitions, and product launches."
   },
@@ -728,7 +728,7 @@
   },
   "DEVELOPERS": {
     "TITLE": "Developer Hub",
-    "SUBTITLE": "Build the future with our open APIs and SDKs.",
+    "SUBTITLE": "Build the future with our open APIs and SDKs. Access our documentation to integrate JSL products into your own digital workflow.",
     "API_DOCS": "API Documentation",
     "API_DESC": "Explore our powerful APIs to integrate virtex into your applications. Our SDKs are available for Node.js, Python, and PHP.",
     "GET_KEY": "Get API Key",
@@ -736,7 +736,7 @@
   },
   "ROADMAP": {
     "TITLE": "Public Roadmap",
-    "SUBTITLE": "See what we are building next.",
+    "SUBTITLE": "See what we are building next. Explore our upcoming features, product releases, and the long-term vision of our technology stack.",
     "IN_DEV": "In Development",
     "PLANNED": "Planned",
     "RELEASED": "Released"
@@ -751,28 +751,28 @@
   },
   "STATUS": {
     "TITLE": "System Status",
-    "SUBTITLE": "Real-time performance metrics.",
+    "SUBTITLE": "Real-time performance metrics and system health indicators. Monitor the reliability and uptime of our global cloud infrastructure.",
     "OPERATIONAL": "All Systems Operational",
     "INCIDENTS": "Incident History",
     "UPTIME": "Uptime"
   },
   "LIFE_AT_JSL": {
     "TITLE": "Life at JSL",
-    "SUBTITLE": "Join our culture of innovation.",
+    "SUBTITLE": "Join our culture of innovation and excellence. Discover how our multidisciplinary team of engineers and designers works and grows together.",
     "TEAM": "Our Team",
     "BENEFITS": "Perks & Benefits",
     "GALLERY": "Moments"
   },
   "PRESS": {
-    "TITLE": "Press Room",
-    "SUBTITLE": "News, assets, and media resources.",
+    "TITLE": "Press Room & Media Resources",
+    "SUBTITLE": "Corporate news, brand assets, and media resources. Stay updated with the latest milestones and official announcements from JSL Technology.",
     "KIT": "Press Kit",
     "DOWNLOAD": "Download Assets",
     "MENTIONS": "In the Media"
   },
   "PRICING": {
     "TITLE": "Pricing Calculator",
-    "SUBTITLE": "Estimate your project cost in minutes.",
+    "SUBTITLE": "Estimate your project cost in minutes with our interactive tool. Get a personalized calculation for your next custom software solution.",
     "WIZARD_STEP_1": "Project Type",
     "WIZARD_STEP_2": "Scale",
     "WIZARD_STEP_3": "Features",
@@ -857,7 +857,7 @@
   },
   "VIRTEEX": {
     "TITLE": "virtex Ecosystem",
-    "SUBTITLE": "The Operating System for Modern Business.",
+    "SUBTITLE": "The Operating System for Modern Business. A unified cloud ecosystem designed for maximum efficiency and scalability.",
     "VISIT_SITE": "Visit Official Site",
     "ECOSYSTEM_TITLE": "A Unified Architecture",
     "ERP_CORE": "virtex ERP Core",
@@ -925,5 +925,38 @@
   "SOCIAL": {
     "GITHUB": "GitHub",
     "INSTAGRAM": "Instagram"
+  },
+  "SEO": {
+    "HOME": "JSL Technology | Shaping the Future of Digital Innovation",
+    "SERVICES": "Custom Software Solutions & Nearshore Engineering",
+    "PRODUCTS": "Proprietary Software Products & ERP Ecosystem",
+    "PROJECTS": "Case Studies & Digital Transformation Success Stories",
+    "BLOG": "Technology Blog | Insights from Our Engineering Team",
+    "VENTURES": "Ventures & Innovation Lab | Building the Next SaaS",
+    "INVESTORS": "Investors & Corporate Governance | JSL Technology",
+    "PROCESS": "Our Development Process | From Discovery to Impact",
+    "INDUSTRIES": "Industry Solutions | Custom Software for Every Sector",
+    "TECH_STACK": "Our Technology Stack | Modern Tools for Scaling",
+    "ABOUT": "About Us | Your Nearshore Software Engineering Partner",
+    "CONTACT": "Contact Us | Let's Build Your Next Digital Solution",
+    "CAREERS": "Careers at JSL | Join Our Team of Technology Innovators",
+    "FAQ": "Frequently Asked Questions | JSL Technology Support",
+    "PRIVACY": "Privacy Policy | How We Protect Your Digital Data",
+    "TERMS": "Terms of Service | Legal Agreements & Guidelines",
+    "COOKIE": "Cookie Policy | Managing Your Digital Experience",
+    "PARTNERS": "Partners Program | Join Our Strategic Ecosystem",
+    "DEVELOPERS": "Developer Hub | Build with Our Open APIs and SDKs",
+    "ROADMAP": "Public Roadmap | Future of JSL Technology Products",
+    "VIRTEEX": "Virteex Ecosystem | Integrated Business Management Solutions",
+    "NEWS": "Latest News & Technology Trends | JSL Technology Updates",
+    "PRESS": "Press Room & Media Resources | JSL Technology Corporate News",
+    "EVENTS": "Events & Webinars | Learn from Our Engineering Experts",
+    "STATUS": "System Status | Real-Time Platform Performance Metrics",
+    "LIFE_AT_JSL": "Life at JSL | Our Culture of Innovation & Excellence",
+    "PRICING": "Pricing Calculator | Estimate Your Project Costs Online",
+    "TRUST": "Trust & Security Center | Security & Compliance Hub",
+    "SERVER_ERROR": "Server Error | We are Fixing the Technical Issue",
+    "THANK_YOU": "Thank You | Your Request has been Successfully Sent",
+    "NOT_FOUND": "Page Not Found | Let's Get You Back on Track"
   }
 }

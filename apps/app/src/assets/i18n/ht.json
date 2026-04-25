@@ -113,7 +113,7 @@
     "ASSESS_TECH": "Evalye Teknoloji Ou",
     "CALC_SAVINGS": "Kalkile Ekonomi Ou",
     "HERO1_TITLE": "Fòme Lavni Inovasyon Dijital la",
-    "HERO1_SUBTITLE": "Konekte espas ant Konsiltasyon ak Bati Antrepriz. Egzekite transfòmasyon dijital mondyal ak jeni presizyon.",
+    "HERO1_SUBTITLE": "Nou konble espas ki genyen ant konsiltasyon ak kreyasyon antrepriz. Nou òganize transfòmasyon digital ak jeni presizyon pou lidè mondyal yo.",
     "HERO1_CTA": "Plis Enfòmasyon",
     "HERO2_TITLE": "Lojisyèl ERP ki Kondwi Kwasans Ou",
     "HERO2_SUBTITLE": "Dekouvri solisyon lojisyèl antrepriz nou yo (ERP & POS) ki fèt pou optimize ak echèl biznis ou.",
@@ -544,22 +544,22 @@
   },
   "PARTNERS_PAGE": {
     "TITLE": "Patnè nou yo",
-    "SUBTITLE": "Bati relasyon dirab ak lidè endistri yo.",
+    "SUBTITLE": "Rejwenn ekosistèm nou an kòm entegratè oswa distribitè. Vin yon patnè estratejik epi grandi ansanm ak nou pandan w ap pwofite avantaj eksklizif pou patnè sètifye yo.",
     "CONTENT": "Dekouvri konpayi ki fè nou konfyans pou solisyon teknolojik yo."
   },
   "NEWS_PAGE": {
     "TITLE": "Nouvèl Konpayi",
-    "SUBTITLE": "Rete enfòme sou dènye inovasyon nou yo.",
+    "SUBTITLE": "Dènye nouvèl antrepriz ak anons ofisyèl JSL Technology. Rete enfòme sou gwo etap nou franchi, akizisyon, ak lansman nouvo pwodui inovatè nan mache teknoloji a.",
     "CONTENT": "Dènye nouvèl ak mizajou nan JSL Technology."
   },
   "TRUST_PAGE": {
     "TITLE": "Sant Konfyans",
-    "SUBTITLE": "Kijan nou pwoteje done ou ak biznis ou.",
+    "SUBTITLE": "Angajman nou pou sekirite, konfòmite, ak gouvènans. Nou respekte pi gwo estanda sekirite yo pou pwoteje done ou yo epi asire biznis ou kontinye fonksyone san pwoblèm.",
     "CONTENT": "Konfyans ou se priyorite nou. Nou itilize estanda sekirite ki pi wo yo."
   },
   "ERRORS": {
     "500_TITLE": "Erè Sèvè (500)",
-    "500_DESC": "Nou gen difikilte teknik. Tanpri eseye ankò pita.",
+    "500_DESC": "N ap rankontre kèk difikilte teknik kounye a. Ekip enjenyè nou an ap travay di pou rezoud sa. Tanpri eseye ankò nan yon ti moman. Mèsi pou pasyans ou.",
     "GO_HOME": "Retounen Lakay"
   },
   "THANK_YOU": {
@@ -728,7 +728,7 @@
   },
   "DEVELOPERS": {
     "TITLE": "Sant Devlopè",
-    "SUBTITLE": "Bati lavni ak API louvri ak SDK nou yo.",
+    "SUBTITLE": "Bati lavni an ak API ak SDK ouvè nou yo. Aksede dokiman nou yo pou entegre pwodui JSL yo nan workflow digital ou.",
     "API_DOCS": "Dokiman API",
     "API_DESC": "Eksplore API pwisan nou yo pou entegre virtex nan aplikasyon w yo. SDK nou yo disponib pou Node.js, Python, ak PHP.",
     "GET_KEY": "Jwenn Kle API",
@@ -736,7 +736,7 @@
   },
   "ROADMAP": {
     "TITLE": "Roadmap Piblik",
-    "SUBTITLE": "Gade sa n ap bati apre sa.",
+    "SUBTITLE": "Gade sa n ap bati apre sa. Eksplore karakteristik k ap vini yo, degaje pwodui yo, ak vizyon alontèm teknoloji nou an.",
     "IN_DEV": "Nan Devlopman",
     "PLANNED": "Planifye",
     "RELEASED": "Lage"
@@ -751,28 +751,28 @@
   },
   "STATUS": {
     "TITLE": "Estati Sistèm",
-    "SUBTITLE": "Metrik pèfòmans an tan reyèl.",
+    "SUBTITLE": "Mezi pèfòmans an tan reyèl ak endikatè sante sistèm nan. Siveye fyabilite ak disponiblite enfrastrikti nwaj mondyal nou an.",
     "OPERATIONAL": "Tout Sistèm yo Operasyonèl",
     "INCIDENTS": "Istwa ensidan",
     "UPTIME": "Disponibilite"
   },
   "LIFE_AT_JSL": {
     "TITLE": "Lavi nan JSL",
-    "SUBTITLE": "Rejwenn kilti inovasyon nou an.",
+    "SUBTITLE": "Rejwenn kilti inovasyon ak ekselans nou an. Dekouvri kijan ekip enjenyè ak konsèptè nou yo travay epi grandi ansanm.",
     "TEAM": "Ekip nou an",
     "BENEFITS": "Avantaj ak Benefis",
     "GALLERY": "Moman yo"
   },
   "PRESS": {
     "TITLE": "Sal de près",
-    "SUBTITLE": "Nouvèl, byen, ak resous medya.",
+    "SUBTITLE": "Nouvèl konpayi, byen mak, ak resous pou medya yo. Rete enfòme sou dènye etap enpòtan ak anons ofisyèl JSL Technology.",
     "KIT": "Twous Près",
     "DOWNLOAD": "Telechaje Resous yo",
     "MENTIONS": "Nan Medya yo"
   },
   "PRICING": {
     "TITLE": "Kalkilatris Pri",
-    "SUBTITLE": "Estime pri pwojè w la nan kèk minit.",
+    "SUBTITLE": "Estime pri pwojè w la nan kèk minit ak zouti entèaktif nou an. Jwenn yon kalkil pèsonalize pou pwochen solisyon lojisyèl sou mezi ou a.",
     "WIZARD_STEP_1": "Tip Pwojè",
     "WIZARD_STEP_2": "Echèl",
     "WIZARD_STEP_3": "Karakteristik",
@@ -857,7 +857,7 @@
   },
   "VIRTEEX": {
     "TITLE": "Ekosistèm virtex",
-    "SUBTITLE": "Sistèm Operasyon pou Biznis Modèn.",
+    "SUBTITLE": "Sistèm operasyon pou biznis modèn. Yon ekosistèm nwaj (cloud) inifye ki fèt pou maksimòm efikasite ak évolutivité.",
     "VISIT_SITE": "Vizite Sit Ofisyèl",
     "ECOSYSTEM_TITLE": "Yon Achitekti Inifye",
     "ERP_CORE": "virtex ERP Nwayo",
@@ -925,5 +925,38 @@
   "SOCIAL": {
     "GITHUB": "GitHub",
     "INSTAGRAM": "Instagram"
+  },
+  "SEO": {
+    "HOME": "JSL Technology | Fòme Lavni Inovasyon Digital ak Jeni Lojisyèl ki gen Klas Mondyal",
+    "SERVICES": "Solisyon Lojisyèl Sou Mezi ak Jeni Nearshore, n ap transfòme biznis ou pou demen",
+    "PRODUCTS": "Pwodui Lojisyèl ak Ekosistèm ERP, n ap optimize efikasite ak kwasans antrepriz ou",
+    "PROJECTS": "Etid Ka ak Siksè Transfòmasyon Digital, dekouvri kijan nou ede lidè yo grandi",
+    "BLOG": "Blog Teknoloji | Enfòmasyon ak konsèy ekip enjenyè nou an sou devlopman ak nwaj (cloud)",
+    "VENTURES": "Venture & Innovation Lab | Nou bati ak echèl pwochen jenerasyon konpayi SaaS yo",
+    "INVESTORS": "Envestisè ak Gouvènans Corporate | Transparans finansye ak vizyon JSL Technology",
+    "PROCESS": "Pwosesis Devlopman Nou | Soti nan dekouvèt rive nan enpak, nou garanti ekselans digital",
+    "INDUSTRIES": "Solisyon pa Endistri | Lojisyèl espesyalize pou detay, finans, sante ak plis ankò",
+    "TECH_STACK": "Teknoloji Nou Itilize | Zouti modèn ak solid pou konstwi sistèm ki ka grandi fasil",
+    "ABOUT": "Sou Nou | Patnè Jeni Lojisyèl ou ki gen talan elit pou konstwi pwojè teknolojik ou yo",
+    "CONTACT": "Kontakte Nou | Ann kòmanse bati pwochen solisyon digital ou a, pale ak ekspè nou yo",
+    "CAREERS": "Karyè nan JSL | Rejwenn ekip inovatè nou an k ap bati lavni teknoloji nan rejyon an",
+    "FAQ": "Kesyon Moun Poze Souvan | Sipò teknik ak detay sou sèvis, pwodui ak pwosesis nou yo",
+    "PRIVACY": "Politik Konfidansyalite | Kijan JSL Technology pwoteje done digital ou ak vi prive ou",
+    "TERMS": "Kondisyon Itilizasyon | Akò legal, direktiv ak dwa ou genyen lè w ap sèvi ak sit nou an",
+    "COOKIE": "Politik sou Cookie | Jere eksperyans digital ou ak konprann kijan nou optimize sit la",
+    "PARTNERS": "Pwogram Patnè | Rejwenn ekosistèm estratejik nou an pou nou ka grandi ansanm",
+    "DEVELOPERS": "Sant pou Devlopè | Sèvi ak API ak SDK nou yo pou bati solisyon ki konekte ak JSL",
+    "ROADMAP": "Plan Piblik | Gade sa n ap bati pou lavni pwodui JSL Technology yo ak vizyon nou",
+    "EVENTS": "Evènman ak Webinar | Aprann nan men ekspè enjenyè nou yo sou dènye tandans teknoloji",
+    "STATUS": "Eta Sistèm nan | Mezi pèfòmans an tan reyèl ak siveyans sante enfrastrikti nwaj nou an",
+    "LIFE_AT_JSL": "Lavi nan JSL | Dekouvri kilti inovasyon ak ekselans nou nan yon anviwònman kolaboratif",
+    "PRICING": "Kalkilatris Pri | Estime pri pwojè lojisyèl ou a sou entènèt nan kèk minit sèlman",
+    "TRUST": "Sant Konfyans ak Sekirite | Konfòmite, chifreman done ak garanti kontinuité biznis ou",
+    "SERVER_ERROR": "Erè Sèvè | N ap ranje yon pwoblèm teknik kounye a, tanpri eseye ankò pi ta",
+    "THANK_YOU": "Mèsi | Nou resevwa demann ou an avèk siksè, n ap kontakte w nan yon ti moman",
+    "NOT_FOUND": "Paj la pa jwenn | Paj w ap chèche a pa egziste, ann ede w tounen nan paj prensipal la",
+    "VIRTEEX": "Ekosistèm Virteex | Solisyon Jesyon Biznis Entegre",
+    "NEWS": "Dènye Nouvèl ak Tandans Teknoloji | Mizajou JSL Technology",
+    "PRESS": "Sal de Près ak Resous Media | Nouvèl JSL Technology Korporatif"
   }
 }
