@@ -12,7 +12,7 @@ export const routes: Routes = [
         path: 'home',
         loadComponent: () => import('./features/home/home').then(c => c.Home),
         data: {
-          title: 'HEADER.HOME',
+          title: 'SEO.HOME',
           description: 'HOME.HERO1_SUBTITLE',
           robots: 'index, follow'
         }
@@ -20,7 +20,7 @@ export const routes: Routes = [
       {
         path: 'solutions',
         data: {
-          title: 'HEADER.SERVICES',
+          title: 'SEO.SERVICES',
           description: 'SOLUTIONS.SUBTITLE',
           robots: 'index, follow'
         },
@@ -42,7 +42,7 @@ export const routes: Routes = [
       {
         path: 'products',
         data: {
-          title: 'HEADER.PRODUCTS',
+          title: 'SEO.PRODUCTS',
           description: 'PRODUCTS.SUBTITLE',
           robots: 'index, follow'
         },
@@ -65,7 +65,7 @@ export const routes: Routes = [
       {
         path: 'projects',
         data: { 
-          title: 'HEADER.PROJECTS',
+          title: 'SEO.PROJECTS',
           description: 'PROJECTS.SUBTITLE',
           robots: 'index, follow'
         },
@@ -87,7 +87,7 @@ export const routes: Routes = [
       {
         path: 'blog',
         data: {
-          title: 'HEADER.BLOG',
+          title: 'SEO.BLOG',
           description: 'BLOG.SUBTITLE',
           robots: 'index, follow'
         },
@@ -110,7 +110,7 @@ export const routes: Routes = [
         path: 'ventures',
         loadComponent: () => import('./features/ventures/ventures').then(c => c.Ventures),
         data: {
-          title: 'HEADER.VENTURES',
+          title: 'SEO.VENTURES',
           description: 'VENTURES.SUBTITLE',
           robots: 'index, follow'
         }
@@ -119,7 +119,7 @@ export const routes: Routes = [
         path: 'investors',
         loadComponent: () => import('./features/investors/investors').then(c => c.Investors),
         data: {
-          title: 'HEADER.INVESTORS',
+          title: 'SEO.INVESTORS',
           description: 'INVESTORS.SUBTITLE',
           robots: 'index, follow'
         }
@@ -128,7 +128,7 @@ export const routes: Routes = [
         path: 'virteex-ecosystem',
         loadComponent: () => import('./features/virteex-landing/virteex-landing').then(c => c.VirteexLanding),
         data: {
-          title: 'VIRTEEX.TITLE',
+          title: 'SEO.HOME', // Or VIRTEEX.TITLE if it's long enough, but SEO.HOME is a good fallback for main brand landing
           description: 'VIRTEEX.SUBTITLE',
           robots: 'index, follow'
         }
@@ -137,7 +137,7 @@ export const routes: Routes = [
         path: 'process',
         loadComponent: () => import('./features/process/process').then(c => c.Process),
         data: {
-          title: 'HEADER.PROCESS',
+          title: 'SEO.PROCESS',
           description: 'PROCESS.SUBTITLE',
           robots: 'index, follow'
         }
@@ -146,7 +146,7 @@ export const routes: Routes = [
         path: 'industries',
         loadComponent: () => import('./features/industries/industries').then(c => c.Industries),
         data: {
-          title: 'HEADER.INDUSTRIES',
+          title: 'SEO.INDUSTRIES',
           description: 'INDUSTRIES.SUBTITLE',
           robots: 'index, follow'
         }
@@ -155,7 +155,7 @@ export const routes: Routes = [
         path: 'tech-stack',
         loadComponent: () => import('./features/tech-stack/tech-stack').then(c => c.TechStack),
         data: { 
-          title: 'HEADER.TECH_STACK',
+          title: 'SEO.TECH_STACK',
           description: 'TECH_STACK.SUBTITLE',
           robots: 'index, follow'
         }
@@ -164,7 +164,7 @@ export const routes: Routes = [
         path: 'about-us',
         loadComponent: () => import('./features/about-us/about-us').then(c => c.AboutUs),
         data: {
-          title: 'HEADER.ABOUT',
+          title: 'SEO.ABOUT',
           description: 'ABOUT.SUBTITLE',
           robots: 'index, follow'
         }
@@ -173,7 +173,7 @@ export const routes: Routes = [
         path: 'contact',
         loadComponent: () => import('./features/contact/contact').then(c => c.Contact),
         data: {
-          title: 'HEADER.CONTACT',
+          title: 'SEO.CONTACT',
           description: 'CONTACT.SUBTITLE',
           robots: 'index, follow'
         }
@@ -182,7 +182,7 @@ export const routes: Routes = [
         path: 'privacy-policy',
         loadComponent: () => import('./features/legal/privacy/privacy').then(c => c.Privacy),
         data: {
-          title: 'LEGAL.PRIVACY_TITLE',
+          title: 'SEO.PRIVACY',
           description: 'LEGAL.PRIVACY_INTRO',
           robots: 'index, follow'
         }
@@ -191,7 +191,7 @@ export const routes: Routes = [
         path: 'terms-of-service',
         loadComponent: () => import('./features/legal/terms/terms').then(c => c.Terms),
         data: {
-          title: 'LEGAL.TERMS_TITLE',
+          title: 'SEO.TERMS',
           description: 'LEGAL.TERMS_SECTION_1_P1',
           robots: 'index, follow'
         }
@@ -200,7 +200,7 @@ export const routes: Routes = [
         path: 'cookie-policy',
         loadComponent: () => import('./features/legal/cookie/cookie').then(c => c.Cookie),
         data: {
-          title: 'LEGAL.COOKIE_TITLE',
+          title: 'SEO.COOKIE',
           description: 'LEGAL.COOKIE_INTRO',
           robots: 'index, follow'
         }
@@ -209,7 +209,7 @@ export const routes: Routes = [
         path: 'careers',
         loadComponent: () => import('./features/careers/careers').then(c => c.Careers),
         data: {
-          title: 'HEADER.CAREERS',
+          title: 'SEO.CAREERS',
           description: 'CAREERS.SUBTITLE',
           robots: 'index, follow'
         }
@@ -218,7 +218,7 @@ export const routes: Routes = [
         path: 'faq',
         loadComponent: () => import('./features/faq/faq').then(c => c.Faq),
         data: {
-          title: 'HEADER.FAQ',
+          title: 'SEO.FAQ',
           description: 'FAQ.SUBTITLE',
           robots: 'index, follow'
         }
@@ -227,7 +227,7 @@ export const routes: Routes = [
         path: 'partners',
         loadComponent: () => import('./features/partners/partners').then(c => c.Partners),
         data: {
-          title: 'PARTNERS_PAGE.TITLE',
+          title: 'SEO.PARTNERS',
           description: 'PARTNERS_PAGE.SUBTITLE',
           robots: 'index, follow'
         }
@@ -236,7 +236,7 @@ export const routes: Routes = [
         path: 'news',
         loadComponent: () => import('./features/news/news').then(c => c.News),
         data: {
-          title: 'NEWS_PAGE.TITLE',
+          title: 'SEO.HOME', // Fallback or a specific long title
           description: 'NEWS_PAGE.SUBTITLE',
           robots: 'index, follow'
         }
@@ -245,7 +245,7 @@ export const routes: Routes = [
         path: 'developers',
         loadComponent: () => import('./features/developers/developers').then(c => c.Developers),
         data: {
-          title: 'DEVELOPERS.TITLE',
+          title: 'SEO.DEVELOPERS',
           description: 'DEVELOPERS.SUBTITLE',
           robots: 'index, follow'
         }
@@ -254,7 +254,7 @@ export const routes: Routes = [
         path: 'roadmap',
         loadComponent: () => import('./features/roadmap/roadmap').then(c => c.Roadmap),
         data: {
-          title: 'ROADMAP.TITLE',
+          title: 'SEO.ROADMAP',
           description: 'ROADMAP.SUBTITLE',
           robots: 'index, follow'
         }
@@ -263,7 +263,7 @@ export const routes: Routes = [
         path: 'events',
         loadComponent: () => import('./features/events/events').then(c => c.Events),
         data: {
-          title: 'EVENTS.TITLE',
+          title: 'SEO.EVENTS',
           description: 'EVENTS.SUBTITLE',
           robots: 'index, follow'
         }
@@ -272,7 +272,7 @@ export const routes: Routes = [
         path: 'status',
         loadComponent: () => import('./features/status/status').then(c => c.Status),
         data: {
-          title: 'STATUS.TITLE',
+          title: 'SEO.STATUS',
           description: 'STATUS.SUBTITLE',
           robots: 'noindex, follow'
         }
@@ -281,7 +281,7 @@ export const routes: Routes = [
         path: 'life-at-jsl',
         loadComponent: () => import('./features/life-at-jsl/life-at-jsl').then(c => c.LifeAtJsl),
         data: {
-          title: 'LIFE_AT_JSL.TITLE',
+          title: 'SEO.LIFE_AT_JSL',
           description: 'LIFE_AT_JSL.SUBTITLE',
           robots: 'index, follow'
         }
@@ -290,7 +290,7 @@ export const routes: Routes = [
         path: 'press',
         loadComponent: () => import('./features/press/press').then(c => c.Press),
         data: {
-          title: 'PRESS.TITLE',
+          title: 'SEO.HOME', // Fallback
           description: 'PRESS.SUBTITLE',
           robots: 'index, follow'
         }
@@ -299,7 +299,7 @@ export const routes: Routes = [
         path: 'pricing',
         loadComponent: () => import('./features/pricing/pricing').then(c => c.Pricing),
         data: {
-          title: 'PRICING.TITLE',
+          title: 'SEO.PRICING',
           description: 'PRICING.SUBTITLE',
           robots: 'index, follow'
         }
@@ -308,7 +308,7 @@ export const routes: Routes = [
         path: 'security',
         loadComponent: () => import('./features/trust/trust').then(c => c.Trust),
         data: {
-          title: 'TRUST_PAGE.TITLE',
+          title: 'SEO.TRUST',
           description: 'TRUST_PAGE.SUBTITLE',
           robots: 'index, follow'
         }
@@ -317,7 +317,7 @@ export const routes: Routes = [
         path: 'server-error',
         loadComponent: () => import('./features/server-error/server-error').then(c => c.ServerError),
         data: {
-          title: 'ERRORS.500_TITLE',
+          title: 'SEO.SERVER_ERROR',
           description: 'ERRORS.500_DESC',
           robots: 'noindex, follow'
         }
@@ -326,7 +326,7 @@ export const routes: Routes = [
         path: 'thank-you',
         loadComponent: () => import('./features/thank-you/thank-you').then(c => c.ThankYou),
         data: {
-          title: 'THANK_YOU.TITLE',
+          title: 'SEO.THANK_YOU',
           description: 'THANK_YOU.MESSAGE',
           robots: 'noindex, follow'
         }
@@ -340,7 +340,7 @@ export const routes: Routes = [
         path: '**',
         loadComponent: () => import('./features/not-found/not-found').then(c => c.NotFound),
         data: { 
-          title: 'NOT_FOUND.TITLE',
+          title: 'SEO.NOT_FOUND',
           description: 'NOT_FOUND.SUBTITLE',
           robots: 'noindex, follow'
         }

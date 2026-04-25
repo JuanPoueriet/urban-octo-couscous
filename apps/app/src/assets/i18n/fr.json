@@ -113,7 +113,7 @@
     "ASSESS_TECH": "Évaluez votre technologie",
     "CALC_SAVINGS": "Calculez vos économies",
     "HERO1_TITLE": "Façonner l'Avenir de l'Innovation Numérique",
-    "HERO1_SUBTITLE": "Combler le fossé entre le Conseil et la Création de Ventures. Exécuter la transformation numérique mondiale avec une ingénierie de précision.",
+    "HERO1_SUBTITLE": "Combler le fossé entre le conseil et la création d'entreprises. Nous orchestrons la transformation numérique avec une ingénierie de précision.",
     "HERO1_CTA": "Plus d'Infos",
     "HERO2_TITLE": "Un Logiciel ERP qui Stimule Votre Croissance",
     "HERO2_SUBTITLE": "Découvrez nos solutions logicielles d'entreprise (ERP & POS) conçues pour optimiser et faire évoluer votre activité.",
@@ -728,7 +728,7 @@
   },
   "DEVELOPERS": {
     "TITLE": "Hub des développeurs",
-    "SUBTITLE": "Construisez l'avenir avec nos API et SDK ouverts.",
+    "SUBTITLE": "Construisez l'avenir avec nos API et SDK ouverts. Accédez à notre documentation pour intégrer les produits JSL dans votre flux de travail numérique.",
     "API_DOCS": "Documentation API",
     "API_DESC": "Explorez nos API puissantes pour intégrer virtex dans vos applications. Nos SDK sont disponibles pour Node.js, Python et PHP.",
     "GET_KEY": "Obtenir une clé API",
@@ -736,7 +736,7 @@
   },
   "ROADMAP": {
     "TITLE": "Roadmap publique",
-    "SUBTITLE": "Découvrez ce que nous construisons ensuite.",
+    "SUBTITLE": "Découvrez ce que nous construisons. Explorez nos prochaines fonctionnalités, nos sorties de produits et la vision à long terme de notre stack.",
     "IN_DEV": "En développement",
     "PLANNED": "Planifié",
     "RELEASED": "Publié"
@@ -751,28 +751,28 @@
   },
   "STATUS": {
     "TITLE": "État du système",
-    "SUBTITLE": "Mesures de performance en temps réel.",
+    "SUBTITLE": "Mesures de performance en temps réel et indicateurs de santé. Surveillez la fiabilité et la disponibilité de notre infrastructure cloud mondiale.",
     "OPERATIONAL": "Tous les systèmes sont opérationnels",
     "INCIDENTS": "Historique des incidents",
     "UPTIME": "Disponibilité"
   },
   "LIFE_AT_JSL": {
     "TITLE": "La vie chez JSL",
-    "SUBTITLE": "Rejoignez notre culture de l'innovation.",
+    "SUBTITLE": "Rejoignez notre culture d'innovation et d'excellence. Découvrez comment notre équipe d'ingénieurs et de designers travaille ensemble.",
     "TEAM": "Notre équipe",
     "BENEFITS": "Avantages et bénéfices",
     "GALLERY": "Galerie"
   },
   "PRESS": {
     "TITLE": "Espace presse",
-    "SUBTITLE": "Actualités, ressources et ressources médias.",
+    "SUBTITLE": "Nouvelles, actifs de marque et ressources médias. Restez informé des dernières étapes et des annonces officielles de JSL Technology.",
     "KIT": "Dossier de presse",
     "DOWNLOAD": "Télécharger les ressources",
     "MENTIONS": "Dans les médias"
   },
   "PRICING": {
     "TITLE": "Calculateur de prix",
-    "SUBTITLE": "Estimez le coût de votre projet en quelques minutes.",
+    "SUBTITLE": "Estimez le coût de votre projet en quelques minutes. Obtenez un calcul personnalisé pour votre prochaine solution logicielle sur mesure.",
     "WIZARD_STEP_1": "Type de projet",
     "WIZARD_STEP_2": "Échelle",
     "WIZARD_STEP_3": "Fonctionnalités",
@@ -857,7 +857,7 @@
   },
   "VIRTEEX": {
     "TITLE": "Écosystème virtex",
-    "SUBTITLE": "Le système d'exploitation pour les entreprises modernes.",
+    "SUBTITLE": "Le système d'exploitation pour les entreprises modernes. Un écosystème cloud unifié conçu pour une efficacité et une évolutivité maximales.",
     "VISIT_SITE": "Visiter le site officiel",
     "ECOSYSTEM_TITLE": "Une architecture unifiée",
     "ERP_CORE": "Cœur de l'ERP virtex",
@@ -925,5 +925,35 @@
   "SOCIAL": {
     "GITHUB": "GitHub",
     "INSTAGRAM": "Instagram"
+  },
+  "SEO": {
+    "HOME": "JSL Technology | Façonner l'avenir de l'innovation numérique",
+    "SERVICES": "Solutions logicielles personnalisées et ingénierie Nearshore",
+    "PRODUCTS": "Produits logiciels propriétaires et écosystème ERP",
+    "PROJECTS": "Études de cas et succès de la transformation numérique",
+    "BLOG": "Blog technologique | Insights de notre équipe d'ingénierie",
+    "VENTURES": "Ventures & Innovation Lab | Construire le prochain SaaS",
+    "INVESTORS": "Investisseurs et gouvernance d'entreprise | JSL Technology",
+    "PROCESS": "Notre processus de développement | De la découverte à l'impact",
+    "INDUSTRIES": "Solutions sectorielles | Logiciels sur mesure pour chaque secteur",
+    "TECH_STACK": "Notre stack technologique | Outils modernes pour la croissance",
+    "ABOUT": "À propos de nous | Votre partenaire d'ingénierie logicielle Nearshore",
+    "CONTACT": "Contactez-nous | Construisons votre prochaine solution numérique",
+    "CAREERS": "Carrières chez JSL | Rejoignez notre équipe d'innovateurs",
+    "FAQ": "Foire aux questions | Support technique JSL Technology",
+    "PRIVACY": "Politique de confidentialité | Protection de vos données numériques",
+    "TERMS": "Conditions d'utilisation | Accords légaux et directives",
+    "COOKIE": "Politique relative aux cookies | Gestion de votre expérience",
+    "PARTNERS": "Programme de partenariat | Rejoignez notre écosystème",
+    "DEVELOPERS": "Developer Hub | Construisez avec nos API et SDK ouverts",
+    "ROADMAP": "Feuille de route publique | L'avenir des produits JSL Technology",
+    "EVENTS": "Événements et webinaires | Apprenez de nos experts ingénieurs",
+    "STATUS": "État du système | Métriques de performance en temps réel",
+    "LIFE_AT_JSL": "La vie chez JSL | Notre culture d'innovation et d'excellence",
+    "PRICING": "Calculateur de prix | Estimez les coûts de votre projet en ligne",
+    "TRUST": "Centre de confiance et sécurité | Hub de conformité",
+    "SERVER_ERROR": "Erreur serveur | Nous corrigeons le problème technique",
+    "THANK_YOU": "Merci | Votre demande a été envoyée avec succès",
+    "NOT_FOUND": "Page non trouvée | Revenons sur le bon chemin"
   }
 }

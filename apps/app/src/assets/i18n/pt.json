@@ -113,7 +113,7 @@
     "ASSESS_TECH": "Avalie sua Tecnologia",
     "CALC_SAVINGS": "Calcule sua Economia",
     "HERO1_TITLE": "Moldando o Futuro da Inovação Digital",
-    "HERO1_SUBTITLE": "Unindo consultoria e construção de novos negócios. Executando a transformação digital global com engenharia de precisão.",
+    "HERO1_SUBTITLE": "Preenchendo a lacuna entre consultoria e construção de ventures. Orquestramos a transformação digital com engenharia de precisão.",
     "HERO1_CTA": "Mais Informações",
     "HERO2_TITLE": "Software ERP que Impulsiona seu Crescimento",
     "HERO2_SUBTITLE": "Descubra nossas soluções de software empresarial (ERP & POS) projetadas para otimizar e escalar seu negócio.",
@@ -554,7 +554,7 @@
   },
   "TRUST_PAGE": {
     "TITLE": "Centro de Confiança",
-    "SUBTITLE": "Como protegemos seus dados e seu negócio.",
+    "SUBTITLE": "Nosso compromisso com a segurança, conformidade e governança. Seguimos os mais altos padrões de segurança para proteger seus dados e garantir a continuidade dos seus negócios.",
     "CONTENT": "Sua confiança é nossa prioridade. Usamos os mais altos padrões de segurança."
   },
   "ERRORS": {
@@ -728,7 +728,7 @@
   },
   "DEVELOPERS": {
     "TITLE": "Centro de Desenvolvedores",
-    "SUBTITLE": "Construa o futuro com nossas APIs e SDKs abertos.",
+    "SUBTITLE": "Construa o futuro com nossas APIs e SDKs abertas. Acesse nossa documentação para integrar os produtos JSL em seu fluxo de trabalho digital.",
     "API_DOCS": "Documentação da API",
     "API_DESC": "Explore nossas poderosas APIs para integrar o virtex em suas aplicações. Nossos SDKs estão disponíveis para Node.js, Python e PHP.",
     "GET_KEY": "Obter Chave da API",
@@ -736,7 +736,7 @@
   },
   "ROADMAP": {
     "TITLE": "Roadmap Público",
-    "SUBTITLE": "Veja o que estamos construindo a seguir.",
+    "SUBTITLE": "Veja o que estamos construindo. Explore nossos próximos recursos, lançamentos de produtos e a visão de longo prazo do nosso stack.",
     "IN_DEV": "Em Desenvolvimento",
     "PLANNED": "Planejado",
     "RELEASED": "Lançado"
@@ -751,28 +751,28 @@
   },
   "STATUS": {
     "TITLE": "Status do Sistema",
-    "SUBTITLE": "Métricas de desempenho em tempo real.",
+    "SUBTITLE": "Métricas de desempenho em tempo real e indicadores de saúde do sistema. Monitore a confiabilidade e o uptime de nossa infraestrutura global.",
     "OPERATIONAL": "Todos os Sistemas Operacionais",
     "INCIDENTS": "Histórico de Incidentes",
     "UPTIME": "Disponibilidade"
   },
   "LIFE_AT_JSL": {
     "TITLE": "Vida na JSL",
-    "SUBTITLE": "Junte-se à nossa cultura de inovação.",
+    "SUBTITLE": "Junte-se à nossa cultura de inovação e excelência. Descubra como nossa equipe multidisciplinar de engenheiros e designers trabalha.",
     "TEAM": "Nossa Equipe",
     "BENEFITS": "Vantagens e Benefícios",
     "GALLERY": "Momentos"
   },
   "PRESS": {
     "TITLE": "Sala de Imprensa",
-    "SUBTITLE": "Notícias, ativos e recursos de mídia.",
+    "SUBTITLE": "Notícias corporativas, ativos de marca e recursos para a mídia. Fique atualizado com os últimos marcos e anúncios oficiais da JSL Technology.",
     "KIT": "Kit de Imprensa",
     "DOWNLOAD": "Baixar Recursos",
     "MENTIONS": "Na Mídia"
   },
   "PRICING": {
     "TITLE": "Calculadora de Preços",
-    "SUBTITLE": "Estime o custo do seu projeto em minutos.",
+    "SUBTITLE": "Estime o custo do seu projeto em minutos. Obtenha um cálculo personalizado para sua próxima solução de software sob medida.",
     "WIZARD_STEP_1": "Tipo de Projeto",
     "WIZARD_STEP_2": "Escala",
     "WIZARD_STEP_3": "Recursos",
@@ -857,7 +857,7 @@
   },
   "VIRTEEX": {
     "TITLE": "Ecossistema virtex",
-    "SUBTITLE": "O Sistema Operacional para Negócios Modernos.",
+    "SUBTITLE": "O sistema operacional para negócios modernos. Um ecossistema unificado na nuvem projetado para máxima eficiência e escalabilidade.",
     "VISIT_SITE": "Visite o Site Oficial",
     "ECOSYSTEM_TITLE": "Uma Arquitetura Unificada",
     "ERP_CORE": "Núcleo do ERP virtex",
@@ -925,5 +925,35 @@
   "SOCIAL": {
     "GITHUB": "GitHub",
     "INSTAGRAM": "Instagram"
+  },
+  "SEO": {
+    "HOME": "JSL Technology | Moldando o Futuro da Inovação Digital",
+    "SERVICES": "Soluções de Software sob Medida e Engenharia Nearshore",
+    "PRODUCTS": "Produtos de Software Próprios e Ecossistema ERP",
+    "PROJECTS": "Casos de Sucesso e Transformação Digital Empresarial",
+    "BLOG": "Blog de Tecnologia | Insights da nossa Equipe de Engenharia",
+    "VENTURES": "Ventures & Innovation Lab | Construindo o próximo SaaS",
+    "INVESTORS": "Investidores e Governança Corporativa | JSL Technology",
+    "PROCESS": "Nosso Processo de Desenvolvimento | Da Descoberta ao Impacto",
+    "INDUSTRIES": "Soluções por Indústria | Software sob Medida para cada Setor",
+    "TECH_STACK": "Nosso Stack Tecnológico | Ferramentas Modernas para Escalar",
+    "ABOUT": "Sobre Nós | Seu Parceiro de Engenharia de Software Nearshore",
+    "CONTACT": "Contate-nos | Vamos Construir sua próxima Solução Digital",
+    "CAREERS": "Carreiras na JSL | Junte-se à nossa Equipe de Inovadores",
+    "FAQ": "Perguntas Frequentes | Suporte Técnico da JSL Technology",
+    "PRIVACY": "Política de Privacidade | Como Protegemos seus Dados Digitais",
+    "TERMS": "Termos de Serviço | Acordos Legais e Diretrizes",
+    "COOKIE": "Política de Cookies | Gerenciando sua Experiência Digital",
+    "PARTNERS": "Programa de Parceiros | Junte-se ao nosso Ecossistema",
+    "DEVELOPERS": "Developer Hub | Construa com nossas APIs e SDKs Abertas",
+    "ROADMAP": "Roteiro Público | O Futuro dos Produtos JSL Technology",
+    "EVENTS": "Eventos e Webinars | Aprenda com nossos Especialistas",
+    "STATUS": "Status do Sistema | Métricas de Desempenho em Tempo Real",
+    "LIFE_AT_JSL": "Vida na JSL | Nossa Cultura de Inovação e Excelência",
+    "PRICING": "Calculadora de Preços | Estime os Custos do seu Projeto",
+    "TRUST": "Centro de Confiança e Segurança | Hub de Conformidade",
+    "SERVER_ERROR": "Erro no Servidor | Estamos Corrigindo o Problema Técnico",
+    "THANK_YOU": "Obrigado | Sua Solicitação foi Enviada com Sucesso",
+    "NOT_FOUND": "Página não Encontrada | Vamos Voltar ao Caminho Certo"
   }
 }
