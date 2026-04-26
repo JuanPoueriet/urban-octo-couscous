@@ -613,7 +613,18 @@
     "READ_TIME_UNIT": "دقيقة قراءة",
     "NO_RESULTS": "لم يتم العثور على مقالات بهذه الفلاتر.",
     "EYEBROW": "آخر التحديثات",
-    "BLOG_TITLE": "من مدونتنا"
+    "BLOG_TITLE": "من مدونتنا",
+    "LIKES": "إعجابات",
+    "DISLIKES": "لم يعجبني",
+    "VIEWS": "مشاهدات",
+    "LISTEN": "استمع للمقال",
+    "STOP_LISTENING": "إيقاف الاستماع",
+    "COMMENTS": "التعليقات",
+    "WRITE_COMMENT": "اكتب تعليقاً",
+    "SUBMIT_COMMENT": "نشر التعليق",
+    "SHARE_ARTICLE": "شارك المقال",
+    "COMMENT_PLACEHOLDER": "انضم إلى المحادثة...",
+    "NO_COMMENTS": "لا توجد تعليقات بعد. كن أول من يشاركنا رأيه!"
   },
   "LEGAL": {
     "PRIVACY_TITLE": "سياسة الخصوصية",
@@ -682,7 +693,6 @@
   "PARTNERS_PAGE": {
     "TITLE": "شركاؤنا",
     "SUBTITLE": "بناء علاقات دائمة مع قادة الصناعة.",
-    "CONTENT": "تعرف على الشركات التي تثق بنا في حلولها التكنولوجية.",
     "EYEBROW": "Partner Ecosystem",
     "TECH_EYEBROW": "Technology Alliances",
     "TECH_TITLE": "Our Technology Partners",
@@ -739,7 +749,6 @@
   "NEWS_PAGE": {
     "TITLE": "أخبار الشركة",
     "SUBTITLE": "ابقَ على اطلاع بأحدث ابتكاراتنا.",
-    "CONTENT": "آخر الأخبار والتحديثات من JSL Technology.",
     "EYEBROW": "Corporate News",
     "FEATURED": "Featured Story",
     "LATEST_EYEBROW": "Recent Coverage",

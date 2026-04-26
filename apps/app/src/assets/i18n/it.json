@@ -613,7 +613,18 @@
     "READ_TIME_UNIT": "min di lettura",
     "NO_RESULTS": "Nessun articolo trovato con quei filtri.",
     "EYEBROW": "Ultimi Aggiornamenti",
-    "BLOG_TITLE": "Dal Nostro Blog"
+    "BLOG_TITLE": "Dal Nostro Blog",
+    "LIKES": "Mi piace",
+    "DISLIKES": "Non mi piace",
+    "VIEWS": "Visualizzazioni",
+    "LISTEN": "Ascolta l'articolo",
+    "STOP_LISTENING": "Interrompi l'ascolto",
+    "COMMENTS": "Commenti",
+    "WRITE_COMMENT": "Scrivi un commento",
+    "SUBMIT_COMMENT": "Pubblica commento",
+    "SHARE_ARTICLE": "Condividi articolo",
+    "COMMENT_PLACEHOLDER": "Partecipa alla conversazione...",
+    "NO_COMMENTS": "Ancora nessun commento. Sii il primo a condividere i tuoi pensieri!"
   },
   "LEGAL": {
     "PRIVACY_TITLE": "Informativa sulla Privacy",
@@ -682,7 +693,6 @@
   "PARTNERS_PAGE": {
     "TITLE": "I nostri partner",
     "SUBTITLE": "Costruire relazioni durature con i leader del settore.",
-    "CONTENT": "Scopri le aziende che si affidano a noi per le loro soluzioni tecnologiche.",
     "EYEBROW": "Partner Ecosystem",
     "TECH_EYEBROW": "Technology Alliances",
     "TECH_TITLE": "Our Technology Partners",
@@ -739,7 +749,6 @@
   "NEWS_PAGE": {
     "TITLE": "Notizie aziendali",
     "SUBTITLE": "Rimani aggiornato sulle nostre ultime innovazioni.",
-    "CONTENT": "Ultime notizie e aggiornamenti da JSL Technology.",
     "EYEBROW": "Corporate News",
     "FEATURED": "Featured Story",
     "LATEST_EYEBROW": "Recent Coverage",

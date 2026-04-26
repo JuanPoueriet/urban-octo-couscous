@@ -613,7 +613,18 @@
     "READ_TIME_UNIT": "min lekti",
     "NO_RESULTS": "Pa gen okenn atik yo jwenn ak filtè sa yo.",
     "EYEBROW": "Dènye Mizajou",
-    "BLOG_TITLE": "Soti nan Blog nou an"
+    "BLOG_TITLE": "Soti nan Blog nou an",
+    "LIKES": "Like",
+    "DISLIKES": "Dislike",
+    "VIEWS": "Vi",
+    "LISTEN": "Koute atik la",
+    "STOP_LISTENING": "Sispann koute",
+    "COMMENTS": "Kòmantè",
+    "WRITE_COMMENT": "Ekri yon kòmantè",
+    "SUBMIT_COMMENT": "Poste kòmantè",
+    "SHARE_ARTICLE": "Pataje atik la",
+    "COMMENT_PLACEHOLDER": "Antre nan konvèsasyon an...",
+    "NO_COMMENTS": "Pa gen kòmantè ankò. Se pou ou premye pataje lide ou!"
   },
   "LEGAL": {
     "PRIVACY_TITLE": "Règleman sou enfòmasyon prive",
@@ -682,7 +693,6 @@
   "PARTNERS_PAGE": {
     "TITLE": "Patnè nou yo",
     "SUBTITLE": "Bati relasyon dirab ak lidè endistri yo.",
-    "CONTENT": "Dekouvri konpayi ki fè nou konfyans pou solisyon teknolojik yo.",
     "EYEBROW": "Partner Ecosystem",
     "TECH_EYEBROW": "Technology Alliances",
     "TECH_TITLE": "Our Technology Partners",
@@ -739,7 +749,6 @@
   "NEWS_PAGE": {
     "TITLE": "Nouvèl Konpayi",
     "SUBTITLE": "Rete enfòme sou dènye inovasyon nou yo.",
-    "CONTENT": "Dènye nouvèl ak mizajou nan JSL Technology.",
     "EYEBROW": "Corporate News",
     "FEATURED": "Featured Story",
     "LATEST_EYEBROW": "Recent Coverage",

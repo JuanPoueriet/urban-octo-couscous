@@ -613,7 +613,18 @@
     "READ_TIME_UNIT": "분 읽기",
     "NO_RESULTS": "해당 필터로 검색된 기사가 없습니다.",
     "EYEBROW": "최신 업데이트",
-    "BLOG_TITLE": "블로그 소식"
+    "BLOG_TITLE": "블로그 소식",
+    "LIKES": "좋아요",
+    "DISLIKES": "싫어요",
+    "VIEWS": "조회수",
+    "LISTEN": "기사 듣기",
+    "STOP_LISTENING": "듣기 중지",
+    "COMMENTS": "댓글",
+    "WRITE_COMMENT": "댓글 쓰기",
+    "SUBMIT_COMMENT": "댓글 게시",
+    "SHARE_ARTICLE": "기사 공유",
+    "COMMENT_PLACEHOLDER": "대화에 참여하세요...",
+    "NO_COMMENTS": "아직 댓글이 없습니다. 첫 번째로 생각을 공유해 보세요!"
   },
   "LEGAL": {
     "PRIVACY_TITLE": "개인정보 처리방침",
@@ -682,7 +693,6 @@
   "PARTNERS_PAGE": {
     "TITLE": "파트너사",
     "SUBTITLE": "업계 리더들과 지속적인 관계 구축.",
-    "CONTENT": "당사의 기술 솔루션을 신뢰하는 기업들을 만나보세요.",
     "EYEBROW": "Partner Ecosystem",
     "TECH_EYEBROW": "Technology Alliances",
     "TECH_TITLE": "Our Technology Partners",
@@ -739,7 +749,6 @@
   "NEWS_PAGE": {
     "TITLE": "회사 뉴스",
     "SUBTITLE": "최신 혁신 소식을 받아보세요.",
-    "CONTENT": "JSL Technology의 최신 뉴스 및 업데이트.",
     "EYEBROW": "Corporate News",
     "FEATURED": "Featured Story",
     "LATEST_EYEBROW": "Recent Coverage",
