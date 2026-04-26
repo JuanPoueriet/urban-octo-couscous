@@ -1,4 +1,4 @@
-{
+﻿{
   "HEADER": {
     "HOME": "首页",
     "SERVICES": "解决方案",
@@ -24,7 +24,14 @@
     "PRESS": "新闻中心",
     "SECURITY": "信任与安全",
     "SUPPORT": "支持",
-    "CLIENT_PORTAL": "客户门户"
+    "CLIENT_PORTAL": "客户门户",
+    "ROADMAP": "路线图",
+    "EVENTS": "活动",
+    "DEVELOPERS": "开发者",
+    "LIFE_AT_JSL": "JSL生活",
+    "PRICING": "价格",
+    "VIRTEEX_ECOSYSTEM": "virtex生态系统",
+    "NEWS": "新闻"
   },
   "TOP_BAR": {
     "PORTFOLIO": "作品集",
@@ -765,10 +772,35 @@
   },
   "PRESS": {
     "TITLE": "新闻中心",
-    "SUBTITLE": "新闻、资产和媒体资源。",
-    "KIT": "新闻稿",
-    "DOWNLOAD": "下载资产",
-    "MENTIONS": "媒体报道"
+    "EYEBROW": "媒体中心",
+    "SUBTITLE": "为报道JSL Technology的记者和媒体专业人士提供的资源、新闻和素材。",
+    "HERO_CTA_PRIMARY": "下载新闻资料包",
+    "HERO_CTA_SECONDARY": "联系新闻团队",
+    "KIT": "新闻资料包",
+    "DOWNLOAD": "下载",
+    "MENTIONS": "媒体报道",
+    "STATS_OUTLETS": "媒体渠道",
+    "STATS_MENTIONS_LABEL": "媒体提及次数",
+    "STATS_COUNTRIES": "覆盖国家",
+    "STATS_ARTICLES": "已发布文章",
+    "RELEASES_EYEBROW": "最新动态",
+    "RELEASES_TITLE": "新闻稿",
+    "RELEASES_READ": "阅读新闻稿",
+    "COVERAGE_EYEBROW": "媒体报道",
+    "COVERAGE_TITLE": "媒体聚焦",
+    "COVERAGE_READ": "阅读文章",
+    "ASSETS_EYEBROW": "品牌资源",
+    "ASSETS_TITLE": "下载新闻资料包",
+    "ASSETS_SUBTITLE": "供媒体使用的官方Logo、品牌规范及高管照片。",
+    "CONTACT_EYEBROW": "媒体咨询",
+    "CONTACT_TITLE": "联系我们的新闻团队",
+    "CONTACT_SUBTITLE": "如需媒体采访、专访申请或合作机会，请直接与我们联系。",
+    "CONTACT_RESPONSE": "我们通常在24个工作小时内回复。",
+    "CONTACT_CTA": "发送媒体咨询",
+    "CATEGORY_LAUNCH": "产品发布",
+    "CATEGORY_EXPANSION": "业务扩张",
+    "CATEGORY_PARTNERSHIP": "合作伙伴",
+    "CATEGORY_AWARD": "奖项"
   },
   "PRICING": {
     "TITLE": "价格计算器",
@@ -877,7 +909,10 @@
     "SENT_MSG": "请检查您的收件箱以获取下载链接。",
     "BADGE": "免费 PDF",
     "NO_SPAM": "无垃圾邮件。我们从不分享您的电子邮件。",
-    "CHECK_INBOX": "检查您的收件箱"
+    "CHECK_INBOX": "检查您的收件箱",
+    "STAT_PAGES": "32页",
+    "STAT_INDUSTRIES": "5个行业",
+    "STAT_FREE": "免费"
   },
   "SHARE": {
     "LABEL": "分享这篇文章",

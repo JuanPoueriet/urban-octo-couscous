@@ -40,22 +40,45 @@
     <div class="footer__col">
       <h3 class="footer__col-title">{{ 'FOOTER.SOLUTIONS' | translate }}</h3>
       <ul class="footer__links">
+        <li><a [routerLink]="[currentLang(), 'solutions', 'web-development']">{{ 'SERVICES_LIST.WEB' | translate }}</a></li>
+        <li><a [routerLink]="[currentLang(), 'solutions', 'mobile-apps']">{{ 'SERVICES_LIST.MOBILE' | translate }}</a></li>
+        <li><a [routerLink]="[currentLang(), 'solutions', 'desktop-software']">{{ 'SERVICES_LIST.DESKTOP' | translate }}</a></li>
+        <li><a [routerLink]="[currentLang(), 'solutions', 'cloud-architecture']">{{ 'SERVICES_LIST.CLOUD' | translate }}</a></li>
         <li><a [routerLink]="[currentLang(), 'products']">{{ 'PRODUCTS_LIST.ERP' | translate }}</a></li>
         <li><a [routerLink]="[currentLang(), 'products']">{{ 'PRODUCTS_LIST.POS' | translate }}</a></li>
-        <li><a [routerLink]="[currentLang(), 'solutions']">{{ 'SERVICES_LIST.WEB' | translate }}</a></li>
-        <li><a [routerLink]="[currentLang(), 'solutions']">{{ 'SERVICES_LIST.MOBILE' | translate }}</a></li>
-        <li><a [routerLink]="[currentLang(), 'solutions']">{{ 'SERVICES_LIST.CLOUD' | translate }}</a></li>
+        <li><a [routerLink]="[currentLang(), 'virteex-ecosystem']">{{ 'HEADER.VIRTEEX_ECOSYSTEM' | translate }}</a></li>
+        <li><a [routerLink]="[currentLang(), 'pricing']">{{ 'HEADER.PRICING' | translate }}</a></li>
+      </ul>
+    </div>
+
+    <div class="footer__col">
+      <h3 class="footer__col-title">{{ 'FOOTER.COMPANY' | translate }}</h3>
+      <ul class="footer__links">
+        <li><a [routerLink]="[currentLang(), 'about-us']">{{ 'HEADER.ABOUT' | translate }}</a></li>
+        <li><a [routerLink]="[currentLang(), 'process']">{{ 'HEADER.PROCESS' | translate }}</a></li>
+        <li><a [routerLink]="[currentLang(), 'careers']">{{ 'HEADER.CAREERS' | translate }}</a></li>
+        <li><a [routerLink]="[currentLang(), 'life-at-jsl']">{{ 'HEADER.LIFE_AT_JSL' | translate }}</a></li>
+        <li><a [routerLink]="[currentLang(), 'partners']">{{ 'HEADER.PARTNERS' | translate }}</a></li>
+        <li><a [routerLink]="[currentLang(), 'investors']">{{ 'HEADER.INVESTORS' | translate }}</a></li>
+        <li><a [routerLink]="[currentLang(), 'ventures']">{{ 'HEADER.VENTURES' | translate }}</a></li>
+        <li><a [routerLink]="[currentLang(), 'security']">{{ 'HEADER.SECURITY' | translate }}</a></li>
       </ul>
     </div>
 
     <div class="footer__col">
       <h3 class="footer__col-title">{{ 'FOOTER.RESOURCES' | translate }}</h3>
       <ul class="footer__links">
-        <li><a [routerLink]="[currentLang(), 'about-us']">{{ 'HEADER.ABOUT' | translate }}</a></li>
-        <li><a [routerLink]="[currentLang(), 'projects']">{{ 'HEADER.PROJECTS' | translate }}</a></li>
         <li><a [routerLink]="[currentLang(), 'blog']">{{ 'HEADER.BLOG' | translate }}</a></li>
-        <li><a [routerLink]="[currentLang(), 'contact']">{{ 'HEADER.CONTACT' | translate }}</a></li>
+        <li><a [routerLink]="[currentLang(), 'projects']">{{ 'HEADER.PROJECTS' | translate }}</a></li>
+        <li><a [routerLink]="[currentLang(), 'industries']">{{ 'HEADER.INDUSTRIES' | translate }}</a></li>
+        <li><a [routerLink]="[currentLang(), 'events']">{{ 'HEADER.EVENTS' | translate }}</a></li>
+        <li><a [routerLink]="[currentLang(), 'news']">{{ 'HEADER.NEWS' | translate }}</a></li>
+        <li><a [routerLink]="[currentLang(), 'press']">{{ 'HEADER.PRESS' | translate }}</a></li>
+        <li><a [routerLink]="[currentLang(), 'roadmap']">{{ 'HEADER.ROADMAP' | translate }}</a></li>
+        <li><a [routerLink]="[currentLang(), 'faq']">{{ 'HEADER.FAQ' | translate }}</a></li>
         <li><a [routerLink]="[currentLang(), 'tech-stack']">{{ 'HEADER.TECH_STACK' | translate }}</a></li>
+        <li><a [routerLink]="[currentLang(), 'developers']">{{ 'HEADER.DEVELOPERS' | translate }}</a></li>
+        <li><a [routerLink]="[currentLang(), 'contact']">{{ 'HEADER.CONTACT' | translate }}</a></li>
       </ul>
     </div>
 

@@ -1,4 +1,4 @@
-{
+﻿{
   "HEADER": {
     "HOME": "ホーム",
     "SERVICES": "ソリューション",
@@ -24,7 +24,14 @@
     "PRESS": "プレスルーム",
     "SECURITY": "信頼とセキュリティ",
     "SUPPORT": "サポート",
-    "CLIENT_PORTAL": "クライアントポータル"
+    "CLIENT_PORTAL": "クライアントポータル",
+    "ROADMAP": "ロードマップ",
+    "EVENTS": "イベント",
+    "DEVELOPERS": "開発者",
+    "LIFE_AT_JSL": "JSLでの仕事",
+    "PRICING": "料金",
+    "VIRTEEX_ECOSYSTEM": "virtexエコシステム",
+    "NEWS": "ニュース"
   },
   "TOP_BAR": {
     "PORTFOLIO": "ポートフォリオ",
@@ -765,10 +772,35 @@
   },
   "PRESS": {
     "TITLE": "プレスルーム",
-    "SUBTITLE": "ニュース、アセット、メディアリソース。",
+    "EYEBROW": "メディアセンター",
+    "SUBTITLE": "JSL Technologyを取材するジャーナリスト・メディア関係者向けのリソース、ニュース、素材。",
+    "HERO_CTA_PRIMARY": "プレスキットをダウンロード",
+    "HERO_CTA_SECONDARY": "報道担当チームへ連絡",
     "KIT": "プレスキット",
-    "DOWNLOAD": "アセットをダウンロード",
-    "MENTIONS": "メディア掲載"
+    "DOWNLOAD": "ダウンロード",
+    "MENTIONS": "メディア掲載",
+    "STATS_OUTLETS": "メディア掲載数",
+    "STATS_MENTIONS_LABEL": "プレスメンション",
+    "STATS_COUNTRIES": "対象国",
+    "STATS_ARTICLES": "掲載記事数",
+    "RELEASES_EYEBROW": "最新ニュース",
+    "RELEASES_TITLE": "プレスリリース",
+    "RELEASES_READ": "リリースを読む",
+    "COVERAGE_EYEBROW": "メディア報道",
+    "COVERAGE_TITLE": "プレスで取り上げられた",
+    "COVERAGE_READ": "記事を読む",
+    "ASSETS_EYEBROW": "ブランドリソース",
+    "ASSETS_TITLE": "プレスキットをダウンロード",
+    "ASSETS_SUBTITLE": "公式ロゴ、ブランドガイドライン、役員写真など媒体向け素材。",
+    "CONTACT_EYEBROW": "報道関係者向け",
+    "CONTACT_TITLE": "報道担当チームに相談する",
+    "CONTACT_SUBTITLE": "取材依頼、インタビュー申請、メディア提携などのお問い合わせはこちら。",
+    "CONTACT_RESPONSE": "通常24営業時間以内にご返信します。",
+    "CONTACT_CTA": "取材申請を送る",
+    "CATEGORY_LAUNCH": "製品発表",
+    "CATEGORY_EXPANSION": "事業拡大",
+    "CATEGORY_PARTNERSHIP": "パートナーシップ",
+    "CATEGORY_AWARD": "受賞"
   },
   "PRICING": {
     "TITLE": "価格シミュレーター",
@@ -877,7 +909,10 @@
     "SENT_MSG": "ダウンロードリンクについては受信トレイを確認してください。",
     "BADGE": "無料PDF",
     "NO_SPAM": "スパムはありません。メールアドレスを共有することはありません。",
-    "CHECK_INBOX": "受信トレイを確認してください"
+    "CHECK_INBOX": "受信トレイを確認してください",
+    "STAT_PAGES": "32ページ",
+    "STAT_INDUSTRIES": "5業界",
+    "STAT_FREE": "無料"
   },
   "SHARE": {
     "LABEL": "この記事をシェアする",

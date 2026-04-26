@@ -20,6 +20,8 @@ export class WhitepaperDownloadComponent {
   email = '';
   isSubmitted = false;
 
+  readonly coverLines = ['75%', '90%', '60%', '85%', '50%', '78%', '45%', '65%'];
+
   constructor(private toastService: ToastService, private translate: TranslateService) {}
 
   onSubmit() {

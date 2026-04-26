@@ -1,4 +1,4 @@
-{
+﻿{
   "HEADER": {
     "HOME": "홈",
     "SERVICES": "솔루션",
@@ -24,7 +24,14 @@
     "PRESS": "프레스 룸",
     "SECURITY": "신뢰 및 보안",
     "SUPPORT": "지원",
-    "CLIENT_PORTAL": "클라이언트 포털"
+    "CLIENT_PORTAL": "클라이언트 포털",
+    "ROADMAP": "로드맵",
+    "EVENTS": "이벤트",
+    "DEVELOPERS": "개발자",
+    "LIFE_AT_JSL": "JSL의 삶",
+    "PRICING": "요금제",
+    "VIRTEEX_ECOSYSTEM": "virtex 에코시스템",
+    "NEWS": "뉴스"
   },
   "TOP_BAR": {
     "PORTFOLIO": "포트폴리오",
@@ -765,10 +772,35 @@
   },
   "PRESS": {
     "TITLE": "프레스 룸",
-    "SUBTITLE": "뉴스, 자산 및 미디어 리소스.",
+    "EYEBROW": "미디어 센터",
+    "SUBTITLE": "JSL Technology를 취재하는 기자 및 미디어 전문가를 위한 리소스, 뉴스 및 자산.",
+    "HERO_CTA_PRIMARY": "프레스 키트 다운로드",
+    "HERO_CTA_SECONDARY": "언론 담당팀 연락",
     "KIT": "프레스 키트",
-    "DOWNLOAD": "자산 다운로드",
-    "MENTIONS": "미디어 보도"
+    "DOWNLOAD": "다운로드",
+    "MENTIONS": "미디어 보도",
+    "STATS_OUTLETS": "미디어 채널",
+    "STATS_MENTIONS_LABEL": "언론 보도 건수",
+    "STATS_COUNTRIES": "도달 국가",
+    "STATS_ARTICLES": "게재 기사 수",
+    "RELEASES_EYEBROW": "최신 뉴스",
+    "RELEASES_TITLE": "보도자료",
+    "RELEASES_READ": "보도자료 읽기",
+    "COVERAGE_EYEBROW": "미디어 커버리지",
+    "COVERAGE_TITLE": "언론 보도",
+    "COVERAGE_READ": "기사 읽기",
+    "ASSETS_EYEBROW": "브랜드 리소스",
+    "ASSETS_TITLE": "프레스 키트 다운로드",
+    "ASSETS_SUBTITLE": "미디어 사용을 위한 공식 로고, 브랜드 가이드라인 및 임원 사진.",
+    "CONTACT_EYEBROW": "언론 문의",
+    "CONTACT_TITLE": "언론 담당팀에 문의하기",
+    "CONTACT_SUBTITLE": "보도 문의, 인터뷰 요청 및 미디어 협력 기회에 대해 직접 연락해 주세요.",
+    "CONTACT_RESPONSE": "일반적으로 24 영업시간 이내에 답변드립니다.",
+    "CONTACT_CTA": "언론 문의 보내기",
+    "CATEGORY_LAUNCH": "제품 출시",
+    "CATEGORY_EXPANSION": "사업 확장",
+    "CATEGORY_PARTNERSHIP": "파트너십",
+    "CATEGORY_AWARD": "수상"
   },
   "PRICING": {
     "TITLE": "가격 계산기",
@@ -877,7 +909,10 @@
     "SENT_MSG": "다운로드 링크는 이메일 수신함을 확인해 주세요.",
     "BADGE": "무료 PDF",
     "NO_SPAM": "스팸 없음. 이메일을 절대 공유하지 않습니다.",
-    "CHECK_INBOX": "이메일 수신함을 확인하세요"
+    "CHECK_INBOX": "이메일 수신함을 확인하세요",
+    "STAT_PAGES": "32페이지",
+    "STAT_INDUSTRIES": "5개 산업",
+    "STAT_FREE": "무료"
   },
   "SHARE": {
     "LABEL": "이 기사 공유하기",

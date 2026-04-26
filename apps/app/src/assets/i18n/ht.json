@@ -1,4 +1,4 @@
-{
+﻿{
   "HEADER": {
     "HOME": "Akèy",
     "SERVICES": "Solisyon",
@@ -24,7 +24,14 @@
     "PRESS": "Sal de près",
     "SECURITY": "Konfyans ak Sekirite",
     "SUPPORT": "Sipò",
-    "CLIENT_PORTAL": "Pòtay Kliyan"
+    "CLIENT_PORTAL": "Pòtay Kliyan",
+    "ROADMAP": "Fèy Chemen",
+    "EVENTS": "Evènman",
+    "DEVELOPERS": "Devlopè",
+    "LIFE_AT_JSL": "Lavi nan JSL",
+    "PRICING": "Pri",
+    "VIRTEEX_ECOSYSTEM": "Ekosistèm virtex",
+    "NEWS": "Nouvèl"
   },
   "TOP_BAR": {
     "PORTFOLIO": "Pòtfolyo",
@@ -764,11 +771,36 @@
     "GALLERY": "Moman yo"
   },
   "PRESS": {
-    "TITLE": "Sal de près",
-    "SUBTITLE": "Nouvèl, byen, ak resous medya.",
+    "TITLE": "Sal de Près",
+    "EYEBROW": "Sant Medya",
+    "SUBTITLE": "Resous, nouvèl ak materyèl pou jounalis ak pwofesyonèl medya ki kouvri JSL Technology.",
+    "HERO_CTA_PRIMARY": "Telechaje Twous Près",
+    "HERO_CTA_SECONDARY": "Kontakte Ekip Près la",
     "KIT": "Twous Près",
-    "DOWNLOAD": "Telechaje Resous yo",
-    "MENTIONS": "Nan Medya yo"
+    "DOWNLOAD": "Telechaje",
+    "MENTIONS": "Nan Medya yo",
+    "STATS_OUTLETS": "Medya Kouvri",
+    "STATS_MENTIONS_LABEL": "Mansyon Près",
+    "STATS_COUNTRIES": "Peyi Rive",
+    "STATS_ARTICLES": "Atik Pibliye",
+    "RELEASES_EYEBROW": "Dènye Nouvèl",
+    "RELEASES_TITLE": "Kominikasyon Près",
+    "RELEASES_READ": "Li Kominikasyon an",
+    "COVERAGE_EYEBROW": "Kouvèti Medya",
+    "COVERAGE_TITLE": "Nan Près la",
+    "COVERAGE_READ": "Li Atik la",
+    "ASSETS_EYEBROW": "Resous Mak",
+    "ASSETS_TITLE": "Telechaje Twous Près",
+    "ASSETS_SUBTITLE": "Logo ofisyèl, gid mak, ak foto egzekitif pou itilizasyon medya.",
+    "CONTACT_EYEBROW": "Demann Près",
+    "CONTACT_TITLE": "Pale ak Ekip Près Nou an",
+    "CONTACT_SUBTITLE": "Pou demann près, entèvyou, ak opòtinite medya, kontakte nou dirèkteman.",
+    "CONTACT_RESPONSE": "Nou reponn nòmalman nan 24 zè travay.",
+    "CONTACT_CTA": "Voye Demann Près",
+    "CATEGORY_LAUNCH": "Lanse Pwodwi",
+    "CATEGORY_EXPANSION": "Ekspansyon",
+    "CATEGORY_PARTNERSHIP": "Patenèship",
+    "CATEGORY_AWARD": "Prim"
   },
   "PRICING": {
     "TITLE": "Kalkilatris Pri",
@@ -877,7 +909,10 @@
     "SENT_MSG": "Tcheke bwat resepsyon ou pou lyen telechajman an.",
     "BADGE": "PDF gratis",
     "NO_SPAM": "Pa gen spam. Nou pa janm pataje imèl ou.",
-    "CHECK_INBOX": "Tcheke bwat resepsyon ou"
+    "CHECK_INBOX": "Tcheke bwat resepsyon ou",
+    "STAT_PAGES": "32 paj",
+    "STAT_INDUSTRIES": "5 endustri",
+    "STAT_FREE": "Gratis"
   },
   "SHARE": {
     "LABEL": "Pataje atik sa a",

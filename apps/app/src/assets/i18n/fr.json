@@ -1,4 +1,4 @@
-{
+﻿{
   "HEADER": {
     "HOME": "Accueil",
     "SERVICES": "Solutions",
@@ -24,7 +24,14 @@
     "PRESS": "Espace presse",
     "SECURITY": "Confiance et sécurité",
     "SUPPORT": "Support",
-    "CLIENT_PORTAL": "Portail client"
+    "CLIENT_PORTAL": "Portail client",
+    "ROADMAP": "Feuille de Route",
+    "EVENTS": "Événements",
+    "DEVELOPERS": "Développeurs",
+    "LIFE_AT_JSL": "La vie chez JSL",
+    "PRICING": "Tarifs",
+    "VIRTEEX_ECOSYSTEM": "Écosystème virtex",
+    "NEWS": "Actualités"
   },
   "TOP_BAR": {
     "PORTFOLIO": "Portfolio",
@@ -764,11 +771,36 @@
     "GALLERY": "Galerie"
   },
   "PRESS": {
-    "TITLE": "Espace presse",
-    "SUBTITLE": "Actualités, ressources et ressources médias.",
+    "TITLE": "Espace Presse",
+    "EYEBROW": "Centre Médias",
+    "SUBTITLE": "Ressources, actualités et actifs pour les journalistes et professionnels des médias couvrant JSL Technology.",
+    "HERO_CTA_PRIMARY": "Télécharger le Dossier de Presse",
+    "HERO_CTA_SECONDARY": "Contacter l'Équipe Presse",
     "KIT": "Dossier de presse",
-    "DOWNLOAD": "Télécharger les ressources",
-    "MENTIONS": "Dans les médias"
+    "DOWNLOAD": "Télécharger",
+    "MENTIONS": "Dans les médias",
+    "STATS_OUTLETS": "Médias couverts",
+    "STATS_MENTIONS_LABEL": "Mentions presse",
+    "STATS_COUNTRIES": "Pays atteints",
+    "STATS_ARTICLES": "Articles publiés",
+    "RELEASES_EYEBROW": "Dernières nouvelles",
+    "RELEASES_TITLE": "Communiqués de presse",
+    "RELEASES_READ": "Lire le communiqué",
+    "COVERAGE_EYEBROW": "Couverture médiatique",
+    "COVERAGE_TITLE": "Dans la presse",
+    "COVERAGE_READ": "Lire l'article",
+    "ASSETS_EYEBROW": "Ressources de marque",
+    "ASSETS_TITLE": "Télécharger le kit presse",
+    "ASSETS_SUBTITLE": "Logos officiels, charte graphique et photos des dirigeants pour usage médiatique.",
+    "CONTACT_EYEBROW": "Demandes presse",
+    "CONTACT_TITLE": "Parlez à Notre Équipe Presse",
+    "CONTACT_SUBTITLE": "Pour les demandes presse, interviews et opportunités médiatiques, contactez-nous directement.",
+    "CONTACT_RESPONSE": "Nous répondons sous 24 heures ouvrables.",
+    "CONTACT_CTA": "Envoyer une demande presse",
+    "CATEGORY_LAUNCH": "Lancement produit",
+    "CATEGORY_EXPANSION": "Expansion",
+    "CATEGORY_PARTNERSHIP": "Partenariat",
+    "CATEGORY_AWARD": "Récompense"
   },
   "PRICING": {
     "TITLE": "Calculateur de prix",
@@ -877,7 +909,10 @@
     "SENT_MSG": "Consultez votre boîte de réception pour le lien de téléchargement.",
     "BADGE": "PDF gratuit",
     "NO_SPAM": "Pas de spam. Nous ne partageons jamais votre e-mail.",
-    "CHECK_INBOX": "Vérifiez votre boîte de réception"
+    "CHECK_INBOX": "Vérifiez votre boîte de réception",
+    "STAT_PAGES": "32 pages",
+    "STAT_INDUSTRIES": "5 secteurs",
+    "STAT_FREE": "Gratuit"
   },
   "SHARE": {
     "LABEL": "Partager cet article",

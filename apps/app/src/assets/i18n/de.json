@@ -1,4 +1,4 @@
-{
+﻿{
   "HEADER": {
     "HOME": "Startseite",
     "SERVICES": "Lösungen",
@@ -24,7 +24,14 @@
     "PRESS": "Pressebereich",
     "SECURITY": "Vertrauen & Sicherheit",
     "SUPPORT": "Support",
-    "CLIENT_PORTAL": "Kundenportal"
+    "CLIENT_PORTAL": "Kundenportal",
+    "ROADMAP": "Roadmap",
+    "EVENTS": "Veranstaltungen",
+    "DEVELOPERS": "Entwickler",
+    "LIFE_AT_JSL": "Leben bei JSL",
+    "PRICING": "Preise",
+    "VIRTEEX_ECOSYSTEM": "virtex Ökosystem",
+    "NEWS": "Neuigkeiten"
   },
   "TOP_BAR": {
     "PORTFOLIO": "Portfolio",
@@ -765,10 +772,35 @@
   },
   "PRESS": {
     "TITLE": "Pressebereich",
-    "SUBTITLE": "Nachrichten, Assets und Medienressourcen.",
+    "EYEBROW": "Medienzentrum",
+    "SUBTITLE": "Ressourcen, Neuigkeiten und Assets für Journalisten und Medienprofis, die über JSL Technology berichten.",
+    "HERO_CTA_PRIMARY": "Pressemappe herunterladen",
+    "HERO_CTA_SECONDARY": "Presseteam kontaktieren",
     "KIT": "Pressemappe",
-    "DOWNLOAD": "Assets herunterladen",
-    "MENTIONS": "In den Medien"
+    "DOWNLOAD": "Herunterladen",
+    "MENTIONS": "In den Medien",
+    "STATS_OUTLETS": "Medienkanäle",
+    "STATS_MENTIONS_LABEL": "Presseerwähnungen",
+    "STATS_COUNTRIES": "Erreichte Länder",
+    "STATS_ARTICLES": "Veröffentlichte Artikel",
+    "RELEASES_EYEBROW": "Aktuelle Nachrichten",
+    "RELEASES_TITLE": "Pressemitteilungen",
+    "RELEASES_READ": "Mitteilung lesen",
+    "COVERAGE_EYEBROW": "Medienberichterstattung",
+    "COVERAGE_TITLE": "In der Presse",
+    "COVERAGE_READ": "Artikel lesen",
+    "ASSETS_EYEBROW": "Markenressourcen",
+    "ASSETS_TITLE": "Pressemappe herunterladen",
+    "ASSETS_SUBTITLE": "Offizielle Logos, Markenrichtlinien und Führungsfotos für Medienzwecke.",
+    "CONTACT_EYEBROW": "Presseanfragen",
+    "CONTACT_TITLE": "Sprechen Sie mit unserem Presseteam",
+    "CONTACT_SUBTITLE": "Für Presseanfragen, Interviewwünsche und Medienmöglichkeiten kontaktieren Sie uns direkt.",
+    "CONTACT_RESPONSE": "Wir antworten innerhalb von 24 Geschäftsstunden.",
+    "CONTACT_CTA": "Presseanfrage senden",
+    "CATEGORY_LAUNCH": "Produktstart",
+    "CATEGORY_EXPANSION": "Expansion",
+    "CATEGORY_PARTNERSHIP": "Partnerschaft",
+    "CATEGORY_AWARD": "Auszeichnung"
   },
   "PRICING": {
     "TITLE": "Preisrechner",
@@ -877,7 +909,10 @@
     "SENT_MSG": "Überprüfen Sie Ihren Posteingang für den Download-Link.",
     "BADGE": "Kostenloses PDF",
     "NO_SPAM": "Kein Spam. Wir geben Ihre E-Mail niemals weiter.",
-    "CHECK_INBOX": "Überprüfen Sie Ihren Posteingang"
+    "CHECK_INBOX": "Überprüfen Sie Ihren Posteingang",
+    "STAT_PAGES": "32 Seiten",
+    "STAT_INDUSTRIES": "5 Branchen",
+    "STAT_FREE": "Kostenlos"
   },
   "SHARE": {
     "LABEL": "Diesen Artikel teilen",

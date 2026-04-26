@@ -114,10 +114,27 @@
             <lucide-icon name="ExternalLink" size="18"></lucide-icon>
             {{ 'PRODUCTS_LIST.MOBILE' | translate }}
           </a>
+          <div class="dropdown-divider"></div>
+          <a
+            [routerLink]="[currentLang, 'virteex-ecosystem']"
+            routerLinkActive="active"
+            (click)="closeDropdowns()"
+          >
+            <lucide-icon name="Layers" size="18"></lucide-icon>
+            {{ 'HEADER.VIRTEEX_ECOSYSTEM' | translate }}
+          </a>
+          <a
+            [routerLink]="[currentLang, 'pricing']"
+            routerLinkActive="active"
+            (click)="closeDropdowns()"
+          >
+            <lucide-icon name="CircleDollarSign" size="18"></lucide-icon>
+            {{ 'HEADER.PRICING' | translate }}
+          </a>
         </div>
       </li>
 
-      <!-- Dropdown: Compañía & Login -->
+      <!-- Dropdown: Compañía -->
       <li class="dropdown" [class.open]="openDropdown === 'company'">
         <button
           class="dropdown-toggle"
@@ -146,6 +163,79 @@
             {{ 'HEADER.PROCESS' | translate }}
           </a>
           <a
+            [routerLink]="[currentLang, 'careers']"
+            routerLinkActive="active"
+            (click)="closeDropdowns()"
+          >
+            <lucide-icon name="Briefcase" size="18"></lucide-icon>
+            {{ 'HEADER.CAREERS' | translate }}
+          </a>
+          <a
+            [routerLink]="[currentLang, 'life-at-jsl']"
+            routerLinkActive="active"
+            (click)="closeDropdowns()"
+          >
+            <lucide-icon name="Heart" size="18"></lucide-icon>
+            {{ 'HEADER.LIFE_AT_JSL' | translate }}
+          </a>
+          <a
+            [routerLink]="[currentLang, 'partners']"
+            routerLinkActive="active"
+            (click)="closeDropdowns()"
+          >
+            <lucide-icon name="Handshake" size="18"></lucide-icon>
+            {{ 'HEADER.PARTNERS' | translate }}
+          </a>
+          <a
+            [routerLink]="[currentLang, 'security']"
+            routerLinkActive="active"
+            (click)="closeDropdowns()"
+          >
+            <lucide-icon name="ShieldCheck" size="18"></lucide-icon>
+            {{ 'HEADER.SECURITY' | translate }}
+          </a>
+          <div class="dropdown-divider"></div>
+          <a
+            [routerLink]="[currentLang, 'investors']"
+            routerLinkActive="active"
+            (click)="closeDropdowns()"
+          >
+            <lucide-icon name="TrendingUp" size="18"></lucide-icon>
+            {{ 'HEADER.INVESTORS' | translate }}
+          </a>
+          <a
+            [routerLink]="[currentLang, 'ventures']"
+            routerLinkActive="active"
+            (click)="closeDropdowns()"
+          >
+            <lucide-icon name="Rocket" size="18"></lucide-icon>
+            {{ 'HEADER.VENTURES' | translate }}
+          </a>
+          <div class="dropdown-divider"></div>
+          <a
+            href="https://portal.jsl.technology"
+            target="_blank"
+            (click)="closeDropdowns()"
+          >
+            <lucide-icon name="ExternalLink" size="18"></lucide-icon>
+            {{ 'HEADER.LOGIN' | translate }}
+          </a>
+        </div>
+      </li>
+
+      <!-- Dropdown: Recursos -->
+      <li class="dropdown" [class.open]="openDropdown === 'resources'">
+        <button
+          class="dropdown-toggle"
+          (click)="toggleDropdown('resources', $event)"
+          aria-haspopup="true"
+          [attr.aria-expanded]="openDropdown === 'resources'"
+        >
+          {{ 'FOOTER.RESOURCES' | translate }}
+          <lucide-icon name="ChevronDown"></lucide-icon>
+        </button>
+        <div class="dropdown-menu" [class.open]="openDropdown === 'resources'">
+          <a
             [routerLink]="[currentLang, 'projects']"
             routerLinkActive="active"
             (click)="closeDropdowns()"
@@ -161,15 +251,47 @@
             <lucide-icon name="Newspaper" size="18"></lucide-icon>
             {{ 'HEADER.BLOG' | translate }}
           </a>
-          <div class="dropdown-divider"></div>
           <a
-            href="https://portal.jsl.technology"
-            target="_blank"
+            [routerLink]="[currentLang, 'industries']"
+            routerLinkActive="active"
             (click)="closeDropdowns()"
           >
-            <lucide-icon name="ExternalLink" size="18"></lucide-icon>
-            {{ 'HEADER.LOGIN' | translate }}
+            <lucide-icon name="Building2" size="18"></lucide-icon>
+            {{ 'HEADER.INDUSTRIES' | translate }}
           </a>
+          <a
+            [routerLink]="[currentLang, 'events']"
+            routerLinkActive="active"
+            (click)="closeDropdowns()"
+          >
+            <lucide-icon name="CalendarDays" size="18"></lucide-icon>
+            {{ 'HEADER.EVENTS' | translate }}
+          </a>
+          <a
+            [routerLink]="[currentLang, 'news']"
+            routerLinkActive="active"
+            (click)="closeDropdowns()"
+          >
+            <lucide-icon name="Radio" size="18"></lucide-icon>
+            {{ 'HEADER.NEWS' | translate }}
+          </a>
+          <a
+            [routerLink]="[currentLang, 'press']"
+            routerLinkActive="active"
+            (click)="closeDropdowns()"
+          >
+            <lucide-icon name="BookOpen" size="18"></lucide-icon>
+            {{ 'HEADER.PRESS' | translate }}
+          </a>
+          <a
+            [routerLink]="[currentLang, 'roadmap']"
+            routerLinkActive="active"
+            (click)="closeDropdowns()"
+          >
+            <lucide-icon name="Map" size="18"></lucide-icon>
+            {{ 'HEADER.ROADMAP' | translate }}
+          </a>
+          <div class="dropdown-divider"></div>
           <a
             [routerLink]="[currentLang, 'faq']"
             routerLinkActive="active"
@@ -177,6 +299,22 @@
           >
             <lucide-icon name="HelpCircle" size="18"></lucide-icon>
             {{ 'HEADER.FAQ' | translate }}
+          </a>
+          <a
+            [routerLink]="[currentLang, 'tech-stack']"
+            routerLinkActive="active"
+            (click)="closeDropdowns()"
+          >
+            <lucide-icon name="Cpu" size="18"></lucide-icon>
+            {{ 'HEADER.TECH_STACK' | translate }}
+          </a>
+          <a
+            [routerLink]="[currentLang, 'developers']"
+            routerLinkActive="active"
+            (click)="closeDropdowns()"
+          >
+            <lucide-icon name="Code" size="18"></lucide-icon>
+            {{ 'HEADER.DEVELOPERS' | translate }}
           </a>
         </div>
       </li>

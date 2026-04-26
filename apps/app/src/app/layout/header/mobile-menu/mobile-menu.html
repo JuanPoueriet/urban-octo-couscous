@@ -69,6 +69,12 @@
               {{ 'SERVICES_LIST.CLOUD' | translate }}
             </a>
           </li>
+          <li>
+            <a [routerLink]="[currentLang, 'industries']" (click)="closeMobileMenu()">
+              <lucide-icon name="Building2"></lucide-icon>
+              {{ 'HEADER.INDUSTRIES' | translate }}
+            </a>
+          </li>
         </ul>
       </div>
     </div>
@@ -103,6 +109,18 @@
             <a href="https://apps.jsl.technology" target="_blank" (click)="closeMobileMenu()">
               <lucide-icon name="ExternalLink"></lucide-icon>
               {{ 'PRODUCTS_LIST.MOBILE' | translate }}
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="[currentLang, 'virteex-ecosystem']" (click)="closeMobileMenu()">
+              <lucide-icon name="Layers"></lucide-icon>
+              {{ 'HEADER.VIRTEEX_ECOSYSTEM' | translate }}
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="[currentLang, 'pricing']" (click)="closeMobileMenu()">
+              <lucide-icon name="CircleDollarSign"></lucide-icon>
+              {{ 'HEADER.PRICING' | translate }}
             </a>
           </li>
         </ul>
@@ -148,6 +166,24 @@
             </a>
           </li>
           <li>
+            <a [routerLink]="[currentLang, 'life-at-jsl']" (click)="closeMobileMenu()">
+              <lucide-icon name="Heart"></lucide-icon>
+              {{ 'HEADER.LIFE_AT_JSL' | translate }}
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="[currentLang, 'investors']" (click)="closeMobileMenu()">
+              <lucide-icon name="TrendingUp"></lucide-icon>
+              {{ 'HEADER.INVESTORS' | translate }}
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="[currentLang, 'ventures']" (click)="closeMobileMenu()">
+              <lucide-icon name="Rocket"></lucide-icon>
+              {{ 'HEADER.VENTURES' | translate }}
+            </a>
+          </li>
+          <li>
             <a [routerLink]="[currentLang, 'security']" (click)="closeMobileMenu()">
               <lucide-icon name="ShieldCheck"></lucide-icon>
               {{ 'HEADER.SECURITY' | translate }}
@@ -178,15 +214,39 @@
             </a>
           </li>
           <li>
+            <a [routerLink]="[currentLang, 'events']" (click)="closeMobileMenu()">
+              <lucide-icon name="CalendarDays"></lucide-icon>
+              {{ 'HEADER.EVENTS' | translate }}
+            </a>
+          </li>
+          <li>
             <a [routerLink]="[currentLang, 'news']" (click)="closeMobileMenu()">
-              <lucide-icon name="Newspaper"></lucide-icon>
+              <lucide-icon name="Radio"></lucide-icon>
+              {{ 'HEADER.NEWS' | translate }}
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="[currentLang, 'press']" (click)="closeMobileMenu()">
+              <lucide-icon name="BookOpen"></lucide-icon>
               {{ 'HEADER.PRESS' | translate }}
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="[currentLang, 'roadmap']" (click)="closeMobileMenu()">
+              <lucide-icon name="Map"></lucide-icon>
+              {{ 'HEADER.ROADMAP' | translate }}
             </a>
           </li>
           <li>
             <a [routerLink]="[currentLang, 'faq']" (click)="closeMobileMenu()">
               <lucide-icon name="HelpCircle"></lucide-icon>
               {{ 'HEADER.FAQ' | translate }}
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="[currentLang, 'developers']" (click)="closeMobileMenu()">
+              <lucide-icon name="Code"></lucide-icon>
+              {{ 'HEADER.DEVELOPERS' | translate }}
             </a>
           </li>
         </ul>

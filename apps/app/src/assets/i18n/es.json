@@ -24,7 +24,14 @@
     "PRESS": "Sala de Prensa",
     "SECURITY": "Confianza y Seguridad",
     "SUPPORT": "Soporte",
-    "CLIENT_PORTAL": "Portal Clientes"
+    "CLIENT_PORTAL": "Portal Clientes",
+    "ROADMAP": "Roadmap",
+    "EVENTS": "Eventos",
+    "DEVELOPERS": "Desarrolladores",
+    "LIFE_AT_JSL": "Vida en JSL",
+    "PRICING": "Precios",
+    "VIRTEEX_ECOSYSTEM": "Ecosistema virtex",
+    "NEWS": "Noticias"
   },
   "TOP_BAR": {
     "PORTFOLIO": "Portafolio",
@@ -765,10 +772,35 @@
   },
   "PRESS": {
     "TITLE": "Sala de Prensa",
-    "SUBTITLE": "Noticias, activos y recursos para medios.",
+    "EYEBROW": "Centro de Medios",
+    "SUBTITLE": "Recursos, noticias y activos para periodistas y profesionales de medios que cubren JSL Technology.",
+    "HERO_CTA_PRIMARY": "Descargar Kit de Prensa",
+    "HERO_CTA_SECONDARY": "Contactar al Equipo de Prensa",
     "KIT": "Kit de Prensa",
-    "DOWNLOAD": "Descargar Recursos",
-    "MENTIONS": "En los Medios"
+    "DOWNLOAD": "Descargar",
+    "MENTIONS": "En los Medios",
+    "STATS_OUTLETS": "Medios de Comunicación",
+    "STATS_MENTIONS_LABEL": "Menciones de Prensa",
+    "STATS_COUNTRIES": "Países Alcanzados",
+    "STATS_ARTICLES": "Artículos Publicados",
+    "RELEASES_EYEBROW": "Últimas Noticias",
+    "RELEASES_TITLE": "Comunicados de Prensa",
+    "RELEASES_READ": "Leer Comunicado",
+    "COVERAGE_EYEBROW": "Cobertura Mediática",
+    "COVERAGE_TITLE": "En la Prensa",
+    "COVERAGE_READ": "Leer Artículo",
+    "ASSETS_EYEBROW": "Recursos de Marca",
+    "ASSETS_TITLE": "Descargar Kit de Prensa",
+    "ASSETS_SUBTITLE": "Logotipos oficiales, guías de marca y fotos ejecutivas para uso mediático.",
+    "CONTACT_EYEBROW": "Consultas de Prensa",
+    "CONTACT_TITLE": "Habla con Nuestro Equipo de Prensa",
+    "CONTACT_SUBTITLE": "Para consultas de prensa, solicitudes de entrevistas y oportunidades mediáticas, contáctanos directamente.",
+    "CONTACT_RESPONSE": "Respondemos en un plazo de 24 horas hábiles.",
+    "CONTACT_CTA": "Enviar Consulta de Prensa",
+    "CATEGORY_LAUNCH": "Lanzamiento",
+    "CATEGORY_EXPANSION": "Expansión",
+    "CATEGORY_PARTNERSHIP": "Alianza",
+    "CATEGORY_AWARD": "Premio"
   },
   "PRICING": {
     "TITLE": "Calculadora de Precios",
@@ -877,7 +909,10 @@
     "SENT_MSG": "Revisa tu bandeja de entrada para el enlace de descarga.",
     "BADGE": "PDF Gratuito",
     "NO_SPAM": "Sin spam. Nunca compartimos tu email.",
-    "CHECK_INBOX": "Revisa tu bandeja de entrada"
+    "CHECK_INBOX": "Revisa tu bandeja de entrada",
+    "STAT_PAGES": "32 págs.",
+    "STAT_INDUSTRIES": "5 industrias",
+    "STAT_FREE": "Gratis"
   },
   "SHARE": {
     "LABEL": "Comparte este artículo",

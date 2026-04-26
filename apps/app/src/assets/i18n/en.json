@@ -24,7 +24,14 @@
     "PRESS": "Press Room",
     "SECURITY": "Trust & Security",
     "SUPPORT": "Support",
-    "CLIENT_PORTAL": "Client Portal"
+    "CLIENT_PORTAL": "Client Portal",
+    "ROADMAP": "Roadmap",
+    "EVENTS": "Events",
+    "DEVELOPERS": "Developers",
+    "LIFE_AT_JSL": "Life at JSL",
+    "PRICING": "Pricing",
+    "VIRTEEX_ECOSYSTEM": "Virteex Ecosystem",
+    "NEWS": "News"
   },
   "TOP_BAR": {
     "PORTFOLIO": "Portfolio",
@@ -765,10 +772,35 @@
   },
   "PRESS": {
     "TITLE": "Press Room",
-    "SUBTITLE": "News, assets, and media resources.",
+    "EYEBROW": "Media Center",
+    "SUBTITLE": "Resources, news, and assets for journalists and media professionals covering JSL Technology.",
+    "HERO_CTA_PRIMARY": "Download Press Kit",
+    "HERO_CTA_SECONDARY": "Contact Press Team",
     "KIT": "Press Kit",
-    "DOWNLOAD": "Download Assets",
-    "MENTIONS": "In the Media"
+    "DOWNLOAD": "Download",
+    "MENTIONS": "In the Media",
+    "STATS_OUTLETS": "Media Outlets",
+    "STATS_MENTIONS_LABEL": "Press Mentions",
+    "STATS_COUNTRIES": "Countries Reached",
+    "STATS_ARTICLES": "Articles Published",
+    "RELEASES_EYEBROW": "Latest News",
+    "RELEASES_TITLE": "Press Releases",
+    "RELEASES_READ": "Read Release",
+    "COVERAGE_EYEBROW": "Earned Media",
+    "COVERAGE_TITLE": "In the Press",
+    "COVERAGE_READ": "Read Article",
+    "ASSETS_EYEBROW": "Brand Resources",
+    "ASSETS_TITLE": "Download Press Kit",
+    "ASSETS_SUBTITLE": "Official logos, brand guidelines, and executive photos for media use.",
+    "CONTACT_EYEBROW": "Media Inquiries",
+    "CONTACT_TITLE": "Talk to Our Press Team",
+    "CONTACT_SUBTITLE": "For press inquiries, interview requests, and media opportunities, reach out directly.",
+    "CONTACT_RESPONSE": "We typically respond within 24 business hours.",
+    "CONTACT_CTA": "Send Press Inquiry",
+    "CATEGORY_LAUNCH": "Product Launch",
+    "CATEGORY_EXPANSION": "Expansion",
+    "CATEGORY_PARTNERSHIP": "Partnership",
+    "CATEGORY_AWARD": "Award"
   },
   "PRICING": {
     "TITLE": "Pricing Calculator",
@@ -877,7 +909,10 @@
     "SENT_MSG": "Check your inbox for the download link.",
     "BADGE": "Free PDF",
     "NO_SPAM": "No spam. We never share your email.",
-    "CHECK_INBOX": "Check your inbox"
+    "CHECK_INBOX": "Check your inbox",
+    "STAT_PAGES": "32 pages",
+    "STAT_INDUSTRIES": "5 industries",
+    "STAT_FREE": "Free"
   },
   "SHARE": {
     "LABEL": "Share this article",

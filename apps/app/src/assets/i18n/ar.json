@@ -1,4 +1,4 @@
-{
+﻿{
   "HEADER": {
     "HOME": "الرئيسية",
     "SERVICES": "الحلول",
@@ -24,7 +24,14 @@
     "PRESS": "غرفة الصحافة",
     "SECURITY": "الثقة والأمان",
     "SUPPORT": "الدعم",
-    "CLIENT_PORTAL": "بوابة العملاء"
+    "CLIENT_PORTAL": "بوابة العملاء",
+    "ROADMAP": "خارطة الطريق",
+    "EVENTS": "الفعاليات",
+    "DEVELOPERS": "المطورون",
+    "LIFE_AT_JSL": "الحياة في JSL",
+    "PRICING": "الأسعار",
+    "VIRTEEX_ECOSYSTEM": "نظام virtex البيئي",
+    "NEWS": "الأخبار"
   },
   "TOP_BAR": {
     "PORTFOLIO": "ملف الأعمال",
@@ -765,10 +772,35 @@
   },
   "PRESS": {
     "TITLE": "غرفة الصحافة",
-    "SUBTITLE": "أخبار وأصول وموارد إعلامية.",
+    "EYEBROW": "مركز الإعلام",
+    "SUBTITLE": "موارد وأخبار وأصول للصحفيين والإعلاميين الذين يتناولون JSL Technology.",
+    "HERO_CTA_PRIMARY": "تحميل الملف الصحفي",
+    "HERO_CTA_SECONDARY": "التواصل مع فريق الصحافة",
     "KIT": "الملف الصحفي",
-    "DOWNLOAD": "تحميل الأصول",
-    "MENTIONS": "في وسائل الإعلام"
+    "DOWNLOAD": "تحميل",
+    "MENTIONS": "في وسائل الإعلام",
+    "STATS_OUTLETS": "وسائل إعلامية",
+    "STATS_MENTIONS_LABEL": "ذكر صحفي",
+    "STATS_COUNTRIES": "دول تم الوصول إليها",
+    "STATS_ARTICLES": "مقالات منشورة",
+    "RELEASES_EYEBROW": "آخر الأخبار",
+    "RELEASES_TITLE": "البيانات الصحفية",
+    "RELEASES_READ": "قراءة البيان",
+    "COVERAGE_EYEBROW": "التغطية الإعلامية",
+    "COVERAGE_TITLE": "في الصحافة",
+    "COVERAGE_READ": "قراءة المقال",
+    "ASSETS_EYEBROW": "موارد العلامة التجارية",
+    "ASSETS_TITLE": "تحميل الملف الصحفي",
+    "ASSETS_SUBTITLE": "الشعارات الرسمية وإرشادات العلامة التجارية وصور المسؤولين للاستخدام الإعلامي.",
+    "CONTACT_EYEBROW": "استفسارات الصحافة",
+    "CONTACT_TITLE": "تحدث مع فريق الصحافة لدينا",
+    "CONTACT_SUBTITLE": "للاستفسارات الصحفية وطلبات المقابلات والفرص الإعلامية، تواصل معنا مباشرة.",
+    "CONTACT_RESPONSE": "نرد عادةً خلال 24 ساعة عمل.",
+    "CONTACT_CTA": "إرسال استفسار صحفي",
+    "CATEGORY_LAUNCH": "إطلاق منتج",
+    "CATEGORY_EXPANSION": "توسع",
+    "CATEGORY_PARTNERSHIP": "شراكة",
+    "CATEGORY_AWARD": "جائزة"
   },
   "PRICING": {
     "TITLE": "حاسبة الأسعار",
@@ -877,7 +909,10 @@
     "SENT_MSG": "تحقق من صندوق الوارد الخاص بك للحصول على رابط التحميل.",
     "BADGE": "PDF مجاني",
     "NO_SPAM": "لا بريد مزعج. نحن لا نشارك بريدك الإلكتروني أبداً.",
-    "CHECK_INBOX": "تحقق من صندوق الوارد الخاص بك"
+    "CHECK_INBOX": "تحقق من صندوق الوارد الخاص بك",
+    "STAT_PAGES": "٣٢ صفحة",
+    "STAT_INDUSTRIES": "٥ صناعات",
+    "STAT_FREE": "مجاني"
   },
   "SHARE": {
     "LABEL": "شارك هذا المقال",
