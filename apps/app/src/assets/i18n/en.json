@@ -613,7 +613,18 @@
     "READ_TIME_UNIT": "min read",
     "NO_RESULTS": "No articles found with those filters.",
     "EYEBROW": "Latest Updates",
-    "BLOG_TITLE": "From Our Blog"
+    "BLOG_TITLE": "From Our Blog",
+    "LIKES": "Likes",
+    "DISLIKES": "Dislikes",
+    "VIEWS": "Views",
+    "LISTEN": "Listen to Article",
+    "STOP_LISTENING": "Stop Listening",
+    "COMMENTS": "Comments",
+    "WRITE_COMMENT": "Write a comment",
+    "SUBMIT_COMMENT": "Post Comment",
+    "SHARE_ARTICLE": "Share Article",
+    "COMMENT_PLACEHOLDER": "Join the conversation...",
+    "NO_COMMENTS": "No comments yet. Be the first to share your thoughts!"
   },
   "LEGAL": {
     "PRIVACY_TITLE": "Privacy Policy",

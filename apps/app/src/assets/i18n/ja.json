@@ -613,7 +613,18 @@
     "READ_TIME_UNIT": "分で読める",
     "NO_RESULTS": "それらのフィルターで見つかった記事はありません。",
     "EYEBROW": "最新情報",
-    "BLOG_TITLE": "ブログより"
+    "BLOG_TITLE": "ブログより",
+    "LIKES": "いいね",
+    "DISLIKES": "よくないね",
+    "VIEWS": "閲覧数",
+    "LISTEN": "記事を聴く",
+    "STOP_LISTENING": "再生停止",
+    "COMMENTS": "コメント",
+    "WRITE_COMMENT": "コメントを書く",
+    "SUBMIT_COMMENT": "コメントを投稿",
+    "SHARE_ARTICLE": "記事を共有",
+    "COMMENT_PLACEHOLDER": "会話に参加...",
+    "NO_COMMENTS": "まだコメントはありません。最初の感想を投稿しましょう！"
   },
   "LEGAL": {
     "PRIVACY_TITLE": "プライバシーポリシー",
@@ -682,7 +693,6 @@
   "PARTNERS_PAGE": {
     "TITLE": "パートナー",
     "SUBTITLE": "業界リーダーとの永続的な関係を築く。",
-    "CONTENT": "当社のテクノロジーソリューションを信頼してくださっている企業をご紹介します。",
     "EYEBROW": "Partner Ecosystem",
     "TECH_EYEBROW": "Technology Alliances",
     "TECH_TITLE": "Our Technology Partners",
@@ -739,7 +749,6 @@
   "NEWS_PAGE": {
     "TITLE": "会社ニュース",
     "SUBTITLE": "最新のイノベーションを常にチェックしてください。",
-    "CONTENT": "JSL Technologyの最新ニュースとアップデート。",
     "EYEBROW": "Corporate News",
     "FEATURED": "Featured Story",
     "LATEST_EYEBROW": "Recent Coverage",

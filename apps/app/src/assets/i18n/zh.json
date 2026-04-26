@@ -613,7 +613,18 @@
     "READ_TIME_UNIT": "分钟阅读",
     "NO_RESULTS": "未找到符合这些筛选条件的文章。",
     "EYEBROW": "最新动态",
-    "BLOG_TITLE": "来自我们的博客"
+    "BLOG_TITLE": "来自我们的博客",
+    "LIKES": "点赞",
+    "DISLIKES": "踩",
+    "VIEWS": "浏览量",
+    "LISTEN": "收听文章",
+    "STOP_LISTENING": "停止收听",
+    "COMMENTS": "评论",
+    "WRITE_COMMENT": "写评论",
+    "SUBMIT_COMMENT": "发表评论",
+    "SHARE_ARTICLE": "分享文章",
+    "COMMENT_PLACEHOLDER": "参与对话...",
+    "NO_COMMENTS": "暂无评论。成为第一个分享想法的人吧！"
   },
   "LEGAL": {
     "PRIVACY_TITLE": "隐私政策",
@@ -682,7 +693,6 @@
   "PARTNERS_PAGE": {
     "TITLE": "我们的合作伙伴",
     "SUBTITLE": "与行业领导者建立持久的关系。",
-    "CONTENT": "了解信任我们并选择我们技术解决方案的公司。",
     "EYEBROW": "Partner Ecosystem",
     "TECH_EYEBROW": "Technology Alliances",
     "TECH_TITLE": "Our Technology Partners",
@@ -739,7 +749,6 @@
   "NEWS_PAGE": {
     "TITLE": "公司新闻",
     "SUBTITLE": "及时了解我们的最新创新。",
-    "CONTENT": "JSL Technology 的最新新闻和更新。",
     "EYEBROW": "Corporate News",
     "FEATURED": "Featured Story",
     "LATEST_EYEBROW": "Recent Coverage",

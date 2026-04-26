@@ -14,8 +14,11 @@ import {
   PLATFORM_ID,
   ViewChild,
   HostListener,
+  signal,
+  WritableSignal,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
@@ -41,6 +44,7 @@ register();
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     TranslateModule,
     RouterLink,
     LucideAngularModule,
@@ -81,6 +85,25 @@ export class BlogDetail
   private postData: BlogPost | undefined;
   private highlighted = false;
   private swiperInitialized = false;
+
+  // Social Engagement State
+  public likes = signal(124);
+  public dislikes = signal(3);
+  public isLiked = signal(false);
+  public isDisliked = signal(false);
+  public viewCount = signal(1240);
+  public showTopShareMenu = signal(false);
+  public showSideShareMenu = signal(false);
+  public isListening = signal(false);
+
+  // Comments state
+  public comments = signal([
+    { author: 'Marcos R.', date: new Date(), text: 'Excelente artículo, el SSR en Angular ha mejorado muchísimo.' },
+    { author: 'Elena M.', date: new Date(), text: 'Muy buena explicación sobre la hidratación no destructiva.' }
+  ]);
+  public newCommentText = '';
+
+  private utterance: SpeechSynthesisUtterance | null = null;
 
   constructor() {
     this.currentLang =
@@ -135,6 +158,80 @@ export class BlogDetail
     if (isPlatformBrowser(this.platformId)) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+  }
+
+  // Social Interactions
+  toggleLike() {
+    if (this.isLiked()) {
+      this.likes.update(v => v - 1);
+      this.isLiked.set(false);
+    } else {
+      this.likes.update(v => v + 1);
+      this.isLiked.set(true);
+      if (this.isDisliked()) {
+        this.dislikes.update(v => v - 1);
+        this.isDisliked.set(false);
+      }
+    }
+  }
+
+  toggleDislike() {
+    if (this.isDisliked()) {
+      this.dislikes.update(v => v - 1);
+      this.isDisliked.set(false);
+    } else {
+      this.dislikes.update(v => v + 1);
+      this.isDisliked.set(true);
+      if (this.isLiked()) {
+        this.likes.update(v => v - 1);
+        this.isLiked.set(false);
+      }
+    }
+  }
+
+  toggleTopShareMenu() {
+    this.showTopShareMenu.update(v => !v);
+    if (this.showTopShareMenu()) this.showSideShareMenu.set(false);
+  }
+
+  toggleSideShareMenu() {
+    this.showSideShareMenu.update(v => !v);
+    if (this.showSideShareMenu()) this.showTopShareMenu.set(false);
+  }
+
+  // Text to Speech
+  toggleListen() {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    if (this.isListening()) {
+      window.speechSynthesis.cancel();
+      this.isListening.set(false);
+    } else {
+      const content = this.el.nativeElement.querySelector('.content-body')?.innerText || '';
+      if (!content) return;
+
+      this.utterance = new SpeechSynthesisUtterance(content);
+      this.utterance.lang = this.translate.currentLang === 'es' ? 'es-ES' : 'en-US';
+      this.utterance.onend = () => this.isListening.set(false);
+
+      window.speechSynthesis.speak(this.utterance);
+      this.isListening.set(true);
+    }
+  }
+
+  // Comments
+  submitComment() {
+    if (!this.newCommentText.trim()) return;
+
+    this.comments.update(prev => [
+      {
+        author: 'Guest User',
+        date: new Date(),
+        text: this.newCommentText
+      },
+      ...prev
+    ]);
+    this.newCommentText = '';
   }
 
   // Image load handler
