@@ -12,16 +12,16 @@ export const routes: Routes = [
         path: 'home',
         loadComponent: () => import('./features/home/home').then(c => c.Home),
         data: {
-          title: 'HEADER.HOME',
-          description: 'HOME.HERO1_SUBTITLE',
+          title: 'SEO.HOME_TITLE',
+          description: 'SEO.HOME_DESC',
           robots: 'index, follow'
         }
       },
       {
         path: 'solutions',
         data: {
-          title: 'HEADER.SERVICES',
-          description: 'SOLUTIONS.SUBTITLE',
+          title: 'SEO.SOLUTIONS_TITLE',
+          description: 'SEO.SOLUTIONS_DESC',
           robots: 'index, follow'
         },
         children: [
@@ -42,8 +42,8 @@ export const routes: Routes = [
       {
         path: 'products',
         data: {
-          title: 'HEADER.PRODUCTS',
-          description: 'PRODUCTS.SUBTITLE',
+          title: 'SEO.PRODUCTS_TITLE',
+          description: 'SEO.PRODUCTS_DESC',
           robots: 'index, follow'
         },
         children: [
@@ -56,7 +56,7 @@ export const routes: Routes = [
             loadComponent: () => import('./features/product-detail/product-detail').then(c => c.ProductDetail),
             data: {
               title: 'dynamic',
-              description: 'PRODUCTS.SUBTITLE',
+              description: 'SEO.PRODUCTS_DESC',
               robots: 'index, follow'
             }
           }
@@ -65,8 +65,8 @@ export const routes: Routes = [
       {
         path: 'projects',
         data: { 
-          title: 'HEADER.PROJECTS',
-          description: 'PROJECTS.SUBTITLE',
+          title: 'SEO.PROJECTS_TITLE',
+          description: 'SEO.PROJECTS_DESC',
           robots: 'index, follow'
         },
         children: [
@@ -87,8 +87,8 @@ export const routes: Routes = [
       {
         path: 'blog',
         data: {
-          title: 'HEADER.BLOG',
-          description: 'BLOG.SUBTITLE',
+          title: 'SEO.BLOG_TITLE',
+          description: 'SEO.BLOG_DESC',
           robots: 'index, follow'
         },
         children: [
@@ -110,8 +110,8 @@ export const routes: Routes = [
         path: 'ventures',
         loadComponent: () => import('./features/ventures/ventures').then(c => c.Ventures),
         data: {
-          title: 'HEADER.VENTURES',
-          description: 'VENTURES.SUBTITLE',
+          title: 'SEO.VENTURES_TITLE',
+          description: 'SEO.VENTURES_DESC',
           robots: 'index, follow'
         }
       },
@@ -119,8 +119,8 @@ export const routes: Routes = [
         path: 'investors',
         loadComponent: () => import('./features/investors/investors').then(c => c.Investors),
         data: {
-          title: 'HEADER.INVESTORS',
-          description: 'INVESTORS.SUBTITLE',
+          title: 'SEO.INVESTORS_TITLE',
+          description: 'SEO.INVESTORS_DESC',
           robots: 'index, follow'
         }
       },
@@ -128,8 +128,8 @@ export const routes: Routes = [
         path: 'virteex-ecosystem',
         loadComponent: () => import('./features/virteex-landing/virteex-landing').then(c => c.VirteexLanding),
         data: {
-          title: 'VIRTEEX.TITLE',
-          description: 'VIRTEEX.SUBTITLE',
+          title: 'SEO.VIRTEEX_TITLE',
+          description: 'SEO.VIRTEEX_DESC',
           robots: 'index, follow'
         }
       },
@@ -137,8 +137,8 @@ export const routes: Routes = [
         path: 'process',
         loadComponent: () => import('./features/process/process').then(c => c.Process),
         data: {
-          title: 'HEADER.PROCESS',
-          description: 'PROCESS.SUBTITLE',
+          title: 'SEO.PROCESS_TITLE',
+          description: 'SEO.PROCESS_DESC',
           robots: 'index, follow'
         }
       },
@@ -146,8 +146,8 @@ export const routes: Routes = [
         path: 'industries',
         loadComponent: () => import('./features/industries/industries').then(c => c.Industries),
         data: {
-          title: 'HEADER.INDUSTRIES',
-          description: 'INDUSTRIES.SUBTITLE',
+          title: 'SEO.INDUSTRIES_TITLE',
+          description: 'SEO.INDUSTRIES_DESC',
           robots: 'index, follow'
         }
       },
@@ -155,8 +155,8 @@ export const routes: Routes = [
         path: 'tech-stack',
         loadComponent: () => import('./features/tech-stack/tech-stack').then(c => c.TechStack),
         data: { 
-          title: 'HEADER.TECH_STACK',
-          description: 'TECH_STACK.SUBTITLE',
+          title: 'SEO.TECH_STACK_TITLE',
+          description: 'SEO.TECH_STACK_DESC',
           robots: 'index, follow'
         }
       },
@@ -164,8 +164,8 @@ export const routes: Routes = [
         path: 'about-us',
         loadComponent: () => import('./features/about-us/about-us').then(c => c.AboutUs),
         data: {
-          title: 'HEADER.ABOUT',
-          description: 'ABOUT.SUBTITLE',
+          title: 'SEO.ABOUT_TITLE',
+          description: 'SEO.ABOUT_DESC',
           robots: 'index, follow'
         }
       },
@@ -173,8 +173,8 @@ export const routes: Routes = [
         path: 'contact',
         loadComponent: () => import('./features/contact/contact').then(c => c.Contact),
         data: {
-          title: 'HEADER.CONTACT',
-          description: 'CONTACT.SUBTITLE',
+          title: 'SEO.CONTACT_TITLE',
+          description: 'SEO.CONTACT_DESC',
           robots: 'index, follow'
         }
       },
@@ -182,8 +182,8 @@ export const routes: Routes = [
         path: 'privacy-policy',
         loadComponent: () => import('./features/legal/privacy/privacy').then(c => c.Privacy),
         data: {
-          title: 'LEGAL.PRIVACY_TITLE',
-          description: 'LEGAL.PRIVACY_INTRO',
+          title: 'SEO.PRIVACY_TITLE',
+          description: 'SEO.PRIVACY_DESC',
           robots: 'index, follow'
         }
       },
@@ -191,8 +191,8 @@ export const routes: Routes = [
         path: 'terms-of-service',
         loadComponent: () => import('./features/legal/terms/terms').then(c => c.Terms),
         data: {
-          title: 'LEGAL.TERMS_TITLE',
-          description: 'LEGAL.TERMS_SECTION_1_P1',
+          title: 'SEO.TERMS_TITLE',
+          description: 'SEO.TERMS_DESC',
           robots: 'index, follow'
         }
       },
@@ -200,8 +200,8 @@ export const routes: Routes = [
         path: 'cookie-policy',
         loadComponent: () => import('./features/legal/cookie/cookie').then(c => c.Cookie),
         data: {
-          title: 'LEGAL.COOKIE_TITLE',
-          description: 'LEGAL.COOKIE_INTRO',
+          title: 'SEO.COOKIE_TITLE',
+          description: 'SEO.COOKIE_DESC',
           robots: 'index, follow'
         }
       },
@@ -209,8 +209,8 @@ export const routes: Routes = [
         path: 'careers',
         loadComponent: () => import('./features/careers/careers').then(c => c.Careers),
         data: {
-          title: 'HEADER.CAREERS',
-          description: 'CAREERS.SUBTITLE',
+          title: 'SEO.CAREERS_TITLE',
+          description: 'SEO.CAREERS_DESC',
           robots: 'index, follow'
         }
       },
@@ -218,8 +218,8 @@ export const routes: Routes = [
         path: 'faq',
         loadComponent: () => import('./features/faq/faq').then(c => c.Faq),
         data: {
-          title: 'HEADER.FAQ',
-          description: 'FAQ.SUBTITLE',
+          title: 'SEO.FAQ_TITLE',
+          description: 'SEO.FAQ_DESC',
           robots: 'index, follow'
         }
       },
@@ -227,8 +227,8 @@ export const routes: Routes = [
         path: 'partners',
         loadComponent: () => import('./features/partners/partners').then(c => c.Partners),
         data: {
-          title: 'PARTNERS_PAGE.TITLE',
-          description: 'PARTNERS_PAGE.SUBTITLE',
+          title: 'SEO.PARTNERS_TITLE',
+          description: 'SEO.PARTNERS_DESC',
           robots: 'index, follow'
         }
       },
@@ -236,8 +236,8 @@ export const routes: Routes = [
         path: 'news',
         loadComponent: () => import('./features/news/news').then(c => c.News),
         data: {
-          title: 'NEWS_PAGE.TITLE',
-          description: 'NEWS_PAGE.SUBTITLE',
+          title: 'SEO.NEWS_TITLE',
+          description: 'SEO.NEWS_DESC',
           robots: 'index, follow'
         }
       },
@@ -245,8 +245,8 @@ export const routes: Routes = [
         path: 'developers',
         loadComponent: () => import('./features/developers/developers').then(c => c.Developers),
         data: {
-          title: 'DEVELOPERS.TITLE',
-          description: 'DEVELOPERS.SUBTITLE',
+          title: 'SEO.DEVELOPERS_TITLE',
+          description: 'SEO.DEVELOPERS_DESC',
           robots: 'index, follow'
         }
       },
@@ -254,8 +254,8 @@ export const routes: Routes = [
         path: 'roadmap',
         loadComponent: () => import('./features/roadmap/roadmap').then(c => c.Roadmap),
         data: {
-          title: 'ROADMAP.TITLE',
-          description: 'ROADMAP.SUBTITLE',
+          title: 'SEO.ROADMAP_TITLE',
+          description: 'SEO.ROADMAP_DESC',
           robots: 'index, follow'
         }
       },
@@ -263,8 +263,8 @@ export const routes: Routes = [
         path: 'events',
         loadComponent: () => import('./features/events/events').then(c => c.Events),
         data: {
-          title: 'EVENTS.TITLE',
-          description: 'EVENTS.SUBTITLE',
+          title: 'SEO.EVENTS_TITLE',
+          description: 'SEO.EVENTS_DESC',
           robots: 'index, follow'
         }
       },
@@ -272,8 +272,8 @@ export const routes: Routes = [
         path: 'status',
         loadComponent: () => import('./features/status/status').then(c => c.Status),
         data: {
-          title: 'STATUS.TITLE',
-          description: 'STATUS.SUBTITLE',
+          title: 'SEO.STATUS_TITLE',
+          description: 'SEO.STATUS_DESC',
           robots: 'noindex, follow'
         }
       },
@@ -281,8 +281,8 @@ export const routes: Routes = [
         path: 'life-at-jsl',
         loadComponent: () => import('./features/life-at-jsl/life-at-jsl').then(c => c.LifeAtJsl),
         data: {
-          title: 'LIFE_AT_JSL.TITLE',
-          description: 'LIFE_AT_JSL.SUBTITLE',
+          title: 'SEO.LIFE_AT_JSL_TITLE',
+          description: 'SEO.LIFE_AT_JSL_DESC',
           robots: 'index, follow'
         }
       },
@@ -290,8 +290,8 @@ export const routes: Routes = [
         path: 'press',
         loadComponent: () => import('./features/press/press').then(c => c.Press),
         data: {
-          title: 'PRESS.TITLE',
-          description: 'PRESS.SUBTITLE',
+          title: 'SEO.PRESS_TITLE',
+          description: 'SEO.PRESS_DESC',
           robots: 'index, follow'
         }
       },
@@ -299,8 +299,8 @@ export const routes: Routes = [
         path: 'pricing',
         loadComponent: () => import('./features/pricing/pricing').then(c => c.Pricing),
         data: {
-          title: 'PRICING.TITLE',
-          description: 'PRICING.SUBTITLE',
+          title: 'SEO.PRICING_TITLE',
+          description: 'SEO.PRICING_DESC',
           robots: 'index, follow'
         }
       },
@@ -308,8 +308,8 @@ export const routes: Routes = [
         path: 'security',
         loadComponent: () => import('./features/trust/trust').then(c => c.Trust),
         data: {
-          title: 'TRUST_PAGE.TITLE',
-          description: 'TRUST_PAGE.SUBTITLE',
+          title: 'SEO.TRUST_TITLE',
+          description: 'SEO.TRUST_DESC',
           robots: 'index, follow'
         }
       },
@@ -317,8 +317,8 @@ export const routes: Routes = [
         path: 'server-error',
         loadComponent: () => import('./features/server-error/server-error').then(c => c.ServerError),
         data: {
-          title: 'ERRORS.500_TITLE',
-          description: 'ERRORS.500_DESC',
+          title: 'SEO.ERROR_500_TITLE',
+          description: 'SEO.ERROR_500_DESC',
           robots: 'noindex, follow'
         }
       },
@@ -326,8 +326,8 @@ export const routes: Routes = [
         path: 'thank-you',
         loadComponent: () => import('./features/thank-you/thank-you').then(c => c.ThankYou),
         data: {
-          title: 'THANK_YOU.TITLE',
-          description: 'THANK_YOU.MESSAGE',
+          title: 'SEO.THANK_YOU_TITLE',
+          description: 'SEO.THANK_YOU_DESC',
           robots: 'noindex, follow'
         }
       },
@@ -340,8 +340,8 @@ export const routes: Routes = [
         path: '**',
         loadComponent: () => import('./features/not-found/not-found').then(c => c.NotFound),
         data: { 
-          title: 'NOT_FOUND.TITLE',
-          description: 'NOT_FOUND.SUBTITLE',
+          title: 'SEO.NOT_FOUND_TITLE',
+          description: 'SEO.NOT_FOUND_DESC',
           robots: 'noindex, follow'
         }
       }
