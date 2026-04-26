@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'jsl-privacy',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [TranslateModule],
   templateUrl: './privacy.html',
-  styleUrl: '../legal-page.scss' // Usamos el SCSS compartido
+  styleUrl: '../legal-page.scss'
 })
 export class Privacy {}

@@ -1,11 +1,28 @@
-<div class="page-container container">
-  <h1 class="page-title">{{ 'CONTACT.TITLE' | translate }}</h1>
-  <p class="page-subtitle">{{ 'CONTACT.SUBTITLE' | translate }}</p>
+<section class="contact-hero">
+  <div class="container">
+    <span class="section-eyebrow" jslAnimateOnScroll>{{ 'CONTACT.EYEBROW' | translate }}</span>
+    <h1 jslAnimateOnScroll>{{ 'CONTACT.TITLE' | translate }}</h1>
+    <p class="subtitle" jslAnimateOnScroll>{{ 'CONTACT.SUBTITLE' | translate }}</p>
 
+    <!-- Response meta -->
+    <div class="contact-meta" jslAnimateOnScroll>
+      <span class="contact-meta__item">
+        <lucide-icon name="Clock" [size]="16"></lucide-icon>
+        {{ 'CONTACT.RESPONSE_TIME' | translate }}
+      </span>
+      <span class="contact-meta__item">
+        <lucide-icon name="Globe" [size]="16"></lucide-icon>
+        {{ 'CONTACT.BUSINESS_HOURS' | translate }}
+      </span>
+    </div>
+  </div>
+</section>
+
+<div class="page-container container">
   <div class="contact-grid">
-    
+
     <!-- Columna 1: Información de Contacto -->
-    <div class="contact-info">
+    <div class="contact-info" jslAnimateOnScroll>
       <h3>{{ 'CONTACT.INFO_TITLE' | translate }}</h3>
       <p>{{ 'CONTACT.INFO_DESC' | translate }}</p>
 
@@ -28,6 +45,13 @@
         <div>
           <h4>{{ 'CONTACT.LOCATION' | translate }}</h4>
           <p>{{ 'CONTACT.LOCATION_ADDRESS' | translate }}</p>
+        </div>
+      </div>
+      <div class="contact-info__item">
+        <lucide-icon name="Clock"></lucide-icon>
+        <div>
+          <h4>{{ 'CONTACT.HOURS_LABEL' | translate }}</h4>
+          <p>{{ 'CONTACT.HOURS_VALUE' | translate }}</p>
         </div>
       </div>
     </div>
@@ -143,3 +167,35 @@
 
   </div>
 </div>
+
+<!-- Alternatives / Social proof -->
+<section class="contact-alternatives">
+  <div class="container">
+    <div class="alternatives-grid" jslAnimateOnScroll>
+      <div class="alternative-card">
+        <lucide-icon name="MessageCircle" [size]="28"></lucide-icon>
+        <h3>{{ 'CONTACT.ALT_WHATSAPP_TITLE' | translate }}</h3>
+        <p>{{ 'CONTACT.ALT_WHATSAPP_DESC' | translate }}</p>
+        <a href="https://wa.me/18092641693" target="_blank" rel="noopener" class="btn-outline">
+          {{ 'CONTACT.ALT_WHATSAPP_CTA' | translate }}
+        </a>
+      </div>
+      <div class="alternative-card">
+        <lucide-icon name="Calendar" [size]="28"></lucide-icon>
+        <h3>{{ 'CONTACT.ALT_CALL_TITLE' | translate }}</h3>
+        <p>{{ 'CONTACT.ALT_CALL_DESC' | translate }}</p>
+        <a href="https://calendly.com/jsl-technology" target="_blank" rel="noopener" class="btn-outline">
+          {{ 'CONTACT.ALT_CALL_CTA' | translate }}
+        </a>
+      </div>
+      <div class="alternative-card">
+        <lucide-icon name="Headphones" [size]="28"></lucide-icon>
+        <h3>{{ 'CONTACT.ALT_SUPPORT_TITLE' | translate }}</h3>
+        <p>{{ 'CONTACT.ALT_SUPPORT_DESC' | translate }}</p>
+        <a href="mailto:support@jsl.technology" class="btn-outline">
+          {{ 'CONTACT.ALT_SUPPORT_CTA' | translate }}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

@@ -3,29 +3,51 @@
   <p class="page-subtitle" jslAnimateOnScroll>{{ 'ABOUT.SUBTITLE' | translate }}</p>
 </div>
 
+<!-- Stats Band -->
+<section class="about-stats">
+  <div class="container">
+    <div class="stats-band">
+      @for (stat of stats; track stat.labelKey) {
+        <div class="stat-item" jslAnimateOnScroll>
+          <span class="stat-item__value">{{ stat.valueKey | translate }}</span>
+          <span class="stat-item__label">{{ stat.labelKey | translate }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Intro -->
 <section class="about-intro container">
   <div class="about-intro__text" jslAnimateOnScroll>
     <span class="section-eyebrow">{{ 'ABOUT.INTRO_EYEBROW' | translate }}</span>
     <h2 class="section-title">{{ 'ABOUT.INTRO_TITLE' | translate }}</h2>
     <p class="section-subtitle">{{ 'ABOUT.INTRO_DESC_1' | translate }}</p>
     <p class="section-subtitle">{{ 'ABOUT.INTRO_DESC_2' | translate }}</p>
+    <a [routerLink]="['/', currentLang, 'contact']" class="btn-primary">
+      {{ 'ABOUT.INTRO_CTA' | translate }}
+      <lucide-icon name="ArrowRight" [size]="18"></lucide-icon>
+    </a>
   </div>
- <div class="about-intro__image" jslAnimateOnScroll>
-    <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?fit=crop&w=600&q=80" 
+  <div class="about-intro__image" jslAnimateOnScroll>
+    <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?fit=crop&w=600&q=80"
          [alt]="'ABOUT.HERO_ALT' | translate"
-         width="600"
-         height="400"
-         loading="lazy">
+         width="600" height="400" loading="lazy">
   </div>
 </section>
 
+<!-- Core Values -->
 <section class="core-values-section">
   <div class="container">
+    <div class="section-header" jslAnimateOnScroll>
+      <span class="section-eyebrow">{{ 'ABOUT.VALUES_EYEBROW' | translate }}</span>
+      <h2 class="section-title">{{ 'ABOUT.VALUES_TITLE' | translate }}</h2>
+    </div>
     <div class="core-values-grid">
       @for (value of coreValues; track value.key) {
         <div class="core-value-card" jslAnimateOnScroll>
           <div class="core-value-card__icon">
-            <lucide-icon [name]="value.icon"></lucide-icon>
+            <lucide-icon [name]="value.icon" [size]="32"></lucide-icon>
           </div>
           <h3 class="core-value-card__title">{{ 'ABOUT.' + value.key + '_TITLE' | translate }}</h3>
           <p class="core-value-card__desc">{{ 'ABOUT.' + value.key + '_DESC' | translate }}</p>
@@ -35,7 +57,26 @@
   </div>
 </section>
 
-<!-- Sección Team (Refactorizada) -->
+<!-- Awards & Recognition -->
+<section class="about-awards">
+  <div class="container">
+    <div class="section-header" jslAnimateOnScroll>
+      <span class="section-eyebrow">{{ 'ABOUT.AWARDS_EYEBROW' | translate }}</span>
+      <h2 class="section-title">{{ 'ABOUT.AWARDS_TITLE' | translate }}</h2>
+    </div>
+    <div class="awards-grid">
+      @for (award of awards; track award.key) {
+        <div class="award-card" jslAnimateOnScroll>
+          <lucide-icon [name]="award.icon" [size]="36"></lucide-icon>
+          <h3>{{ 'ABOUT.AWARD_' + award.key + '_TITLE' | translate }}</h3>
+          <p>{{ 'ABOUT.AWARD_' + award.key + '_DESC' | translate }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Team -->
 <section class="team-section container">
   <div class="team-header" jslAnimateOnScroll>
     <span class="section-eyebrow">{{ 'ABOUT.TEAM_EYEBROW' | translate }}</span>
@@ -52,8 +93,6 @@
         <div class="team-member-card__info">
           <h3 class="team-member-card__name">{{ member.nameKey | translate }}</h3>
           <p class="team-member-card__role">{{ member.roleKey | translate }}</p>
-
-          <!-- Certifications -->
           @if (member.certifications && member.certifications.length > 0) {
             <div class="team-member-certs">
               @for (cert of member.certifications; track cert) {
@@ -65,11 +104,18 @@
       </div>
     }
   </div>
+
+  <div class="team-cta" jslAnimateOnScroll>
+    <a [routerLink]="['/', currentLang, 'careers']" class="btn-outline">
+      {{ 'ABOUT.JOIN_TEAM' | translate }}
+      <lucide-icon name="ArrowRight" [size]="18"></lucide-icon>
+    </a>
+  </div>
 </section>
 
-<!-- 2. Añadir CTA reutilizable al final -->
-<jsl-cta-section 
+<jsl-cta-section
   eyebrowKey="ABOUT.CTA_EYEBROW"
   titleKey="ABOUT.CTA_TITLE"
-  subtitleKey="ABOUT.CTA_SUBTITLE">
+  subtitleKey="ABOUT.CTA_SUBTITLE"
+  [ctaLink]="['/', currentLang, 'contact']">
 </jsl-cta-section>

@@ -1,42 +1,49 @@
-// src/app/features/not-found/not-found.ts
 import { Component, Inject, OnDestroy } from '@angular/core';
-// 1. Importar NgOptimizedImage
-import { CommonModule, NgOptimizedImage } from '@angular/common'; 
-import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
-import { Subscription } from 'rxjs';
 import { AnimateOnScroll } from '@shared/directives/animate-on-scroll';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'jsl-not-found',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    TranslateModule,
-    LucideAngularModule,
-    AnimateOnScroll,
-    NgOptimizedImage // 2. Añadir a imports
-  ],
+  imports: [FormsModule, RouterLink, TranslateModule, LucideAngularModule, AnimateOnScroll],
   templateUrl: './not-found.html',
   styleUrl: './not-found.scss'
 })
 export class NotFound implements OnDestroy {
   public currentLang: string;
+  public searchQuery = '';
   private langSub: Subscription;
-  
-  // 3. Ilustración moderna y profesional de Storyset by Freepik
-  public illustrationUrl = 'https://stories.freepik.com/storage/v1/product/404-error-with-a-cute-animal-pana/404-error-with-a-cute-animal-pana.svg';
+
+  public illustrationUrl = 'assets/imgs/illustrations/404.svg';
+
+  suggestedPages = [
+    { route: 'solutions',  icon: 'Layers',    labelKey: 'HEADER.SERVICES'   },
+    { route: 'products',   icon: 'Package',   labelKey: 'HEADER.PRODUCTS'   },
+    { route: 'projects',   icon: 'Briefcase', labelKey: 'HEADER.PROJECTS'   },
+    { route: 'blog',       icon: 'BookOpen',  labelKey: 'HEADER.BLOG'       },
+    { route: 'about-us',   icon: 'Users',     labelKey: 'HEADER.ABOUT'      },
+    { route: 'contact',    icon: 'Mail',      labelKey: 'HEADER.CONTACT'    },
+  ];
 
   constructor(
     @Inject(TranslateService) private translate: TranslateService,
+    private router: Router,
   ) {
     this.currentLang = this.translate.currentLang || this.translate.defaultLang || 'es';
-    this.langSub = this.translate.onLangChange.subscribe(event => this.currentLang = event.lang);
+    this.langSub = this.translate.onLangChange.subscribe(e => this.currentLang = e.lang);
   }
 
-  ngOnDestroy(): void {
-    this.langSub?.unsubscribe();
+  onSearch() {
+    if (this.searchQuery.trim()) {
+      this.router.navigate(['/', this.currentLang, 'blog'], {
+        queryParams: { q: this.searchQuery.trim() }
+      });
+    }
   }
+
+  ngOnDestroy() { this.langSub?.unsubscribe(); }
 }

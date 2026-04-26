@@ -14,7 +14,7 @@ import {
   HostListener,
   effect,
 } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { DirectionService } from '@core/services/direction.service';
@@ -23,7 +23,7 @@ import { MenuService } from '@core/services/menu.service';
 @Component({
   selector: 'jsl-mobile-menu',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, TranslateModule, LucideAngularModule],
+  imports: [CommonModule, RouterLink, TranslateModule, LucideAngularModule],
   templateUrl: './mobile-menu.html',
   styleUrl: './mobile-menu.scss',
 })

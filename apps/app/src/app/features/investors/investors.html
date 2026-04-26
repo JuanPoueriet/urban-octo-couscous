@@ -1,57 +1,145 @@
-<div class="page-container container">
-  <h1 class="page-title">{{ 'INVESTORS.TITLE' | translate }}</h1>
-  <p class="page-subtitle">{{ 'INVESTORS.SUBTITLE' | translate }}</p>
-</div>
-
-<div class="container">
-  <!-- Governance Section -->
-  <section class="governance-section">
-    <div class="content">
-      <h2>{{ 'INVESTORS.GOVERNANCE_TITLE' | translate }}</h2>
-      <p>{{ 'INVESTORS.GOVERNANCE_DESC' | translate }}</p>
-
-      <ul class="governance-list">
-        <li>
-          <lucide-icon name="ShieldCheck"></lucide-icon>
-          <span>{{ 'INVESTORS.GOVERNANCE_POINT1' | translate }}</span>
-        </li>
-        <li>
-          <lucide-icon name="Users"></lucide-icon>
-          <span>{{ 'INVESTORS.GOVERNANCE_POINT2' | translate }}</span>
-        </li>
-        <li>
-          <lucide-icon name="FileText"></lucide-icon>
-          <span>{{ 'INVESTORS.GOVERNANCE_POINT3' | translate }}</span>
-        </li>
-      </ul>
+<!-- Hero -->
+<section class="investors-hero">
+  <div class="container">
+    <span class="section-eyebrow" jslAnimateOnScroll>{{ 'INVESTORS.EYEBROW' | translate }}</span>
+    <h1 jslAnimateOnScroll>{{ 'INVESTORS.TITLE' | translate }}</h1>
+    <p class="subtitle" jslAnimateOnScroll>{{ 'INVESTORS.SUBTITLE' | translate }}</p>
+    <div class="investors-hero__actions" jslAnimateOnScroll>
+      <a href="mailto:investors@jsl.technology" class="btn-primary">
+        <lucide-icon name="Mail" [size]="18"></lucide-icon>
+        {{ 'INVESTORS.CONTACT_IR' | translate }}
+      </a>
+      <a href="assets/docs/jsl-investor-deck-2025.pdf" download class="btn-outline">
+        <lucide-icon name="Download" [size]="18"></lucide-icon>
+        {{ 'INVESTORS.DOWNLOAD_DECK' | translate }}
+      </a>
     </div>
-    <div class="image">
-      <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?fit=crop&w=800&q=80" [alt]="'ALT.GOVERNANCE' | translate" width="800" height="500" loading="lazy">
-    </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Financial Stability -->
-  <section class="financial-section">
-    <h2>{{ 'INVESTORS.FINANCIAL_TITLE' | translate }}</h2>
+<!-- Stats Band -->
+<section class="investors-stats">
+  <div class="container">
+    <div class="stats-band">
+      @for (stat of stats; track stat.labelKey) {
+        <div class="stat-item" jslAnimateOnScroll>
+          <span class="stat-item__value">{{ stat.valueKey | translate }}</span>
+          <span class="stat-item__label">{{ stat.labelKey | translate }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Investment Highlights -->
+<section class="investors-highlights">
+  <div class="container">
+    <div class="section-header" jslAnimateOnScroll>
+      <span class="section-eyebrow">{{ 'INVESTORS.HIGHLIGHTS_EYEBROW' | translate }}</span>
+      <h2 class="section-title">{{ 'INVESTORS.HIGHLIGHTS_TITLE' | translate }}</h2>
+      <p class="section-subtitle">{{ 'INVESTORS.HIGHLIGHTS_SUBTITLE' | translate }}</p>
+    </div>
+    <div class="highlights-grid">
+      @for (item of highlights; track item.key) {
+        <div class="highlight-card" jslAnimateOnScroll>
+          <div class="highlight-card__icon">
+            <lucide-icon [name]="item.icon" [size]="28"></lucide-icon>
+          </div>
+          <h3>{{ 'INVESTORS.HIGHLIGHT_' + item.key + '_TITLE' | translate }}</h3>
+          <p>{{ 'INVESTORS.HIGHLIGHT_' + item.key + '_DESC' | translate }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Governance & Financials -->
+<section class="investors-governance">
+  <div class="container">
+    <div class="governance-grid">
+      <div class="governance-text" jslAnimateOnScroll>
+        <span class="section-eyebrow">{{ 'INVESTORS.GOVERNANCE_EYEBROW' | translate }}</span>
+        <h2 class="section-title">{{ 'INVESTORS.GOVERNANCE_TITLE' | translate }}</h2>
+        <p>{{ 'INVESTORS.GOVERNANCE_DESC' | translate }}</p>
+        <ul class="governance-list">
+          <li>
+            <lucide-icon name="ShieldCheck" [size]="18"></lucide-icon>
+            <span>{{ 'INVESTORS.GOVERNANCE_POINT1' | translate }}</span>
+          </li>
+          <li>
+            <lucide-icon name="Users" [size]="18"></lucide-icon>
+            <span>{{ 'INVESTORS.GOVERNANCE_POINT2' | translate }}</span>
+          </li>
+          <li>
+            <lucide-icon name="FileText" [size]="18"></lucide-icon>
+            <span>{{ 'INVESTORS.GOVERNANCE_POINT3' | translate }}</span>
+          </li>
+          <li>
+            <lucide-icon name="Scale" [size]="18"></lucide-icon>
+            <span>{{ 'INVESTORS.GOVERNANCE_POINT4' | translate }}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="governance-image" jslAnimateOnScroll>
+        <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?fit=crop&w=800&q=80"
+             [alt]="'INVESTORS.GOVERNANCE_ALT' | translate"
+             width="800" height="500" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Financial Highlights -->
+<section class="investors-financial">
+  <div class="container">
+    <div class="section-header" jslAnimateOnScroll>
+      <span class="section-eyebrow">{{ 'INVESTORS.FINANCIAL_EYEBROW' | translate }}</span>
+      <h2 class="section-title">{{ 'INVESTORS.FINANCIAL_TITLE' | translate }}</h2>
+    </div>
     <div class="financial-grid">
-      <div class="stat-card">
-        <span class="stat-value">{{ 'INVESTORS.STAT_YEARS_VAL' | translate }}</span>
-        <span class="stat-label">{{ 'INVESTORS.STAT_YEARS' | translate }}</span>
+      <div class="financial-card" jslAnimateOnScroll>
+        <lucide-icon name="TrendingUp" [size]="32"></lucide-icon>
+        <h3>{{ 'INVESTORS.FINANCIAL_REVENUE_TITLE' | translate }}</h3>
+        <p>{{ 'INVESTORS.FINANCIAL_REVENUE_DESC' | translate }}</p>
       </div>
-      <div class="stat-card">
-        <span class="stat-value">{{ 'INVESTORS.STAT_GROWTH_VAL' | translate }}</span>
-        <span class="stat-label">{{ 'INVESTORS.STAT_GROWTH' | translate }}</span>
+      <div class="financial-card" jslAnimateOnScroll>
+        <lucide-icon name="Globe" [size]="32"></lucide-icon>
+        <h3>{{ 'INVESTORS.FINANCIAL_MARKETS_TITLE' | translate }}</h3>
+        <p>{{ 'INVESTORS.FINANCIAL_MARKETS_DESC' | translate }}</p>
       </div>
-      <div class="stat-card">
-        <span class="stat-value">{{ 'INVESTORS.STAT_CLIENTS_VAL' | translate }}</span>
-        <span class="stat-label">{{ 'INVESTORS.STAT_CLIENTS' | translate }}</span>
+      <div class="financial-card" jslAnimateOnScroll>
+        <lucide-icon name="Layers" [size]="32"></lucide-icon>
+        <h3>{{ 'INVESTORS.FINANCIAL_MODEL_TITLE' | translate }}</h3>
+        <p>{{ 'INVESTORS.FINANCIAL_MODEL_DESC' | translate }}</p>
       </div>
     </div>
-  </section>
-</div>
+  </div>
+</section>
+
+<!-- IR Contact -->
+<section class="investors-ir">
+  <div class="container">
+    <div class="ir-card" jslAnimateOnScroll>
+      <lucide-icon name="Briefcase" [size]="40"></lucide-icon>
+      <div class="ir-card__content">
+        <h2>{{ 'INVESTORS.IR_TITLE' | translate }}</h2>
+        <p>{{ 'INVESTORS.IR_DESC' | translate }}</p>
+      </div>
+      <div class="ir-card__actions">
+        <a href="mailto:investors@jsl.technology" class="btn-primary">
+          {{ 'INVESTORS.IR_EMAIL' | translate }}
+        </a>
+        <a href="tel:+18092641693" class="btn-outline">
+          {{ 'INVESTORS.IR_PHONE' | translate }}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
 
 <jsl-cta-section
   eyebrowKey="INVESTORS.CTA_EYEBROW"
   titleKey="INVESTORS.CTA_TITLE"
-  subtitleKey="INVESTORS.CTA_SUBTITLE">
+  subtitleKey="INVESTORS.CTA_SUBTITLE"
+  [ctaLink]="['/', currentLang, 'contact']">
 </jsl-cta-section>

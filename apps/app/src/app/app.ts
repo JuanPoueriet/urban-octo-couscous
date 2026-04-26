@@ -13,7 +13,6 @@ import { WhatsAppButtonComponent } from './shared/components/whatsapp-button/wha
 import { SUPPORTED_LANGUAGES } from '@core/constants/languages';
 import { ToastComponent } from './shared/components/toast/toast';
 import { CookieBannerComponent } from './shared/components/cookie-banner/cookie-banner';
-import { BreadcrumbsComponent } from './shared/components/breadcrumbs/breadcrumbs';
 import Lenis from 'lenis';
 
 @Component({
@@ -28,7 +27,6 @@ import Lenis from 'lenis';
     WhatsAppButtonComponent,
     ToastComponent,
     CookieBannerComponent,
-    BreadcrumbsComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',

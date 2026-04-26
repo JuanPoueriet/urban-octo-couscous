@@ -131,22 +131,28 @@ export const PRODUCTS = [
     key: 'ERP',
     slug: 'virtex',
     icon: 'Database',
+    type: 'erp',
     imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?fit=crop&w=1200&q=80',
     externalUrl: 'https://virtex.com',
+    featuresKeys: ['PRODUCTS.ERP_FEAT_1', 'PRODUCTS.ERP_FEAT_2', 'PRODUCTS.ERP_FEAT_3'],
   },
   {
     key: 'POS',
     slug: 'jsl-pos',
     icon: 'ShoppingCart',
+    type: 'pos',
     imageUrl: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?fit=crop&w=1200&q=80',
     externalUrl: 'https://pos.virtex.com',
+    featuresKeys: ['PRODUCTS.POS_FEAT_1', 'PRODUCTS.POS_FEAT_2', 'PRODUCTS.POS_FEAT_3'],
   },
   {
     key: 'MOBILE_APPS',
     slug: 'proprietary-apps',
     icon: 'Smartphone',
+    type: 'mobile',
     imageUrl: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?fit=crop&w=1200&q=80',
     externalUrl: 'https://apps.virtex.com',
+    featuresKeys: ['PRODUCTS.MOBILE_APPS_FEAT_1', 'PRODUCTS.MOBILE_APPS_FEAT_2', 'PRODUCTS.MOBILE_APPS_FEAT_3'],
   },
 ];
 
@@ -440,20 +446,12 @@ export const CAREER_POSITIONS = [
  * DATOS DE PREGUNTAS FRECUENTES (FAQ)
  */
 export const FAQ_ITEMS = [
-  {
-    questionKey: 'FAQ.Q1_TITLE',
-    answerKey: 'FAQ.Q1_DESC',
-  },
-  {
-    questionKey: 'FAQ.Q2_TITLE',
-    answerKey: 'FAQ.Q2_DESC',
-  },
-  {
-    questionKey: 'FAQ.Q3_TITLE',
-    answerKey: 'FAQ.Q3_DESC',
-  },
-  {
-    questionKey: 'FAQ.Q4_TITLE',
-    answerKey: 'FAQ.Q4_DESC',
-  },
+  { questionKey: 'FAQ.Q1_TITLE',  answerKey: 'FAQ.Q1_DESC',  category: 'services'  },
+  { questionKey: 'FAQ.Q2_TITLE',  answerKey: 'FAQ.Q2_DESC',  category: 'services'  },
+  { questionKey: 'FAQ.Q3_TITLE',  answerKey: 'FAQ.Q3_DESC',  category: 'pricing'   },
+  { questionKey: 'FAQ.Q4_TITLE',  answerKey: 'FAQ.Q4_DESC',  category: 'pricing'   },
+  { questionKey: 'FAQ.Q5_TITLE',  answerKey: 'FAQ.Q5_DESC',  category: 'process'   },
+  { questionKey: 'FAQ.Q6_TITLE',  answerKey: 'FAQ.Q6_DESC',  category: 'process'   },
+  { questionKey: 'FAQ.Q7_TITLE',  answerKey: 'FAQ.Q7_DESC',  category: 'technical' },
+  { questionKey: 'FAQ.Q8_TITLE',  answerKey: 'FAQ.Q8_DESC',  category: 'technical' },
 ];

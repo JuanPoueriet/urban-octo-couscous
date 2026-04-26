@@ -52,8 +52,10 @@ export interface Product {
   key: string;
   slug: string;
   icon: string;
+  type?: string;
   imageUrl?: string;
   externalUrl?: string;
+  featuresKeys?: string[];
 }
 
 // Interface para Casos de Éxito (Proyectos)
@@ -135,6 +137,7 @@ export interface CareerPosition {
 export interface FaqItem {
   questionKey: string;
   answerKey: string;
+  category?: string;
 }
 
 // Interface para Páginas Estáticas

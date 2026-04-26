@@ -1,34 +1,65 @@
-<div class="page-container container">
-  <h1 class="page-title" jslAnimateOnScroll>{{ 'FAQ.TITLE' | translate }}</h1>
-  <p class="page-subtitle" jslAnimateOnScroll>{{ 'FAQ.SUBTITLE' | translate }}</p>
+<!-- Hero -->
+<section class="faq-hero">
+  <div class="container">
+    <span class="section-eyebrow" jslAnimateOnScroll>{{ 'FAQ.EYEBROW' | translate }}</span>
+    <h1 jslAnimateOnScroll>{{ 'FAQ.TITLE' | translate }}</h1>
+    <p class="subtitle" jslAnimateOnScroll>{{ 'FAQ.SUBTITLE' | translate }}</p>
+  </div>
+</section>
 
-  <div class="faq-list" jslAnimateOnScroll>
-    @if (faqItems$ | async; as faqItems) {
-      @for (item of faqItems; track $index) {
-        <div class="faq-item" [class.open]="openQuestionIndex() === $index">
-          
-          <!-- El botón de la pregunta -->
-          <button class="faq-question" (click)="toggleQuestion($index)">
-            <span>{{ item.questionKey | translate }}</span>
-            <div class="faq-icon">
-              <!-- El ícono rota basado en el estado 'open' -->
-              <lucide-icon name="ChevronDown"></lucide-icon>
-            </div>
-          </button>
-          
-          <!-- La respuesta (se muestra condicionalmente) -->
-          @if (openQuestionIndex() === $index) {
-            <div class="faq-answer">
-              <p [innerHTML]="item.answerKey | translate"></p>
-            </div>
-          }
-        </div>
+<!-- Category Tabs -->
+<section class="faq-categories">
+  <div class="container">
+    <div class="filter-tabs" role="tablist" jslAnimateOnScroll>
+      @for (cat of categories; track cat.key) {
+        <button
+          class="filter-tab"
+          [class.filter-tab--active]="activeCategory() === cat.key"
+          (click)="setCategory(cat.key)"
+          role="tab"
+          [attr.aria-selected]="activeCategory() === cat.key">
+          {{ cat.labelKey | translate }}
+        </button>
       }
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Accordion -->
+<div class="page-container container">
+  <div class="faq-list" jslAnimateOnScroll>
+    @for (item of filteredItems(); track $index) {
+      <div class="faq-item" [class.open]="openQuestionIndex() === $index">
+        <button class="faq-question" (click)="toggleQuestion($index)" [attr.aria-expanded]="openQuestionIndex() === $index">
+          <span>{{ item.questionKey | translate }}</span>
+          <div class="faq-icon">
+            <lucide-icon name="ChevronDown" [size]="20"></lucide-icon>
+          </div>
+        </button>
+        @if (openQuestionIndex() === $index) {
+          <div class="faq-answer" role="region">
+            <p [innerHTML]="item.answerKey | translate"></p>
+          </div>
+        }
+      </div>
+    } @empty {
+      <div class="faq-empty" jslAnimateOnScroll>
+        <lucide-icon name="HelpCircle" [size]="32"></lucide-icon>
+        <p>{{ 'FAQ.EMPTY' | translate }}</p>
+      </div>
     }
+  </div>
+
+  <!-- Still have questions -->
+  <div class="faq-contact-prompt" jslAnimateOnScroll>
+    <lucide-icon name="MessageSquare" [size]="24"></lucide-icon>
+    <p>{{ 'FAQ.STILL_QUESTIONS' | translate }}</p>
+    <a href="mailto:info@jsl.technology" class="btn-outline">
+      {{ 'FAQ.CONTACT_US' | translate }}
+    </a>
   </div>
 </div>
 
-<!-- CTA al final -->
 <jsl-cta-section
   eyebrowKey="FAQ.CTA_EYEBROW"
   titleKey="FAQ.CTA_TITLE"

@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node update-langs.js)",
+      "Bash(node update-langs2.js)",
+      "Bash(node update-langs3.js)",
+      "Bash(node update-langs4.js)"
+    ]
+  }
+}

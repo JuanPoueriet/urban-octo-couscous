@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
@@ -8,6 +7,7 @@ import { ToastService } from '@core/services/toast.service';
 import { AnalyticsService } from '@core/services/analytics.service';
 import { Seo } from '@core/services/seo';
 import { Router } from '@angular/router';
+import { AnimateOnScroll } from '@shared/directives/animate-on-scroll';
 import { Subject } from 'rxjs';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { ALL_ICONS } from '@core/constants/icons';
@@ -15,7 +15,7 @@ import { ALL_ICONS } from '@core/constants/icons';
 @Component({
   selector: 'jsl-contact',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule, LucideAngularModule],
+  imports: [ReactiveFormsModule, TranslateModule, LucideAngularModule, AnimateOnScroll],
   templateUrl: './contact.html',
   styleUrl: './contact.scss',
 })

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -17,7 +17,7 @@ import { Seo } from '@core/services/seo';
   selector: 'jsl-solution-detail',
   standalone: true,
   imports: [
-    CommonModule,
+    AsyncPipe,
     TranslateModule,
     RouterLink,
     LucideAngularModule,

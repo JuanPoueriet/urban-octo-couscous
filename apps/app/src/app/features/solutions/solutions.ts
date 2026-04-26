@@ -1,39 +1,38 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Inject, OnDestroy, inject } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Card } from '@shared/components/card/card';
 import { AnimateOnScroll } from '@shared/directives/animate-on-scroll';
 import { DataService } from '@core/services/data.service';
 import { CtaComponent } from '@shared/components/cta/cta';
+import { LucideAngularModule } from 'lucide-angular';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'jsl-solutions',
   standalone: true,
-  imports: [
-    CommonModule,
-    TranslateModule,
-    Card,
-    AnimateOnScroll,
-    CtaComponent,
-  ],
+  imports: [TranslateModule, LucideAngularModule, Card, AnimateOnScroll, CtaComponent],
   templateUrl: './solutions.html',
   styleUrl: './solutions.scss',
 })
-export class Solutions implements OnInit {
-  private translate = inject(TranslateService);
+export class Solutions implements OnDestroy {
   private dataService = inject(DataService);
+  private langSub: Subscription;
 
   public currentLang: string;
   public solutions = toSignal(this.dataService.getSolutions(), { initialValue: [] });
 
-  constructor() {
+  stats = [
+    { icon: 'Briefcase', valueKey: 'SOLUTIONS.STAT_PROJECTS_VAL',    labelKey: 'SOLUTIONS.STAT_PROJECTS'    },
+    { icon: 'Users',     valueKey: 'SOLUTIONS.STAT_CLIENTS_VAL',     labelKey: 'SOLUTIONS.STAT_CLIENTS'     },
+    { icon: 'Globe',     valueKey: 'SOLUTIONS.STAT_COUNTRIES_VAL',   labelKey: 'SOLUTIONS.STAT_COUNTRIES'   },
+    { icon: 'Gauge',     valueKey: 'SOLUTIONS.STAT_SATISFACTION_VAL', labelKey: 'SOLUTIONS.STAT_SATISFACTION' },
+  ];
+
+  constructor(@Inject(TranslateService) private translate: TranslateService) {
     this.currentLang = this.translate.currentLang || this.translate.defaultLang || 'es';
+    this.langSub = this.translate.onLangChange.subscribe(e => this.currentLang = e.lang);
   }
 
-  ngOnInit() {
-    this.translate.onLangChange.subscribe((event) => {
-      this.currentLang = event.lang;
-    });
-  }
+  ngOnDestroy() { this.langSub?.unsubscribe(); }
 }
