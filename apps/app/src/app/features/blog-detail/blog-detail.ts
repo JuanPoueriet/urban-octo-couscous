@@ -88,13 +88,12 @@ export class BlogDetail
 
   // Social Engagement State
   public likes = signal(124);
-  public dislikes = signal(3);
   public isLiked = signal(false);
-  public isDisliked = signal(false);
   public viewCount = signal(1240);
   public showTopShareMenu = signal(false);
   public showSideShareMenu = signal(false);
   public isListening = signal(false);
+  public showCommentsModal = signal(false);
 
   // Comments state
   public comments = signal([
@@ -168,24 +167,6 @@ export class BlogDetail
     } else {
       this.likes.update(v => v + 1);
       this.isLiked.set(true);
-      if (this.isDisliked()) {
-        this.dislikes.update(v => v - 1);
-        this.isDisliked.set(false);
-      }
-    }
-  }
-
-  toggleDislike() {
-    if (this.isDisliked()) {
-      this.dislikes.update(v => v - 1);
-      this.isDisliked.set(false);
-    } else {
-      this.dislikes.update(v => v + 1);
-      this.isDisliked.set(true);
-      if (this.isLiked()) {
-        this.likes.update(v => v - 1);
-        this.isLiked.set(false);
-      }
     }
   }
 
@@ -197,6 +178,10 @@ export class BlogDetail
   toggleSideShareMenu() {
     this.showSideShareMenu.update(v => !v);
     if (this.showSideShareMenu()) this.showTopShareMenu.set(false);
+  }
+
+  toggleCommentsModal() {
+    this.showCommentsModal.update(v => !v);
   }
 
   // Text to Speech
@@ -232,6 +217,12 @@ export class BlogDetail
       ...prev
     ]);
     this.newCommentText = '';
+  }
+
+  handleCommentKeydown(event: KeyboardEvent) {
+    if (event.ctrlKey && event.key === 'Enter') {
+      this.submitComment();
+    }
   }
 
   // Image load handler
