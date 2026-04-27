@@ -9,6 +9,7 @@ import { Seo } from './core/services/seo';
 import { AnalyticsService } from './core/services/analytics.service';
 import { DirectionService } from './core/services/direction.service';
 import { ChatBubbleComponent } from './shared/components/chat-bubble/chat-bubble';
+import { BreadcrumbsComponent } from './shared/components/breadcrumbs/breadcrumbs';
 import { WhatsAppButtonComponent } from './shared/components/whatsapp-button/whatsapp-button';
 import { SUPPORTED_LANGUAGES } from '@core/constants/languages';
 import { ToastComponent } from './shared/components/toast/toast';
@@ -23,6 +24,7 @@ import Lenis from 'lenis';
     RouterOutlet,
     Header,
     Footer,
+    BreadcrumbsComponent,
     // ChatBubbleComponent,
     WhatsAppButtonComponent,
     ToastComponent,
