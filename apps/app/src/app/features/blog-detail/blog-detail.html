@@ -54,54 +54,6 @@
           </div>
         </div>
 
-        <div class="social-interaction-bar" jslAnimateOnScroll>
-          <div class="interaction-group">
-            <button class="interaction-btn like-btn" [class.active]="isLiked()" (click)="toggleLike()">
-              <lucide-icon name="ThumbsUp" [size]="20"></lucide-icon>
-              <span class="count">{{ likes() }}</span>
-            </button>
-            <button class="interaction-btn dislike-btn" [class.active]="isDisliked()" (click)="toggleDislike()">
-              <lucide-icon name="ThumbsDown" [size]="20"></lucide-icon>
-              <span class="count">{{ dislikes() }}</span>
-            </button>
-          </div>
-
-          <div class="interaction-divider"></div>
-
-          <div class="interaction-group">
-            <div class="view-counter">
-              <lucide-icon name="Eye" [size]="20"></lucide-icon>
-              <span class="count">{{ viewCount() | number }} {{ 'BLOG.VIEWS' | translate }}</span>
-            </div>
-          </div>
-
-          <div class="interaction-divider"></div>
-
-          <div class="interaction-group">
-            <button class="interaction-btn listen-btn" [class.listening]="isListening()" (click)="toggleListen()">
-              <lucide-icon [name]="isListening() ? 'Square' : 'Headphones'" [size]="20"></lucide-icon>
-              <span class="btn-label">{{ (isListening() ? 'BLOG.STOP_LISTENING' : 'BLOG.LISTEN') | translate }}</span>
-            </button>
-          </div>
-
-          <div class="interaction-spacer"></div>
-
-          <div class="interaction-group share-group">
-            <button class="interaction-btn share-toggle-btn" (click)="toggleTopShareMenu()">
-              <lucide-icon name="Share2" [size]="20"></lucide-icon>
-              <span class="btn-label">{{ 'BLOG.SHARE_ARTICLE' | translate }}</span>
-            </button>
-
-            @if (showTopShareMenu()) {
-              <div class="share-dropdown-menu fade-in-scale">
-                <app-social-share
-                  [url]="'/blog/' + post.slug"
-                  [title]="'BLOG.' + post.key + '_TITLE' | translate"
-                ></app-social-share>
-              </div>
-            }
-          </div>
-        </div>
       </div>
     </header>
 
@@ -123,36 +75,42 @@
       </div>
 
       <div class="content-layout">
-        <aside class="sidebar-left">
-          <div class="sticky-tools">
-            <div class="vertical-interaction-bar">
-              <button class="v-interaction-btn" [class.active]="isLiked()" (click)="toggleLike()" [title]="'BLOG.LIKE' | translate">
-                <lucide-icon name="ThumbsUp" [size]="20"></lucide-icon>
-              </button>
-              <button class="v-interaction-btn" [class.active]="isDisliked()" (click)="toggleDislike()" [title]="'BLOG.DISLIKE' | translate">
-                <lucide-icon name="ThumbsDown" [size]="20"></lucide-icon>
-              </button>
-              <div class="v-divider"></div>
-              <div class="share-wrapper">
-                <button class="v-interaction-btn" (click)="toggleSideShareMenu()" [title]="'BLOG.SHARE' | translate">
-                  <lucide-icon name="Share2" [size]="20"></lucide-icon>
-                </button>
-                @if (showSideShareMenu()) {
-                  <div class="share-dropdown-menu side fade-in-scale">
-                    <app-social-share
-                      [url]="'/blog/' + post.slug"
-                      [title]="'BLOG.' + post.key + '_TITLE' | translate"
-                    ></app-social-share>
-                  </div>
-                }
-              </div>
-            </div>
-          </div>
-        </aside>
-
         <main class="detail-page-content blog-content" jslAnimateOnScroll>
           <article class="content-article">
             <div class="content-body" [innerHTML]="'BLOG.' + post.key + '_CONTENT' | translate"></div>
+
+            <div class="article-footer-interactions">
+              <div class="consolidated-bar">
+                <button class="interaction-item" [class.active]="isLiked()" (click)="toggleLike()" [attr.aria-label]="'BLOG.LIKE' | translate">
+                  <lucide-icon name="Heart" [class.filled]="isLiked()" [size]="22"></lucide-icon>
+                  <span class="count">{{ likes() }}</span>
+                </button>
+
+                <div class="item-divider"></div>
+
+                <button class="interaction-item" (click)="toggleCommentsModal()" [attr.aria-label]="'BLOG.COMMENTS' | translate">
+                  <lucide-icon name="MessageSquare" [size]="22"></lucide-icon>
+                  <span class="count">{{ comments().length }}</span>
+                </button>
+
+                <div class="item-divider"></div>
+
+                <div class="share-trigger-wrapper">
+                  <button class="interaction-item" (click)="toggleSideShareMenu()" [attr.aria-label]="'BLOG.SHARE' | translate">
+                    <lucide-icon name="Share2" [size]="22"></lucide-icon>
+                  </button>
+
+                  @if (showSideShareMenu()) {
+                    <div class="share-dropdown-modal fade-in-scale">
+                      <app-social-share
+                        [url]="'/blog/' + post.slug"
+                        [title]="'BLOG.' + post.key + '_TITLE' | translate"
+                      ></app-social-share>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
 
             <div class="post-tags-footer">
               <span class="tags-label">
@@ -166,55 +124,6 @@
             <div class="whitepaper-section">
               <jsl-whitepaper-download></jsl-whitepaper-download>
             </div>
-
-            <section class="comments-section" id="comments">
-              <div class="comments-header">
-                <h3><lucide-icon name="MessageSquare" [size]="24"></lucide-icon> {{ 'BLOG.COMMENTS' | translate }} ({{ comments().length }})</h3>
-              </div>
-
-              <div class="comment-form-container">
-                <div class="user-avatar-mini">
-                  <lucide-icon name="User" [size]="20"></lucide-icon>
-                </div>
-                <div class="form-group">
-                  <textarea
-                    [placeholder]="'BLOG.COMMENT_PLACEHOLDER' | translate"
-                    [(ngModel)]="newCommentText"
-                    (keyup.enter)="submitComment()"
-                  ></textarea>
-                  <div class="form-footer">
-                    <button class="submit-comment-btn" (click)="submitComment()">
-                      {{ 'BLOG.SUBMIT_COMMENT' | translate }}
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div class="comments-list">
-                @for (comment of comments(); track comment.date) {
-                  <div class="comment-item jslAnimateOnScroll">
-                    <div class="comment-avatar">
-                      <div class="avatar-placeholder">{{ comment.author[0] }}</div>
-                    </div>
-                    <div class="comment-content">
-                      <div class="comment-meta">
-                        <span class="comment-author">{{ comment.author }}</span>
-                        <span class="comment-date">{{ comment.date | date: 'short' }}</span>
-                      </div>
-                      <p class="comment-text">{{ comment.text }}</p>
-                      <div class="comment-actions">
-                        <button class="action-btn"><lucide-icon name="ThumbsUp" [size]="14"></lucide-icon> <span>Helpful</span></button>
-                        <button class="action-btn"><lucide-icon name="Reply" [size]="14"></lucide-icon> <span>Reply</span></button>
-                      </div>
-                    </div>
-                  </div>
-                } @empty {
-                  <div class="empty-comments">
-                    <p>{{ 'BLOG.NO_COMMENTS' | translate }}</p>
-                  </div>
-                }
-              </div>
-            </section>
           </article>
         </main>
 
@@ -312,6 +221,60 @@
       subtitleKey="BLOG.CTA_SUBTITLE"
     ></jsl-cta-section>
   </div>
+
+  @if (showCommentsModal()) {
+    <div class="comments-modal-overlay" (click)="toggleCommentsModal()">
+      <div class="comments-modal-container" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>{{ 'BLOG.COMMENTS' | translate }} ({{ comments().length }})</h3>
+          <button class="close-modal-btn" (click)="toggleCommentsModal()" aria-label="Close">
+            <lucide-icon name="X" [size]="24"></lucide-icon>
+          </button>
+        </div>
+
+        <div class="modal-body custom-scrollbar">
+          <div class="comment-form-container">
+            <div class="form-group">
+              <label for="comment-textarea" class="sr-only">{{ 'BLOG.SUBMIT_COMMENT' | translate }}</label>
+              <textarea
+                id="comment-textarea"
+                [placeholder]="'BLOG.COMMENT_PLACEHOLDER' | translate"
+                [(ngModel)]="newCommentText"
+                (keydown)="handleCommentKeydown($event)"
+              ></textarea>
+              <div class="form-footer">
+                <span class="hint">Ctrl + Enter to send</span>
+                <button class="submit-comment-btn" (click)="submitComment()">
+                  {{ 'BLOG.SUBMIT_COMMENT' | translate }}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="comments-list">
+            @for (comment of comments(); track comment.date) {
+              <div class="comment-item">
+                <div class="comment-avatar">
+                  <div class="avatar-placeholder">{{ comment.author[0] }}</div>
+                </div>
+                <div class="comment-content">
+                  <div class="comment-meta">
+                    <span class="comment-author">{{ comment.author }}</span>
+                    <span class="comment-date">{{ comment.date | date: 'short' }}</span>
+                  </div>
+                  <p class="comment-text">{{ comment.text }}</p>
+                </div>
+              </div>
+            } @empty {
+              <div class="empty-comments">
+                <p>{{ 'BLOG.NO_COMMENTS' | translate }}</p>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
 } @else {
   <div class="not-found-container">
     <div class="container">
