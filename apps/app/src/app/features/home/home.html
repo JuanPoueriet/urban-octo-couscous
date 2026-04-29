@@ -2,7 +2,6 @@
   <!-- Añadido #heroSwiper para referencia en TypeScript -->
   <swiper-container 
     #heroSwiper
-    [config]="heroSwiperConfig" 
     init="false"
     class="hero-main-swiper"
     [attr.dir]="directionService.isRtl() ? 'rtl' : 'ltr'"
@@ -158,7 +157,7 @@
 <!-- NUEVO: Tech Stack Slider (Marquee) -->
 <section class="tech-stack-slider">
   <div class="container-fluid">
-    <swiper-container [config]="logoSwiperConfig" init="true" class="logo-slider" [attr.dir]="directionService.isRtl() ? 'rtl' : 'ltr'">
+    <swiper-container init="false" class="logo-slider" [attr.dir]="directionService.isRtl() ? 'rtl' : 'ltr'">
       @for (tech of techStack(); track tech.name) {
         <swiper-slide class="logo-slide">
           <img [src]="tech.imageUrl" [alt]="tech.name" loading="lazy" width="100" height="100" />
@@ -371,7 +370,7 @@
       <span class="section-eyebrow">{{ 'HOME.TESTIMONIALS_EYEBROW' | translate }}</span>
       <h2 class="section-title">{{ 'HOME.TESTIMONIALS_TITLE' | translate }}</h2>
     </div>
-    <swiper-container [config]="testimonialSwiperConfig" init="true" class="testimonial-slider" [attr.dir]="directionService.isRtl() ? 'rtl' : 'ltr'">
+    <swiper-container init="false" class="testimonial-slider" [attr.dir]="directionService.isRtl() ? 'rtl' : 'ltr'">
       @for (testimonial of testimonials(); track testimonial.nameKey) {
         <swiper-slide class="testimonial-card">
           <div class="testimonial-card__stars">
@@ -449,17 +448,46 @@
     <span class="section-eyebrow">{{ 'HOME.BLOG_EYEBROW' | translate }}</span>
     <h2 class="section-title">{{ 'HOME.BLOG_TITLE' | translate }}</h2>
   </div>
-  <div class="insights-grid">
-    @for (post of latestBlogPosts(); track post.key) {
-      <jsl-card
-        [imageUrl]="post.imageUrl"
-        [title]="'BLOG.' + post.key + '_TITLE' | translate"
-        [description]="'BLOG.' + post.key + '_EXCERPT' | translate"
-        [link]="['/', currentLang, 'blog', post.slug]"
-        jslAnimateOnScroll
-      >
-      </jsl-card>
-    }
+
+  <div class="insights-slider-wrapper">
+    <swiper-container
+      init="false"
+      class="insights-swiper"
+      [attr.dir]="directionService.isRtl() ? 'rtl' : 'ltr'"
+    >
+      @for (post of latestBlogPosts(); track post.key) {
+        <swiper-slide class="insight-slide">
+          <jsl-card
+            [imageUrl]="post.imageUrl"
+            [title]="'BLOG.' + post.key + '_TITLE' | translate"
+            [description]="'BLOG.' + post.key + '_EXCERPT' | translate"
+            [link]="['/', currentLang, 'blog', post.slug]"
+            jslAnimateOnScroll
+          >
+          </jsl-card>
+        </swiper-slide>
+      }
+    </swiper-container>
+
+    <!-- Custom Navigation Buttons -->
+    <div
+      class="insights-swiper-button-prev"
+      [attr.aria-label]="'ARIA.PREVIOUS_SLIDE' | translate"
+      role="button"
+      tabindex="0"
+      (keydown.enter)="onPrevInsights()"
+      (keydown.space)="onPrevInsights()">
+      <lucide-icon name="ChevronLeft"></lucide-icon>
+    </div>
+    <div
+      class="insights-swiper-button-next"
+      [attr.aria-label]="'ARIA.NEXT_SLIDE' | translate"
+      role="button"
+      tabindex="0"
+      (keydown.enter)="onNextInsights()"
+      (keydown.space)="onNextInsights()">
+      <lucide-icon name="ChevronRight"></lucide-icon>
+    </div>
   </div>
 </section>
 
