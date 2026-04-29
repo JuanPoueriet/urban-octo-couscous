@@ -149,6 +149,29 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     },
   };
 
+  public insightsSwiperConfig: SwiperOptions = {
+    modules: [Navigation, Pagination],
+    slidesPerView: 1.2,
+    spaceBetween: 20,
+    grabCursor: true,
+    loop: false,
+    speed: 600,
+    navigation: {
+      nextEl: '.insights-swiper-button-next',
+      prevEl: '.insights-swiper-button-prev',
+    },
+    breakpoints: {
+      768: {
+        slidesPerView: 2.2,
+        spaceBetween: 25,
+      },
+      1024: {
+        slidesPerView: 3,
+        spaceBetween: 30,
+      },
+    },
+  };
+
   public currentLang: string;
 
   private translate = inject(TranslateService);
@@ -244,6 +267,8 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   private unlistenExitIntent: (() => void) | null = null;
   private unlistenHeroMouseMove: (() => void) | null = null;
   private unlistenHeroMouseLeave: (() => void) | null = null;
+  private unlistenInsightsMouseMove: (() => void) | null = null;
+  private unlistenInsightsMouseLeave: (() => void) | null = null;
   private socialProofInterval: any;
   private isBrowser: boolean;
 
@@ -291,6 +316,12 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     }
     if (this.unlistenHeroMouseLeave) {
       this.unlistenHeroMouseLeave();
+    }
+    if (this.unlistenInsightsMouseMove) {
+      this.unlistenInsightsMouseMove();
+    }
+    if (this.unlistenInsightsMouseLeave) {
+      this.unlistenInsightsMouseLeave();
     }
     if (this.socialProofInterval) {
       clearInterval(this.socialProofInterval);
@@ -532,6 +563,16 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         }, 500);
       }
 
+      // 4. Latest Insights Slider
+      const insightsSwiperEl = this.el.nativeElement.querySelector('.latest-insights swiper-container');
+
+      if (insightsSwiperEl) {
+        Object.assign(insightsSwiperEl, this.insightsSwiperConfig);
+
+        insightsSwiperEl.initialize();
+        this.setupInsightsNavigationVisibility();
+      }
+
       // Setup Exit Intent
       this.setupExitIntent();
 
@@ -627,6 +668,32 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     heroSlider.style.setProperty('--hero-nav-right-visibility', '0');
   }
 
+  private setupInsightsNavigationVisibility(): void {
+    const insightsSection = this.el.nativeElement.querySelector('.latest-insights') as HTMLElement | null;
+    if (!insightsSection) return;
+
+    const updateVisibility = (event: MouseEvent) => {
+      const rect = insightsSection.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const pointerPercent = (x / rect.width) * 100;
+
+      const leftRatio = Math.max(0, Math.min(1, (30 - pointerPercent) / 30));
+      const rightRatio = Math.max(0, Math.min(1, (pointerPercent - 70) / 30));
+
+      insightsSection.style.setProperty('--insights-nav-left-visibility', leftRatio.toFixed(3));
+      insightsSection.style.setProperty('--insights-nav-right-visibility', rightRatio.toFixed(3));
+    };
+
+    this.unlistenInsightsMouseMove = this.renderer.listen(insightsSection, 'mousemove', updateVisibility);
+    this.unlistenInsightsMouseLeave = this.renderer.listen(insightsSection, 'mouseleave', () => {
+      insightsSection.style.setProperty('--insights-nav-left-visibility', '0');
+      insightsSection.style.setProperty('--insights-nav-right-visibility', '0');
+    });
+
+    insightsSection.style.setProperty('--insights-nav-left-visibility', '0');
+    insightsSection.style.setProperty('--insights-nav-right-visibility', '0');
+  }
+
   getStars(count: number): any[] {
     return new Array(count);
   }
@@ -686,6 +753,18 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     if (!this.isBrowser) return;
     const heroSwiperEl = this.el.nativeElement.querySelector('.hero-slider swiper-container');
     heroSwiperEl?.swiper?.slideNext();
+  }
+
+  onPrevInsights() {
+    if (!this.isBrowser) return;
+    const insightsSwiperEl = this.el.nativeElement.querySelector('.latest-insights swiper-container');
+    insightsSwiperEl?.swiper?.slidePrev();
+  }
+
+  onNextInsights() {
+    if (!this.isBrowser) return;
+    const insightsSwiperEl = this.el.nativeElement.querySelector('.latest-insights swiper-container');
+    insightsSwiperEl?.swiper?.slideNext();
   }
 
   downloadLeadMagnet() {
