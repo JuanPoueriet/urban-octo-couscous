@@ -11,6 +11,7 @@ import {
   Renderer2,
   signal,
   OnDestroy,
+  Signal,
 } from '@angular/core';
 import { SearchUiService } from '@core/services/search-ui.service';
 import { DirectionService } from '@core/services/direction.service';
@@ -21,7 +22,7 @@ import { RouterLink } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { Card } from '@shared/components/card/card';
 import { AnimateOnScroll } from '@shared/directives/animate-on-scroll';
-import { DataService, Technology } from '@core/services/data.service';
+import { DataService, Technology, Testimonial, Project, Solution, Product, ProcessStep, Partner, BlogPost } from '@core/services/data.service';
 import { Seo } from '@core/services/seo';
 import { AnalyticsService } from '@core/services/analytics.service';
 import { ToastService } from '@core/services/toast.service';
@@ -197,27 +198,27 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     { titleKey: 'FAQ.Q3_TITLE', descKey: 'FAQ.Q3_DESC', isOpen: false },
   ];
 
-  public testimonials = toSignal(this.dataService.getTestimonials(), { initialValue: [] });
-  public projects = toSignal(this.dataService.getProjects(), { initialValue: [] });
+  public testimonials: Signal<Testimonial[]> = toSignal(this.dataService.getTestimonials(), { initialValue: [] as Testimonial[] });
+  public projects: Signal<Project[]> = toSignal(this.dataService.getProjects(), { initialValue: [] as Project[] });
 
   // New filtering logic for projects
   public selectedProjectCategory = signal<string>('All');
   public projectCategories = ['All', 'Enterprise', 'Commerce', 'Mobile']; // Could be dynamic
 
-  public filteredProjects = computed(() => {
+  public filteredProjects = computed<Project[]>(() => {
     const allProjects = this.projects();
     const category = this.selectedProjectCategory();
 
     if (category === 'All') {
       return allProjects;
     }
-    return allProjects.filter((p: any) => p.category === category);
+    return allProjects.filter((project) => project.category === category);
   });
 
-  public solutions = toSignal(this.dataService.getSolutions(), { initialValue: [] });
-  public products = toSignal(this.dataService.getProducts(), { initialValue: [] });
-  public processSteps = toSignal(this.dataService.getProcessSteps(), { initialValue: [] });
-  public partners = toSignal(this.dataService.getPartners(), { initialValue: [] });
+  public solutions: Signal<Solution[]> = toSignal(this.dataService.getSolutions(), { initialValue: [] as Solution[] });
+  public products: Signal<Product[]> = toSignal(this.dataService.getProducts(), { initialValue: [] as Product[] });
+  public processSteps: Signal<ProcessStep[]> = toSignal(this.dataService.getProcessSteps(), { initialValue: [] as ProcessStep[] });
+  public partners: Signal<Partner[]> = toSignal(this.dataService.getPartners(), { initialValue: [] as Partner[] });
 
   // Modal signals
   public isVideoModalOpen = signal(false);
@@ -227,7 +228,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   // Default video
   public demoVideoUrl = 'https://www.youtube.com/embed/LXb3EKWsInQ'; // Tech demo placeholder
 
-  public techStack = toSignal(
+  public techStack: Signal<Technology[]> = toSignal(
     this.dataService.getTechStack().pipe(
       map((categories) => {
         const allTechs: Technology[] = [];
@@ -243,12 +244,12 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         return allTechs;
       })
     ),
-    { initialValue: [] }
+    { initialValue: [] as Technology[] }
   );
 
-  public latestBlogPosts = toSignal(
+  public latestBlogPosts: Signal<BlogPost[]> = toSignal(
     this.dataService.getBlogPosts().pipe(map((posts) => posts.slice(0, 3))),
-    { initialValue: [] }
+    { initialValue: [] as BlogPost[] }
   );
 
   public activeTab = signal<'services' | 'products'>('services');
