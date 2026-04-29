@@ -182,7 +182,7 @@
             <span class="checkmark"></span>
             <span class="checkbox-text">
               {{ 'CONTACT.FORM.PRIVACY' | translate }}
-              <a routerLink="/privacy" target="_blank">{{ 'CONTACT.FORM.PRIVACY_LINK' | translate }}</a>
+              <a routerLink="../privacy-policy" target="_blank">{{ 'CONTACT.FORM.PRIVACY_LINK' | translate }}</a>
             </span>
           </label>
           @if (f['privacy'].invalid && (f['privacy'].dirty || f['privacy'].touched)) {
