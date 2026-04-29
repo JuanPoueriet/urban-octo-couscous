@@ -247,6 +247,8 @@
       "SERVICE_PROMPT": "Selecione um serviço...",
       "SERVICE_OTHER": "Outro",
       "MESSAGE": "Sua Mensagem",
+      "PRIVACY": "Concordo com o processamento dos meus dados pessoais de acordo com a",
+      "PRIVACY_LINK": "Política de Privacidade",
       "SUBMIT": "Enviar Mensagem",
       "HONEYPOT_LABEL": "Deixe este campo em branco",
       "ERRORS": {

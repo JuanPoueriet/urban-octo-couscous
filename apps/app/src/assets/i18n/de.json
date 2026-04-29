@@ -247,6 +247,8 @@
       "SERVICE_PROMPT": "Wählen Sie einen Service...",
       "SERVICE_OTHER": "Andere",
       "MESSAGE": "Ihre Nachricht",
+      "PRIVACY": "Ich stimme der Verarbeitung meiner personenbezogenen Daten gemäß der",
+      "PRIVACY_LINK": "Datenschutzerklärung zu",
       "SUBMIT": "Nachricht Senden",
       "HONEYPOT_LABEL": "Lassen Sie dieses Feld leer",
       "ERRORS": {

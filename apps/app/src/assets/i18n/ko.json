@@ -247,6 +247,8 @@
       "SERVICE_PROMPT": "서비스 선택...",
       "SERVICE_OTHER": "기타",
       "MESSAGE": "메시지",
+      "PRIVACY": "본인은 다음에 따라 개인 정보 처리에 동의합니다.",
+      "PRIVACY_LINK": "개인정보 처리방침",
       "SUBMIT": "메시지 보내기",
       "HONEYPOT_LABEL": "이 필드를 비워 두십시오",
       "ERRORS": {

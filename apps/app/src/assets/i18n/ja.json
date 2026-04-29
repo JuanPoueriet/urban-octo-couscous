@@ -247,6 +247,8 @@
       "SERVICE_PROMPT": "サービスを選択...",
       "SERVICE_OTHER": "その他",
       "MESSAGE": "あなたのメッセージ",
+      "PRIVACY": "私は、以下の内容に従って個人データが処理されることに同意します：",
+      "PRIVACY_LINK": "プライバシーポリシー",
       "SUBMIT": "メッセージを送信",
       "HONEYPOT_LABEL": "このフィールドは空のままにしてください",
       "ERRORS": {

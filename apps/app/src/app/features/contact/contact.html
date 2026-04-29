@@ -1,19 +1,25 @@
 <section class="contact-hero">
-  <div class="container">
-    <span class="section-eyebrow" jslAnimateOnScroll>{{ 'CONTACT.EYEBROW' | translate }}</span>
-    <h1 jslAnimateOnScroll>{{ 'CONTACT.TITLE' | translate }}</h1>
-    <p class="subtitle" jslAnimateOnScroll>{{ 'CONTACT.SUBTITLE' | translate }}</p>
+  <div class="contact-hero__bg">
+    <div class="contact-hero__glow contact-hero__glow--1"></div>
+    <div class="contact-hero__glow contact-hero__glow--2"></div>
+  </div>
 
-    <!-- Response meta -->
-    <div class="contact-meta" jslAnimateOnScroll>
-      <span class="contact-meta__item">
-        <lucide-icon name="Clock" [size]="16"></lucide-icon>
-        {{ 'CONTACT.RESPONSE_TIME' | translate }}
-      </span>
-      <span class="contact-meta__item">
-        <lucide-icon name="Globe" [size]="16"></lucide-icon>
-        {{ 'CONTACT.BUSINESS_HOURS' | translate }}
-      </span>
+  <div class="container contact-hero__container">
+    <div class="contact-hero__content">
+      <span class="section-eyebrow" jslAnimateOnScroll>{{ 'CONTACT.EYEBROW' | translate }}</span>
+      <h1 class="contact-hero__title" jslAnimateOnScroll>{{ 'CONTACT.TITLE' | translate }}</h1>
+      <p class="contact-hero__subtitle" jslAnimateOnScroll>{{ 'CONTACT.SUBTITLE' | translate }}</p>
+
+      <div class="contact-meta" jslAnimateOnScroll>
+        <span class="contact-meta__item">
+          <lucide-icon name="Clock" [size]="16"></lucide-icon>
+          {{ 'CONTACT.RESPONSE_TIME' | translate }}
+        </span>
+        <span class="contact-meta__item">
+          <lucide-icon name="Globe" [size]="16"></lucide-icon>
+          {{ 'CONTACT.BUSINESS_HOURS' | translate }}
+        </span>
+      </div>
     </div>
   </div>
 </section>
@@ -23,147 +29,197 @@
 
     <!-- Columna 1: Información de Contacto -->
     <div class="contact-info" jslAnimateOnScroll>
-      <h3>{{ 'CONTACT.INFO_TITLE' | translate }}</h3>
-      <p>{{ 'CONTACT.INFO_DESC' | translate }}</p>
+      <div class="contact-info__header">
+        <h3 class="contact-info__title">{{ 'CONTACT.INFO_TITLE' | translate }}</h3>
+        <p class="contact-info__desc">{{ 'CONTACT.INFO_DESC' | translate }}</p>
+      </div>
 
-      <div class="contact-info__item">
-        <lucide-icon name="Mail"></lucide-icon>
-        <div>
-          <h4>{{ 'CONTACT.EMAIL' | translate }}</h4>
-          <a href="mailto:info@jsl.technology">{{ 'CONTACT.EMAIL_DISPLAY' | translate }}</a>
+      <div class="contact-info__cards">
+        <div class="info-card">
+          <div class="info-card__icon">
+            <lucide-icon name="Mail"></lucide-icon>
+          </div>
+          <div class="info-card__content">
+            <h4>{{ 'CONTACT.EMAIL' | translate }}</h4>
+            <a href="mailto:info@jsl.technology" class="info-card__link">{{ 'CONTACT.EMAIL_DISPLAY' | translate }}</a>
+          </div>
         </div>
-      </div>
-      <div class="contact-info__item">
-        <lucide-icon name="Phone"></lucide-icon>
-        <div>
-          <h4>{{ 'CONTACT.PHONE' | translate }}</h4>
-          <a href="tel:+18092641693">{{ 'CONTACT.PHONE_DISPLAY' | translate }}</a>
+
+        <div class="info-card">
+          <div class="info-card__icon">
+            <lucide-icon name="Phone"></lucide-icon>
+          </div>
+          <div class="info-card__content">
+            <h4>{{ 'CONTACT.PHONE' | translate }}</h4>
+            <a href="tel:+18092641693" class="info-card__link">{{ 'CONTACT.PHONE_DISPLAY' | translate }}</a>
+          </div>
         </div>
-      </div>
-      <div class="contact-info__item">
-        <lucide-icon name="MapPin"></lucide-icon>
-        <div>
-          <h4>{{ 'CONTACT.LOCATION' | translate }}</h4>
-          <p>{{ 'CONTACT.LOCATION_ADDRESS' | translate }}</p>
+
+        <div class="info-card">
+          <div class="info-card__icon">
+            <lucide-icon name="MapPin"></lucide-icon>
+          </div>
+          <div class="info-card__content">
+            <h4>{{ 'CONTACT.LOCATION' | translate }}</h4>
+            <p class="info-card__text">{{ 'CONTACT.LOCATION_ADDRESS' | translate }}</p>
+          </div>
         </div>
-      </div>
-      <div class="contact-info__item">
-        <lucide-icon name="Clock"></lucide-icon>
-        <div>
-          <h4>{{ 'CONTACT.HOURS_LABEL' | translate }}</h4>
-          <p>{{ 'CONTACT.HOURS_VALUE' | translate }}</p>
+
+        <div class="info-card">
+          <div class="info-card__icon">
+            <lucide-icon name="Clock"></lucide-icon>
+          </div>
+          <div class="info-card__content">
+            <h4>{{ 'CONTACT.HOURS_LABEL' | translate }}</h4>
+            <p class="info-card__text">{{ 'CONTACT.HOURS_VALUE' | translate }}</p>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Columna 2: Formulario de Contacto -->
-    <form class="contact-form" [formGroup]="contactForm" (ngSubmit)="onSubmit()">
-      
-      <!-- Honeypot field (hidden from users) -->
-      <div style="display: none;">
-        <label for="honeypot">{{ 'CONTACT.FORM.HONEYPOT_LABEL' | translate }}</label>
-        <input type="text" id="honeypot" formControlName="honeypot">
-      </div>
+    <div class="contact-form-container" jslAnimateOnScroll>
+      <form class="contact-form" [formGroup]="contactForm" (ngSubmit)="onSubmit()">
 
-      <!-- Campo Nombre -->
-      <div class="form-group">
-        <label for="name">{{ 'CONTACT.FORM.NAME' | translate }}</label>
-        <input type="text" id="name" class="form-control" formControlName="name" 
-               [class.is-invalid]="f['name'].invalid && (f['name'].dirty || f['name'].touched)">
-        @if (f['name'].invalid && (f['name'].dirty || f['name'].touched)) {
-          <div class="form-error">
-            @if (f['name'].errors?.['required']) {
-              <span>{{ 'CONTACT.FORM.ERRORS.REQUIRED' | translate }}</span>
-            }
-            @if (f['name'].errors?.['minlength']) {
-              <span>{{ 'CONTACT.FORM.ERRORS.MINLENGTH' | translate:{'value': 3} }}</span>
-            }
-          </div>
-        }
-      </div>
-
-      <!-- Campo Email -->
-      <div class="form-group">
-        <label for="email">{{ 'CONTACT.FORM.EMAIL' | translate }}</label>
-        <input type="email" id="email" class="form-control" formControlName="email"
-               [class.is-invalid]="f['email'].invalid && (f['email'].dirty || f['email'].touched)">
-        @if (f['email'].invalid && (f['email'].dirty || f['email'].touched)) {
-          <div class="form-error">
-            @if (f['email'].errors?.['required']) {
-              <span>{{ 'CONTACT.FORM.ERRORS.REQUIRED' | translate }}</span>
-            }
-            @if (f['email'].errors?.['email']) {
-              <span>{{ 'CONTACT.FORM.ERRORS.EMAIL' | translate }}</span>
-            }
-          </div>
-        }
-      </div>
-
-      <!-- Campo Servicio -->
-      <div class="form-group">
-        <label for="service">{{ 'CONTACT.FORM.SERVICE' | translate }}</label>
-        <select id="service" class="form-control" formControlName="service"
-                [class.is-invalid]="f['service'].invalid && (f['service'].dirty || f['service'].touched)">
-          <option value="" disabled>{{ 'CONTACT.FORM.SERVICE_PROMPT' | translate }}</option>
-          <option value="erp">{{ 'PRODUCTS_LIST.ERP' | translate }}</option>
-          <option value="pos">{{ 'PRODUCTS_LIST.POS' | translate }}</option>
-          <option value="web_dev">{{ 'SERVICES_LIST.WEB' | translate }}</option>
-          <option value="mobile_dev">{{ 'SERVICES_LIST.MOBILE' | translate }}</option>
-          <option value="other">{{ 'CONTACT.FORM.SERVICE_OTHER' | translate }}</option>
-        </select>
-        @if (f['service'].invalid && (f['service'].dirty || f['service'].touched)) {
-          <div class="form-error">
-            @if (f['service'].errors?.['required']) {
-              <span>{{ 'CONTACT.FORM.ERRORS.REQUIRED' | translate }}</span>
-            }
-          </div>
-        }
-      </div>
-
-      <!-- Campo Mensaje -->
-      <div class="form-group">
-        <label for="message">{{ 'CONTACT.FORM.MESSAGE' | translate }}</label>
-        <textarea id="message" class="form-control" rows="6" formControlName="message"
-                  [class.is-invalid]="f['message'].invalid && (f['message'].dirty || f['message'].touched)"></textarea>
-        @if (f['message'].invalid && (f['message'].dirty || f['message'].touched)) {
-          <div class="form-error">
-            @if (f['message'].errors?.['required']) {
-              <span>{{ 'CONTACT.FORM.ERRORS.REQUIRED' | translate }}</span>
-            }
-            @if (f['message'].errors?.['minlength']) {
-              <span>{{ 'CONTACT.FORM.ERRORS.MINLENGTH' | translate:{'value': 10} }}</span>
-            }
-          </div>
-        }
-      </div>
-
-      <!-- Botón de Envío -->
-      <div class="form-group">
-        <button type="submit" class="submit-btn" [disabled]="isSubmitting || contactForm.invalid">
-          @if (!isSubmitting) {
-            <span>{{ 'CONTACT.FORM.SUBMIT' | translate }}</span>
-          }
-          @if (isSubmitting) {
-            <span class="spinner"></span> <!-- (Estilizaremos el spinner) -->
-          }
-          @if (!isSubmitting) {
-            <lucide-icon name="Send"></lucide-icon>
-          }
-        </button>
-      </div>
-
-      <!-- Mensajes de Estado -->
-      @if (submitSuccess) {
-        <div class="submit-success">
-          {{ 'CONTACT.FORM.SUCCESS' | translate }}
+        <!-- Honeypot field (hidden from users) -->
+        <div style="display: none;">
+          <label for="honeypot">{{ 'CONTACT.FORM.HONEYPOT_LABEL' | translate }}</label>
+          <input type="text" id="honeypot" formControlName="honeypot">
         </div>
-      }
-      @if (submitError) {
-        <div class="submit-error">
-          {{ 'CONTACT.FORM.ERROR' | translate }}
+
+        <div class="form-row">
+          <!-- Campo Nombre -->
+          <div class="form-group">
+            <label for="name">{{ 'CONTACT.FORM.NAME' | translate }}</label>
+            <div class="input-wrapper">
+              <lucide-icon name="User" [size]="18" class="input-icon"></lucide-icon>
+              <input type="text" id="name" class="form-control" formControlName="name"
+                     [placeholder]="'CONTACT.FORM.NAME' | translate"
+                     [class.is-invalid]="f['name'].invalid && (f['name'].dirty || f['name'].touched)">
+            </div>
+            @if (f['name'].invalid && (f['name'].dirty || f['name'].touched)) {
+              <div class="form-error">
+                @if (f['name'].errors?.['required']) {
+                  <span>{{ 'CONTACT.FORM.ERRORS.REQUIRED' | translate }}</span>
+                }
+                @if (f['name'].errors?.['minlength']) {
+                  <span>{{ 'CONTACT.FORM.ERRORS.MINLENGTH' | translate:{'value': 3} }}</span>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Campo Email -->
+          <div class="form-group">
+            <label for="email">{{ 'CONTACT.FORM.EMAIL' | translate }}</label>
+            <div class="input-wrapper">
+              <lucide-icon name="Mail" [size]="18" class="input-icon"></lucide-icon>
+              <input type="email" id="email" class="form-control" formControlName="email"
+                     [placeholder]="'CONTACT.FORM.EMAIL' | translate"
+                     [class.is-invalid]="f['email'].invalid && (f['email'].dirty || f['email'].touched)">
+            </div>
+            @if (f['email'].invalid && (f['email'].dirty || f['email'].touched)) {
+              <div class="form-error">
+                @if (f['email'].errors?.['required']) {
+                  <span>{{ 'CONTACT.FORM.ERRORS.REQUIRED' | translate }}</span>
+                }
+                @if (f['email'].errors?.['email']) {
+                  <span>{{ 'CONTACT.FORM.ERRORS.EMAIL' | translate }}</span>
+                }
+              </div>
+            }
+          </div>
         </div>
-      }
-    </form>
+
+        <!-- Campo Servicio -->
+        <div class="form-group">
+          <label for="service">{{ 'CONTACT.FORM.SERVICE' | translate }}</label>
+          <div class="input-wrapper">
+            <lucide-icon name="LayoutGrid" [size]="18" class="input-icon"></lucide-icon>
+            <select id="service" class="form-control" formControlName="service"
+                    [class.is-invalid]="f['service'].invalid && (f['service'].dirty || f['service'].touched)">
+              <option value="" disabled>{{ 'CONTACT.FORM.SERVICE_PROMPT' | translate }}</option>
+              <option value="erp">{{ 'PRODUCTS_LIST.ERP' | translate }}</option>
+              <option value="pos">{{ 'PRODUCTS_LIST.POS' | translate }}</option>
+              <option value="web_dev">{{ 'SERVICES_LIST.WEB' | translate }}</option>
+              <option value="mobile_dev">{{ 'SERVICES_LIST.MOBILE' | translate }}</option>
+              <option value="other">{{ 'CONTACT.FORM.SERVICE_OTHER' | translate }}</option>
+            </select>
+          </div>
+          @if (f['service'].invalid && (f['service'].dirty || f['service'].touched)) {
+            <div class="form-error">
+              @if (f['service'].errors?.['required']) {
+                <span>{{ 'CONTACT.FORM.ERRORS.REQUIRED' | translate }}</span>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Campo Mensaje -->
+        <div class="form-group">
+          <label for="message">{{ 'CONTACT.FORM.MESSAGE' | translate }}</label>
+          <div class="input-wrapper">
+            <textarea id="message" class="form-control" rows="5" formControlName="message"
+                      [placeholder]="'CONTACT.FORM.MESSAGE' | translate"
+                      [class.is-invalid]="f['message'].invalid && (f['message'].dirty || f['message'].touched)"></textarea>
+          </div>
+          @if (f['message'].invalid && (f['message'].dirty || f['message'].touched)) {
+            <div class="form-error">
+              @if (f['message'].errors?.['required']) {
+                <span>{{ 'CONTACT.FORM.ERRORS.REQUIRED' | translate }}</span>
+              }
+              @if (f['message'].errors?.['minlength']) {
+                <span>{{ 'CONTACT.FORM.ERRORS.MINLENGTH' | translate:{'value': 10} }}</span>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Privacy Policy Checkbox -->
+        <div class="form-group form-checkbox">
+          <label class="checkbox-container">
+            <input type="checkbox" formControlName="privacy">
+            <span class="checkmark"></span>
+            <span class="checkbox-text">
+              {{ 'CONTACT.FORM.PRIVACY' | translate }}
+              <a routerLink="/privacy" target="_blank">{{ 'CONTACT.FORM.PRIVACY_LINK' | translate }}</a>
+            </span>
+          </label>
+          @if (f['privacy'].invalid && (f['privacy'].dirty || f['privacy'].touched)) {
+            <div class="form-error">
+              <span>{{ 'CONTACT.FORM.ERRORS.REQUIRED' | translate }}</span>
+            </div>
+          }
+        </div>
+
+        <!-- Botón de Envío -->
+        <div class="form-actions">
+          <button type="submit" class="submit-btn" [disabled]="isSubmitting || contactForm.invalid">
+            @if (isSubmitting) {
+              <span class="spinner"></span>
+              <span>{{ 'HOME.LEAD_MAGNET_SENDING' | translate }}</span>
+            } @else {
+              <span>{{ 'CONTACT.FORM.SUBMIT' | translate }}</span>
+              <lucide-icon name="Send"></lucide-icon>
+            }
+          </button>
+        </div>
+
+        <!-- Mensajes de Estado -->
+        @if (submitSuccess) {
+          <div class="submit-success fade-in">
+            <lucide-icon name="CheckCircle"></lucide-icon>
+            {{ 'CONTACT.FORM.SUCCESS' | translate }}
+          </div>
+        }
+        @if (submitError) {
+          <div class="submit-error fade-in">
+            <lucide-icon name="XCircle"></lucide-icon>
+            {{ 'CONTACT.FORM.ERROR' | translate }}
+          </div>
+        }
+      </form>
+    </div>
 
   </div>
 </div>
@@ -173,27 +229,38 @@
   <div class="container">
     <div class="alternatives-grid" jslAnimateOnScroll>
       <div class="alternative-card">
-        <lucide-icon name="MessageCircle" [size]="28"></lucide-icon>
-        <h3>{{ 'CONTACT.ALT_WHATSAPP_TITLE' | translate }}</h3>
-        <p>{{ 'CONTACT.ALT_WHATSAPP_DESC' | translate }}</p>
-        <a href="https://wa.me/18092641693" target="_blank" rel="noopener" class="btn-outline">
+        <div class="alternative-card__icon">
+          <lucide-icon name="MessageCircle" [size]="32"></lucide-icon>
+        </div>
+        <h3 class="alternative-card__title">{{ 'CONTACT.ALT_WHATSAPP_TITLE' | translate }}</h3>
+        <p class="alternative-card__desc">{{ 'CONTACT.ALT_WHATSAPP_DESC' | translate }}</p>
+        <a href="https://wa.me/18092641693" target="_blank" rel="noopener" class="alternative-card__cta">
           {{ 'CONTACT.ALT_WHATSAPP_CTA' | translate }}
+          <lucide-icon name="ArrowRight" [size]="16"></lucide-icon>
         </a>
       </div>
+
       <div class="alternative-card">
-        <lucide-icon name="Calendar" [size]="28"></lucide-icon>
-        <h3>{{ 'CONTACT.ALT_CALL_TITLE' | translate }}</h3>
-        <p>{{ 'CONTACT.ALT_CALL_DESC' | translate }}</p>
-        <a href="https://calendly.com/jsl-technology" target="_blank" rel="noopener" class="btn-outline">
+        <div class="alternative-card__icon">
+          <lucide-icon name="Calendar" [size]="32"></lucide-icon>
+        </div>
+        <h3 class="alternative-card__title">{{ 'CONTACT.ALT_CALL_TITLE' | translate }}</h3>
+        <p class="alternative-card__desc">{{ 'CONTACT.ALT_CALL_DESC' | translate }}</p>
+        <a href="https://calendly.com/jsl-technology" target="_blank" rel="noopener" class="alternative-card__cta">
           {{ 'CONTACT.ALT_CALL_CTA' | translate }}
+          <lucide-icon name="ArrowRight" [size]="16"></lucide-icon>
         </a>
       </div>
+
       <div class="alternative-card">
-        <lucide-icon name="Headphones" [size]="28"></lucide-icon>
-        <h3>{{ 'CONTACT.ALT_SUPPORT_TITLE' | translate }}</h3>
-        <p>{{ 'CONTACT.ALT_SUPPORT_DESC' | translate }}</p>
-        <a href="mailto:support@jsl.technology" class="btn-outline">
+        <div class="alternative-card__icon">
+          <lucide-icon name="Headphones" [size]="32"></lucide-icon>
+        </div>
+        <h3 class="alternative-card__title">{{ 'CONTACT.ALT_SUPPORT_TITLE' | translate }}</h3>
+        <p class="alternative-card__desc">{{ 'CONTACT.ALT_SUPPORT_DESC' | translate }}</p>
+        <a href="mailto:support@jsl.technology" class="alternative-card__cta">
           {{ 'CONTACT.ALT_SUPPORT_CTA' | translate }}
+          <lucide-icon name="ArrowRight" [size]="16"></lucide-icon>
         </a>
       </div>
     </div>

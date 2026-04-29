@@ -6,7 +6,7 @@ import { ApiService } from '@core/services/api.service';
 import { ToastService } from '@core/services/toast.service';
 import { AnalyticsService } from '@core/services/analytics.service';
 import { Seo } from '@core/services/seo';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AnimateOnScroll } from '@shared/directives/animate-on-scroll';
 import { Subject } from 'rxjs';
 import { takeUntil, finalize } from 'rxjs/operators';
@@ -15,7 +15,7 @@ import { ALL_ICONS } from '@core/constants/icons';
 @Component({
   selector: 'jsl-contact',
   standalone: true,
-  imports: [ReactiveFormsModule, TranslateModule, LucideAngularModule, AnimateOnScroll],
+  imports: [ReactiveFormsModule, TranslateModule, LucideAngularModule, AnimateOnScroll, RouterLink],
   templateUrl: './contact.html',
   styleUrl: './contact.scss',
 })

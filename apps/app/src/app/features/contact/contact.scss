@@ -1,195 +1,427 @@
 /* src/app/features/contact/contact.component.scss */
 
-.page-title {
+// --- Hero Section ---
+.contact-hero {
+  position: relative;
+  padding: 8rem 0 6rem;
+  background-color: var(--bg-primary);
+  overflow: hidden;
   text-align: center;
-}
-.page-subtitle {
-  text-align: center;
-  max-width: 600px;
-  margin: 0 auto 4rem;
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  &__glow {
+    position: absolute;
+    width: 40vw;
+    height: 40vw;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.15;
+
+    &--1 {
+      top: -10%;
+      inset-inline-start: -10%;
+      background: var(--primary);
+    }
+
+    &--2 {
+      bottom: -10%;
+      inset-inline-end: -5%;
+      background: var(--secondary);
+    }
+  }
+
+  &__container {
+    position: relative;
+    z-index: 1;
+  }
+
+  &__title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-block: 1.5rem;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  &__subtitle {
+    font-size: clamp(1.1rem, 2vw, 1.25rem);
+    color: var(--text-muted);
+    max-width: 700px;
+    margin-inline: auto;
+    line-height: 1.6;
+  }
 }
 
+.contact-meta {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-color);
+
+    lucide-icon {
+      color: var(--primary);
+    }
+  }
+}
+
+// --- Layout Grid ---
 .contact-grid {
   display: grid;
-  grid-template-columns: 1fr 1.5fr; // Columna de info más pequeña
-  gap: 4rem;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 5rem;
+  margin-block-end: 4rem;
 
   @media (max-width: 992px) {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 4rem;
   }
 }
 
-// --- Columna de Información ---
+// --- Contact Info Column ---
 .contact-info {
-  h3 {
-    font-size: 1.8rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    color: var(--text-main);
+  &__header {
+    margin-block-end: 3rem;
   }
-  p {
-    font-size: 1rem;
+
+  &__title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-block-end: 1rem;
+  }
+
+  &__desc {
     color: var(--text-muted);
-    line-height: 1.7;
-    margin-bottom: 2.5rem;
+    line-height: 1.6;
+  }
+
+  &__cards {
+    display: grid;
+    gap: 1.5rem;
   }
 }
 
-.contact-info__item {
+.info-card {
   display: flex;
   align-items: flex-start;
   gap: 1.5rem;
-  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-speed) var(--transition-timing);
 
-  lucide-icon {
-    flex-shrink: 0;
-    width: 28px;
-    height: 28px;
-    color: var(--primary);
-    margin-top: 5px;
+  &:hover {
+    transform: translateX(calc(var(--dir) * 8px));
+    border-color: rgba(var(--primary-rgb), 0.3);
+    background-color: var(--bg-card);
+    box-shadow: var(--shadow-md);
   }
 
-  h4 {
+  &__icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(var(--primary-rgb), 0.1);
+    color: var(--primary);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    lucide-icon {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  &__content {
+    h4 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-block-end: 0.5rem;
+    }
+  }
+
+  &__link, &__text {
     font-size: 1.1rem;
     font-weight: 600;
-    margin-bottom: 0.25rem;
     color: var(--text-main);
+    display: block;
   }
 
-  a, p {
-    font-size: 1rem;
-    color: var(--text-muted);
-    word-break: break-word;
-  }
-
-  a:hover {
-    color: var(--text-main);
+  &__link:hover {
+    color: var(--primary);
   }
 }
 
-// --- Columna de Formulario ---
-.contact-form {
-  width: 100%;
+// --- Contact Form Column ---
+.contact-form-container {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 3rem;
+  box-shadow: var(--shadow-lg);
+
+  @media (max-width: 576px) {
+    padding: 2rem 1.5rem;
+  }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
-  position: relative;
+  margin-block-end: 1.5rem;
 
   label {
     display: block;
     font-size: 0.9rem;
     font-weight: 500;
     color: var(--text-muted);
-    margin-bottom: 0.5rem;
+    margin-block-end: 0.5rem;
+    padding-inline-start: 0.25rem;
+  }
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .input-icon {
+    position: absolute;
+    inset-inline-start: 1rem;
+    color: var(--text-muted);
+    pointer-events: none;
+    transition: color 0.3s ease;
+  }
+
+  .form-control {
+    padding-inline-start: 3rem;
+  }
+
+  textarea.form-control {
+    padding-block-start: 0.8rem;
+  }
+
+  &:focus-within {
+    .input-icon {
+      color: var(--primary);
+    }
   }
 }
 
 .form-control {
   width: 100%;
-  padding: 0.9rem 1rem;
+  padding: 0.8rem 1.2rem;
   font-size: 1rem;
-  font-family: var(--font-family-base);
+  font-family: inherit;
   color: var(--text-main);
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-primary);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+  transition: all 0.3s ease;
 
   &:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(255, 75, 43, 0.2);
+    box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.1);
   }
 
   &.is-invalid {
-    border-color: #e74c3c; // Color de error
+    border-color: #ff4d4d;
+    &:focus {
+      box-shadow: 0 0 0 4px rgba(255, 77, 77, 0.1);
+    }
   }
 
   &::placeholder {
-    color: var(--text-muted);
-  }
-
-  // Estilo para el <select>
-  & option {
-    background-color: var(--bg-secondary);
-    color: var(--text-main);
+    color: rgba(255, 255, 255, 0.2);
   }
 }
 
-textarea.form-control {
-  resize: vertical;
-  min-height: 120px;
+select.form-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23A0A0A0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: inset-inline-end 1rem center;
+  background-size: 1.2rem;
 }
 
-.form-error {
-  color: #e74c3c;
+// Checkbox Styling
+.form-checkbox {
+  margin-block: 2rem;
+}
+
+.checkbox-container {
+  display: block;
+  position: relative;
+  padding-inline-start: 2.25rem;
+  cursor: pointer;
   font-size: 0.85rem;
-  font-weight: 500;
-  margin-top: 0.5rem;
+  color: var(--text-muted);
+  user-select: none;
+  line-height: 1.4;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  .checkmark {
+    position: absolute;
+    top: 0;
+    inset-inline-start: 0;
+    height: 1.25rem;
+    width: 1.25rem;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+
+  &:hover input ~ .checkmark {
+    border-color: var(--primary);
+  }
+
+  input:checked ~ .checkmark {
+    background-color: var(--primary);
+    border-color: var(--primary);
+  }
+
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    inset-inline-start: 7px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  input:checked ~ .checkmark:after {
+    display: block;
+  }
+
+  a {
+    color: var(--primary);
+    text-decoration: underline;
+    &:hover {
+      color: var(--secondary);
+    }
+  }
 }
 
 .submit-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  padding: 1rem 2.5rem;
+  width: 100%;
+  padding: 1rem 2rem;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   color: #fff;
   background: var(--accent-gradient);
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  width: 100%;
-  transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+  letter-spacing: 1px;
 
   lucide-icon {
-    width: 20px;
+    width: 18px;
+    height: 18px;
   }
 
   &:hover:not(:disabled) {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(255, 65, 108, 0.2);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(var(--primary-rgb), 0.3);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(-1px);
   }
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
   }
 }
 
-// Mensajes de Éxito/Error
+.form-error {
+  color: #ff4d4d;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-block-start: 0.5rem;
+}
+
 .submit-success, .submit-error {
-  text-align: center;
-  font-size: 1rem;
-  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   padding: 1rem;
   border-radius: var(--radius-md);
-  margin-top: 1.5rem;
+  margin-block-start: 2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
 .submit-success {
-  background-color: rgba(46, 204, 113, 0.1);
+  background: rgba(46, 204, 113, 0.1);
   border: 1px solid #2ecc71;
   color: #2ecc71;
 }
 
 .submit-error {
-  background-color: rgba(231, 76, 60, 0.1);
+  background: rgba(231, 76, 60, 0.1);
   border: 1px solid #e74c3c;
   color: #e74c3c;
 }
 
-// Spinner de carga
 .spinner {
-  width: 20px;
-  height: 20px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
   border-top-color: #fff;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -197,4 +429,96 @@ textarea.form-control {
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+// --- Alternatives Section ---
+.contact-alternatives {
+  padding-block: 6rem;
+  background: linear-gradient(to bottom, var(--bg-primary), var(--bg-secondary));
+  border-top: 1px solid var(--border-color);
+}
+
+.alternatives-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+
+  @media (max-width: 992px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.alternative-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+  &:hover {
+    transform: translateY(-10px);
+    border-color: rgba(var(--primary-rgb), 0.4);
+    box-shadow: var(--shadow-lg);
+  }
+
+  &__icon {
+    width: 64px;
+    height: 64px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-inline: auto;
+    margin-block-end: 1.5rem;
+    transition: all 0.3s ease;
+
+    .alternative-card:hover & {
+      background: var(--accent-gradient);
+      color: #fff;
+      transform: scale(1.1) rotate(5deg);
+    }
+  }
+
+  &__title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-block-end: 1rem;
+  }
+
+  &__desc {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-block-end: 2rem;
+  }
+
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: var(--text-main);
+    transition: color 0.3s ease;
+
+    lucide-icon {
+      transition: transform 0.3s ease;
+    }
+
+    &:hover {
+      color: var(--primary);
+      lucide-icon {
+        transform: translateX(calc(var(--dir) * 5px));
+      }
+    }
+  }
+}
+
+// RTL fixes for select icon
+[dir="rtl"] {
+  select.form-control {
+    background-position: left 1rem center;
+  }
 }

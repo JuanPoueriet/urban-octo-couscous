@@ -247,6 +247,8 @@
       "SERVICE_PROMPT": "选择服务...",
       "SERVICE_OTHER": "其他",
       "MESSAGE": "您的留言",
+      "PRIVACY": "我同意根据以下条款处理我的个人数据：",
+      "PRIVACY_LINK": "隐私政策",
       "SUBMIT": "发送留言",
       "HONEYPOT_LABEL": "请将此字段留空",
       "ERRORS": {
