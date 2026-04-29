@@ -1439,6 +1439,16 @@
     "INSTAGRAM": "Instagram"
   },
   "SEO": {
+    "HOME_TITLE": "JSL Technology - Moldeando el Futuro de la Innovación Digital",
+    "HOME_DESC": "JSL Technology ofrece soluciones de software a medida, ERP, POS y desarrollo móvil para impulsar el crecimiento de su negocio y la transformación digital.",
+    "SOLUTIONS_TITLE": "Soluciones de Software a Medida - Ingeniería Web, Móvil y Cloud",
+    "SOLUTIONS_DESC": "Explore nuestras soluciones de ingeniería expertas, incluyendo desarrollo web, aplicaciones móviles, software de escritorio y arquitectura de nube escalable.",
+    "PRODUCTS_TITLE": "Productos de Software Empresarial - virtex ERP y JSL-POS",
+    "PRODUCTS_DESC": "Descubra nuestro ecosistema de software propietario con virtex ERP y JSL-POS, diseñados para la máxima eficiencia y escalabilidad empresarial.",
+    "PROJECTS_TITLE": "Casos de Éxito e Historias de Triunfo - JSL Technology",
+    "PROJECTS_DESC": "Conozca nuestros exitosos proyectos de transformación digital y cómo nuestras soluciones de software a medida entregaron resultados tangibles para clientes globales.",
+    "BLOG_TITLE": "Blog de JSL Technology - Información Tecnológica y Noticias de Ingeniería",
+    "BLOG_DESC": "Manténgase al día con las últimas perspectivas sobre Angular, arquitectura en la nube, diseño UI/UX y transformación digital de nuestro equipo de ingeniería.",
     "CONTACT_TITLE": "Contactar a JSL Technology - Soluciones de Software Empresarial",
     "CONTACT_DESC": "Póngase en contacto con los expertos de JSL Technology para discutir su próximo proyecto de software. Brindamos consultoría personalizada y soluciones tecnológicas de alto nivel."
   }

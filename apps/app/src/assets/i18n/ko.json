@@ -1440,6 +1440,16 @@
   },
   "SEO": {
     "CONTACT_TITLE": "JSL Technology에 문의하기 - 엔터프라이즈 소프트웨어 솔루션",
-    "CONTACT_DESC": "다음 소프트웨어 프로젝트에 대해 JSL Technology 전문가와 상담하십시오. 비즈니스 성장을 위한 맞춤형 컨설팅과 고급 기술 솔루션을 제공합니다."
+    "CONTACT_DESC": "다음 소프트웨어 프로젝트에 대해 JSL Technology 전문가와 상담하십시오. 비즈니스 성장을 위한 맞춤형 컨설팅과 고급 기술 솔루션을 제공합니다.",
+    "HOME_TITLE": "JSL Technology - 디지털 혁신의 미래를 설계합니다",
+    "HOME_DESC": "JSL Technology는 비즈니스 성장과 디지털 전환을 가속화하기 위한 맞춤형 소프트웨어 솔루션, ERP, POS 및 모바일 개발을 제공합니다.",
+    "SOLUTIONS_TITLE": "맞춤형 소프트웨어 솔루션 - 웹, 모바일 및 클라우드 엔지니어링",
+    "SOLUTIONS_DESC": "웹 개발, 모바일 애플리케이션, 데스크톱 소프트웨어 및 확장 가능한 클라우드 아키텍처를 포함한 전문 엔지니어링 솔루션을 확인해 보세요.",
+    "PRODUCTS_TITLE": "기업용 소프트웨어 제품 - virtex ERP 및 JSL-POS",
+    "PRODUCTS_DESC": "최고의 비즈니스 효율성과 확장성을 위해 설계된 virtex ERP와 JSL-POS가 포함된 독자적인 소프트웨어 생태계를 만나보세요.",
+    "PROJECTS_TITLE": "사례 연구 및 성공 사례 - JSL Technology",
+    "PROJECTS_DESC": "성공적인 디지털 전환 프로젝트와 맞춤형 소프트웨어 솔루션이 글로벌 고객에게 어떤 실질적인 결과를 제공했는지 읽어보세요.",
+    "BLOG_TITLE": "JSL Technology 블로그 - 기술 인사이트 및 엔지니어링 뉴스",
+    "BLOG_DESC": "Angular, 클라우드 아키처, UI/UX 디자인 및 디지털 전환에 관한 엔지니어링 팀의 최신 인사이트를 확인하세요."
   }
 }

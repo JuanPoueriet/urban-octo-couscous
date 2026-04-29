@@ -1440,6 +1440,16 @@
   },
   "SEO": {
     "CONTACT_TITLE": "Kontakte JSL Technology - Solisyon Lojisyèl Enterprise",
-    "CONTACT_DESC": "Pran kontak ak ekspè JSL Technology pou diskite sou pwochen pwojè lojisyèl ou a. Nou bay konsiltasyon pèsonalize ak solisyon teknolojik wo nivo."
+    "CONTACT_DESC": "Pran kontak ak ekspè JSL Technology pou diskite sou pwochen pwojè lojisyèl ou a. Nou bay konsiltasyon pèsonalize ak solisyon teknolojik wo nivo.",
+    "HOME_TITLE": "JSL Technology - Fasonnen avni inovasyon dijital la",
+    "HOME_DESC": "JSL Technology bay solisyon lojisyèl koutim, ERP, POS, ak devlopman mobil pou ranfòse kwasans biznis ou ak transfòmasyon dijital.",
+    "SOLUTIONS_TITLE": "Solisyon lojisyèl koutim - Jeni Web, Mobil ak Cloud",
+    "SOLUTIONS_DESC": "Eksplore solisyon jeni ekspè nou yo tankou devlopman entènèt, aplikasyon mobil, lojisyèl biwo, ak achitekti nwaj évolutive.",
+    "PRODUCTS_TITLE": "Pwodwi lojisyèl antrepriz - virtex ERP ak JSL-POS",
+    "PRODUCTS_DESC": "Dekouvri ekosistèm lojisyèl propriétaires nou an ki gen virtex ERP ak JSL-POS, ki fèt pou maksimòm efikasite biznis ak évolutivité.",
+    "PROJECTS_TITLE": "Etid ka ak istwa siksè - JSL Technology",
+    "PROJECTS_DESC": "Li sou pwojè transfòmasyon dijital siksè nou yo ak fason solisyon lojisyèl koutim nou yo bay rezilta byen mèb pou kliyan mondyal yo.",
+    "BLOG_TITLE": "Blog JSL Technology - Insights teknoloji ak nouvèl jeni",
+    "BLOG_DESC": "Rete mizajou ak dènye insights sou Angular, Cloud Architecture, konsepsyon UI/UX ak transfòmasyon dijital nan ekip jeni nou an."
   }
 }

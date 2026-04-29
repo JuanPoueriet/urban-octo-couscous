@@ -1440,6 +1440,16 @@
   },
   "SEO": {
     "CONTACT_TITLE": "Kontakt JSL Technology - Softwarelösungen für Unternehmen",
-    "CONTACT_DESC": "Kontaktieren Sie die Experten von JSL Technology, um Ihr nächstes Softwareprojekt zu besprechen. Wir bieten maßgeschneiderte Beratung und erstklassige technologische Lösungen."
+    "CONTACT_DESC": "Kontaktieren Sie die Experten von JSL Technology, um Ihr nächstes Softwareprojekt zu besprechen. Wir bieten maßgeschneiderte Beratung und erstklassige technologische Lösungen.",
+    "HOME_TITLE": "JSL Technology - Die Zukunft der digitalen Innovation gestalten",
+    "HOME_DESC": "JSL Technology bietet maßgeschneiderte Softwarelösungen, ERP, POS und mobile Entwicklung, um Ihr Geschäftswachstum und Ihre digitale Transformation voranzutreiben.",
+    "SOLUTIONS_TITLE": "Maßgeschneiderte Softwarelösungen - Web-, Mobil- und Cloud-Engineering",
+    "SOLUTIONS_DESC": "Entdecken Sie unsere Experten-Engineering-Lösungen, darunter Webentwicklung, mobile Anwendungen, Desktop-Software und skalierbare Cloud-Architektur.",
+    "PRODUCTS_TITLE": "Unternehmenssoftwareprodukte - virtex ERP und JSL-POS",
+    "PRODUCTS_DESC": "Entdecken Sie unser proprietäres Software-Ökosystem mit virtex ERP und JSL-POS, das für maximale Geschäftseffizienz und Skalierbarkeit entwickelt wurde.",
+    "PROJECTS_TITLE": "Fallstudien und Erfolgsgeschichten - JSL Technology",
+    "PROJECTS_DESC": "Lesen Sie mehr über unsere erfolgreichen Projekte zur digitalen Transformation und wie unsere maßgeschneiderten Softwarelösungen greifbare Ergebnisse lieferten.",
+    "BLOG_TITLE": "JSL Technology Blog - Tech-Einblicke und Engineering-News",
+    "BLOG_DESC": "Bleiben Sie auf dem Laufenden mit den neuesten Erkenntnissen zu Angular, Cloud-Architektur, UI/UX-Design und digitaler Transformation von unserem Team."
   }
 }

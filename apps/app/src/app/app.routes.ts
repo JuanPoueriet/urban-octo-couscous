@@ -12,16 +12,16 @@ export const routes: Routes = [
         path: 'home',
         loadComponent: () => import('./features/home/home').then(c => c.Home),
         data: {
-          title: 'HEADER.HOME',
-          description: 'HOME.HERO1_SUBTITLE',
+          title: 'SEO.HOME_TITLE',
+          description: 'SEO.HOME_DESC',
           robots: 'index, follow'
         }
       },
       {
         path: 'solutions',
         data: {
-          title: 'HEADER.SERVICES',
-          description: 'SOLUTIONS.SUBTITLE',
+          title: 'SEO.SOLUTIONS_TITLE',
+          description: 'SEO.SOLUTIONS_DESC',
           robots: 'index, follow'
         },
         children: [
@@ -42,8 +42,8 @@ export const routes: Routes = [
       {
         path: 'products',
         data: {
-          title: 'HEADER.PRODUCTS',
-          description: 'PRODUCTS.SUBTITLE',
+          title: 'SEO.PRODUCTS_TITLE',
+          description: 'SEO.PRODUCTS_DESC',
           robots: 'index, follow'
         },
         children: [
@@ -65,8 +65,8 @@ export const routes: Routes = [
       {
         path: 'projects',
         data: { 
-          title: 'HEADER.PROJECTS',
-          description: 'PROJECTS.SUBTITLE',
+          title: 'SEO.PROJECTS_TITLE',
+          description: 'SEO.PROJECTS_DESC',
           robots: 'index, follow'
         },
         children: [
@@ -87,8 +87,8 @@ export const routes: Routes = [
       {
         path: 'blog',
         data: {
-          title: 'HEADER.BLOG',
-          description: 'BLOG.SUBTITLE',
+          title: 'SEO.BLOG_TITLE',
+          description: 'SEO.BLOG_DESC',
           robots: 'index, follow'
         },
         children: [

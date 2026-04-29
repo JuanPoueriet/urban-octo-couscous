@@ -1440,6 +1440,16 @@
   },
   "SEO": {
     "CONTACT_TITLE": "联系 JSL Technology - 企业级软件解决方案",
-    "CONTACT_DESC": "联系 JSL Technology 专家讨论您的下一个软件项目。我们为您的业务增长提供定制咨询和高端技术解决方案。"
+    "CONTACT_DESC": "联系 JSL Technology 专家讨论您的下一个软件项目。我们为您的业务增长提供定制咨询和高端技术解决方案。",
+    "HOME_TITLE": "JSL Technology - 塑造数字创新的未来",
+    "HOME_DESC": "JSL Technology 提供定制软件解决方案、ERP、POS 和移动开发，助力您的业务增长和数字化转型。",
+    "SOLUTIONS_TITLE": "定制软件解决方案 - Web、移动和云工程",
+    "SOLUTIONS_DESC": "探索我们世界级的专家工程解决方案，涵盖 Web 开发、高性能移动应用、稳健的桌面软件以及安全可扩展的全球云架构。",
+    "PRODUCTS_TITLE": "企业软件产品 - virtex ERP 和 JSL-POS",
+    "PRODUCTS_DESC": "探索我们的专有软件生态系统，包括专为实现最大业务效率和可扩展性而设计的 virtex ERP 和 JSL-POS。",
+    "PROJECTS_TITLE": "案例研究与成功案例 - JSL Technology",
+    "PROJECTS_DESC": "深入了解我们成功的数字化转型项目案例研究，探索我们的定制软件解决方案如何为全球各行业的客户提供切实可见的业务增长成果。",
+    "BLOG_TITLE": "JSL Technology 博客 - 技术见解与工程新闻",
+    "BLOG_DESC": "随时了解我们专业的工程团队关于 Angular 开发、现代云架构、尖端 UI/UX 设计以及全球企业数字化转型的最新技术见解和深度分析。"
   }
 }
