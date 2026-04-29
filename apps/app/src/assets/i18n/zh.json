@@ -896,7 +896,6 @@
   },
   "FAQ": {
     "TITLE": "常见问题",
-    "SUBTITLE": "有疑问吗？我们在这里回答了有关我们的服务、产品和流程的最常见问题。",
     "Q1_TITLE": "你们开发什么样的软件解决方案？",
     "Q1_DESC": "我们专注于三个主要领域：<strong>定制开发</strong>（Web、移动、云）、<strong>企业软件</strong>（我们的 virtex 和 JSL-POS）和<strong>云工程</strong>（DevOps、AWS 和 Azure 上的架构）。",
     "Q2_TITLE": "你们的开发流程是怎样的？",
@@ -924,7 +923,9 @@
     "Q8_DESC": "Angular + Node.js for web, Flutter for mobile, AWS/Azure for cloud.",
     "EMPTY": "No questions found in this category.",
     "STILL_QUESTIONS": "Still have questions? We are happy to help.",
-    "CONTACT_US": "Contact Us"
+    "CONTACT_US": "Contact Us",
+    "SEARCH_PLACEHOLDER": "Search...",
+    "SUBTITLE": "有疑问吗？我们在下面回答了有关我们的服务、产品和流程的最常见问题。"
   },
   "CHAT": {
     "TITLE": "与我们聊天",
