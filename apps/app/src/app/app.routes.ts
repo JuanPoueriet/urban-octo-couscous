@@ -173,8 +173,8 @@ export const routes: Routes = [
         path: 'contact',
         loadComponent: () => import('./features/contact/contact').then(c => c.Contact),
         data: {
-          title: 'HEADER.CONTACT',
-          description: 'CONTACT.SUBTITLE',
+          title: 'SEO.CONTACT_TITLE',
+          description: 'SEO.CONTACT_DESC',
           robots: 'index, follow'
         }
       },

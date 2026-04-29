@@ -1436,5 +1436,9 @@
   "SOCIAL": {
     "GITHUB": "GitHub",
     "INSTAGRAM": "Instagram"
+  },
+  "SEO": {
+    "CONTACT_TITLE": "Contact JSL Technology - Enterprise Software Solutions",
+    "CONTACT_DESC": "Get in touch with JSL Technology experts to discuss your next software project. We provide custom consulting and high-end technological solutions for your business growth."
   }
 }
