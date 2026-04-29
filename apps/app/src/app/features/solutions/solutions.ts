@@ -26,8 +26,15 @@ export class Solutions implements OnDestroy {
     { icon: 'Briefcase', valueKey: 'SOLUTIONS.STAT_PROJECTS_VAL',    labelKey: 'SOLUTIONS.STAT_PROJECTS'    },
     { icon: 'Users',     valueKey: 'SOLUTIONS.STAT_CLIENTS_VAL',     labelKey: 'SOLUTIONS.STAT_CLIENTS'     },
     { icon: 'Globe',     valueKey: 'SOLUTIONS.STAT_COUNTRIES_VAL',   labelKey: 'SOLUTIONS.STAT_COUNTRIES'   },
-    { icon: 'Gauge',     valueKey: 'SOLUTIONS.STAT_SATISFACTION_VAL', labelKey: 'SOLUTIONS.STAT_SATISFACTION' },
+    { icon: 'Award',     valueKey: 'SOLUTIONS.STAT_SATISFACTION_VAL', labelKey: 'SOLUTIONS.STAT_SATISFACTION' },
   ];
+
+  scrollToGrid() {
+    const grid = document.getElementById('solutions-grid');
+    if (grid) {
+      grid.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
 
   constructor(@Inject(TranslateService) private translate: TranslateService) {
     this.currentLang = this.translate.currentLang || this.translate.defaultLang || 'es';
