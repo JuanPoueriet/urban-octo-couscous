@@ -264,7 +264,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   private searchUiService = inject(SearchUiService);
   private seoService = inject(Seo);
   private analyticsService = inject(AnalyticsService);
-  public directionService = inject(DirectionService);
+  public directionService: DirectionService = inject(DirectionService);
   private unlistenExitIntent: (() => void) | null = null;
   private unlistenHeroMouseMove: (() => void) | null = null;
   private unlistenHeroMouseLeave: (() => void) | null = null;
