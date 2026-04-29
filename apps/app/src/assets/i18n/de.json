@@ -796,8 +796,8 @@
     "CTA_SUBTITLE": "Get the latest JSL Technology news, product updates, and industry insights."
   },
   "TRUST_PAGE": {
-    "TITLE": "Trust-Center",
-    "SUBTITLE": "Wie wir Ihre Daten und Ihr Unternehmen schützen.",
+    "TITLE": "Enterprise Vertrauens- und Sicherheitszentrum | JSL Technology",
+    "SUBTITLE": "Unser unerschütterliches Engagement für Sicherheit auf Unternehmensebene, globale Compliance und Data Governance. Wir schützen Ihre geschäftskritischen Informationen zuverlässig.",
     "CONTENT": "Ihr Vertrauen ist unsere Priorität. Wir verwenden höchste Sicherheitsstandards."
   },
   "ERRORS": {
@@ -1493,6 +1493,8 @@
   "SEO": {
     "CONTACT_TITLE": "Kontakt JSL Technology - Softwarelösungen für Unternehmen",
     "CONTACT_DESC": "Kontaktieren Sie die Experten von JSL Technology, um Ihr nächstes Softwareprojekt zu besprechen. Wir bieten maßgeschneiderte Beratung und erstklassige technologische Lösungen."
+  }
+}
   },
   "MEMBER_1": "Javier S. Liranzo",
   "MEMBER_2": "Laura Fernández"

@@ -796,8 +796,8 @@
     "CTA_SUBTITLE": "Recibe las últimas noticias de JSL Technology, actualizaciones de productos e insights de la industria."
   },
   "TRUST_PAGE": {
-    "TITLE": "Confianza y Seguridad",
-    "SUBTITLE": "Nuestro compromiso con la seguridad, el cumplimiento y la gobernanza.",
+    "TITLE": "Centro de Confianza y Seguridad Empresarial | JSL Technology",
+    "SUBTITLE": "Nuestro compromiso inquebrantable con la seguridad de nivel empresarial, el cumplimiento global y la gobernanza de datos. Protegemos su información con los estándares más altos.",
     "CONTENT": "Nos adherimos a los más altos estándares de seguridad para proteger sus datos y garantizar la continuidad del negocio."
   },
   "ERRORS": {
@@ -1493,6 +1493,8 @@
   "SEO": {
     "CONTACT_TITLE": "Contactar a JSL Technology - Soluciones de Software Empresarial",
     "CONTACT_DESC": "Póngase en contacto con los expertos de JSL Technology para discutir su próximo proyecto de software. Brindamos consultoría personalizada y soluciones tecnológicas de alto nivel."
+  }
+}
   },
   "MEMBER_1": "Javier S. Liranzo",
   "MEMBER_2": "Laura Fernández"

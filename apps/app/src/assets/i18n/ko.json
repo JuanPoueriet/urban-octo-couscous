@@ -796,8 +796,8 @@
     "CTA_SUBTITLE": "Get the latest JSL Technology news, product updates, and industry insights."
   },
   "TRUST_PAGE": {
-    "TITLE": "신뢰 센터",
-    "SUBTITLE": "데이터와 비즈니스를 보호하는 방법.",
+    "TITLE": "엔터프라이즈 신뢰 및 보안 센터 | JSL Technology",
+    "SUBTITLE": "기업 수준의 보안, 글로벌 규정 준수 및 데이터 거버넌스에 대한 당사의 확고한 약속입니다. 귀하의 비즈니스 데이터를 세계 최고 수준의 보안 표준으로 안전하게 보호합니다.",
     "CONTENT": "고객의 신뢰가 당사의 최우선 과제입니다. 최고 수준의 보안 표준을 사용합니다."
   },
   "ERRORS": {
@@ -1493,6 +1493,8 @@
   "SEO": {
     "CONTACT_TITLE": "JSL Technology에 문의하기 - 엔터프라이즈 소프트웨어 솔루션",
     "CONTACT_DESC": "다음 소프트웨어 프로젝트에 대해 JSL Technology 전문가와 상담하십시오. 비즈니스 성장을 위한 맞춤형 컨설팅과 고급 기술 솔루션을 제공합니다."
+  }
+}
   },
   "MEMBER_1": "하비에르 S. 리란조",
   "MEMBER_2": "로라 페르난데스"

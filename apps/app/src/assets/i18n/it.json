@@ -796,8 +796,8 @@
     "CTA_SUBTITLE": "Get the latest JSL Technology news, product updates, and industry insights."
   },
   "TRUST_PAGE": {
-    "TITLE": "Centro fiducia",
-    "SUBTITLE": "Come proteggiamo i tuoi dati e la tua attività.",
+    "TITLE": "Centro per la fiducia e la sicurezza enterprise | JSL Technology",
+    "SUBTITLE": "Il nostro impegno costante per la sicurezza di livello enterprise, la conformità globale e la governance dei dati. Proteggiamo le vostre informazioni con i massimi standard del settore.",
     "CONTENT": "La tua fiducia è la nostra priorità. Utilizziamo i più alti standard di sicurezza."
   },
   "ERRORS": {
@@ -1493,6 +1493,8 @@
   "SEO": {
     "CONTACT_TITLE": "Contatta JSL Technology - Soluzioni Software Aziendali",
     "CONTACT_DESC": "Mettiti in contatto con gli esperti di JSL Technology per discutere il tuo prossimo progetto software. Forniamo consulenza personalizzata e soluzioni tecnologiche di alto livello."
+  }
+}
   },
   "MEMBER_1": "Javier S. Liranzo",
   "MEMBER_2": "Laura Fernández"
