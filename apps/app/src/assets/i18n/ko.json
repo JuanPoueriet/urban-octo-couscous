@@ -404,7 +404,27 @@
     "STAT_SATISFACTION": "Client Satisfaction",
     "CTA_EYEBROW": "Ready to Build?",
     "CTA_TITLE": "Start Your Custom Solution",
-    "CTA_SUBTITLE": "Tell us your challenge and we will design the right approach."
+    "CTA_SUBTITLE": "Tell us your challenge and we will design the right approach.",
+    "WEB_SECTION_FRONTEND_TITLE": "Frontend Engineering",
+    "WEB_SECTION_FRONTEND_DESC": "Creating responsive, accessible, and high-performance user interfaces.",
+    "WEB_SECTION_BACKEND_TITLE": "Backend Systems",
+    "WEB_SECTION_BACKEND_DESC": "Building secure, scalable, and reliable server-side architectures.",
+    "WEB_SECTION_DEVOPS_TITLE": "Cloud & DevOps",
+    "WEB_SECTION_DEVOPS_DESC": "Automating deployments and ensuring maximum availability.",
+    "MOBILE_SECTION_NATIVE_TITLE": "Native Performance",
+    "MOBILE_SECTION_NATIVE_DESC": "Leveraging full device capabilities with Swift and Kotlin.",
+    "MOBILE_SECTION_HYBRID_TITLE": "Hybrid Versatility",
+    "MOBILE_SECTION_HYBRID_DESC": "Fast cross-platform development with Flutter and React Native.",
+    "DESKTOP_SECTION_WINDOWS_TITLE": "Windows Applications",
+    "DESKTOP_SECTION_WINDOWS_DESC": "Robust software optimized for the Windows ecosystem.",
+    "DESKTOP_SECTION_MACOS_TITLE": "macOS Applications",
+    "DESKTOP_SECTION_MACOS_DESC": "Elegant and performant apps for Apple desktop users.",
+    "CLOUD_SECTION_IAAS_TITLE": "Infrastructure (IaaS)",
+    "CLOUD_SECTION_IAAS_DESC": "Direct control over compute, storage, and networking resources.",
+    "CLOUD_SECTION_PAAS_TITLE": "Platform (PaaS)",
+    "CLOUD_SECTION_PAAS_DESC": "Focus on code while we manage the underlying platform.",
+    "CLOUD_SECTION_SAAS_TITLE": "Software (SaaS)",
+    "CLOUD_SECTION_SAAS_DESC": "Scalable software delivered entirely over the cloud."
   },
   "PRODUCTS": {
     "OVERVIEW": "개요",
@@ -626,7 +646,15 @@
     "SUBMIT_COMMENT": "댓글 게시",
     "SHARE_ARTICLE": "기사 공유",
     "COMMENT_PLACEHOLDER": "대화에 참여하세요...",
-    "NO_COMMENTS": "아직 댓글이 없습니다. 첫 번째로 생각을 공유해 보세요!"
+    "NO_COMMENTS": "아직 댓글이 없습니다. 첫 번째로 생각을 공유해 보세요!",
+    "LIKE": "좋아요",
+    "SHARE": "공유",
+    "POST_1_DESC": "Angular 17+는 서버 측 렌더링을 재정의했습니다. 우리는 하이드레이션의 변화와 그것이 성능에서 다른 프레임워크를 어떻게 이기고 있는지 분석합니다.",
+    "POST_2_DESC": "많은 사람들이 UI(사용자 인터페이스)와 UX(사용자 경험)를 같은 의미로 사용합니다. 이것은 비용이 많이 드는 실수입니다. 우리는 중요한 차이점을 설명합니다.",
+    "POST_3_DESC": "앱이 100명의 사용자에게는 잘 작동하지만 100,000명에게는 어떻습니까? 진정한 확장성은 마법이 아니라 좋은 아키텍처입니다. 여기에 우리의 5가지 기둥이 있습니다.",
+    "POST_4_DESC": "최신 프런트엔드 도구인 Vite를 사용하여 새 React 프로젝트를 설정하기 위한 빠른 안내서입니다. Create React App에 대한 이점을 살펴봅니다.",
+    "POST_5_DESC": "디자인은 과정입니다. Figma를 사용하여 초기 아이디어를 충실도가 높은 대화형 프로토타입으로 전환하는 워크플로를 보여줍니다.",
+    "POST_6_DESC": "90%의 시간 동안 유휴 상태인 서버에 왜 돈을 지불합니까? AWS Lambda를 사용한 서버리스 기능의 이점과 사용 사례를 살펴봅니다."
   },
   "LEGAL": {
     "PRIVACY_TITLE": "개인정보 처리방침",
@@ -1210,7 +1238,31 @@
     "CUSTOMIZABLE": "맞춤화 가능",
     "OPEN_API": "오픈 API",
     "ANNUAL_SAVINGS": "연간 절감액",
-    "PRODUCT_NAME": "virtex"
+    "PRODUCT_NAME": "virtex",
+    "EYEBROW": "Investment",
+    "ADD_ONS": "Add-ons",
+    "BACK": "뒤로",
+    "PRICE_FROM": "에서",
+    "PRICE_TO": "까지",
+    "GET_QUOTE": "상세 견적 받기",
+    "COMPARE_EYEBROW": "비교",
+    "WIZARD_STEP_1_DESC": "빌드하려는 프로젝트 유형을 선택하십시오.",
+    "WIZARD_STEP_2_DESC": "현재 필요에 가장 적합한 규모를 선택하십시오.",
+    "WIZARD_STEP_3_DESC": "솔루션을 향상시키기 위해 선택적 기능을 추가하십시오.",
+    "VS_OTHERS_DESC": "virtex가 시장의 다른 솔루션과 어떻게 비교되는지 확인하십시오.",
+    "TALK_SALES_TITLE": "맞춤 견적이 필요하십니까?",
+    "TALK_SALES_DESC": "당사의 영업 팀은 귀하의 특정 요구 사항에 맞는 솔루션을 설계하는 데 도움을 줄 수 있습니다.",
+    "TALK_SALES_CTA": "영업팀과 상담하기",
+    "STEP_1_LABEL": "유형",
+    "STEP_2_LABEL": "규모",
+    "STEP_3_LABEL": "기능",
+    "STEP_4_LABEL": "결과",
+    "WEB_HINT": "맞춤형 웹 애플리케이션 및 포털.",
+    "MOBILE_HINT": "iOS 및 Android 모바일 앱.",
+    "ERP_HINT": "통합 비즈니스 관리 시스템.",
+    "STARTUP_HINT": "검증 및 MVP에 이상적입니다.",
+    "SMB_HINT": "성장하는 비즈니스를 위해 설계되었습니다.",
+    "ENTERPRISE_HINT": "미션 크리티컬 대규모 시스템."
   },
   "SECURITY_CENTER": {
     "TITLE": "보안 센터",
@@ -1442,4 +1494,8 @@
     "CONTACT_TITLE": "JSL Technology에 문의하기 - 엔터프라이즈 소프트웨어 솔루션",
     "CONTACT_DESC": "다음 소프트웨어 프로젝트에 대해 JSL Technology 전문가와 상담하십시오. 비즈니스 성장을 위한 맞춤형 컨설팅과 고급 기술 솔루션을 제공합니다."
   }
+}
+  },
+  "MEMBER_1": "하비에르 S. 리란조",
+  "MEMBER_2": "로라 페르난데스"
 }

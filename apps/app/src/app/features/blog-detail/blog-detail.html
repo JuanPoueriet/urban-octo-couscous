@@ -28,7 +28,7 @@
               <img [src]="(author$ | async)?.imageUrl || 'assets/images/default-avatar.png'" class="meta-author-img" [alt]="'ALT.AUTHOR' | translate" />
               <div class="meta-text">
                 <span class="meta-label">{{ 'COMMON.AUTHOR' | translate }}</span>
-                <span class="meta-value">{{ post.authorKey | translate }}</span>
+                <span class="meta-value">{{ (author$ | async)?.nameKey | translate }}</span>
               </div>
             </div>
             

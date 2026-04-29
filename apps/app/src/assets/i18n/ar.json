@@ -404,7 +404,27 @@
     "STAT_SATISFACTION": "Client Satisfaction",
     "CTA_EYEBROW": "Ready to Build?",
     "CTA_TITLE": "Start Your Custom Solution",
-    "CTA_SUBTITLE": "Tell us your challenge and we will design the right approach."
+    "CTA_SUBTITLE": "Tell us your challenge and we will design the right approach.",
+    "WEB_SECTION_FRONTEND_TITLE": "Frontend Engineering",
+    "WEB_SECTION_FRONTEND_DESC": "Creating responsive, accessible, and high-performance user interfaces.",
+    "WEB_SECTION_BACKEND_TITLE": "Backend Systems",
+    "WEB_SECTION_BACKEND_DESC": "Building secure, scalable, and reliable server-side architectures.",
+    "WEB_SECTION_DEVOPS_TITLE": "Cloud & DevOps",
+    "WEB_SECTION_DEVOPS_DESC": "Automating deployments and ensuring maximum availability.",
+    "MOBILE_SECTION_NATIVE_TITLE": "Native Performance",
+    "MOBILE_SECTION_NATIVE_DESC": "Leveraging full device capabilities with Swift and Kotlin.",
+    "MOBILE_SECTION_HYBRID_TITLE": "Hybrid Versatility",
+    "MOBILE_SECTION_HYBRID_DESC": "Fast cross-platform development with Flutter and React Native.",
+    "DESKTOP_SECTION_WINDOWS_TITLE": "Windows Applications",
+    "DESKTOP_SECTION_WINDOWS_DESC": "Robust software optimized for the Windows ecosystem.",
+    "DESKTOP_SECTION_MACOS_TITLE": "macOS Applications",
+    "DESKTOP_SECTION_MACOS_DESC": "Elegant and performant apps for Apple desktop users.",
+    "CLOUD_SECTION_IAAS_TITLE": "Infrastructure (IaaS)",
+    "CLOUD_SECTION_IAAS_DESC": "Direct control over compute, storage, and networking resources.",
+    "CLOUD_SECTION_PAAS_TITLE": "Platform (PaaS)",
+    "CLOUD_SECTION_PAAS_DESC": "Focus on code while we manage the underlying platform.",
+    "CLOUD_SECTION_SAAS_TITLE": "Software (SaaS)",
+    "CLOUD_SECTION_SAAS_DESC": "Scalable software delivered entirely over the cloud."
   },
   "PRODUCTS": {
     "OVERVIEW": "نظرة عامة",
@@ -626,7 +646,15 @@
     "SUBMIT_COMMENT": "نشر التعليق",
     "SHARE_ARTICLE": "شارك المقال",
     "COMMENT_PLACEHOLDER": "انضم إلى المحادثة...",
-    "NO_COMMENTS": "لا توجد تعليقات بعد. كن أول من يشاركنا رأيه!"
+    "NO_COMMENTS": "لا توجد تعليقات بعد. كن أول من يشاركنا رأيه!",
+    "LIKE": "أعجبني",
+    "SHARE": "مشاركة",
+    "POST_1_DESC": "لقد أعاد Angular 17+ تعريف العرض من جانب الخادم. نقوم بتحليل التغييرات في الترطيب وكيف يتفوق على الأطر الأخرى في الأداء.",
+    "POST_2_DESC": "يستخدم الكثير من الناس واجهة المستخدم (User Interface) وتجربة المستخدم (User Experience) بالتبادل. هذا خطأ مكلف. نوضح الفرق الحاسم.",
+    "POST_3_DESC": "يعمل تطبيقك بشكل جيد مع 100 مستخدم ، ولكن ماذا عن 100000؟ قابلية التوسع الحقيقية ليست سحرًا ، إنها بنية جيدة. إليك ركائزنا الخمس.",
+    "POST_4_DESC": "دليل سريع لإعداد مشروع React جديد باستخدام Vite ، أداة الواجهة الأمامية الحديثة. نستكشف الفوائد على Create React App.",
+    "POST_5_DESC": "التصميم عملية. نعرض سير عملنا لتحويل الأفكار الأولية إلى نماذج أولية تفاعلية عالية الدقة باستخدام Figma.",
+    "POST_6_DESC": "لماذا تدفع مقابل خادم خامل 90٪ من الوقت؟ نستكشف الفوائد وحالات الاستخدام للوظائف بدون خادم باستخدام AWS Lambda."
   },
   "LEGAL": {
     "PRIVACY_TITLE": "سياسة الخصوصية",
@@ -1210,7 +1238,31 @@
     "CUSTOMIZABLE": "قابل للتخصيص",
     "OPEN_API": "API مفتوح",
     "ANNUAL_SAVINGS": "التوفير السنوي",
-    "PRODUCT_NAME": "virtex"
+    "PRODUCT_NAME": "virtex",
+    "EYEBROW": "Investment",
+    "ADD_ONS": "Add-ons",
+    "BACK": "عودة",
+    "PRICE_FROM": "من",
+    "PRICE_TO": "إلى",
+    "GET_QUOTE": "احصل على عرض سعر مفصل",
+    "COMPARE_EYEBROW": "مقارنة",
+    "WIZARD_STEP_1_DESC": "حدد نوع المشروع الذي تريد بناءه.",
+    "WIZARD_STEP_2_DESC": "اختر المقياس الذي يناسب احتياجاتك الحالية بشكل أفضل.",
+    "WIZARD_STEP_3_DESC": "أضف ميزات اختيارية لتحسين الحل الخاص بك.",
+    "VS_OTHERS_DESC": "شاهد كيف يقارن virtex بالحلول الأخرى في السوق.",
+    "TALK_SALES_TITLE": "هل تحتاج إلى عرض سعر مخصص؟",
+    "TALK_SALES_DESC": "يمكن لفريق المبيعات لدينا مساعدتك في تصميم حل مخصص لمتطلباتك المحددة.",
+    "TALK_SALES_CTA": "تحدث إلى المبيعات",
+    "STEP_1_LABEL": "النوع",
+    "STEP_2_LABEL": "المقياس",
+    "STEP_3_LABEL": "الميزات",
+    "STEP_4_LABEL": "النتيجة",
+    "WEB_HINT": "تطبيقات ومواقع ويب مخصصة.",
+    "MOBILE_HINT": "تطبيقات الهاتف المحمول iOS و Android.",
+    "ERP_HINT": "أنظمة إدارة الأعمال المتكاملة.",
+    "STARTUP_HINT": "مثالي للتحقق من الصحة والحد الأدنى من المنتجات القابلة للتطبيق (MVP).",
+    "SMB_HINT": "مصمم للشركات المتنامية.",
+    "ENTERPRISE_HINT": "أنظمة واسعة النطاق للمهام الحرجة."
   },
   "SECURITY_CENTER": {
     "TITLE": "مركز الأمان",
@@ -1442,4 +1494,8 @@
     "CONTACT_TITLE": "اتصل بـ JSL Technology - حلول البرمجيات للمؤسسات",
     "CONTACT_DESC": "تواصل مع خبراء JSL Technology لمناقشة مشروعك البرمجي القادم. نحن نقدم استشارات مخصصة وحلولًا تقنية متطورة لتنمية أعمالك."
   }
+}
+  },
+  "MEMBER_1": "خافيير س. ليرانزو",
+  "MEMBER_2": "لورا فرنانديز"
 }
