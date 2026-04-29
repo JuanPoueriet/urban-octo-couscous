@@ -404,7 +404,27 @@
     "STAT_SATISFACTION": "Client Satisfaction",
     "CTA_EYEBROW": "Ready to Build?",
     "CTA_TITLE": "Start Your Custom Solution",
-    "CTA_SUBTITLE": "Tell us your challenge and we will design the right approach."
+    "CTA_SUBTITLE": "Tell us your challenge and we will design the right approach.",
+    "WEB_SECTION_FRONTEND_TITLE": "Frontend Engineering",
+    "WEB_SECTION_FRONTEND_DESC": "Creating responsive, accessible, and high-performance user interfaces.",
+    "WEB_SECTION_BACKEND_TITLE": "Backend Systems",
+    "WEB_SECTION_BACKEND_DESC": "Building secure, scalable, and reliable server-side architectures.",
+    "WEB_SECTION_DEVOPS_TITLE": "Cloud & DevOps",
+    "WEB_SECTION_DEVOPS_DESC": "Automating deployments and ensuring maximum availability.",
+    "MOBILE_SECTION_NATIVE_TITLE": "Native Performance",
+    "MOBILE_SECTION_NATIVE_DESC": "Leveraging full device capabilities with Swift and Kotlin.",
+    "MOBILE_SECTION_HYBRID_TITLE": "Hybrid Versatility",
+    "MOBILE_SECTION_HYBRID_DESC": "Fast cross-platform development with Flutter and React Native.",
+    "DESKTOP_SECTION_WINDOWS_TITLE": "Windows Applications",
+    "DESKTOP_SECTION_WINDOWS_DESC": "Robust software optimized for the Windows ecosystem.",
+    "DESKTOP_SECTION_MACOS_TITLE": "macOS Applications",
+    "DESKTOP_SECTION_MACOS_DESC": "Elegant and performant apps for Apple desktop users.",
+    "CLOUD_SECTION_IAAS_TITLE": "Infrastructure (IaaS)",
+    "CLOUD_SECTION_IAAS_DESC": "Direct control over compute, storage, and networking resources.",
+    "CLOUD_SECTION_PAAS_TITLE": "Platform (PaaS)",
+    "CLOUD_SECTION_PAAS_DESC": "Focus on code while we manage the underlying platform.",
+    "CLOUD_SECTION_SAAS_TITLE": "Software (SaaS)",
+    "CLOUD_SECTION_SAAS_DESC": "Scalable software delivered entirely over the cloud."
   },
   "PRODUCTS": {
     "OVERVIEW": "概要",
@@ -626,7 +646,15 @@
     "SUBMIT_COMMENT": "コメントを投稿",
     "SHARE_ARTICLE": "記事を共有",
     "COMMENT_PLACEHOLDER": "会話に参加...",
-    "NO_COMMENTS": "まだコメントはありません。最初の感想を投稿しましょう！"
+    "NO_COMMENTS": "まだコメントはありません。最初の感想を投稿しましょう！",
+    "LIKE": "いいね",
+    "SHARE": "共有",
+    "POST_1_DESC": "Angular 17+はサーバーサイドレンダリングを再定義しました。ハイドレーションの変化と、それが他のフレームワークをパフォーマンスでどのように打ち負かしているかを分析します。",
+    "POST_2_DESC": "多くの人がUI（ユーザーインターフェイス）とUX（ユーザーエクスペリエンス）を同じ意味で使用しています。これは費用のかかる間違いです。私たちは重要な違いを説明します。",
+    "POST_3_DESC": "あなたのアプリは100人のユーザーでは問題なく動作しますが、100,000人ではどうでしょうか？真のスケーラビリティは魔法ではなく、優れたアーキテクチャです。ここに私たちの5つの柱があります。",
+    "POST_4_DESC": "最新のフロントエンドツールであるViteを使用して新しいReactプロジェクトをセットアップするためのクイックガイド。Create React Appに対する利点を探ります。",
+    "POST_5_DESC": "デザインはプロセスです。Figmaを使用して、初期のアイデアを忠実度の高いインタラクティブなプロトタイプに変えるワークフローを紹介します。",
+    "POST_6_DESC": "90％の時間アイドル状態のサーバーになぜ料金を支払うのですか？AWS Lambdaを使用したサーバーレス関数の利点と使用例を探ります。"
   },
   "LEGAL": {
     "PRIVACY_TITLE": "プライバシーポリシー",
@@ -1210,7 +1238,31 @@
     "CUSTOMIZABLE": "カスタマイズ可能",
     "OPEN_API": "オープンAPI",
     "ANNUAL_SAVINGS": "年間節約額",
-    "PRODUCT_NAME": "virtex"
+    "PRODUCT_NAME": "virtex",
+    "EYEBROW": "Investment",
+    "ADD_ONS": "Add-ons",
+    "BACK": "戻る",
+    "PRICE_FROM": "から",
+    "PRICE_TO": "まで",
+    "GET_QUOTE": "詳細な見積もりを取得",
+    "COMPARE_EYEBROW": "比較",
+    "WIZARD_STEP_1_DESC": "構築したいプロジェクトの種類を選択してください。",
+    "WIZARD_STEP_2_DESC": "現在のニーズに最も適した規模を選択してください。",
+    "WIZARD_STEP_3_DESC": "ソリューションを強化するためのオプション機能を追加します。",
+    "VS_OTHERS_DESC": "virtexが市場の他のソリューションとどのように比較されるかをご覧ください。",
+    "TALK_SALES_TITLE": "カスタム見積もりが必要ですか？",
+    "TALK_SALES_DESC": "当社の営業チームが、お客様の特定の要件に合わせたソリューションの設計をお手伝いします。",
+    "TALK_SALES_CTA": "営業担当者に相談する",
+    "STEP_1_LABEL": "タイプ",
+    "STEP_2_LABEL": "規模",
+    "STEP_3_LABEL": "機能",
+    "STEP_4_LABEL": "結果",
+    "WEB_HINT": "カスタムWebアプリケーションとポータル。",
+    "MOBILE_HINT": "iOSおよびAndroidモバイルアプリ。",
+    "ERP_HINT": "統合されたビジネス管理システム。",
+    "STARTUP_HINT": "検証やMVPに最適です。",
+    "SMB_HINT": "成長中の企業向けに設計されています。",
+    "ENTERPRISE_HINT": "ミッションクリティカルな大規模システム。"
   },
   "SECURITY_CENTER": {
     "TITLE": "セキュリティセンター",
@@ -1441,5 +1493,7 @@
   "SEO": {
     "CONTACT_TITLE": "JSL Technologyに問い合わせる - エンタープライズソフトウェアソリューション",
     "CONTACT_DESC": "次回のソフトウェアプロジェクトについて、JSL Technologyのエキスパートにご相談ください。お客様のビジネス成長のために、カスタムコンサルティングとハイエンドな技術ソリューションを提供します。"
-  }
+  },
+  "MEMBER_1": "ハビエル・S・リランゾ",
+  "MEMBER_2": "ローラ・フェルナンデス"
 }
