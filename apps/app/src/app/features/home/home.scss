@@ -934,6 +934,11 @@ swiper-container {
 .latest-insights {
   padding: 6rem 0;
   border-top: 1px solid var(--border-color);
+  position: relative;
+  overflow: hidden; // Important for button proximity tracking logic
+
+  --insights-nav-left-visibility: 0;
+  --insights-nav-right-visibility: 0;
 }
 
 .latest-insights__header {
@@ -942,19 +947,96 @@ swiper-container {
   margin: 0 auto 4rem;
 }
 
-.insights-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+.insights-slider-wrapper {
+  position: relative;
+  width: 100%;
+}
 
-  @media (max-width: 992px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.insights-swiper {
+  width: 100%;
+  padding: 1rem 0 3rem; // Add padding for shadows and pagination
+
+  // Modern way to style Swiper Web Components (Shadow DOM safe)
+  --swiper-pagination-bottom: 0px;
+  --swiper-pagination-color: var(--primary);
+  --swiper-pagination-bullet-inactive-color: var(--border-color);
+  --swiper-pagination-bullet-inactive-opacity: 0.5;
+  --swiper-pagination-bullet-size: 10px;
+  --swiper-pagination-bullet-horizontal-gap: 4px;
+}
+
+.insight-slide {
+  height: auto;
+  display: flex;
+}
+
+// Replicating Hero-style Navigation for Insights Slider
+.insights-swiper-button-next,
+.insights-swiper-button-prev {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  width: 50px;
+  height: 50px;
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0.2;
 
   @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+    display: none !important; // Hide buttons on mobile as requested
+  }
+
+  lucide-icon {
+    width: 24px;
+    height: 24px;
+    stroke-width: 1.5;
+  }
+
+  &:hover {
+    opacity: 1 !important;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+
+    lucide-icon {
+      stroke-width: 2;
+    }
+  }
+
+  &:active {
+    transform: translateY(-50%) scale(0.95);
   }
 }
+
+.insights-swiper-button-prev {
+  inset-inline-start: -1rem; // Slight overlap or outside depending on container
+  opacity: calc(0.1 + (var(--insights-nav-left-visibility, 0) * 0.9));
+
+  @media (min-width: 1400px) {
+    inset-inline-start: -2rem;
+  }
+}
+
+.insights-swiper-button-next {
+  inset-inline-end: -1rem;
+  opacity: calc(0.1 + (var(--insights-nav-right-visibility, 0) * 0.9));
+
+  @media (min-width: 1400px) {
+    inset-inline-end: -2rem;
+  }
+}
+
 
 // --- 6. Final CTA Section ---
 .final-cta-section {
