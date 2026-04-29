@@ -404,7 +404,27 @@
     "STAT_SATISFACTION": "Client Satisfaction",
     "CTA_EYEBROW": "Ready to Build?",
     "CTA_TITLE": "Start Your Custom Solution",
-    "CTA_SUBTITLE": "Tell us your challenge and we will design the right approach."
+    "CTA_SUBTITLE": "Tell us your challenge and we will design the right approach.",
+    "WEB_SECTION_FRONTEND_TITLE": "Frontend Engineering",
+    "WEB_SECTION_FRONTEND_DESC": "Creating responsive, accessible, and high-performance user interfaces.",
+    "WEB_SECTION_BACKEND_TITLE": "Backend Systems",
+    "WEB_SECTION_BACKEND_DESC": "Building secure, scalable, and reliable server-side architectures.",
+    "WEB_SECTION_DEVOPS_TITLE": "Cloud & DevOps",
+    "WEB_SECTION_DEVOPS_DESC": "Automating deployments and ensuring maximum availability.",
+    "MOBILE_SECTION_NATIVE_TITLE": "Native Performance",
+    "MOBILE_SECTION_NATIVE_DESC": "Leveraging full device capabilities with Swift and Kotlin.",
+    "MOBILE_SECTION_HYBRID_TITLE": "Hybrid Versatility",
+    "MOBILE_SECTION_HYBRID_DESC": "Fast cross-platform development with Flutter and React Native.",
+    "DESKTOP_SECTION_WINDOWS_TITLE": "Windows Applications",
+    "DESKTOP_SECTION_WINDOWS_DESC": "Robust software optimized for the Windows ecosystem.",
+    "DESKTOP_SECTION_MACOS_TITLE": "macOS Applications",
+    "DESKTOP_SECTION_MACOS_DESC": "Elegant and performant apps for Apple desktop users.",
+    "CLOUD_SECTION_IAAS_TITLE": "Infrastructure (IaaS)",
+    "CLOUD_SECTION_IAAS_DESC": "Direct control over compute, storage, and networking resources.",
+    "CLOUD_SECTION_PAAS_TITLE": "Platform (PaaS)",
+    "CLOUD_SECTION_PAAS_DESC": "Focus on code while we manage the underlying platform.",
+    "CLOUD_SECTION_SAAS_TITLE": "Software (SaaS)",
+    "CLOUD_SECTION_SAAS_DESC": "Scalable software delivered entirely over the cloud."
   },
   "PRODUCTS": {
     "OVERVIEW": "Visão Geral",
@@ -626,7 +646,15 @@
     "SUBMIT_COMMENT": "Postar comentário",
     "SHARE_ARTICLE": "Compartilhar artigo",
     "COMMENT_PLACEHOLDER": "Participe da conversa...",
-    "NO_COMMENTS": "Ainda não há comentários. Seja o primeiro a compartilhar sua opinião!"
+    "NO_COMMENTS": "Ainda não há comentários. Seja o primeiro a compartilhar sua opinião!",
+    "LIKE": "Curtir",
+    "SHARE": "Compartilhar",
+    "POST_1_DESC": "O Angular 17+ redefiniu a Renderização do Lado do Servidor. Analisamos as mudanças na hidratação e como está superando outros frameworks em desempenho.",
+    "POST_2_DESC": "Muitas pessoas usam UI (Interface do Usuário) e UX (Experiência do Usuário) de forma intercambiável. Este é um erro caro. Explicamos a diferença crucial.",
+    "POST_3_DESC": "Seu aplicativo funciona bem com 100 usuários, mas e com 100.000? A verdadeira escalabilidade não é mágica, é boa arquitetura. Aqui estão nossos 5 pilares.",
+    "POST_4_DESC": "Um guia rápido para configurar um novo projeto React com Vite, a moderna ferramenta de frontend. Exploramos os benefícios em relação ao Create React App.",
+    "POST_5_DESC": "O design é um processo. Mostramos nosso fluxo de trabalho para transformar ideias iniciais em protótipos interativos de alta fidelidade usando o Figma.",
+    "POST_6_DESC": "Por que pagar por um servidor que fica ocioso 90% do tempo? Exploramos os benefícios e casos de uso para funções sem servidor com AWS Lambda."
   },
   "LEGAL": {
     "PRIVACY_TITLE": "Política de Privacidade",
@@ -1210,7 +1238,31 @@
     "CUSTOMIZABLE": "Customizável",
     "OPEN_API": "API Aberta",
     "ANNUAL_SAVINGS": "Economia Anual",
-    "PRODUCT_NAME": "virtex"
+    "PRODUCT_NAME": "virtex",
+    "EYEBROW": "Investment",
+    "ADD_ONS": "Add-ons",
+    "BACK": "Voltar",
+    "PRICE_FROM": "De",
+    "PRICE_TO": "a",
+    "GET_QUOTE": "Obter Cotação Detalhada",
+    "COMPARE_EYEBROW": "Comparação",
+    "WIZARD_STEP_1_DESC": "Selecione o tipo de projeto que deseja construir.",
+    "WIZARD_STEP_2_DESC": "Escolha a escala que melhor se adapta às suas necessidades atuais.",
+    "WIZARD_STEP_3_DESC": "Adicione recursos opcionais para aprimorar sua solução.",
+    "VS_OTHERS_DESC": "Veja como o virtex se compara a outras soluções no mercado.",
+    "TALK_SALES_TITLE": "Precisa de uma Cotação Personalizada?",
+    "TALK_SALES_DESC": "Nossa equipe de vendas pode ajudá-lo a projetar uma solução adaptada às suas necessidades específicas.",
+    "TALK_SALES_CTA": "Falar com Vendas",
+    "STEP_1_LABEL": "Tipo",
+    "STEP_2_LABEL": "Escala",
+    "STEP_3_LABEL": "Recursos",
+    "STEP_4_LABEL": "Resultado",
+    "WEB_HINT": "Aplicações web e portais personalizados.",
+    "MOBILE_HINT": "Aplicações móveis iOS e Android.",
+    "ERP_HINT": "Sistemas integrados de gestão empresarial.",
+    "STARTUP_HINT": "Ideal para validação e MVPs.",
+    "SMB_HINT": "Projetado para empresas em crescimento.",
+    "ENTERPRISE_HINT": "Sistemas de grande escala de missão crítica."
   },
   "SECURITY_CENTER": {
     "TITLE": "Centro de Segurança",
@@ -1441,5 +1493,7 @@
   "SEO": {
     "CONTACT_TITLE": "Contate a JSL Technology - Soluções de Software Empresarial",
     "CONTACT_DESC": "Entre em contato com os especialistas da JSL Technology para discutir seu próximo projeto de software. Oferecemos consultoria personalizada e soluções tecnológicas de ponta."
-  }
+  },
+  "MEMBER_1": "Javier S. Liranzo",
+  "MEMBER_2": "Laura Fernández"
 }

@@ -404,7 +404,27 @@
     "STAT_SATISFACTION": "Client Satisfaction",
     "CTA_EYEBROW": "Ready to Build?",
     "CTA_TITLE": "Start Your Custom Solution",
-    "CTA_SUBTITLE": "Tell us your challenge and we will design the right approach."
+    "CTA_SUBTITLE": "Tell us your challenge and we will design the right approach.",
+    "WEB_SECTION_FRONTEND_TITLE": "Frontend Engineering",
+    "WEB_SECTION_FRONTEND_DESC": "Creating responsive, accessible, and high-performance user interfaces.",
+    "WEB_SECTION_BACKEND_TITLE": "Backend Systems",
+    "WEB_SECTION_BACKEND_DESC": "Building secure, scalable, and reliable server-side architectures.",
+    "WEB_SECTION_DEVOPS_TITLE": "Cloud & DevOps",
+    "WEB_SECTION_DEVOPS_DESC": "Automating deployments and ensuring maximum availability.",
+    "MOBILE_SECTION_NATIVE_TITLE": "Native Performance",
+    "MOBILE_SECTION_NATIVE_DESC": "Leveraging full device capabilities with Swift and Kotlin.",
+    "MOBILE_SECTION_HYBRID_TITLE": "Hybrid Versatility",
+    "MOBILE_SECTION_HYBRID_DESC": "Fast cross-platform development with Flutter and React Native.",
+    "DESKTOP_SECTION_WINDOWS_TITLE": "Windows Applications",
+    "DESKTOP_SECTION_WINDOWS_DESC": "Robust software optimized for the Windows ecosystem.",
+    "DESKTOP_SECTION_MACOS_TITLE": "macOS Applications",
+    "DESKTOP_SECTION_MACOS_DESC": "Elegant and performant apps for Apple desktop users.",
+    "CLOUD_SECTION_IAAS_TITLE": "Infrastructure (IaaS)",
+    "CLOUD_SECTION_IAAS_DESC": "Direct control over compute, storage, and networking resources.",
+    "CLOUD_SECTION_PAAS_TITLE": "Platform (PaaS)",
+    "CLOUD_SECTION_PAAS_DESC": "Focus on code while we manage the underlying platform.",
+    "CLOUD_SECTION_SAAS_TITLE": "Software (SaaS)",
+    "CLOUD_SECTION_SAAS_DESC": "Scalable software delivered entirely over the cloud."
   },
   "PRODUCTS": {
     "OVERVIEW": "概览",
@@ -626,7 +646,15 @@
     "SUBMIT_COMMENT": "发表评论",
     "SHARE_ARTICLE": "分享文章",
     "COMMENT_PLACEHOLDER": "参与对话...",
-    "NO_COMMENTS": "暂无评论。成为第一个分享想法的人吧！"
+    "NO_COMMENTS": "暂无评论。成为第一个分享想法的人吧！",
+    "LIKE": "点赞",
+    "SHARE": "分享",
+    "POST_1_DESC": "Angular 17+ 重新定义了服务器端渲染。我们分析了 hydration 的变化以及它如何在性能上超越其他框架。",
+    "POST_2_DESC": "许多人交替使用 UI（用户界面）和 UX（用户体验）。这是一个代价高昂的错误。我们解释了关键的区别。",
+    "POST_3_DESC": "您的应用程序在 100 个用户的情况下运行良好，但 100,000 个用户呢？真正的可扩展性不是魔术，而是良好的架构。以下是我们的 5 个支柱。",
+    "POST_4_DESC": "使用现代前端工具 Vite 设置新 React 项目的快速指南。我们探讨了与 Create React App 相比的优势。",
+    "POST_5_DESC": "设计是一个过程。我们展示了使用 Figma 将初步想法转化为高保真交互式原型的工作流程。",
+    "POST_6_DESC": "为什么要为 90% 的时间都处于空闲状态的服务器付费？我们探讨了使用 AWS Lambda 的无服务器函数的优势和用例。"
   },
   "LEGAL": {
     "PRIVACY_TITLE": "隐私政策",
@@ -1210,7 +1238,31 @@
     "CUSTOMIZABLE": "可定制",
     "OPEN_API": "开放 API",
     "ANNUAL_SAVINGS": "年度节省",
-    "PRODUCT_NAME": "virtex"
+    "PRODUCT_NAME": "virtex",
+    "EYEBROW": "Investment",
+    "ADD_ONS": "Add-ons",
+    "BACK": "返回",
+    "PRICE_FROM": "起",
+    "PRICE_TO": "至",
+    "GET_QUOTE": "获取详细报价",
+    "COMPARE_EYEBROW": "比较",
+    "WIZARD_STEP_1_DESC": "选择您要构建的项目类型。",
+    "WIZARD_STEP_2_DESC": "选择最适合您当前需求的规模。",
+    "WIZARD_STEP_3_DESC": "添加可选功能以增强您的解决方案。",
+    "VS_OTHERS_DESC": "查看 virtex 与市场上其他解决方案的比较。",
+    "TALK_SALES_TITLE": "需要定制报价吗？",
+    "TALK_SALES_DESC": "我们的销售团队可以帮助您设计针对您特定要求的解决方案。",
+    "TALK_SALES_CTA": "联系销售",
+    "STEP_1_LABEL": "类型",
+    "STEP_2_LABEL": "规模",
+    "STEP_3_LABEL": "功能",
+    "STEP_4_LABEL": "结果",
+    "WEB_HINT": "定制 Web 应用程序和门户。",
+    "MOBILE_HINT": "iOS 和 Android 移动应用程序。",
+    "ERP_HINT": "集成商业管理系统。",
+    "STARTUP_HINT": "非常适合验证和 MVP。",
+    "SMB_HINT": "专为成长型企业设计。",
+    "ENTERPRISE_HINT": "任务关键型大型系统。"
   },
   "SECURITY_CENTER": {
     "TITLE": "安全中心",
@@ -1441,5 +1493,7 @@
   "SEO": {
     "CONTACT_TITLE": "联系 JSL Technology - 企业级软件解决方案",
     "CONTACT_DESC": "联系 JSL Technology 专家讨论您的下一个软件项目。我们为您的业务增长提供定制咨询和高端技术解决方案。"
-  }
+  },
+  "MEMBER_1": "哈维尔·S·利兰佐",
+  "MEMBER_2": "劳拉·费尔南德斯"
 }
