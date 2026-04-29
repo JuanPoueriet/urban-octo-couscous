@@ -896,7 +896,6 @@
   },
   "FAQ": {
     "TITLE": "よくある質問",
-    "SUBTITLE": "質問がありますか？当社のサービス、製品、プロセスに関する最も一般的な質問にここで回答しました。",
     "Q1_TITLE": "どのような種類のソフトウェアソリューションを開発していますか？",
     "Q1_DESC": "当社は、<strong>カスタム開発</strong>（Web、モバイル、クラウド）、<strong>エンタープライズソフトウェア</strong>（当社のvirtexおよびJSL-POS）、および<strong>クラウドエンジニアリング</strong>（DevOps、AWSおよびAzure上のアーキテクチャ）の3つの主要分野に特化しています。",
     "Q2_TITLE": "開発プロセスはどのようなものですか？",
@@ -924,7 +923,9 @@
     "Q8_DESC": "Angular + Node.js for web, Flutter for mobile, AWS/Azure for cloud.",
     "EMPTY": "No questions found in this category.",
     "STILL_QUESTIONS": "Still have questions? We are happy to help.",
-    "CONTACT_US": "Contact Us"
+    "CONTACT_US": "Contact Us",
+    "SEARCH_PLACEHOLDER": "Search...",
+    "SUBTITLE": "ご質問がありますか？ここでは、当社のサービス、製品、およびプロセスに関する最も一般的な質問にお答えしました。"
   },
   "CHAT": {
     "TITLE": "チャットする",

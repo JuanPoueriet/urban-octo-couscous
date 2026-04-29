@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, inject, signal, computed, OnDestroy } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { AnimateOnScroll } from '@shared/directives/animate-on-scroll';
@@ -11,7 +12,7 @@ import { Seo } from '@core/services/seo';
 @Component({
   selector: 'jsl-faq',
   standalone: true,
-  imports: [TranslateModule, LucideAngularModule, AnimateOnScroll, CtaComponent],
+  imports: [TranslateModule, LucideAngularModule, AnimateOnScroll, CtaComponent, FormsModule],
   templateUrl: './faq.html',
   styleUrl: './faq.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -23,23 +24,40 @@ export class Faq implements OnInit, OnDestroy {
 
   public openQuestionIndex = signal<number | null>(null);
   public activeCategory = signal<string>('all');
+  public searchQuery = signal<string>('');
+  public currentLang = toSignal(this.translate.onLangChange);
 
   private langSub: Subscription | undefined;
 
   allItems = toSignal(this.dataService.getFaqItems(), { initialValue: [] as FaqItem[] });
 
   categories = [
-    { key: 'all',      labelKey: 'FAQ.CAT_ALL'       },
-    { key: 'services', labelKey: 'FAQ.CAT_SERVICES'  },
-    { key: 'pricing',  labelKey: 'FAQ.CAT_PRICING'   },
-    { key: 'process',  labelKey: 'FAQ.CAT_PROCESS'   },
-    { key: 'technical', labelKey: 'FAQ.CAT_TECHNICAL' },
+    { key: 'all',       labelKey: 'FAQ.CAT_ALL',       icon: 'LayoutGrid' },
+    { key: 'services',  labelKey: 'FAQ.CAT_SERVICES',  icon: 'Zap'        },
+    { key: 'pricing',   labelKey: 'FAQ.CAT_PRICING',   icon: 'DollarSign' },
+    { key: 'process',   labelKey: 'FAQ.CAT_PROCESS',   icon: 'Settings'   },
+    { key: 'technical', labelKey: 'FAQ.CAT_TECHNICAL', icon: 'Cpu'        },
   ];
 
   filteredItems = computed(() => {
     const cat = this.activeCategory();
-    const items = this.allItems();
-    return cat === 'all' ? items : items.filter(i => i.category === cat);
+    const query = this.searchQuery().toLowerCase();
+    this.currentLang(); // Dependency to re-trigger on language change
+    let items = this.allItems();
+
+    if (cat !== 'all') {
+      items = items.filter(i => i.category === cat);
+    }
+
+    if (query) {
+      return items.filter(i => {
+        const question = this.translate.instant(i.questionKey).toLowerCase();
+        const answer = this.translate.instant(i.answerKey).toLowerCase();
+        return question.includes(query) || answer.includes(query);
+      });
+    }
+
+    return items;
   });
 
   ngOnInit() {
@@ -56,6 +74,10 @@ export class Faq implements OnInit, OnDestroy {
 
   toggleQuestion(index: number) {
     this.openQuestionIndex.set(this.openQuestionIndex() === index ? null : index);
+  }
+
+  clearSearch() {
+    this.searchQuery.set('');
   }
 
   private updateFaqSchema() {

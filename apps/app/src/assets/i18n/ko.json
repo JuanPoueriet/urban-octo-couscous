@@ -896,7 +896,6 @@
   },
   "FAQ": {
     "TITLE": "자주 묻는 질문",
-    "SUBTITLE": "질문이 있으신가요? 서비스, 제품 및 프로세스에 대한 가장 일반적인 질문에 대한 답변을 여기에서 확인하십시오.",
     "Q1_TITLE": "어떤 종류의 소프트웨어 솔루션을 개발합니까?",
     "Q1_DESC": "우리는 <strong>맞춤형 개발</strong>(웹, 모바일, 클라우드), <strong>엔터프라이즈 소프트웨어</strong>(virtex 및 JSL-POS) 및 <strong>클라우드 엔지니어링</strong>(DevOps, AWS 및 Azure의 아키텍처)의 세 가지 주요 영역을 전문으로 합니다.",
     "Q2_TITLE": "개발 프로세스는 어떻게 됩니까?",
@@ -924,7 +923,9 @@
     "Q8_DESC": "Angular + Node.js for web, Flutter for mobile, AWS/Azure for cloud.",
     "EMPTY": "No questions found in this category.",
     "STILL_QUESTIONS": "Still have questions? We are happy to help.",
-    "CONTACT_US": "Contact Us"
+    "CONTACT_US": "Contact Us",
+    "SEARCH_PLACEHOLDER": "Search...",
+    "SUBTITLE": "질문이 있으신가요? 여기에서 당사의 서비스, 제품 및 프로세스에 대한 가장 일반적인 질문에 답변해 드렸습니다."
   },
   "CHAT": {
     "TITLE": "채팅하기",
