@@ -926,7 +926,8 @@
     "CONTACT_US": "Contáctanos",
     "CTA_EYEBROW": "¿Tienes más preguntas?",
     "CTA_TITLE": "Estamos Aquí para Ayudarte",
-    "CTA_SUBTITLE": "Si no encontraste tu respuesta, nuestro equipo de expertos está listo para conversar contigo."
+    "CTA_SUBTITLE": "Si no encontraste tu respuesta, nuestro equipo de expertos está listo para conversar contigo.",
+    "SEARCH_PLACEHOLDER": "Busca por tema, servicio o producto..."
   },
   "CHAT": {
     "TITLE": "Chatea con nosotros",

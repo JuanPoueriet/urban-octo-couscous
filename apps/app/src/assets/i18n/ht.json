@@ -898,7 +898,6 @@
   },
   "FAQ": {
     "TITLE": "Kesyon yo poze souvan",
-    "SUBTITLE": "Gen kesyon? Nou reponn sa ki pi komen yo sou sèvis nou yo, pwodwi yo, ak pwosesis isit la.",
     "Q1_TITLE": "Ki kalite solisyon lojisyèl ou devlope?",
     "Q1_DESC": "Nou espesyalize nan twa domèn prensipal: <strong>Devlopman Custom</strong> (Entènèt, mobil, Cloud), <strong>Lojisyèl Enterprise</strong> (virtex ak JSL-POS nou an), ak <strong>Jeni Cloud</strong> (DevOps, Achitekti sou AWS & Azure).",
     "Q2_TITLE": "Kijan pwosesis devlopman ou ye?",
@@ -926,7 +925,9 @@
     "Q8_DESC": "Angular + Node.js for web, Flutter for mobile, AWS/Azure for cloud.",
     "EMPTY": "No questions found in this category.",
     "STILL_QUESTIONS": "Still have questions? We are happy to help.",
-    "CONTACT_US": "Contact Us"
+    "CONTACT_US": "Contact Us",
+    "SEARCH_PLACEHOLDER": "Search...",
+    "SUBTITLE": "Gen kesyon? Nou reponn sa ki pi komen sou sèvis nou yo, pwodwi yo, ak pwosesis isit la."
   },
   "CHAT": {
     "TITLE": "Chat avèk nou",

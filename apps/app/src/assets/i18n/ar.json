@@ -898,7 +898,6 @@
   },
   "FAQ": {
     "TITLE": "الأسئلة الشائعة",
-    "SUBTITLE": "هل لديك أسئلة؟ لقد أجبنا على الأسئلة الأكثر شيوعًا حول خدماتنا ومنتجاتنا وعمليتنا هنا.",
     "Q1_TITLE": "ما نوع حلول البرامج التي تطورونها؟",
     "Q1_DESC": "نحن متخصصون في ثلاثة مجالات رئيسية: <strong> التطوير المخصص </strong> (الويب ، والجوال ، والسحابة) ، و <strong> برامج المؤسسات </strong> (لدينا virtex و JSL-POS) ، و <strong> الهندسة السحابية </strong> (DevOps ، والهندسة المعمارية على AWS و Azure).",
     "Q2_TITLE": "كيف تبدو عملية التطوير الخاصة بكم؟",
@@ -926,7 +925,9 @@
     "Q8_DESC": "Angular + Node.js for web, Flutter for mobile, AWS/Azure for cloud.",
     "EMPTY": "No questions found in this category.",
     "STILL_QUESTIONS": "Still have questions? We are happy to help.",
-    "CONTACT_US": "Contact Us"
+    "CONTACT_US": "Contact Us",
+    "SEARCH_PLACEHOLDER": "Search...",
+    "SUBTITLE": "هل لديك أسئلة؟ لقد أجبنا على الأسئلة الأكثر شيوعًا حول خدماتنا ومنتجاتنا وعمليتنا هنا."
   },
   "CHAT": {
     "TITLE": "تحدث معنا",

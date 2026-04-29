@@ -898,7 +898,6 @@
   },
   "FAQ": {
     "TITLE": "Häufig Gestellte Fragen",
-    "SUBTITLE": "Haben Sie Fragen? Wir haben die häufigsten zu unseren Dienstleistungen, Produkten und unserem Prozess hier beantwortet.",
     "Q1_TITLE": "Welche Art von Softwarelösungen entwickeln Sie?",
     "Q1_DESC": "Wir sind auf drei Hauptbereiche spezialisiert: <strong>Maßgeschneiderte Entwicklung</strong> (Web, Mobile, Cloud), <strong>Unternehmenssoftware</strong> (unser virtex und JSL-POS) und <strong>Cloud Engineering</strong> (DevOps, Architektur auf AWS & Azure).",
     "Q2_TITLE": "Wie sieht Ihr Entwicklungsprozess aus?",
@@ -926,7 +925,9 @@
     "Q8_DESC": "Angular + Node.js for web, Flutter for mobile, AWS/Azure for cloud.",
     "EMPTY": "No questions found in this category.",
     "STILL_QUESTIONS": "Still have questions? We are happy to help.",
-    "CONTACT_US": "Contact Us"
+    "CONTACT_US": "Contact Us",
+    "SEARCH_PLACEHOLDER": "Search...",
+    "SUBTITLE": "Haben Sie Fragen? Wir haben hier die häufigsten Fragen zu unseren Dienstleistungen, Produkten und Prozessen beantwortet."
   },
   "CHAT": {
     "TITLE": "Chatten Sie mit uns",

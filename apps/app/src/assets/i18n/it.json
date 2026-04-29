@@ -898,7 +898,6 @@
   },
   "FAQ": {
     "TITLE": "Domande Frequenti",
-    "SUBTITLE": "Hai domande? Abbiamo risposto a quelle più comuni sui nostri servizi, prodotti e processi qui.",
     "Q1_TITLE": "Che tipo di soluzioni software sviluppate?",
     "Q1_DESC": "Siamo specializzati in tre aree principali: <strong>Sviluppo Personalizzato</strong> (Web, Mobile, Cloud), <strong>Software Aziendale</strong> (il nostro virtex e JSL-POS) e <strong>Ingegneria Cloud</strong> (DevOps, Architettura su AWS e Azure).",
     "Q2_TITLE": "Com'è il vostro processo di sviluppo?",
@@ -926,7 +925,9 @@
     "Q8_DESC": "Angular + Node.js for web, Flutter for mobile, AWS/Azure for cloud.",
     "EMPTY": "No questions found in this category.",
     "STILL_QUESTIONS": "Still have questions? We are happy to help.",
-    "CONTACT_US": "Contact Us"
+    "CONTACT_US": "Contact Us",
+    "SEARCH_PLACEHOLDER": "Search...",
+    "SUBTITLE": "Hai domande? Abbiamo risposto qui alle domande più comuni sui nostri servizi, prodotti e processi."
   },
   "CHAT": {
     "TITLE": "Chatta con noi",
