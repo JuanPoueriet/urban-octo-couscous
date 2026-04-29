@@ -247,6 +247,8 @@
       "SERVICE_PROMPT": "Selecione um serviço...",
       "SERVICE_OTHER": "Outro",
       "MESSAGE": "Sua Mensagem",
+      "PRIVACY": "Concordo com o processamento dos meus dados pessoais de acordo com a",
+      "PRIVACY_LINK": "Política de Privacidade",
       "SUBMIT": "Enviar Mensagem",
       "HONEYPOT_LABEL": "Deixe este campo em branco",
       "ERRORS": {
@@ -1434,5 +1436,9 @@
   "SOCIAL": {
     "GITHUB": "GitHub",
     "INSTAGRAM": "Instagram"
+  },
+  "SEO": {
+    "CONTACT_TITLE": "Contate a JSL Technology - Soluções de Software Empresarial",
+    "CONTACT_DESC": "Entre em contato com os especialistas da JSL Technology para discutir seu próximo projeto de software. Oferecemos consultoria personalizada e soluções tecnológicas de ponta."
   }
 }

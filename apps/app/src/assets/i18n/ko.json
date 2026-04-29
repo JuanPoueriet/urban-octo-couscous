@@ -247,6 +247,8 @@
       "SERVICE_PROMPT": "서비스 선택...",
       "SERVICE_OTHER": "기타",
       "MESSAGE": "메시지",
+      "PRIVACY": "본인은 다음에 따라 개인 정보 처리에 동의합니다.",
+      "PRIVACY_LINK": "개인정보 처리방침",
       "SUBMIT": "메시지 보내기",
       "HONEYPOT_LABEL": "이 필드를 비워 두십시오",
       "ERRORS": {
@@ -1434,5 +1436,9 @@
   "SOCIAL": {
     "GITHUB": "GitHub",
     "INSTAGRAM": "Instagram"
+  },
+  "SEO": {
+    "CONTACT_TITLE": "JSL Technology에 문의하기 - 엔터프라이즈 소프트웨어 솔루션",
+    "CONTACT_DESC": "다음 소프트웨어 프로젝트에 대해 JSL Technology 전문가와 상담하십시오. 비즈니스 성장을 위한 맞춤형 컨설팅과 고급 기술 솔루션을 제공합니다."
   }
 }

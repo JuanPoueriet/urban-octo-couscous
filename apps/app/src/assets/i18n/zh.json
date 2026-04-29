@@ -247,6 +247,8 @@
       "SERVICE_PROMPT": "选择服务...",
       "SERVICE_OTHER": "其他",
       "MESSAGE": "您的留言",
+      "PRIVACY": "我同意根据以下条款处理我的个人数据：",
+      "PRIVACY_LINK": "隐私政策",
       "SUBMIT": "发送留言",
       "HONEYPOT_LABEL": "请将此字段留空",
       "ERRORS": {
@@ -1434,5 +1436,9 @@
   "SOCIAL": {
     "GITHUB": "GitHub",
     "INSTAGRAM": "Instagram"
+  },
+  "SEO": {
+    "CONTACT_TITLE": "联系 JSL Technology - 企业级软件解决方案",
+    "CONTACT_DESC": "联系 JSL Technology 专家讨论您的下一个软件项目。我们为您的业务增长提供定制咨询和高端技术解决方案。"
   }
 }

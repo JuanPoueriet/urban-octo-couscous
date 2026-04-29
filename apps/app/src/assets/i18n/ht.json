@@ -247,6 +247,8 @@
       "SERVICE_PROMPT": "Chwazi yon sèvis...",
       "SERVICE_OTHER": "Lòt",
       "MESSAGE": "Mesaj Ou",
+      "PRIVACY": "Mwen dakò ak tretman done pèsonèl mwen yo dapre",
+      "PRIVACY_LINK": "Règleman sou Konfidansyalite",
       "SUBMIT": "Voye Mesaj",
       "HONEYPOT_LABEL": "Kite jaden sa a vid",
       "ERRORS": {
@@ -1434,5 +1436,9 @@
   "SOCIAL": {
     "GITHUB": "GitHub",
     "INSTAGRAM": "Instagram"
+  },
+  "SEO": {
+    "CONTACT_TITLE": "Kontakte JSL Technology - Solisyon Lojisyèl Enterprise",
+    "CONTACT_DESC": "Pran kontak ak ekspè JSL Technology pou diskite sou pwochen pwojè lojisyèl ou a. Nou bay konsiltasyon pèsonalize ak solisyon teknolojik wo nivo."
   }
 }

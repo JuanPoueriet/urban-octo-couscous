@@ -247,8 +247,10 @@
       "SERVICE_PROMPT": "حدد خدمة ...",
       "SERVICE_OTHER": "أخرى",
       "MESSAGE": "رسالتك",
+      "PRIVACY": "أوافق على معالجة بياناتي الشخصية وفقًا لـ",
+      "PRIVACY_LINK": "سياسة الخصوصية",
       "SUBMIT": "إرسال رسالة",
-      "HONEYPOT_LABEL": "اترك هذا الحقل فارغاً",
+      "HONEYPOT_LABEL": "اترك هذا الحقل فارغًا",
       "ERRORS": {
         "REQUIRED": "هذا الحقل مطلوب.",
         "EMAIL": "يرجى إدخال عنوان بريد إلكتروني صالح.",
@@ -1434,5 +1436,9 @@
   "SOCIAL": {
     "GITHUB": "GitHub",
     "INSTAGRAM": "Instagram"
+  },
+  "SEO": {
+    "CONTACT_TITLE": "اتصل بـ JSL Technology - حلول البرمجيات للمؤسسات",
+    "CONTACT_DESC": "تواصل مع خبراء JSL Technology لمناقشة مشروعك البرمجي القادم. نحن نقدم استشارات مخصصة وحلولًا تقنية متطورة لتنمية أعمالك."
   }
 }
