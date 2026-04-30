@@ -180,6 +180,31 @@ export class BlogDetail
     if (this.showSideShareMenu()) this.showTopShareMenu.set(false);
   }
 
+  async sharePost(post: BlogPost) {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    const title = this.translate.instant('BLOG.' + post.key + '_TITLE');
+    const text = this.translate.instant('BLOG.' + post.key + '_EXCERPT');
+    const url = window.location.href;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title,
+          text,
+          url
+        });
+      } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
+          console.error('Error sharing:', error);
+          this.toggleSideShareMenu();
+        }
+      }
+    } else {
+      this.toggleSideShareMenu();
+    }
+  }
+
   toggleCommentsModal() {
     this.showCommentsModal.update(v => !v);
   }
