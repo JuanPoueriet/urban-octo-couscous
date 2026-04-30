@@ -107,7 +107,9 @@
     "PLACEHOLDER_TITLE": "詳細は近日公開",
     "VISIT_WEBSITE": "ウェブサイトを見る",
     "BRAND_NAME": "JSL Technology",
-    "WHATSAPP_CHAT": "WhatsAppでチャット"
+    "WHATSAPP_CHAT": "WhatsAppでチャット",
+    "COPY": "コピー",
+    "CLOSE": "閉じる"
   },
   "HOME": {
     "WATCH_REEL": "リールを見る",
@@ -1453,7 +1455,11 @@
     "SHARE_TWITTER": "Twitterでシェア",
     "SHARE_FACEBOOK": "Facebookでシェア",
     "SHARE_EMAIL": "メールでシェア",
-    "COPY_LINK": "リンクをコピー"
+    "COPY_LINK": "リンクをコピー",
+    "WHATSAPP": "WhatsApp",
+    "PINTEREST": "Pinterest",
+    "REDDIT": "Reddit",
+    "MESSAGES": "メッセージ"
   },
   "ARIA": {
     "BREADCRUMB": "パンくずリスト",

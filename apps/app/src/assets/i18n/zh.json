@@ -107,7 +107,9 @@
     "PLACEHOLDER_TITLE": "更多信息即将推出",
     "VISIT_WEBSITE": "访问网站",
     "BRAND_NAME": "JSL Technology",
-    "WHATSAPP_CHAT": "在WhatsApp上聊天"
+    "WHATSAPP_CHAT": "在WhatsApp上聊天",
+    "COPY": "复制",
+    "CLOSE": "关闭"
   },
   "HOME": {
     "WATCH_REEL": "观看视频",
@@ -1453,7 +1455,11 @@
     "SHARE_TWITTER": "在Twitter上分享",
     "SHARE_FACEBOOK": "在Facebook上分享",
     "SHARE_EMAIL": "通过电子邮件分享",
-    "COPY_LINK": "复制链接"
+    "COPY_LINK": "复制链接",
+    "WHATSAPP": "WhatsApp",
+    "PINTEREST": "Pinterest",
+    "REDDIT": "Reddit",
+    "MESSAGES": "信息"
   },
   "ARIA": {
     "BREADCRUMB": "面包屑导航",

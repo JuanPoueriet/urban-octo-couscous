@@ -1,4 +1,4 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
 import { ALL_ICONS } from '@core/constants/icons';
@@ -15,19 +15,19 @@ export class SocialShareComponent {
   @Input() url = '';
   @Input() title = '';
   @Input() description = '';
+  @Output() close = new EventEmitter<void>();
 
   readonly icons = ALL_ICONS;
   public copied = signal(false);
 
   get shareUrl(): string {
-    // If running in browser, use window.location.href if url is not provided or relative
     if (typeof window !== 'undefined' && !this.url.startsWith('http')) {
       return window.location.origin + this.url;
     }
     return this.url;
   }
 
-  share(platform: 'linkedin' | 'twitter' | 'facebook' | 'mail'): void {
+  share(platform: 'linkedin' | 'facebook' | 'pinterest' | 'reddit' | 'whatsapp' | 'messages' | 'mail'): void {
     const url = encodeURIComponent(this.shareUrl);
     const text = encodeURIComponent(this.title);
 
@@ -37,11 +37,21 @@ export class SocialShareComponent {
       case 'linkedin':
         shareLink = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
         break;
-      case 'twitter':
-        shareLink = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
-        break;
       case 'facebook':
         shareLink = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        break;
+      case 'pinterest':
+        shareLink = `https://pinterest.com/pin/create/button/?url=${url}&description=${text}`;
+        break;
+      case 'reddit':
+        shareLink = `https://www.reddit.com/submit?url=${url}&title=${text}`;
+        break;
+      case 'whatsapp':
+        shareLink = `https://api.whatsapp.com/send?text=${text}%20${url}`;
+        break;
+      case 'messages':
+        // sms:?&body= on iOS, sms:?body= on Android. & works for both usually.
+        shareLink = `sms:?&body=${text}%20${url}`;
         break;
       case 'mail':
         shareLink = `mailto:?subject=${text}&body=${url}`;
@@ -60,5 +70,9 @@ export class SocialShareComponent {
         setTimeout(() => this.copied.set(false), 2000);
       });
     }
+  }
+
+  onClose(): void {
+    this.close.emit();
   }
 }

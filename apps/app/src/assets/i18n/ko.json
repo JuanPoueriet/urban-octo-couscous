@@ -107,7 +107,9 @@
     "PLACEHOLDER_TITLE": "자세한 정보는 곧 제공될 예정입니다.",
     "VISIT_WEBSITE": "웹사이트 방문",
     "BRAND_NAME": "JSL Technology",
-    "WHATSAPP_CHAT": "WhatsApp에서 채팅"
+    "WHATSAPP_CHAT": "WhatsApp에서 채팅",
+    "COPY": "복사",
+    "CLOSE": "닫기"
   },
   "HOME": {
     "WATCH_REEL": "영상 보기",
@@ -1453,7 +1455,11 @@
     "SHARE_TWITTER": "Twitter에서 공유",
     "SHARE_FACEBOOK": "Facebook에서 공유",
     "SHARE_EMAIL": "이메일로 공유",
-    "COPY_LINK": "링크 복사"
+    "COPY_LINK": "링크 복사",
+    "WHATSAPP": "WhatsApp",
+    "PINTEREST": "Pinterest",
+    "REDDIT": "Reddit",
+    "MESSAGES": "메시지"
   },
   "ARIA": {
     "BREADCRUMB": "탐색 경로",
