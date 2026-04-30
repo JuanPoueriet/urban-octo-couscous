@@ -107,7 +107,9 @@
     "PLACEHOLDER_TITLE": "Mais Informações em Breve",
     "VISIT_WEBSITE": "Visitar Site",
     "BRAND_NAME": "JSL Technology",
-    "WHATSAPP_CHAT": "Converse no WhatsApp"
+    "WHATSAPP_CHAT": "Converse no WhatsApp",
+    "COPY": "Copiar",
+    "CLOSE": "Fechar"
   },
   "HOME": {
     "WATCH_REEL": "Assistir Reel",
@@ -1453,7 +1455,11 @@
     "SHARE_TWITTER": "Compartilhar no Twitter",
     "SHARE_FACEBOOK": "Compartilhar no Facebook",
     "SHARE_EMAIL": "Compartilhar por e-mail",
-    "COPY_LINK": "Copiar link"
+    "COPY_LINK": "Copiar link",
+    "WHATSAPP": "WhatsApp",
+    "PINTEREST": "Pinterest",
+    "REDDIT": "Reddit",
+    "MESSAGES": "Mensagens"
   },
   "ARIA": {
     "BREADCRUMB": "Caminho de navegação",

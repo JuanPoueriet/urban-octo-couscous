@@ -107,7 +107,9 @@
     "PLACEHOLDER_TITLE": "Plis Enfòmasyon Ap Vini Byento",
     "VISIT_WEBSITE": "Vizite Sit Wèb",
     "BRAND_NAME": "JSL Technology",
-    "WHATSAPP_CHAT": "Chat sou WhatsApp"
+    "WHATSAPP_CHAT": "Chat sou WhatsApp",
+    "COPY": "Kopye",
+    "CLOSE": "Fèmen"
   },
   "HOME": {
     "WATCH_REEL": "Gade Reel",
@@ -1453,7 +1455,11 @@
     "SHARE_TWITTER": "Pataje sou Twitter",
     "SHARE_FACEBOOK": "Pataje sou Facebook",
     "SHARE_EMAIL": "Pataje pa imèl",
-    "COPY_LINK": "Kopi lyen"
+    "COPY_LINK": "Kopi lyen",
+    "WHATSAPP": "WhatsApp",
+    "PINTEREST": "Pinterest",
+    "REDDIT": "Reddit",
+    "MESSAGES": "Mesaj"
   },
   "ARIA": {
     "BREADCRUMB": "Chemen navigasyon",

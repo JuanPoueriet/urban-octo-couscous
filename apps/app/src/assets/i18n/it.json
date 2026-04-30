@@ -107,7 +107,9 @@
     "PLACEHOLDER_TITLE": "Maggiori Informazioni a Breve",
     "VISIT_WEBSITE": "Visita il sito web",
     "BRAND_NAME": "JSL Technology",
-    "WHATSAPP_CHAT": "Chatta su WhatsApp"
+    "WHATSAPP_CHAT": "Chatta su WhatsApp",
+    "COPY": "Copia",
+    "CLOSE": "Chiudi"
   },
   "HOME": {
     "WATCH_REEL": "Guarda il Reel",
@@ -1453,7 +1455,11 @@
     "SHARE_TWITTER": "Condividi su Twitter",
     "SHARE_FACEBOOK": "Condividi su Facebook",
     "SHARE_EMAIL": "Condividi via e-mail",
-    "COPY_LINK": "Copia link"
+    "COPY_LINK": "Copia link",
+    "WHATSAPP": "WhatsApp",
+    "PINTEREST": "Pinterest",
+    "REDDIT": "Reddit",
+    "MESSAGES": "Messaggi"
   },
   "ARIA": {
     "BREADCRUMB": "Navigazione a briciole di pane",
