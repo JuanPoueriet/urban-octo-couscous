@@ -107,7 +107,9 @@
     "PLACEHOLDER_TITLE": "مزيد من المعلومات قريبا",
     "VISIT_WEBSITE": "زيارة الموقع الإلكتروني",
     "BRAND_NAME": "JSL Technology",
-    "WHATSAPP_CHAT": "دردشة على واتساب"
+    "WHATSAPP_CHAT": "دردشة على واتساب",
+    "COPY": "نسخ",
+    "CLOSE": "إغلاق"
   },
   "HOME": {
     "WATCH_REEL": "مشاهدة الفيديو",
@@ -1453,7 +1455,11 @@
     "SHARE_TWITTER": "شارك على Twitter",
     "SHARE_FACEBOOK": "شارك على Facebook",
     "SHARE_EMAIL": "شارك عبر البريد الإلكتروني",
-    "COPY_LINK": "نسخ الرابط"
+    "COPY_LINK": "نسخ الرابط",
+    "WHATSAPP": "واتساب",
+    "PINTEREST": "بينتيريست",
+    "REDDIT": "ريديت",
+    "MESSAGES": "رسائل"
   },
   "ARIA": {
     "BREADCRUMB": "مسار التنقل",
