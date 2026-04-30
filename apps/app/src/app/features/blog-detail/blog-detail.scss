@@ -477,8 +477,8 @@
 .share-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(16px);
   z-index: 10000;
   display: flex;
   align-items: center;
@@ -489,8 +489,8 @@
 .share-modal-container {
   width: 100%;
   max-width: 500px;
-  background: rgba(20, 20, 20, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(13, 13, 13, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 24px;
   overflow: hidden;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
