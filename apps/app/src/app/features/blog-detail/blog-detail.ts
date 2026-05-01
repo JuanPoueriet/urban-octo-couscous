@@ -22,7 +22,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
-import { Subscription, Observable, of } from 'rxjs';
+import { Subscription, Observable, of, firstValueFrom } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { DataService, BlogPost, TeamMember } from '@core/services/data.service';
 import { Title } from '@angular/platform-browser';
@@ -183,24 +183,35 @@ export class BlogDetail
   async sharePost(post: BlogPost) {
     if (!isPlatformBrowser(this.platformId)) return;
 
-    const title = this.translate.instant('BLOG.' + post.key + '_TITLE');
-    const text = this.translate.instant('BLOG.' + post.key + '_EXCERPT');
+    const titleKey = 'BLOG.' + post.key + '_TITLE';
+    const excerptKey = 'BLOG.' + post.key + '_EXCERPT';
+
+    const translations = await firstValueFrom(
+      this.translate.get([titleKey, excerptKey])
+    );
+    const title = translations[titleKey];
+    const text = translations[excerptKey];
     const url = window.location.href;
 
+    const shareData = { title, text, url };
+
+    let shared = false;
     if (navigator.share) {
       try {
-        await navigator.share({
-          title,
-          text,
-          url
-        });
+        if (!navigator.canShare || navigator.canShare(shareData)) {
+          await navigator.share(shareData);
+          shared = true;
+        }
       } catch (error) {
-        if ((error as Error).name !== 'AbortError') {
+        if ((error as Error).name === 'AbortError') {
+          shared = true; // Considere it "shared" if user cancelled to avoid fallback
+        } else {
           console.error('Error sharing:', error);
-          this.toggleSideShareMenu();
         }
       }
-    } else {
+    }
+
+    if (!shared) {
       this.toggleSideShareMenu();
     }
   }
