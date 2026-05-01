@@ -183,26 +183,30 @@ export class BlogDetail
   async sharePost(post: BlogPost) {
     if (!isPlatformBrowser(this.platformId)) return;
 
-    const title = this.translate.instant('BLOG.' + post.key + '_TITLE');
-    const text = this.translate.instant('BLOG.' + post.key + '_EXCERPT');
-    const url = window.location.href;
+    const shareData = {
+      title: this.translate.instant('BLOG.' + post.key + '_TITLE'),
+      text: this.translate.instant('BLOG.' + post.key + '_EXCERPT'),
+      url: window.location.href,
+    };
 
-    if (navigator.share) {
+    const canUseWebShare =
+      typeof navigator !== 'undefined' &&
+      typeof navigator.share === 'function' &&
+      (!navigator.canShare || navigator.canShare(shareData));
+
+    if (canUseWebShare) {
       try {
-        await navigator.share({
-          title,
-          text,
-          url
-        });
+        await navigator.share(shareData);
+        return;
       } catch (error) {
-        if ((error as Error).name !== 'AbortError') {
-          console.error('Error sharing:', error);
-          this.toggleSideShareMenu();
-        }
+        if ((error as Error).name === 'AbortError') return;
+        console.error('Error sharing with Web Share API:', error);
       }
-    } else {
-      this.toggleSideShareMenu();
     }
+
+    // Fallback conservado: modal con opciones sociales para navegadores sin soporte.
+    this.showSideShareMenu.set(true);
+    this.showTopShareMenu.set(false);
   }
 
   toggleCommentsModal() {
