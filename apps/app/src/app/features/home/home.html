@@ -316,18 +316,46 @@
     }
   </div>
 
-  <div class="projects-grid">
-    @for (project of filteredProjects(); track project.key) {
-      <jsl-card
-        [imageUrl]="project.imageUrl"
-        [title]="'PROJECTS.' + project.key + '_TITLE' | translate"
-        [description]="'PROJECTS.' + project.key + '_DESC' | translate"
-        [link]="['/', currentLang, 'projects', project.slug]"
-        [metrics]="project.metrics || []"
-        jslAnimateOnScroll
-      >
-      </jsl-card>
-    }
+  <div class="projects-slider-wrapper">
+    <swiper-container
+      init="false"
+      class="projects-swiper"
+      [attr.dir]="directionService.isRtl() ? 'rtl' : 'ltr'"
+    >
+      @for (project of filteredProjects(); track project.key) {
+        <swiper-slide class="project-slide">
+          <jsl-card
+            [imageUrl]="project.imageUrl"
+            [title]="'PROJECTS.' + project.key + '_TITLE' | translate"
+            [description]="'PROJECTS.' + project.key + '_DESC' | translate"
+            [link]="['/', currentLang, 'projects', project.slug]"
+            [metrics]="project.metrics || []"
+            jslAnimateOnScroll
+          >
+          </jsl-card>
+        </swiper-slide>
+      }
+    </swiper-container>
+
+    <!-- Custom Navigation Buttons -->
+    <div
+      class="projects-swiper-button-prev"
+      [attr.aria-label]="'ARIA.PREVIOUS_SLIDE' | translate"
+      role="button"
+      tabindex="0"
+      (keydown.enter)="onPrevProjects()"
+      (keydown.space)="onPrevProjects()">
+      <lucide-icon name="ChevronLeft"></lucide-icon>
+    </div>
+    <div
+      class="projects-swiper-button-next"
+      [attr.aria-label]="'ARIA.NEXT_SLIDE' | translate"
+      role="button"
+      tabindex="0"
+      (keydown.enter)="onNextProjects()"
+      (keydown.space)="onNextProjects()">
+      <lucide-icon name="ChevronRight"></lucide-icon>
+    </div>
   </div>
 </section>
 
