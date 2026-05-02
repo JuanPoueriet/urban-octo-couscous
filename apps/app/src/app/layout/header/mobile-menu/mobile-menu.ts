@@ -195,11 +195,11 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     this.cdRef.markForCheck();
 
-    setTimeout(() => {
+    this.handleTransitionEnd(() => {
       this.isAnimating = false;
       this.a11y.setInitialFocus();
       this.cdRef.markForCheck();
-    }, 300);
+    });
   }
 
   private closeDrawer() {
@@ -221,10 +221,36 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     this.cdRef.markForCheck();
 
-    setTimeout(() => {
+    this.handleTransitionEnd(() => {
       this.isAnimating = false;
       this.cdRef.markForCheck();
-    }, 300);
+    });
+  }
+
+  private handleTransitionEnd(callback: () => void) {
+    if (!this.isBrowser || !this.menuElement) {
+      callback();
+      return;
+    }
+
+    const unlisten = this.renderer.listen(this.menuElement, 'transitionend', (event: TransitionEvent) => {
+      if (event.propertyName === 'transform') {
+        unlisten();
+        this.ngZone.run(() => {
+          callback();
+        });
+      }
+    });
+
+    // Fallback for cases where transition might not fire
+    setTimeout(() => {
+      unlisten();
+      this.ngZone.run(() => {
+        if (this.isAnimating) {
+          callback();
+        }
+      });
+    }, 400);
   }
 
   closeMobileMenu() {
@@ -283,7 +309,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       let expandedCount = 0;
       for (const section of this.menuSections) {
         if (this.shouldShowSection(section.titleKey, section.links)) {
-          if (expandedCount < 3) {
+          if (expandedCount < 2) {
             this.expandedSections.add(section.id);
             expandedCount++;
           }
@@ -301,11 +327,15 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     let count = 0;
     for (const section of this.menuSections) {
-      if (this.shouldShowSection(section.titleKey, section.links)) {
-        count++;
-      }
+      // Count individual matching links in each section
+      section.links.forEach(link => {
+        if (this.shouldShowLink(link.key)) {
+          count++;
+        }
+      });
     }
 
+    // Include contact button if it matches
     if (this.shouldShowLink('HEADER.CONTACT')) {
       count++;
     }
