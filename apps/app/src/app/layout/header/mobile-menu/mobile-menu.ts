@@ -69,6 +69,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private lastDragPosition = 0;
   private isHorizontalGesture = false;
   private lastFocusedElement: HTMLElement | null = null;
+  private searchDebounceTimer: any;
 
   public currentYear = new Date().getFullYear();
   public searchQuery = '';
@@ -243,9 +244,15 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   onSearchChange() {
     if (this.searchQuery) {
-      this.analyticsService.trackEvent('mobile_menu_search', {
-        search_term: this.searchQuery
-      });
+      if (this.searchDebounceTimer) {
+        clearTimeout(this.searchDebounceTimer);
+      }
+
+      this.searchDebounceTimer = setTimeout(() => {
+        this.analyticsService.trackEvent('mobile_menu_search', {
+          search_term: this.searchQuery
+        });
+      }, 300);
 
       // Auto-expand all sections that have matches
       const sections = [
@@ -276,28 +283,36 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     if (event.key === 'Escape') {
       this.closeMobileMenu();
+      event.preventDefault();
       return;
     }
 
     if (event.key === 'Tab') {
-      const focusableSelectors = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
-      const focusableElements = Array.from(this.el.nativeElement.querySelectorAll(focusableSelectors)) as HTMLElement[];
+      this.trapFocus(event);
+    }
+  }
 
-      if (focusableElements.length > 0) {
-        const firstElement = focusableElements[0];
-        const lastElement = focusableElements[focusableElements.length - 1];
+  private trapFocus(event: KeyboardEvent) {
+    const focusableSelectors =
+      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+    const focusableElements = Array.from(
+      this.el.nativeElement.querySelectorAll(focusableSelectors)
+    ) as HTMLElement[];
 
-        if (event.shiftKey) {
-          if (document.activeElement === firstElement || document.activeElement === document.body) {
-            lastElement.focus();
-            event.preventDefault();
-          }
-        } else {
-          if (document.activeElement === lastElement) {
-            firstElement.focus();
-            event.preventDefault();
-          }
-        }
+    if (focusableElements.length === 0) return;
+
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    if (event.shiftKey) {
+      if (document.activeElement === firstElement || !this.el.nativeElement.contains(document.activeElement)) {
+        lastElement.focus();
+        event.preventDefault();
+      }
+    } else {
+      if (document.activeElement === lastElement || !this.el.nativeElement.contains(document.activeElement)) {
+        firstElement.focus();
+        event.preventDefault();
       }
     }
   }

@@ -31,7 +31,12 @@
     "LIFE_AT_JSL": "JSLでの仕事",
     "PRICING": "料金",
     "VIRTEEX_ECOSYSTEM": "virtexエコシステム",
-    "NEWS": "ニュース"
+    "NEWS": "ニュース",
+    "QUICK_ACCESS": "クイックアクセス",
+    "QUICK_CONTACT": "お問い合わせ",
+    "QUICK_PRICING": "料金",
+    "QUICK_FAQ": "FAQ",
+    "QUICK_SUPPORT": "サポート"
   },
   "TOP_BAR": {
     "PORTFOLIO": "ポートフォリオ",
@@ -1478,7 +1483,8 @@
     "HOME_LINK": "JSL Technology ホーム",
     "DESKTOP_NAV": "デスクトップナビゲーション",
     "MOBILE_MENU": "モバイルナビゲーションメニュー",
-    "SEARCH_MENU": "メニューオプションをフィルタリング"
+    "SEARCH_MENU": "メニューオプションをフィルタリング",
+    "MOBILE_MENU_TITLE": "メインナビゲーションメニュー"
   },
   "SEARCH": {
     "PLACEHOLDER": "検索...",

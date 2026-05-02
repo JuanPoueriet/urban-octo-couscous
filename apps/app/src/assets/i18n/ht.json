@@ -31,7 +31,12 @@
     "LIFE_AT_JSL": "Lavi nan JSL",
     "PRICING": "Pri",
     "VIRTEEX_ECOSYSTEM": "Ekosistèm virtex",
-    "NEWS": "Nouvèl"
+    "NEWS": "Nouvèl",
+    "QUICK_ACCESS": "Aksè Rapid",
+    "QUICK_CONTACT": "Kontak",
+    "QUICK_PRICING": "Pri",
+    "QUICK_FAQ": "FAQ",
+    "QUICK_SUPPORT": "Sipò"
   },
   "TOP_BAR": {
     "PORTFOLIO": "Pòtfolyo",
@@ -1478,7 +1483,8 @@
     "HOME_LINK": "Akèy JSL Technology",
     "DESKTOP_NAV": "Navigasyon òdinatè",
     "MOBILE_MENU": "Meni navigasyon mobil",
-    "SEARCH_MENU": "Filtre opsyon meni yo"
+    "SEARCH_MENU": "Filtre opsyon meni yo",
+    "MOBILE_MENU_TITLE": "Meni navigasyon prensipal"
   },
   "SEARCH": {
     "PLACEHOLDER": "Chèche...",

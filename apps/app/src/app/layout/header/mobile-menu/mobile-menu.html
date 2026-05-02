@@ -15,10 +15,11 @@
   (touchstart)="onMenuTouchStart($event)"
   (touchmove)="onMenuTouchMove($event)"
   (touchend)="onMenuTouchEnd($event)"
-  role="navigation"
+  role="dialog"
   aria-modal="true"
-  [attr.aria-label]="'ARIA.MOBILE_MENU' | translate"
+  [attr.aria-labelledby]="'mobile-menu-title'"
 >
+  <h2 id="mobile-menu-title" class="sr-only">{{ 'ARIA.MOBILE_MENU_TITLE' | translate }}</h2>
   <!-- Mobile Menu Header -->
   <div class="mobile-menu-top">
     <div class="mobile-logo-container">
@@ -33,6 +34,29 @@
 
   <!-- Mobile Menu Content -->
   <div class="mobile-menu-content">
+    <!-- Quick Access Section -->
+    <div class="mobile-quick-access">
+      <h3 class="quick-access-title">{{ 'HEADER.QUICK_ACCESS' | translate }}</h3>
+      <div class="quick-access-grid">
+        <a [routerLink]="[currentLang, 'contact']" class="quick-tile" (click)="closeMobileMenu()">
+          <div class="tile-icon"><lucide-icon name="Mail"></lucide-icon></div>
+          <span>{{ 'HEADER.QUICK_CONTACT' | translate }}</span>
+        </a>
+        <a [routerLink]="[currentLang, 'pricing']" class="quick-tile" (click)="closeMobileMenu()">
+          <div class="tile-icon"><lucide-icon name="CircleDollarSign"></lucide-icon></div>
+          <span>{{ 'HEADER.QUICK_PRICING' | translate }}</span>
+        </a>
+        <a [routerLink]="[currentLang, 'faq']" class="quick-tile" (click)="closeMobileMenu()">
+          <div class="tile-icon"><lucide-icon name="HelpCircle"></lucide-icon></div>
+          <span>{{ 'HEADER.QUICK_FAQ' | translate }}</span>
+        </a>
+        <a href="https://support.jsl.technology" target="_blank" rel="noopener noreferrer" class="quick-tile" (click)="closeMobileMenu()">
+          <div class="tile-icon"><lucide-icon name="Headphones"></lucide-icon></div>
+          <span>{{ 'HEADER.QUICK_SUPPORT' | translate }}</span>
+        </a>
+      </div>
+    </div>
+
     <!-- Search Bar -->
     <div class="mobile-menu-search">
       <div class="search-input-wrapper">
