@@ -1,20 +1,22 @@
 import { Injectable, inject, PLATFORM_ID, Inject } from '@angular/core';
 // --- 1. IMPORTAR DOCUMENT ---
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { CanActivateFn, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { CanActivateFn, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({ providedIn: 'root' })
 export class LanguageInitService {
   constructor(
     private translate: TranslateService,
     private router: Router,
+    private cookieService: CookieService,
     @Inject(PLATFORM_ID) private platformId: object,
     // --- 2. INYECTAR DOCUMENT ---
     @Inject(DOCUMENT) private document: Document
   ) {}
 
-  initLanguage(route: ActivatedRouteSnapshot): boolean {
+  initLanguage(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const lang = route.params['lang'];
     const supportedLangs = this.translate.getLangs();
 
@@ -29,20 +31,36 @@ export class LanguageInitService {
       if (isPlatformBrowser(this.platformId)) {
         // 2. Guardar la preferencia en localStorage (Solo se ejecuta en el cliente)
         localStorage.setItem('jsl_lang', lang);
+        this.cookieService.set('lang', lang, { expires: 365, path: '/' });
       }
       return true; // Permitir el acceso a la ruta
     } else {
-      // Si el idioma en la URL no es válido (p.ej. /fr/home)
-      // Redirigir a la versión 'es' de la misma ruta para evitar errores
-      const urlSegments = route.url.map(segment => segment.path);
-      // Nota: En un entorno de servidor, 'navigate' puede necesitar configuración adicional
-      // para emitir un redirect 301, pero para la lógica de la app esto es correcto.
-      this.router.navigate(['es', ...urlSegments], { replaceUrl: true });
+      // Si el idioma en la URL no es válido (p.ej. /fr/home o /home cuando no hay prefijo)
+      // Redirigir a la versión detectada o por defecto de la misma ruta
+
+      const defaultLang = 'en';
+      let langToUse = defaultLang;
+
+      if (isPlatformBrowser(this.platformId)) {
+        const storedLang = this.cookieService.get('lang') || localStorage.getItem('jsl_lang');
+        if (storedLang && supportedLangs.includes(storedLang)) {
+          langToUse = storedLang;
+        } else {
+          const browserLang = this.translate.getBrowserLang() || '';
+          langToUse = supportedLangs.includes(browserLang) ? browserLang : defaultLang;
+        }
+      }
+
+      // Prependemos el idioma detectado a la URL original.
+      // state.url contiene la ruta completa empezando por '/'.
+      const targetUrl = `/${langToUse}${state.url}`;
+
+      this.router.navigateByUrl(targetUrl, { replaceUrl: true });
       return false;
     }
   }
 }
 
-export const languageInitGuard: CanActivateFn = (route) => {
-  return inject(LanguageInitService).initLanguage(route);
+export const languageInitGuard: CanActivateFn = (route, state) => {
+  return inject(LanguageInitService).initLanguage(route, state);
 };
