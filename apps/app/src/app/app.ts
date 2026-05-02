@@ -15,6 +15,7 @@ import { SUPPORTED_LANGUAGES } from '@core/constants/languages';
 import { ToastComponent } from './shared/components/toast/toast';
 import { CookieBannerComponent } from './shared/components/cookie-banner/cookie-banner';
 import { ScrollRestorationService } from './core/services/scroll-restoration.service';
+import { ScrollEngineService } from './core/services/scroll-engine.service';
 import Lenis from 'lenis';
 
 @Component({
@@ -55,7 +56,8 @@ export class App implements OnInit, OnDestroy {
     private seo: Seo,
     private analytics: AnalyticsService,
     private directionService: DirectionService, // Inject to initialize
-    private scrollRestoration: ScrollRestorationService,
+    private scrollRestoration: ScrollRestorationService, // Keep to initialize
+    private scrollEngine: ScrollEngineService,
     @Inject(PLATFORM_ID) private platformId: object,
     private cookieService: CookieService,
   ) {
@@ -100,7 +102,7 @@ export class App implements OnInit, OnDestroy {
       touchMultiplier: 2,
     });
 
-    this.scrollRestoration.registerLenis(this.lenis);
+    this.scrollEngine.setLenis(this.lenis);
 
     const raf = (time: number) => {
       this.lenis?.raf(time);
