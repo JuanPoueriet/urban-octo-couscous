@@ -1484,7 +1484,10 @@
     "DESKTOP_NAV": "Navigasyon òdinatè",
     "MOBILE_MENU": "Meni navigasyon mobil",
     "SEARCH_MENU": "Filtre opsyon meni yo",
-    "MOBILE_MENU_TITLE": "Meni navigasyon prensipal"
+    "MOBILE_MENU_TITLE": "Meni navigasyon prensipal",
+    "EXPANDED": "Laj",
+    "COLLAPSED": "Tonbe",
+    "EXTERNAL_LINK": "Lyen ekstèn"
   },
   "SEARCH": {
     "PLACEHOLDER": "Chèche...",
@@ -1493,7 +1496,10 @@
     "BLOG": "Blog",
     "PRODUCTS": "Pwodui",
     "PROJECTS": "Pwojè",
-    "VENTURES": "Antrepriz"
+    "VENTURES": "Antrepriz",
+    "NO_RESULTS_FOUND": "Pa gen rezilta yo jwenn",
+    "RESULTS_COUNT": "{{count}} rezilta",
+    "CLEAR_SEARCH": "Klè rechèch"
   },
   "ALT": {
     "AUTHOR": "Otè",

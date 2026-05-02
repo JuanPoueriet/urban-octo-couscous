@@ -1484,7 +1484,10 @@
     "DESKTOP_NAV": "Desktop-Navigation",
     "MOBILE_MENU": "Mobiles Navigationsmenü",
     "SEARCH_MENU": "Menüoptionen filtern",
-    "MOBILE_MENU_TITLE": "Hauptnavigationsmenü"
+    "MOBILE_MENU_TITLE": "Hauptnavigationsmenü",
+    "EXPANDED": "Erweitert",
+    "COLLAPSED": "Reduziert",
+    "EXTERNAL_LINK": "Externer Link"
   },
   "SEARCH": {
     "PLACEHOLDER": "Suchen...",
@@ -1493,7 +1496,10 @@
     "BLOG": "Blog",
     "PRODUCTS": "Produkte",
     "PROJECTS": "Projekte",
-    "VENTURES": "Ventures"
+    "VENTURES": "Ventures",
+    "NO_RESULTS_FOUND": "Keine Ergebnisse gefunden",
+    "RESULTS_COUNT": "{{count}} Ergebnisse",
+    "CLEAR_SEARCH": "Suche löschen"
   },
   "ALT": {
     "AUTHOR": "Autor",

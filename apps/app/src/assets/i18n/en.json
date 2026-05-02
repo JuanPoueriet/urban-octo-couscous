@@ -1486,7 +1486,8 @@
     "SEARCH_MENU": "Filter menu options",
     "MOBILE_MENU_TITLE": "Main navigation menu",
     "EXPANDED": "Expanded",
-    "COLLAPSED": "Collapsed"
+    "COLLAPSED": "Collapsed",
+    "EXTERNAL_LINK": "External link"
   },
   "SEARCH": {
     "PLACEHOLDER": "Search...",

@@ -1484,7 +1484,10 @@
     "DESKTOP_NAV": "デスクトップナビゲーション",
     "MOBILE_MENU": "モバイルナビゲーションメニュー",
     "SEARCH_MENU": "メニューオプションをフィルタリング",
-    "MOBILE_MENU_TITLE": "メインナビゲーションメニュー"
+    "MOBILE_MENU_TITLE": "メインナビゲーションメニュー",
+    "EXPANDED": "展開済み",
+    "COLLAPSED": "折りたたみ済み",
+    "EXTERNAL_LINK": "外部リンク"
   },
   "SEARCH": {
     "PLACEHOLDER": "検索...",
@@ -1493,7 +1496,10 @@
     "BLOG": "Blog",
     "PRODUCTS": "製品",
     "PROJECTS": "プロジェクト",
-    "VENTURES": "ベンチャー"
+    "VENTURES": "ベンチャー",
+    "NO_RESULTS_FOUND": "結果が見つかりませんでした",
+    "RESULTS_COUNT": "{{count}} 件の結果",
+    "CLEAR_SEARCH": "検索をクリア"
   },
   "ALT": {
     "AUTHOR": "著者",
