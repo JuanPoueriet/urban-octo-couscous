@@ -1,6 +1,7 @@
 import { Component, HostListener, Inject, PLATFORM_ID, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, ChildrenOutletContexts } from '@angular/router';
+import { trigger, transition, style, animate, query, group } from '@angular/animations';
 import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
 import { Header } from './layout/header/header';
@@ -33,6 +34,33 @@ import Lenis from 'lenis';
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
+  animations: [
+    trigger('routeAnimations', [
+      transition('* <=> *', [
+        style({ position: 'relative' }),
+        query(':enter, :leave', [
+          style({
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            opacity: 0,
+          })
+        ], { optional: true }),
+        query(':enter', [
+          style({ opacity: 0, transform: 'translateY(8px)' })
+        ], { optional: true }),
+        group([
+          query(':leave', [
+            animate('200ms ease-in', style({ opacity: 0, transform: 'translateY(-8px)' }))
+          ], { optional: true }),
+          query(':enter', [
+            animate('250ms 50ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+          ], { optional: true })
+        ])
+      ])
+    ])
+  ]
 })
 export class App implements OnInit, OnDestroy {
   title = 'jsl-technology-web';
@@ -58,6 +86,7 @@ export class App implements OnInit, OnDestroy {
     private scrollRestoration: ScrollRestorationService,
     @Inject(PLATFORM_ID) private platformId: object,
     private cookieService: CookieService,
+    private contexts: ChildrenOutletContexts,
   ) {
     this.seo.init();
     this.analytics.init();
@@ -224,6 +253,10 @@ export class App implements OnInit, OnDestroy {
   onWindowResize() {
     // Ejecutar al redimensionar la ventana
     this.updateScrollAndResize();
+  }
+
+  getRouteAnimationData() {
+    return this.contexts.getContext('primary')?.route?.snapshot?.data?.['animation'] || this.contexts.getContext('primary')?.route?.snapshot?.url?.join('/') || 'default';
   }
 
   /**

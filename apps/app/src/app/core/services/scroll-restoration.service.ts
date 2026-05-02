@@ -7,6 +7,7 @@ import Lenis from 'lenis';
 
 interface LenisWithScrollTo extends Lenis {
   scrollTo(target: number | string | HTMLElement, options?: any): void;
+  scroll: number;
 }
 
 @Injectable({
@@ -16,6 +17,7 @@ export class ScrollRestorationService implements OnDestroy {
   private lenis: LenisWithScrollTo | null = null;
   private destroy$ = new Subject<void>();
   private isBrowser: boolean;
+  private currentRetryId: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     private router: Router,
@@ -34,6 +36,11 @@ export class ScrollRestorationService implements OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe((e) => {
+        if (this.currentRetryId) {
+          clearTimeout(this.currentRetryId);
+          this.currentRetryId = null;
+        }
+
         if (e.position) {
           // backward/forward navigation
           this.restoreScroll(e.position[1]);
@@ -52,47 +59,72 @@ export class ScrollRestorationService implements OnDestroy {
   }
 
   private restoreScroll(y: number): void {
-    // We use a small timeout to ensure the DOM has rendered
-    const attemptRestore = (remainingAttempts: number) => {
-      if (this.lenis) {
-        this.lenis.scrollTo(y, { immediate: true });
-      } else {
-        window.scrollTo(0, y);
-      }
-
-      if (remainingAttempts > 0) {
-        setTimeout(() => attemptRestore(remainingAttempts - 1), 100);
-      }
-    };
-
-    setTimeout(() => attemptRestore(5), 100);
+    this.retryApplyScroll(y, 0);
   }
 
   private scrollToAnchor(anchor: string): void {
-    setTimeout(() => {
+    const attempt = () => {
       const element = document.getElementById(anchor);
       if (element) {
         if (this.lenis) {
-          this.lenis.scrollTo(element);
+          this.lenis.scrollTo(element, { immediate: true });
         } else {
           element.scrollIntoView();
         }
+        return true;
       }
-    }, 0);
+      return false;
+    };
+
+    if (!attempt()) {
+      let count = 0;
+      const interval = setInterval(() => {
+        count++;
+        if (attempt() || count > 20) {
+          clearInterval(interval);
+        }
+      }, 100);
+    }
   }
 
   private scrollToTop(): void {
-    setTimeout(() => {
-      if (this.lenis) {
-        this.lenis.scrollTo(0, { immediate: true });
-      } else {
-        window.scrollTo(0, 0);
-      }
-    }, 0);
+    this.retryApplyScroll(0, 0);
+  }
+
+  private retryApplyScroll(targetY: number, attempts: number): void {
+    this.applyScroll(targetY);
+    const currentY = this.getCurrentScrollY();
+
+    if (Math.abs(currentY - targetY) <= 2) {
+      return;
+    }
+
+    if (attempts > 60) {
+      return;
+    }
+
+    this.currentRetryId = setTimeout(() => {
+      this.retryApplyScroll(targetY, attempts + 1);
+    }, 100);
+  }
+
+  private applyScroll(y: number): void {
+    if (this.lenis) {
+      this.lenis.scrollTo(y, { immediate: true });
+    } else {
+      window.scrollTo(0, y);
+    }
+  }
+
+  private getCurrentScrollY(): number {
+    return this.lenis ? this.lenis.scroll : window.scrollY;
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    if (this.currentRetryId) {
+      clearTimeout(this.currentRetryId);
+    }
   }
 }

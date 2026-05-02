@@ -9,4 +9,6 @@
   min-height: calc(100vh - var(--header-height)); 
   
   width: 100%;
+  position: relative;
+  overflow: clip; // Ensure animations don't cause horizontal scroll
 }
