@@ -13,23 +13,30 @@ import {
   inject,
   HostListener,
   effect,
+  signal,
+  computed,
 } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { LucideAngularModule } from 'lucide-angular';
 import { DirectionService } from '@core/services/direction.service';
 import { MenuService } from '@core/services/menu.service';
+import { AnalyticsService } from '@core/services/analytics.service';
 
 @Component({
   selector: 'jsl-mobile-menu',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslateModule, LucideAngularModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule, LucideAngularModule],
   templateUrl: './mobile-menu.html',
   styleUrl: './mobile-menu.scss',
 })
 export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private directionService = inject(DirectionService);
   private menuService = inject(MenuService);
+  private analyticsService = inject(AnalyticsService);
   private translate = inject(TranslateService);
   private el = inject(ElementRef);
   private renderer = inject(Renderer2);
@@ -37,7 +44,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private cdRef = inject(ChangeDetectorRef);
   @Inject(PLATFORM_ID) private platformId = inject(PLATFORM_ID);
 
-  public currentLang: string;
+  public currentLang = signal(this.translate.currentLang || this.translate.defaultLang || 'es');
   private isBrowser: boolean;
 
   // Variables para el drawer navigation
@@ -67,19 +74,128 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private isHorizontalGesture = false;
   private lastFocusedElement: HTMLElement | null = null;
 
-  public expandedSection: string | null = null;
   public currentYear = new Date().getFullYear();
+  public searchQuery = signal('');
+
+  public debouncedSearchQuery = toSignal(
+    toObservable(this.searchQuery).pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ),
+    { initialValue: '' }
+  );
+
+  private readonly MENU_STRUCTURE = [
+    {
+      id: 'services',
+      titleKey: 'HEADER.SERVICES',
+      links: [
+        { key: 'HEADER.VIEW_ALL_SERVICES', routerLink: 'solutions', icon: 'LayoutGrid' },
+        { key: 'SERVICES_LIST.WEB', routerLink: 'solutions/web-development', icon: 'Monitor' },
+        { key: 'SERVICES_LIST.MOBILE', routerLink: 'solutions/mobile-apps', icon: 'Smartphone' },
+        { key: 'SERVICES_LIST.DESKTOP', routerLink: 'solutions/desktop-software', icon: 'Laptop' },
+        { key: 'SERVICES_LIST.CLOUD', routerLink: 'solutions/cloud-architecture', icon: 'CloudCog' },
+        { key: 'HEADER.INDUSTRIES', routerLink: 'industries', icon: 'Building2' },
+      ]
+    },
+    {
+      id: 'products',
+      titleKey: 'HEADER.PRODUCTS',
+      links: [
+        { key: 'HEADER.VIEW_ALL_PRODUCTS', routerLink: 'products', icon: 'Package' },
+        { key: 'PRODUCTS_LIST.ERP', href: 'https://virtex.com', icon: 'ExternalLink', external: true },
+        { key: 'PRODUCTS_LIST.POS', href: 'https://pos.jsl.technology', icon: 'ExternalLink', external: true },
+        { key: 'PRODUCTS_LIST.MOBILE', href: 'https://apps.jsl.technology', icon: 'ExternalLink', external: true },
+        { key: 'HEADER.VIRTEEX_ECOSYSTEM', routerLink: 'virteex-ecosystem', icon: 'Layers' },
+        { key: 'HEADER.PRICING', routerLink: 'pricing', icon: 'CircleDollarSign' },
+      ]
+    },
+    {
+      id: 'company',
+      titleKey: 'FOOTER.COMPANY',
+      links: [
+        { key: 'HEADER.ABOUT', routerLink: 'about-us', icon: 'Users' },
+        { key: 'HEADER.PROCESS', routerLink: 'process', icon: 'Workflow' },
+        { key: 'HEADER.TECH_STACK', routerLink: 'tech-stack', icon: 'Cpu' },
+        { key: 'HEADER.CAREERS', routerLink: 'careers', icon: 'Briefcase' },
+        { key: 'HEADER.PARTNERS', routerLink: 'partners', icon: 'Handshake' },
+        { key: 'HEADER.LIFE_AT_JSL', routerLink: 'life-at-jsl', icon: 'Heart' },
+        { key: 'HEADER.INVESTORS', routerLink: 'investors', icon: 'TrendingUp' },
+        { key: 'HEADER.VENTURES', routerLink: 'ventures', icon: 'Rocket' },
+        { key: 'HEADER.SECURITY', routerLink: 'security', icon: 'ShieldCheck' },
+      ]
+    },
+    {
+      id: 'resources',
+      titleKey: 'FOOTER.RESOURCES',
+      links: [
+        { key: 'HEADER.PROJECTS', routerLink: 'projects', icon: 'Lightbulb' },
+        { key: 'HEADER.BLOG', routerLink: 'blog', icon: 'Newspaper' },
+        { key: 'HEADER.EVENTS', routerLink: 'events', icon: 'CalendarDays' },
+        { key: 'HEADER.NEWS', routerLink: 'news', icon: 'Radio' },
+        { key: 'HEADER.PRESS', routerLink: 'press', icon: 'BookOpen' },
+        { key: 'HEADER.ROADMAP', routerLink: 'roadmap', icon: 'Map' },
+        { key: 'HEADER.FAQ', routerLink: 'faq', icon: 'HelpCircle' },
+        { key: 'HEADER.DEVELOPERS', routerLink: 'developers', icon: 'Code' },
+      ]
+    },
+    {
+      id: 'login',
+      titleKey: 'HEADER.LOGIN',
+      links: [
+        { key: 'HEADER.LOGIN_VIRTEEX', href: 'https://app.virtex.com', icon: 'ExternalLink', external: true },
+        { key: 'HEADER.LOGIN_CLIENT', href: 'https://portal.jsl.technology', icon: 'ExternalLink', external: true },
+        { key: 'HEADER.LOGIN_SUPPORT', href: 'https://support.jsl.technology', icon: 'ExternalLink', external: true },
+      ]
+    }
+  ];
+
+  public filteredMenu = computed(() => {
+    const query = this.searchQuery().toLowerCase().trim();
+    const lang = this.currentLang(); // Dependency for language switch
+
+    if (!query) return this.MENU_STRUCTURE;
+
+    return this.MENU_STRUCTURE.map(section => {
+      const sectionTitle = this.translate.instant(section.titleKey).toLowerCase();
+      const filteredLinks = section.links.filter(link =>
+        this.translate.instant(link.key).toLowerCase().includes(query)
+      );
+
+      if (sectionTitle.includes(query) || filteredLinks.length > 0) {
+        return {
+          ...section,
+          links: filteredLinks.length > 0 ? filteredLinks : section.links
+        };
+      }
+      return null;
+    }).filter((s): s is NonNullable<typeof s> => s !== null);
+  });
 
   get isMobileMenuOpen() {
     return this.menuService.isMobileMenuOpen();
   }
 
   constructor() {
-    this.currentLang = this.translate.getCurrentLang() || this.translate.defaultLang || 'es';
     this.isBrowser = isPlatformBrowser(this.platformId);
 
     this.translate.onLangChange.subscribe((event) => {
-      this.currentLang = event.lang;
+      this.currentLang.set(event.lang);
+    });
+
+    effect(() => {
+      const query = this.debouncedSearchQuery();
+      if (query) {
+        this.analyticsService.trackEvent('mobile_menu_search', {
+          search_term: query
+        });
+
+        // Auto-expand all sections that have matches
+        this.filteredMenu().forEach(section => {
+          this.expandedSections.add(section.id);
+        });
+        this.cdRef.detectChanges();
+      }
     });
 
     effect(() => {
@@ -124,7 +240,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     if (!this.isBrowser) return;
 
     this.ngZone.runOutsideAngular(() => {
-      document.addEventListener('touchstart', this.handleWindowTouchStart.bind(this), {
+      document.addEventListener('touchstart', this.handleWindowTouchStart, {
         passive: false,
       });
     });
@@ -134,9 +250,9 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     if (!this.isBrowser) return;
 
     this.ngZone.runOutsideAngular(() => {
-      document.removeEventListener('touchstart', this.handleWindowTouchStart.bind(this));
-      document.removeEventListener('touchmove', this.handleEdgeSwipeMove.bind(this));
-      document.removeEventListener('touchend', this.handleEdgeSwipeEnd.bind(this));
+      document.removeEventListener('touchstart', this.handleWindowTouchStart);
+      document.removeEventListener('touchmove', this.handleEdgeSwipeMove);
+      document.removeEventListener('touchend', this.handleEdgeSwipeEnd);
     });
 
     if (this.isMobileMenuOpen) {
@@ -164,6 +280,11 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     setTimeout(() => {
       this.isAnimating = false;
+      // Focus the close button for accessibility
+      const closeBtn = this.el.nativeElement.querySelector('.mobile-close-btn');
+      if (closeBtn) {
+        (closeBtn as HTMLElement).focus();
+      }
     }, 300);
   }
 
@@ -197,8 +318,29 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.menuService.close();
   }
 
+  public expandedSections = new Set<string>();
+
   toggleSection(section: string) {
-    this.expandedSection = this.expandedSection === section ? null : section;
+    if (this.expandedSections.has(section)) {
+      this.expandedSections.delete(section);
+    } else {
+      this.expandedSections.add(section);
+      this.analyticsService.trackEvent('mobile_menu_expand_section', {
+        section_id: section
+      });
+    }
+  }
+
+  isSectionExpanded(section: string): boolean {
+    return this.expandedSections.has(section);
+  }
+
+  updateSearch(value: string) {
+    this.searchQuery.set(value);
+  }
+
+  clearSearch() {
+    this.searchQuery.set('');
   }
 
   private triggerHapticFeedback() {
@@ -217,15 +359,15 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     }
 
     if (event.key === 'Tab') {
-      const focusableElements = this.menuElement?.querySelectorAll(
-        'a[href], button, textarea, input, select'
-      );
-      if (focusableElements && focusableElements.length > 0) {
-        const firstElement = focusableElements[0] as HTMLElement;
-        const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+      const focusableSelectors = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+      const focusableElements = Array.from(this.el.nativeElement.querySelectorAll(focusableSelectors)) as HTMLElement[];
+
+      if (focusableElements.length > 0) {
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
 
         if (event.shiftKey) {
-          if (document.activeElement === firstElement) {
+          if (document.activeElement === firstElement || document.activeElement === document.body) {
             lastElement.focus();
             event.preventDefault();
           }
@@ -376,7 +518,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private handleWindowTouchStart = (event: TouchEvent) => {
+  private handleWindowTouchStart = (event: TouchEvent): void => {
     if (this.isMobileMenuOpen || this.isDragging || this.isAnimating) return;
 
     const touch = event.touches[0];
@@ -412,7 +554,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     }
   };
 
-  private handleEdgeSwipeMove = (event: TouchEvent) => {
+  private handleEdgeSwipeMove = (event: TouchEvent): void => {
     if (!this.isDragging || this.isMobileMenuOpen) return;
 
     const touch = event.touches[0];
@@ -465,7 +607,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     }
   };
 
-  private handleEdgeSwipeEnd = (event: TouchEvent) => {
+  private handleEdgeSwipeEnd = (event: TouchEvent): void => {
     if (!this.isDragging) return;
 
     this.ngZone.runOutsideAngular(() => {

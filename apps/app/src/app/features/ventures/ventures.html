@@ -37,7 +37,7 @@
         <img [src]="venture.logoUrl" [alt]="venture.name" class="venture-logo" width="120" height="40" loading="lazy">
         <h3>{{ venture.name }}</h3>
         <p>{{ venture.descriptionKey | translate }}</p>
-        <a [href]="venture.website" target="_blank" class="venture-link">
+        <a [href]="venture.website" target="_blank" rel="noopener noreferrer" class="venture-link">
           {{ 'COMMON.VISIT_WEBSITE' | translate }} <lucide-icon name="ExternalLink" size="16"></lucide-icon>
         </a>
       </div>

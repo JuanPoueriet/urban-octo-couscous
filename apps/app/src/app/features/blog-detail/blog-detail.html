@@ -150,12 +150,12 @@
               }
               <div class="author-card__social">
                 @if (author.linkedIn) {
-                  <a [href]="author.linkedIn" target="_blank" class="author-social-link" [title]="'SHARE.LINKEDIN' | translate">
+                  <a [href]="author.linkedIn" target="_blank" rel="noopener noreferrer" class="author-social-link" [title]="'SHARE.LINKEDIN' | translate">
                     <lucide-icon name="Linkedin"></lucide-icon>
                   </a>
                 }
                 @if (author.twitter) {
-                  <a [href]="author.twitter" target="_blank" class="author-social-link" [title]="'SHARE.TWITTER' | translate">
+                  <a [href]="author.twitter" target="_blank" rel="noopener noreferrer" class="author-social-link" [title]="'SHARE.TWITTER' | translate">
                     <lucide-icon name="Twitter"></lucide-icon>
                   </a>
                 }

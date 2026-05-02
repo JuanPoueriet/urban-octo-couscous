@@ -46,7 +46,7 @@
         <!-- CTAs -->
         <div class="pd-hero__actions">
           @if (product.externalUrl) {
-            <a [href]="product.externalUrl" target="_blank" rel="noopener" class="btn-primary">
+            <a [href]="product.externalUrl" target="_blank" rel="noopener noreferrer" class="btn-primary">
               <lucide-icon name="ExternalLink" [size]="18"></lucide-icon>
               {{ extras ? ( 'PRODUCTS.VISIT_BRAND_SITE' | translate:{brand: extras.brandName} ) : ('PRODUCTS.VIEW_DEDICATED_PAGE' | translate) }}
             </a>
@@ -88,7 +88,7 @@
         <span class="section-eyebrow">{{ 'PRODUCTS.OVERVIEW' | translate }}</span>
         <h2 class="section-title">{{ 'PRODUCTS.WHAT_IS_BRAND' | translate:{brand: extras.brandName} }}</h2>
         <p class="pd-overview__desc">{{ extras.overview }}</p>
-        <a [href]="product.externalUrl" target="_blank" rel="noopener" class="pd-overview__link">
+        <a [href]="product.externalUrl" target="_blank" rel="noopener noreferrer" class="pd-overview__link">
           {{ 'PRODUCTS.LEARN_MORE_AT' | translate:{brand: extras.brandName} }}
           <lucide-icon name="ArrowRight" [size]="16"></lucide-icon>
         </a>
@@ -256,7 +256,7 @@
           <h2>{{ 'PRODUCTS.START_JOURNEY' | translate:{brand: extras.brandName} }}</h2>
           <p>{{ 'PRODUCTS.JOURNEY_DESC' | translate }}</p>
           <div class="pd-final-cta__actions">
-            <a [href]="product.externalUrl" target="_blank" rel="noopener" class="btn-primary">
+            <a [href]="product.externalUrl" target="_blank" rel="noopener noreferrer" class="btn-primary">
               <lucide-icon name="ExternalLink" [size]="18"></lucide-icon>
               {{ 'PRODUCTS.VISIT_BRAND_SITE' | translate:{brand: extras.brandName} }}
             </a>
@@ -279,12 +279,12 @@
         <p [innerHTML]="'PRODUCTS.' + product.key + '_DETAIL_CONTENT' | translate"></p>
 
         @if (product.externalUrl) {
-          <a [href]="product.externalUrl" target="_blank" rel="noopener" class="btn-primary">
+          <a [href]="product.externalUrl" target="_blank" rel="noopener noreferrer" class="btn-primary">
             <lucide-icon name="ExternalLink" [size]="18"></lucide-icon>
             {{ 'PRODUCTS.VIEW_DEDICATED_PAGE' | translate }}
           </a>
         } @else {
-          <a [href]="'PRODUCTS.' + product.key + '_MARKETING_URL' | translate" target="_blank" rel="noopener" class="btn-primary">
+          <a [href]="'PRODUCTS.' + product.key + '_MARKETING_URL' | translate" target="_blank" rel="noopener noreferrer" class="btn-primary">
             <lucide-icon name="ExternalLink" [size]="18"></lucide-icon>
             {{ 'PRODUCTS.VIEW_DEDICATED_PAGE' | translate }}
           </a>

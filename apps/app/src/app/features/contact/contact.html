@@ -182,7 +182,7 @@
             <span class="checkmark"></span>
             <span class="checkbox-text">
               {{ 'CONTACT.FORM.PRIVACY' | translate }}
-              <a routerLink="../privacy-policy" target="_blank">{{ 'CONTACT.FORM.PRIVACY_LINK' | translate }}</a>
+              <a routerLink="../privacy-policy" target="_blank" rel="noopener noreferrer">{{ 'CONTACT.FORM.PRIVACY_LINK' | translate }}</a>
             </span>
           </label>
           @if (f['privacy'].invalid && (f['privacy'].dirty || f['privacy'].touched)) {
@@ -234,7 +234,7 @@
         </div>
         <h3 class="alternative-card__title">{{ 'CONTACT.ALT_WHATSAPP_TITLE' | translate }}</h3>
         <p class="alternative-card__desc">{{ 'CONTACT.ALT_WHATSAPP_DESC' | translate }}</p>
-        <a href="https://wa.me/18092641693" target="_blank" rel="noopener" class="alternative-card__cta">
+        <a href="https://wa.me/18092641693" target="_blank" rel="noopener noreferrer" class="alternative-card__cta">
           {{ 'CONTACT.ALT_WHATSAPP_CTA' | translate }}
           <lucide-icon name="ArrowRight" [size]="16"></lucide-icon>
         </a>
@@ -246,7 +246,7 @@
         </div>
         <h3 class="alternative-card__title">{{ 'CONTACT.ALT_CALL_TITLE' | translate }}</h3>
         <p class="alternative-card__desc">{{ 'CONTACT.ALT_CALL_DESC' | translate }}</p>
-        <a href="https://calendly.com/jsl-technology" target="_blank" rel="noopener" class="alternative-card__cta">
+        <a href="https://calendly.com/jsl-technology" target="_blank" rel="noopener noreferrer" class="alternative-card__cta">
           {{ 'CONTACT.ALT_CALL_CTA' | translate }}
           <lucide-icon name="ArrowRight" [size]="16"></lucide-icon>
         </a>

@@ -15,11 +15,14 @@
   (touchstart)="onMenuTouchStart($event)"
   (touchmove)="onMenuTouchMove($event)"
   (touchend)="onMenuTouchEnd($event)"
+  role="navigation"
+  aria-modal="true"
+  [attr.aria-label]="'ARIA.MOBILE_MENU' | translate"
 >
   <!-- Mobile Menu Header -->
   <div class="mobile-menu-top">
     <div class="mobile-logo-container">
-      <a [routerLink]="[currentLang, 'home']" class="header__logo mobile-logo" (click)="closeMobileMenu()">
+      <a [routerLink]="[currentLang(), 'home']" class="header__logo mobile-logo" (click)="closeMobileMenu()">
         {{ 'COMMON.BRAND_NAME' | translate }}
       </a>
     </div>
@@ -30,262 +33,68 @@
 
   <!-- Mobile Menu Content -->
   <div class="mobile-menu-content">
-
-    <!-- Section: Services -->
-    <div class="mobile-accordion" [class.expanded]="expandedSection === 'services'">
-      <button class="accordion-header" (click)="toggleSection('services')">
-        <span>{{ 'HEADER.SERVICES' | translate }}</span>
-        <lucide-icon name="ChevronDown" class="chevron"></lucide-icon>
-      </button>
-      <div class="accordion-content">
-        <ul class="mobile-links-list">
-          <li>
-            <a [routerLink]="[currentLang, 'solutions']" (click)="closeMobileMenu()">
-              <lucide-icon name="LayoutGrid"></lucide-icon>
-              {{ 'HEADER.VIEW_ALL_SERVICES' | translate }}
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="[currentLang, 'solutions', 'web-development']" (click)="closeMobileMenu()">
-              <lucide-icon name="Monitor"></lucide-icon>
-              {{ 'SERVICES_LIST.WEB' | translate }}
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="[currentLang, 'solutions', 'mobile-apps']" (click)="closeMobileMenu()">
-              <lucide-icon name="Smartphone"></lucide-icon>
-              {{ 'SERVICES_LIST.MOBILE' | translate }}
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="[currentLang, 'solutions', 'desktop-software']" (click)="closeMobileMenu()">
-              <lucide-icon name="Laptop"></lucide-icon>
-              {{ 'SERVICES_LIST.DESKTOP' | translate }}
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="[currentLang, 'solutions', 'cloud-architecture']" (click)="closeMobileMenu()">
-              <lucide-icon name="CloudCog"></lucide-icon>
-              {{ 'SERVICES_LIST.CLOUD' | translate }}
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="[currentLang, 'industries']" (click)="closeMobileMenu()">
-              <lucide-icon name="Building2"></lucide-icon>
-              {{ 'HEADER.INDUSTRIES' | translate }}
-            </a>
-          </li>
-        </ul>
+    <!-- Search Bar -->
+    <div class="mobile-menu-search">
+      <div class="search-input-wrapper">
+        <lucide-icon name="Search" class="search-icon"></lucide-icon>
+        <input
+          type="text"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="updateSearch($event)"
+          [placeholder]="'SEARCH.PLACEHOLDER' | translate"
+          [attr.aria-label]="'ARIA.SEARCH_MENU' | translate"
+        />
+        @if (searchQuery()) {
+          <button class="clear-search" (click)="clearSearch()">
+            <lucide-icon name="X"></lucide-icon>
+          </button>
+        }
       </div>
     </div>
 
-    <!-- Section: Products -->
-    <div class="mobile-accordion" [class.expanded]="expandedSection === 'products'">
-      <button class="accordion-header" (click)="toggleSection('products')">
-        <span>{{ 'HEADER.PRODUCTS' | translate }}</span>
-        <lucide-icon name="ChevronDown" class="chevron"></lucide-icon>
-      </button>
-      <div class="accordion-content">
-        <ul class="mobile-links-list">
-          <li>
-            <a [routerLink]="[currentLang, 'products']" (click)="closeMobileMenu()">
-              <lucide-icon name="Package"></lucide-icon>
-              {{ 'HEADER.VIEW_ALL_PRODUCTS' | translate }}
-            </a>
-          </li>
-          <li>
-            <a href="https://virtex.com" target="_blank" (click)="closeMobileMenu()">
-              <lucide-icon name="ExternalLink"></lucide-icon>
-              {{ 'PRODUCTS_LIST.ERP' | translate }}
-            </a>
-          </li>
-          <li>
-            <a href="https://pos.jsl.technology" target="_blank" (click)="closeMobileMenu()">
-              <lucide-icon name="ExternalLink"></lucide-icon>
-              {{ 'PRODUCTS_LIST.POS' | translate }}
-            </a>
-          </li>
-          <li>
-            <a href="https://apps.jsl.technology" target="_blank" (click)="closeMobileMenu()">
-              <lucide-icon name="ExternalLink"></lucide-icon>
-              {{ 'PRODUCTS_LIST.MOBILE' | translate }}
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="[currentLang, 'virteex-ecosystem']" (click)="closeMobileMenu()">
-              <lucide-icon name="Layers"></lucide-icon>
-              {{ 'HEADER.VIRTEEX_ECOSYSTEM' | translate }}
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="[currentLang, 'pricing']" (click)="closeMobileMenu()">
-              <lucide-icon name="CircleDollarSign"></lucide-icon>
-              {{ 'HEADER.PRICING' | translate }}
-            </a>
-          </li>
-        </ul>
+    <!-- Data-Driven Menu Sections -->
+    @for (section of filteredMenu(); track section.id) {
+      <div class="mobile-accordion" [class.expanded]="isSectionExpanded(section.id)">
+        <button
+          [id]="'accordion-' + section.id + '-header'"
+          class="accordion-header"
+          (click)="toggleSection(section.id)"
+          [attr.aria-expanded]="isSectionExpanded(section.id)"
+          [attr.aria-controls]="'accordion-' + section.id + '-content'"
+        >
+          <span>{{ section.titleKey | translate }}</span>
+          <lucide-icon name="ChevronDown" class="chevron"></lucide-icon>
+        </button>
+        <div
+          [id]="'accordion-' + section.id + '-content'"
+          class="accordion-content"
+          role="region"
+          [attr.aria-labelledby]="'accordion-' + section.id + '-header'"
+        >
+          <ul class="mobile-links-list">
+            @for (link of section.links; track link.key) {
+              <li>
+                @if (link.external) {
+                  <a [href]="link.href" target="_blank" rel="noopener noreferrer" (click)="closeMobileMenu()">
+                    <lucide-icon [name]="link.icon"></lucide-icon>
+                    {{ link.key | translate }}
+                  </a>
+                } @else {
+                  <a [routerLink]="[currentLang(), link.routerLink]" (click)="closeMobileMenu()">
+                    <lucide-icon [name]="link.icon"></lucide-icon>
+                    {{ link.key | translate }}
+                  </a>
+                }
+              </li>
+            }
+          </ul>
+        </div>
       </div>
-    </div>
-
-    <!-- Section: Company -->
-    <div class="mobile-accordion" [class.expanded]="expandedSection === 'company'">
-      <button class="accordion-header" (click)="toggleSection('company')">
-        <span>{{ 'FOOTER.COMPANY' | translate }}</span>
-        <lucide-icon name="ChevronDown" class="chevron"></lucide-icon>
-      </button>
-      <div class="accordion-content">
-        <ul class="mobile-links-list">
-          <li>
-            <a [routerLink]="[currentLang, 'about-us']" (click)="closeMobileMenu()">
-              <lucide-icon name="Users"></lucide-icon>
-              {{ 'HEADER.ABOUT' | translate }}
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="[currentLang, 'process']" (click)="closeMobileMenu()">
-              <lucide-icon name="Workflow"></lucide-icon>
-              {{ 'HEADER.PROCESS' | translate }}
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="[currentLang, 'tech-stack']" (click)="closeMobileMenu()">
-              <lucide-icon name="Cpu"></lucide-icon>
-              {{ 'HEADER.TECH_STACK' | translate }}
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="[currentLang, 'careers']" (click)="closeMobileMenu()">
-              <lucide-icon name="Briefcase"></lucide-icon>
-              {{ 'HEADER.CAREERS' | translate }}
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="[currentLang, 'partners']" (click)="closeMobileMenu()">
-              <lucide-icon name="Users"></lucide-icon>
-              {{ 'HEADER.PARTNERS' | translate }}
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="[currentLang, 'life-at-jsl']" (click)="closeMobileMenu()">
-              <lucide-icon name="Heart"></lucide-icon>
-              {{ 'HEADER.LIFE_AT_JSL' | translate }}
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="[currentLang, 'investors']" (click)="closeMobileMenu()">
-              <lucide-icon name="TrendingUp"></lucide-icon>
-              {{ 'HEADER.INVESTORS' | translate }}
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="[currentLang, 'ventures']" (click)="closeMobileMenu()">
-              <lucide-icon name="Rocket"></lucide-icon>
-              {{ 'HEADER.VENTURES' | translate }}
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="[currentLang, 'security']" (click)="closeMobileMenu()">
-              <lucide-icon name="ShieldCheck"></lucide-icon>
-              {{ 'HEADER.SECURITY' | translate }}
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Section: Resources -->
-    <div class="mobile-accordion" [class.expanded]="expandedSection === 'resources'">
-      <button class="accordion-header" (click)="toggleSection('resources')">
-        <span>{{ 'FOOTER.RESOURCES' | translate }}</span>
-        <lucide-icon name="ChevronDown" class="chevron"></lucide-icon>
-      </button>
-      <div class="accordion-content">
-        <ul class="mobile-links-list">
-          <li>
-            <a [routerLink]="[currentLang, 'projects']" (click)="closeMobileMenu()">
-              <lucide-icon name="Lightbulb"></lucide-icon>
-              {{ 'HEADER.PROJECTS' | translate }}
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="[currentLang, 'blog']" (click)="closeMobileMenu()">
-              <lucide-icon name="Newspaper"></lucide-icon>
-              {{ 'HEADER.BLOG' | translate }}
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="[currentLang, 'events']" (click)="closeMobileMenu()">
-              <lucide-icon name="CalendarDays"></lucide-icon>
-              {{ 'HEADER.EVENTS' | translate }}
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="[currentLang, 'news']" (click)="closeMobileMenu()">
-              <lucide-icon name="Radio"></lucide-icon>
-              {{ 'HEADER.NEWS' | translate }}
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="[currentLang, 'press']" (click)="closeMobileMenu()">
-              <lucide-icon name="BookOpen"></lucide-icon>
-              {{ 'HEADER.PRESS' | translate }}
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="[currentLang, 'roadmap']" (click)="closeMobileMenu()">
-              <lucide-icon name="Map"></lucide-icon>
-              {{ 'HEADER.ROADMAP' | translate }}
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="[currentLang, 'faq']" (click)="closeMobileMenu()">
-              <lucide-icon name="HelpCircle"></lucide-icon>
-              {{ 'HEADER.FAQ' | translate }}
-            </a>
-          </li>
-          <li>
-            <a [routerLink]="[currentLang, 'developers']" (click)="closeMobileMenu()">
-              <lucide-icon name="Code"></lucide-icon>
-              {{ 'HEADER.DEVELOPERS' | translate }}
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Section: Login -->
-    <div class="mobile-accordion" [class.expanded]="expandedSection === 'login'">
-      <button class="accordion-header" (click)="toggleSection('login')">
-        <span>{{ 'HEADER.LOGIN' | translate }}</span>
-        <lucide-icon name="ChevronDown" class="chevron"></lucide-icon>
-      </button>
-      <div class="accordion-content">
-        <ul class="mobile-links-list">
-          <li>
-            <a href="https://app.virtex.com" target="_blank" (click)="closeMobileMenu()">
-              <lucide-icon name="ExternalLink"></lucide-icon>
-              {{ 'HEADER.LOGIN_VIRTEEX' | translate }}
-            </a>
-          </li>
-          <li>
-            <a href="https://portal.jsl.technology" target="_blank" (click)="closeMobileMenu()">
-              <lucide-icon name="ExternalLink"></lucide-icon>
-              {{ 'HEADER.LOGIN_CLIENT' | translate }}
-            </a>
-          </li>
-          <li>
-            <a href="https://support.jsl.technology" target="_blank" (click)="closeMobileMenu()">
-              <lucide-icon name="ExternalLink"></lucide-icon>
-              {{ 'HEADER.LOGIN_SUPPORT' | translate }}
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
+    }
 
     <!-- Contact Button -->
     <div class="mobile-cta-container">
-      <a [routerLink]="[currentLang, 'contact']" class="mobile-cta-btn" (click)="closeMobileMenu()">
+      <a [routerLink]="[currentLang(), 'contact']" class="mobile-cta-btn" (click)="closeMobileMenu()">
         <lucide-icon name="Mail"></lucide-icon>
         {{ 'HEADER.CONTACT' | translate }}
       </a>
@@ -296,16 +105,16 @@
   <!-- Mobile Menu Footer -->
   <div class="mobile-menu-footer">
     <div class="mobile-socials">
-      <a href="https://linkedin.com" target="_blank" [attr.aria-label]="'SHARE.LINKEDIN' | translate">
+      <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'SHARE.LINKEDIN' | translate">
         <lucide-icon name="Linkedin"></lucide-icon>
       </a>
-      <a href="https://github.com/jsl-technology" target="_blank" [attr.aria-label]="'SOCIAL.GITHUB' | translate">
+      <a href="https://github.com/jsl-technology" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'SOCIAL.GITHUB' | translate">
         <lucide-icon name="Github"></lucide-icon>
       </a>
-      <a href="https://twitter.com/jsl_tech" target="_blank" [attr.aria-label]="'SHARE.TWITTER' | translate">
+      <a href="https://twitter.com/jsl_tech" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'SHARE.TWITTER' | translate">
         <lucide-icon name="Twitter"></lucide-icon>
       </a>
-      <a href="https://instagram.com/jsl_tech" target="_blank" [attr.aria-label]="'SOCIAL.INSTAGRAM' | translate">
+      <a href="https://instagram.com/jsl_tech" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'SOCIAL.INSTAGRAM' | translate">
         <lucide-icon name="Instagram"></lucide-icon>
       </a>
     </div>
