@@ -1476,7 +1476,9 @@
     "CLOSE_MENU": "关闭菜单",
     "SELECT_LANGUAGE": "选择语言",
     "HOME_LINK": "JSL Technology 主页",
-    "DESKTOP_NAV": "桌面导航"
+    "DESKTOP_NAV": "桌面导航",
+    "MOBILE_MENU": "移动导航菜单",
+    "SEARCH_MENU": "过滤菜单选项"
   },
   "SEARCH": {
     "PLACEHOLDER": "搜索...",

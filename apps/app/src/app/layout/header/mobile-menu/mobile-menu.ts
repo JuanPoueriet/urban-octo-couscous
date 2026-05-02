@@ -15,21 +15,24 @@ import {
   effect,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { DirectionService } from '@core/services/direction.service';
 import { MenuService } from '@core/services/menu.service';
+import { AnalyticsService } from '@core/services/analytics.service';
 
 @Component({
   selector: 'jsl-mobile-menu',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslateModule, LucideAngularModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule, LucideAngularModule],
   templateUrl: './mobile-menu.html',
   styleUrl: './mobile-menu.scss',
 })
 export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private directionService = inject(DirectionService);
   private menuService = inject(MenuService);
+  private analyticsService = inject(AnalyticsService);
   private translate = inject(TranslateService);
   private el = inject(ElementRef);
   private renderer = inject(Renderer2);
@@ -67,8 +70,8 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private isHorizontalGesture = false;
   private lastFocusedElement: HTMLElement | null = null;
 
-  public expandedSection: string | null = null;
   public currentYear = new Date().getFullYear();
+  public searchQuery = '';
 
   get isMobileMenuOpen() {
     return this.menuService.isMobileMenuOpen();
@@ -124,7 +127,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     if (!this.isBrowser) return;
 
     this.ngZone.runOutsideAngular(() => {
-      document.addEventListener('touchstart', this.handleWindowTouchStart.bind(this), {
+      document.addEventListener('touchstart', this.handleWindowTouchStart, {
         passive: false,
       });
     });
@@ -134,9 +137,9 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     if (!this.isBrowser) return;
 
     this.ngZone.runOutsideAngular(() => {
-      document.removeEventListener('touchstart', this.handleWindowTouchStart.bind(this));
-      document.removeEventListener('touchmove', this.handleEdgeSwipeMove.bind(this));
-      document.removeEventListener('touchend', this.handleEdgeSwipeEnd.bind(this));
+      document.removeEventListener('touchstart', this.handleWindowTouchStart);
+      document.removeEventListener('touchmove', this.handleEdgeSwipeMove);
+      document.removeEventListener('touchend', this.handleEdgeSwipeEnd);
     });
 
     if (this.isMobileMenuOpen) {
@@ -164,6 +167,11 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     setTimeout(() => {
       this.isAnimating = false;
+      // Focus the close button for accessibility
+      const closeBtn = this.el.nativeElement.querySelector('.mobile-close-btn');
+      if (closeBtn) {
+        (closeBtn as HTMLElement).focus();
+      }
     }, 300);
   }
 
@@ -197,8 +205,63 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.menuService.close();
   }
 
+  shouldShowLink(linkTextKey: string): boolean {
+    if (!this.searchQuery) return true;
+    const translatedText = this.translate.instant(linkTextKey).toLowerCase();
+    return translatedText.includes(this.searchQuery.toLowerCase());
+  }
+
+  shouldShowSection(sectionKey: string, links: string[]): boolean {
+    if (!this.searchQuery) return true;
+
+    // Show if section title matches
+    const sectionTitle = this.translate.instant(sectionKey).toLowerCase();
+    if (sectionTitle.includes(this.searchQuery.toLowerCase())) {
+      return true;
+    }
+
+    // Show if any link in the section matches
+    return links.some(linkKey => this.shouldShowLink(linkKey));
+  }
+
+  public expandedSections = new Set<string>();
+
   toggleSection(section: string) {
-    this.expandedSection = this.expandedSection === section ? null : section;
+    if (this.expandedSections.has(section)) {
+      this.expandedSections.delete(section);
+    } else {
+      this.expandedSections.add(section);
+      this.analyticsService.trackEvent('mobile_menu_expand_section', {
+        section_id: section
+      });
+    }
+  }
+
+  isSectionExpanded(section: string): boolean {
+    return this.expandedSections.has(section);
+  }
+
+  onSearchChange() {
+    if (this.searchQuery) {
+      this.analyticsService.trackEvent('mobile_menu_search', {
+        search_term: this.searchQuery
+      });
+
+      // Auto-expand all sections that have matches
+      const sections = [
+        { id: 'services', title: 'HEADER.SERVICES', links: ['HEADER.VIEW_ALL_SERVICES', 'SERVICES_LIST.WEB', 'SERVICES_LIST.MOBILE', 'SERVICES_LIST.DESKTOP', 'SERVICES_LIST.CLOUD', 'HEADER.INDUSTRIES'] },
+        { id: 'products', title: 'HEADER.PRODUCTS', links: ['HEADER.VIEW_ALL_PRODUCTS', 'PRODUCTS_LIST.ERP', 'PRODUCTS_LIST.POS', 'PRODUCTS_LIST.MOBILE', 'HEADER.VIRTEEX_ECOSYSTEM', 'HEADER.PRICING'] },
+        { id: 'company', title: 'FOOTER.COMPANY', links: ['HEADER.ABOUT', 'HEADER.PROCESS', 'HEADER.TECH_STACK', 'HEADER.CAREERS', 'HEADER.PARTNERS', 'HEADER.LIFE_AT_JSL', 'HEADER.INVESTORS', 'HEADER.VENTURES', 'HEADER.SECURITY'] },
+        { id: 'resources', title: 'FOOTER.RESOURCES', links: ['HEADER.PROJECTS', 'HEADER.BLOG', 'HEADER.EVENTS', 'HEADER.NEWS', 'HEADER.PRESS', 'HEADER.ROADMAP', 'HEADER.FAQ', 'HEADER.DEVELOPERS'] },
+        { id: 'login', title: 'HEADER.LOGIN', links: ['HEADER.LOGIN_VIRTEEX', 'HEADER.LOGIN_CLIENT', 'HEADER.LOGIN_SUPPORT'] }
+      ];
+
+      for (const section of sections) {
+        if (this.shouldShowSection(section.title, section.links)) {
+          this.expandedSections.add(section.id);
+        }
+      }
+    }
   }
 
   private triggerHapticFeedback() {
@@ -217,15 +280,15 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     }
 
     if (event.key === 'Tab') {
-      const focusableElements = this.menuElement?.querySelectorAll(
-        'a[href], button, textarea, input, select'
-      );
-      if (focusableElements && focusableElements.length > 0) {
-        const firstElement = focusableElements[0] as HTMLElement;
-        const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+      const focusableSelectors = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+      const focusableElements = Array.from(this.el.nativeElement.querySelectorAll(focusableSelectors)) as HTMLElement[];
+
+      if (focusableElements.length > 0) {
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
 
         if (event.shiftKey) {
-          if (document.activeElement === firstElement) {
+          if (document.activeElement === firstElement || document.activeElement === document.body) {
             lastElement.focus();
             event.preventDefault();
           }

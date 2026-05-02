@@ -1476,7 +1476,9 @@
     "CLOSE_MENU": "メニューを閉じる",
     "SELECT_LANGUAGE": "言語を選択",
     "HOME_LINK": "JSL Technology ホーム",
-    "DESKTOP_NAV": "デスクトップナビゲーション"
+    "DESKTOP_NAV": "デスクトップナビゲーション",
+    "MOBILE_MENU": "モバイルナビゲーションメニュー",
+    "SEARCH_MENU": "メニューオプションをフィルタリング"
   },
   "SEARCH": {
     "PLACEHOLDER": "検索...",
