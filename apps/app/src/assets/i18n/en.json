@@ -1484,11 +1484,16 @@
     "DESKTOP_NAV": "Desktop Navigation",
     "MOBILE_MENU": "Mobile navigation menu",
     "SEARCH_MENU": "Filter menu options",
-    "MOBILE_MENU_TITLE": "Main navigation menu"
+    "MOBILE_MENU_TITLE": "Main navigation menu",
+    "EXPANDED": "Expanded",
+    "COLLAPSED": "Collapsed"
   },
   "SEARCH": {
     "PLACEHOLDER": "Search...",
     "NO_RESULTS": "No results found.",
+    "NO_RESULTS_FOUND": "No results found for your search.",
+    "RESULTS_COUNT": "{{count}} results found.",
+    "CLEAR_SEARCH": "Clear search",
     "ALL": "All",
     "BLOG": "Blog",
     "PRODUCTS": "Products",

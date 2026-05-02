@@ -74,7 +74,26 @@
           </button>
         }
       </div>
+      <!-- Screen reader announcement for results -->
+      <div class="sr-only" aria-live="polite" aria-atomic="true">
+        @if (searchQuery) {
+          {{ 'SEARCH.RESULTS_COUNT' | translate: { count: searchResultsCount } }}
+        }
+      </div>
     </div>
+
+    <!-- No Results State -->
+    @if (searchQuery && searchResultsCount === 0) {
+      <div class="mobile-menu-no-results">
+        <div class="no-results-icon">
+          <lucide-icon name="SearchX"></lucide-icon>
+        </div>
+        <p class="no-results-text">{{ 'SEARCH.NO_RESULTS_FOUND' | translate }}</p>
+        <button class="clear-search-link" (click)="searchQuery = ''; onSearchChange()">
+          {{ 'SEARCH.CLEAR_SEARCH' | translate }}
+        </button>
+      </div>
+    }
 
     <!-- Section: Services -->
     @if (shouldShowSection('HEADER.SERVICES', ['HEADER.VIEW_ALL_SERVICES', 'SERVICES_LIST.WEB', 'SERVICES_LIST.MOBILE', 'SERVICES_LIST.DESKTOP', 'SERVICES_LIST.CLOUD', 'HEADER.INDUSTRIES'])) {
@@ -87,6 +106,9 @@
         aria-controls="accordion-services-content"
       >
         <span>{{ 'HEADER.SERVICES' | translate }}</span>
+        <span class="sr-only">
+          {{ (isSectionExpanded('services') ? 'ARIA.EXPANDED' : 'ARIA.COLLAPSED') | translate }}
+        </span>
         <lucide-icon name="ChevronDown" class="chevron"></lucide-icon>
       </button>
       <div
@@ -160,6 +182,9 @@
         aria-controls="accordion-products-content"
       >
         <span>{{ 'HEADER.PRODUCTS' | translate }}</span>
+        <span class="sr-only">
+          {{ (isSectionExpanded('products') ? 'ARIA.EXPANDED' : 'ARIA.COLLAPSED') | translate }}
+        </span>
         <lucide-icon name="ChevronDown" class="chevron"></lucide-icon>
       </button>
       <div
@@ -233,6 +258,9 @@
         aria-controls="accordion-company-content"
       >
         <span>{{ 'FOOTER.COMPANY' | translate }}</span>
+        <span class="sr-only">
+          {{ (isSectionExpanded('company') ? 'ARIA.EXPANDED' : 'ARIA.COLLAPSED') | translate }}
+        </span>
         <lucide-icon name="ChevronDown" class="chevron"></lucide-icon>
       </button>
       <div
@@ -330,6 +358,9 @@
         aria-controls="accordion-resources-content"
       >
         <span>{{ 'FOOTER.RESOURCES' | translate }}</span>
+        <span class="sr-only">
+          {{ (isSectionExpanded('resources') ? 'ARIA.EXPANDED' : 'ARIA.COLLAPSED') | translate }}
+        </span>
         <lucide-icon name="ChevronDown" class="chevron"></lucide-icon>
       </button>
       <div
@@ -419,6 +450,9 @@
         aria-controls="accordion-login-content"
       >
         <span>{{ 'HEADER.LOGIN' | translate }}</span>
+        <span class="sr-only">
+          {{ (isSectionExpanded('login') ? 'ARIA.EXPANDED' : 'ARIA.COLLAPSED') | translate }}
+        </span>
         <lucide-icon name="ChevronDown" class="chevron"></lucide-icon>
       </button>
       <div
