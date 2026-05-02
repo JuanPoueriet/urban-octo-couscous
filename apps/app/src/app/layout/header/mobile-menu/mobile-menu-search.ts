@@ -26,11 +26,6 @@ import { LucideAngularModule } from 'lucide-angular';
           </button>
         }
       </div>
-      <div class="sr-only" aria-live="polite" aria-atomic="true">
-        @if (searchQuery) {
-          {{ 'SEARCH.RESULTS_COUNT' | translate: { count: searchResultsCount } }}
-        }
-      </div>
     </div>
   `
 })

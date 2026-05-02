@@ -46,6 +46,17 @@
       (onSearchChange)="onSearchChange($event)"
     ></jsl-mobile-menu-search>
 
+    <!-- ARIA Live region for search status and results -->
+    <div class="sr-only" aria-live="polite" aria-atomic="true">
+      @if (searchQuery) {
+        @if (searchResultsCount > 0) {
+          {{ 'SEARCH.RESULTS_COUNT' | translate: { count: searchResultsCount } }}
+        } @else {
+          {{ 'SEARCH.NO_RESULTS_FOUND' | translate }}
+        }
+      }
+    </div>
+
     <!-- No Results State -->
     @if (searchQuery && searchResultsCount === 0) {
       <div class="mobile-menu-no-results">

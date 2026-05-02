@@ -25,10 +25,17 @@ import { LucideAngularModule } from 'lucide-angular';
           <div class="tile-icon"><lucide-icon name="HelpCircle"></lucide-icon></div>
           <span>{{ 'HEADER.QUICK_FAQ' | translate }}</span>
         </a>
-        <a href="https://support.jsl.technology" target="_blank" rel="noopener noreferrer" class="quick-tile" (click)="onClose.emit()">
+        <a
+          href="https://support.jsl.technology"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="quick-tile"
+          (click)="onClose.emit()"
+          [attr.aria-label]="('HEADER.QUICK_SUPPORT' | translate) + ' (' + ('ARIA.EXTERNAL_LINK' | translate) + ')'"
+        >
           <div class="tile-icon"><lucide-icon name="Headphones"></lucide-icon></div>
           <span>{{ 'HEADER.QUICK_SUPPORT' | translate }}</span>
-          <lucide-icon name="ExternalLink" class="external-icon-sm" [attr.aria-label]="'ARIA.EXTERNAL_LINK' | translate"></lucide-icon>
+          <lucide-icon name="ExternalLink" class="external-icon-sm"></lucide-icon>
         </a>
       </div>
     </div>
