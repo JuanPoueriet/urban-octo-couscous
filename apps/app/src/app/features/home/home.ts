@@ -12,6 +12,7 @@ import {
   signal,
   OnDestroy,
   Signal,
+  effect,
 } from '@angular/core';
 import { SearchUiService } from '@core/services/search-ui.service';
 import { DirectionService } from '@core/services/direction.service';
@@ -200,6 +201,29 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     },
   };
 
+  public projectsSwiperConfig: SwiperOptions = {
+    modules: [Navigation, Pagination],
+    slidesPerView: 1.2,
+    spaceBetween: 20,
+    grabCursor: true,
+    loop: false,
+    speed: 600,
+    navigation: {
+      nextEl: '.projects-swiper-button-next',
+      prevEl: '.projects-swiper-button-prev',
+    },
+    breakpoints: {
+      768: {
+        slidesPerView: 2.2,
+        spaceBetween: 25,
+      },
+      1024: {
+        slidesPerView: 3,
+        spaceBetween: 30,
+      },
+    },
+  };
+
   public currentLang: string;
 
   private translate = inject(TranslateService);
@@ -301,8 +325,8 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   private unlistenHeroMouseLeave: (() => void) | null = null;
   private unlistenInsightsMouseMove: (() => void) | null = null;
   private unlistenInsightsMouseLeave: (() => void) | null = null;
-  private unlistenOfferingsMouseMove: (() => void) | null = null;
-  private unlistenOfferingsMouseLeave: (() => void) | null = null;
+  private unlistenProjectsMouseMove: (() => void) | null = null;
+  private unlistenProjectsMouseLeave: (() => void) | null = null;
   private socialProofInterval: any;
   private isBrowser: boolean;
 
@@ -311,6 +335,21 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   constructor() {
     this.currentLang = this.translate.currentLang || this.translate.defaultLang || 'es';
     this.isBrowser = isPlatformBrowser(this.platformId);
+
+    // Effect to update projects swiper when filter changes
+    effect(() => {
+      // Access projects to track dependency
+      const projects = this.filteredProjects();
+      if (this.isBrowser) {
+        setTimeout(() => {
+          const projectsSwiperEl = this.el.nativeElement.querySelector('.featured-projects swiper-container');
+          if (projectsSwiperEl && projectsSwiperEl.swiper) {
+            projectsSwiperEl.swiper.update();
+            projectsSwiperEl.swiper.slideTo(0);
+          }
+        }, 50);
+      }
+    });
   }
 
   ngOnInit() {
@@ -357,11 +396,11 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     if (this.unlistenInsightsMouseLeave) {
       this.unlistenInsightsMouseLeave();
     }
-    if (this.unlistenOfferingsMouseMove) {
-      this.unlistenOfferingsMouseMove();
+    if (this.unlistenProjectsMouseMove) {
+      this.unlistenProjectsMouseMove();
     }
-    if (this.unlistenOfferingsMouseLeave) {
-      this.unlistenOfferingsMouseLeave();
+    if (this.unlistenProjectsMouseLeave) {
+      this.unlistenProjectsMouseLeave();
     }
     if (this.socialProofInterval) {
       clearInterval(this.socialProofInterval);
@@ -621,14 +660,14 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         this.setupInsightsNavigationVisibility();
       }
 
-      // 5. Offerings Slider
-      const offeringsSwiperEl = this.el.nativeElement.querySelector('.offerings-section swiper-container');
+      // 5. Featured Projects Slider
+      const projectsSwiperEl = this.el.nativeElement.querySelector('.featured-projects swiper-container');
 
-      if (offeringsSwiperEl) {
-        Object.assign(offeringsSwiperEl, this.offeringsSwiperConfig);
+      if (projectsSwiperEl) {
+        Object.assign(projectsSwiperEl, this.projectsSwiperConfig);
 
-        offeringsSwiperEl.initialize();
-        this.setupOfferingsNavigationVisibility();
+        projectsSwiperEl.initialize();
+        this.setupProjectsNavigationVisibility();
       }
 
       // Setup Exit Intent
@@ -752,30 +791,30 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     insightsSection.style.setProperty('--insights-nav-right-visibility', '0');
   }
 
-  private setupOfferingsNavigationVisibility(): void {
-    const offeringsSection = this.el.nativeElement.querySelector('.offerings-section') as HTMLElement | null;
-    if (!offeringsSection) return;
+  private setupProjectsNavigationVisibility(): void {
+    const projectsSection = this.el.nativeElement.querySelector('.featured-projects') as HTMLElement | null;
+    if (!projectsSection) return;
 
     const updateVisibility = (event: MouseEvent) => {
-      const rect = offeringsSection.getBoundingClientRect();
+      const rect = projectsSection.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const pointerPercent = (x / rect.width) * 100;
 
       const leftRatio = Math.max(0, Math.min(1, (30 - pointerPercent) / 30));
       const rightRatio = Math.max(0, Math.min(1, (pointerPercent - 70) / 30));
 
-      offeringsSection.style.setProperty('--offerings-nav-left-visibility', leftRatio.toFixed(3));
-      offeringsSection.style.setProperty('--offerings-nav-right-visibility', rightRatio.toFixed(3));
+      projectsSection.style.setProperty('--projects-nav-left-visibility', leftRatio.toFixed(3));
+      projectsSection.style.setProperty('--projects-nav-right-visibility', rightRatio.toFixed(3));
     };
 
-    this.unlistenOfferingsMouseMove = this.renderer.listen(offeringsSection, 'mousemove', updateVisibility);
-    this.unlistenOfferingsMouseLeave = this.renderer.listen(offeringsSection, 'mouseleave', () => {
-      offeringsSection.style.setProperty('--offerings-nav-left-visibility', '0');
-      offeringsSection.style.setProperty('--offerings-nav-right-visibility', '0');
+    this.unlistenProjectsMouseMove = this.renderer.listen(projectsSection, 'mousemove', updateVisibility);
+    this.unlistenProjectsMouseLeave = this.renderer.listen(projectsSection, 'mouseleave', () => {
+      projectsSection.style.setProperty('--projects-nav-left-visibility', '0');
+      projectsSection.style.setProperty('--projects-nav-right-visibility', '0');
     });
 
-    offeringsSection.style.setProperty('--offerings-nav-left-visibility', '0');
-    offeringsSection.style.setProperty('--offerings-nav-right-visibility', '0');
+    projectsSection.style.setProperty('--projects-nav-left-visibility', '0');
+    projectsSection.style.setProperty('--projects-nav-right-visibility', '0');
   }
 
   getStars(count: number): any[] {
@@ -851,16 +890,16 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     insightsSwiperEl?.swiper?.slideNext();
   }
 
-  onPrevOfferings() {
+  onPrevProjects() {
     if (!this.isBrowser) return;
-    const offeringsSwiperEl = this.el.nativeElement.querySelector('.offerings-section swiper-container');
-    offeringsSwiperEl?.swiper?.slidePrev();
+    const projectsSwiperEl = this.el.nativeElement.querySelector('.featured-projects swiper-container');
+    projectsSwiperEl?.swiper?.slidePrev();
   }
 
-  onNextOfferings() {
+  onNextProjects() {
     if (!this.isBrowser) return;
-    const offeringsSwiperEl = this.el.nativeElement.querySelector('.offerings-section swiper-container');
-    offeringsSwiperEl?.swiper?.slideNext();
+    const projectsSwiperEl = this.el.nativeElement.querySelector('.featured-projects swiper-container');
+    projectsSwiperEl?.swiper?.slideNext();
   }
 
   downloadLeadMagnet() {

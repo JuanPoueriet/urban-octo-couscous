@@ -901,6 +901,14 @@ swiper-container {
   padding: 6rem 0;
 }
 
+.featured-projects {
+  position: relative;
+  overflow: hidden;
+
+  --projects-nav-left-visibility: 0;
+  --projects-nav-right-visibility: 0;
+}
+
 .featured-services__header,
 .featured-products__header,
 .featured-projects__header {
@@ -936,6 +944,94 @@ swiper-container {
       color: white;
       border-color: var(--primary);
     }
+  }
+}
+
+.projects-slider-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.projects-swiper {
+  width: 100%;
+  padding: 1rem 0 3rem;
+
+  --swiper-pagination-bottom: 0px;
+  --swiper-pagination-color: var(--primary);
+  --swiper-pagination-bullet-inactive-color: var(--border-color);
+  --swiper-pagination-bullet-inactive-opacity: 0.5;
+  --swiper-pagination-bullet-size: 10px;
+  --swiper-pagination-bullet-horizontal-gap: 4px;
+}
+
+.project-slide {
+  height: auto;
+  display: flex;
+}
+
+.projects-swiper-button-next,
+.projects-swiper-button-prev {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  width: 50px;
+  height: 50px;
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0.2;
+
+  @media (max-width: 768px) {
+    display: none !important;
+  }
+
+  lucide-icon {
+    width: 24px;
+    height: 24px;
+    stroke-width: 1.5;
+  }
+
+  &:hover {
+    opacity: 1 !important;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+
+    lucide-icon {
+      stroke-width: 2;
+    }
+  }
+
+  &:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+}
+
+.projects-swiper-button-prev {
+  inset-inline-start: -1rem;
+  opacity: calc(0.1 + (var(--projects-nav-left-visibility, 0) * 0.9));
+
+  @media (min-width: 1400px) {
+    inset-inline-start: -2rem;
+  }
+}
+
+.projects-swiper-button-next {
+  inset-inline-end: -1rem;
+  opacity: calc(0.1 + (var(--projects-nav-right-visibility, 0) * 0.9));
+
+  @media (min-width: 1400px) {
+    inset-inline-end: -2rem;
   }
 }
 
