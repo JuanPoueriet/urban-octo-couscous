@@ -376,6 +376,9 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       // Simulate initial loading
       setTimeout(() => {
         this.isLoading.set(false);
+        // El slider de offerings no existe en el DOM mientras se muestra el skeleton
+        // por eso lo inicializamos cuando termina la carga simulada.
+        setTimeout(() => this.initializeOfferingsSlider(), 0);
       }, 1500);
     }
 
@@ -424,6 +427,23 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
           offeringsSwiperEl.swiper.slideTo(0);
         }
       }, 50);
+    }
+  }
+
+
+  private initializeOfferingsSlider() {
+    if (!this.isBrowser || this.isLoading()) return;
+
+    const offeringsSwiperEl = this.el.nativeElement.querySelector('.offerings-section swiper-container');
+    if (!offeringsSwiperEl) return;
+
+    Object.assign(offeringsSwiperEl, this.offeringsSwiperConfig);
+
+    if (!offeringsSwiperEl.swiper) {
+      offeringsSwiperEl.initialize();
+      this.setupOfferingsNavigationVisibility();
+    } else {
+      offeringsSwiperEl.swiper.update();
     }
   }
 
@@ -659,14 +679,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       }
 
       // 4. Offerings Slider
-      const offeringsSwiperEl = this.el.nativeElement.querySelector('.offerings-section swiper-container');
-
-      if (offeringsSwiperEl) {
-        Object.assign(offeringsSwiperEl, this.offeringsSwiperConfig);
-
-        offeringsSwiperEl.initialize();
-        this.setupOfferingsNavigationVisibility();
-      }
+      this.initializeOfferingsSlider();
 
       // 4. Latest Insights Slider
       const insightsSwiperEl = this.el.nativeElement.querySelector('.latest-insights swiper-container');
