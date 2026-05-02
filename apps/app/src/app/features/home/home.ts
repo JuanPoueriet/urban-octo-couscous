@@ -95,6 +95,33 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     },
   };
 
+  public offeringsSwiperConfig: SwiperOptions = {
+    modules: [Navigation, Pagination],
+    slidesPerView: 1.1,
+    spaceBetween: 16,
+    grabCursor: true,
+    loop: false,
+    speed: 600,
+    navigation: {
+      nextEl: '.offerings-swiper-button-next',
+      prevEl: '.offerings-swiper-button-prev',
+    },
+    breakpoints: {
+      640: {
+        slidesPerView: 1.5,
+        spaceBetween: 20,
+      },
+      768: {
+        slidesPerView: 2.2,
+        spaceBetween: 25,
+      },
+      1024: {
+        slidesPerView: 3,
+        spaceBetween: 30,
+      },
+    },
+  };
+
   public logoSwiperConfig: SwiperOptions = {
     modules: [Autoplay],
     slidesPerView: 2,
@@ -277,6 +304,10 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   );
 
   public activeTab = signal<'services' | 'products'>('services');
+
+  public offeringItems = computed(() => {
+    return this.activeTab() === 'services' ? this.solutions() : this.products();
+  });
   public isReturningVisitor = signal(false);
   public isSubmitting = signal(false);
   public isLoading = signal(true); // For skeleton loader demo
@@ -378,6 +409,14 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
   setActiveTab(tab: 'services' | 'products') {
     this.activeTab.set(tab);
+    if (this.isBrowser) {
+      setTimeout(() => {
+        const offeringsSwiperEl = this.el.nativeElement.querySelector('.offerings-section swiper-container');
+        if (offeringsSwiperEl && offeringsSwiperEl.swiper) {
+          offeringsSwiperEl.swiper.slideTo(0);
+        }
+      }, 50);
+    }
   }
 
   private addSchemaData() {

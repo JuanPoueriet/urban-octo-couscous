@@ -238,35 +238,48 @@
          }
       </div>
     } @else {
-      @if (activeTab() === 'services') {
-        <div class="solutions-grid fade-in">
-          @for (solution of solutions(); track solution.key) {
-            <jsl-card
-              [icon]="solution.icon"
-              [title]="'SOLUTIONS.' + solution.key + '_TITLE' | translate"
-              [description]="'SOLUTIONS.' + solution.key + '_DESC' | translate"
-              [link]="['/', currentLang, 'solutions', solution.slug]"
-              jslAnimateOnScroll
-            >
-            </jsl-card>
+      <div class="offerings-slider-wrapper">
+        <swiper-container
+          init="false"
+          class="offerings-swiper"
+          [attr.dir]="directionService.isRtl() ? 'rtl' : 'ltr'"
+        >
+          @for (item of offeringItems(); track item.key) {
+            <swiper-slide class="offering-slide">
+              <jsl-card
+                [icon]="item.icon"
+                [title]="(activeTab() === 'services' ? 'SOLUTIONS.' : 'PRODUCTS.') + item.key + '_TITLE' | translate"
+                [description]="(activeTab() === 'services' ? 'SOLUTIONS.' : 'PRODUCTS.') + item.key + '_DESC' | translate"
+                [link]="['/', currentLang, activeTab() === 'services' ? 'solutions' : 'products', item.slug]"
+                jslAnimateOnScroll
+              >
+              </jsl-card>
+            </swiper-slide>
           }
-        </div>
-      }
+        </swiper-container>
 
-      @if (activeTab() === 'products') {
-        <div class="products-grid fade-in">
-          @for (product of products(); track product.key) {
-            <jsl-card
-              [icon]="product.icon"
-              [title]="'PRODUCTS.' + product.key + '_TITLE' | translate"
-              [description]="'PRODUCTS.' + product.key + '_DESC' | translate"
-              [link]="['/', currentLang, 'products', product.slug]"
-              jslAnimateOnScroll
-            >
-            </jsl-card>
-          }
+        <!-- Custom Navigation Buttons -->
+        <div
+          class="offerings-swiper-button-prev"
+          [attr.aria-label]="'ARIA.PREVIOUS_SLIDE' | translate"
+          role="button"
+          tabindex="0"
+          (keydown.enter)="onPrevOfferings()"
+          (keydown.space)="onPrevOfferings()"
+          (click)="onPrevOfferings()">
+          <lucide-icon name="ChevronLeft"></lucide-icon>
         </div>
-      }
+        <div
+          class="offerings-swiper-button-next"
+          [attr.aria-label]="'ARIA.NEXT_SLIDE' | translate"
+          role="button"
+          tabindex="0"
+          (keydown.enter)="onNextOfferings()"
+          (keydown.space)="onNextOfferings()"
+          (click)="onNextOfferings()">
+          <lucide-icon name="ChevronRight"></lucide-icon>
+        </div>
+      </div>
     }
   </div>
 </section>
