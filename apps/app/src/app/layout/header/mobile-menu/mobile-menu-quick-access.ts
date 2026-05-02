@@ -21,10 +21,6 @@ import { LucideAngularModule } from 'lucide-angular';
           <div class="tile-icon"><lucide-icon name="CircleDollarSign"></lucide-icon></div>
           <span>{{ 'HEADER.QUICK_PRICING' | translate }}</span>
         </a>
-        <a [routerLink]="[currentLang, 'faq']" routerLinkActive="active" class="quick-tile" (click)="onClose.emit()">
-          <div class="tile-icon"><lucide-icon name="HelpCircle"></lucide-icon></div>
-          <span>{{ 'HEADER.QUICK_FAQ' | translate }}</span>
-        </a>
         <a
           href="https://support.jsl.technology"
           target="_blank"

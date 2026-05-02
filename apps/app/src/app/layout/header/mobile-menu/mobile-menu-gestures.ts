@@ -13,13 +13,13 @@ export interface MobileMenuGestureConfig {
 
 export class MobileMenuGestures {
   // Configuración de gestos
-  private readonly EDGE_THRESHOLD = 20;
-  private readonly OPEN_THRESHOLD = 0.3;
-  private readonly MIN_SWIPE_DISTANCE = 30;
-  private readonly VELOCITY_THRESHOLD = 0.3;
-  private readonly MAX_OVERDRAG = 30;
-  private readonly HORIZONTAL_THRESHOLD = 10;
-  private readonly VERTICAL_LOCK_THRESHOLD = 10;
+  private readonly EDGE_THRESHOLD = 24;
+  private readonly OPEN_THRESHOLD = 0.4;
+  private readonly MIN_SWIPE_DISTANCE = 40;
+  private readonly VELOCITY_THRESHOLD = 0.4;
+  private readonly MAX_OVERDRAG = 20;
+  private readonly HORIZONTAL_THRESHOLD = 12;
+  private readonly VERTICAL_LOCK_THRESHOLD = 15;
 
   // Estado del gesto
   private isDragging = false;

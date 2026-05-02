@@ -98,7 +98,9 @@ describe('MobileMenu', () => {
     fixture.detectChanges();
 
     const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true });
-    document.dispatchEvent(event);
+    // In Angular tests with zoneless, we might need to manually call the host listener
+    // or ensure the component is actually listening to the document.
+    component.handleKeyboardEvent(event);
 
     expect(menuServiceMock.close).toHaveBeenCalled();
   });

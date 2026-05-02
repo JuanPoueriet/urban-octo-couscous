@@ -8,7 +8,7 @@
 
 <!-- Menú móvil tipo Drawer Navigation -->
 <div
-  class="header__nav-links-mobile"
+  class="header__nav-links-mobile mobile-menu-wrapper"
   [class.open]="isMobileMenuOpen"
   [style.transform]="'translateX(' + menuTranslateX + 'px)'"
   [style.transition]="menuTransition"
@@ -90,7 +90,7 @@
     <div class="mobile-cta-container">
       <a [routerLink]="[currentLang, 'contact']" routerLinkActive="active" class="mobile-cta-btn" (click)="closeMobileMenu()">
         <lucide-icon name="Mail"></lucide-icon>
-        {{ 'HEADER.CONTACT' | translate }}
+        <span>{{ 'HEADER.CONTACT' | translate }}</span>
       </a>
     </div>
     }

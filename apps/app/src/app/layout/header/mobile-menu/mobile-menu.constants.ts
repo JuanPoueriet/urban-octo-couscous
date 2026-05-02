@@ -15,10 +15,19 @@ export interface MobileMenuSectionData {
 export function getMobileMenuSections(currentLang: string): MobileMenuSectionData[] {
   return [
     {
+      id: 'top-tasks',
+      titleKey: 'HEADER.TOP_TASKS',
+      links: [
+        { key: 'HEADER.VIEW_ALL_SERVICES', route: [currentLang, 'solutions'], icon: 'LayoutGrid' },
+        { key: 'HEADER.VIEW_ALL_PRODUCTS', route: [currentLang, 'products'], icon: 'Package' },
+        { key: 'HEADER.PROJECTS', route: [currentLang, 'projects'], icon: 'Lightbulb' },
+        { key: 'HEADER.BLOG', route: [currentLang, 'blog'], icon: 'Newspaper' },
+      ]
+    },
+    {
       id: 'services',
       titleKey: 'HEADER.SERVICES',
       links: [
-        { key: 'HEADER.VIEW_ALL_SERVICES', route: [currentLang, 'solutions'], icon: 'LayoutGrid' },
         { key: 'SERVICES_LIST.WEB', route: [currentLang, 'solutions', 'web-development'], icon: 'Monitor' },
         { key: 'SERVICES_LIST.MOBILE', route: [currentLang, 'solutions', 'mobile-apps'], icon: 'Smartphone' },
         { key: 'SERVICES_LIST.DESKTOP', route: [currentLang, 'solutions', 'desktop-software'], icon: 'Laptop' },
@@ -30,7 +39,6 @@ export function getMobileMenuSections(currentLang: string): MobileMenuSectionDat
       id: 'products',
       titleKey: 'HEADER.PRODUCTS',
       links: [
-        { key: 'HEADER.VIEW_ALL_PRODUCTS', route: [currentLang, 'products'], icon: 'Package' },
         { key: 'PRODUCTS_LIST.ERP', href: 'https://virtex.com', icon: 'ExternalLink' },
         { key: 'PRODUCTS_LIST.POS', href: 'https://pos.jsl.technology', icon: 'ExternalLink' },
         { key: 'PRODUCTS_LIST.MOBILE', href: 'https://apps.jsl.technology', icon: 'ExternalLink' },

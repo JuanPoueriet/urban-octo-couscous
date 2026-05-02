@@ -14,6 +14,7 @@ import {
   HostListener,
   effect,
   ChangeDetectionStrategy,
+  ViewEncapsulation,
 } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -47,6 +48,7 @@ import { MobileMenuAccessibility } from './mobile-menu-accessibility';
   templateUrl: './mobile-menu.html',
   styleUrl: './mobile-menu.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private directionService = inject(DirectionService);
@@ -110,6 +112,8 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   private initMenuSections() {
     this.menuSections = getMobileMenuSections(this.currentLang);
+    // Expand Top Tasks by default
+    this.expandedSections.add('top-tasks');
   }
 
   ngOnInit() {
@@ -177,13 +181,13 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private openDrawer() {
-    if (this.isAnimating) return;
     this.isAnimating = true;
-    this.menuTransition = 'transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)';
+    this.menuTransition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
     this.menuTranslateX = 0;
 
     if (this.isBrowser) {
       document.body.classList.add('no-scroll');
+      this.toggleBackgroundInert(true);
       this.a11y.saveFocus();
       this.triggerHapticFeedback();
     }
@@ -197,19 +201,24 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     this.handleTransitionEnd(() => {
       this.isAnimating = false;
-      this.a11y.setInitialFocus();
+      // Re-verify state after animation in case it was closed rapidly
+      if (!this.menuService.isMobileMenuOpen()) {
+        this.closeDrawer();
+      } else {
+        this.a11y.setInitialFocus();
+      }
       this.cdRef.markForCheck();
     });
   }
 
   private closeDrawer() {
-    if (this.isAnimating) return;
     this.isAnimating = true;
-    this.menuTransition = 'transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)';
+    this.menuTransition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
     this.menuTranslateX = this.directionService.isRtl() ? this.menuWidth : -this.menuWidth;
 
     if (this.isBrowser) {
       document.body.classList.remove('no-scroll');
+      this.toggleBackgroundInert(false);
       this.triggerHapticFeedback();
       this.a11y.restoreFocus();
     }
@@ -223,7 +232,42 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     this.handleTransitionEnd(() => {
       this.isAnimating = false;
+      // Re-verify state
+      if (this.menuService.isMobileMenuOpen()) {
+        this.openDrawer();
+      }
       this.cdRef.markForCheck();
+    });
+  }
+
+  private toggleBackgroundInert(isInert: boolean) {
+    if (!this.isBrowser) return;
+
+    // Use querySelector via renderer if possible or document as a fallback for high-level elements
+    const mainContent = document.querySelector('.main-content');
+    const footer = document.querySelector('jsl-footer');
+
+    const elementsToInert: HTMLElement[] = [];
+    if (mainContent) elementsToInert.push(mainContent as HTMLElement);
+    if (footer) elementsToInert.push(footer as HTMLElement);
+
+    // Also siblings of the root app component or the header container to ensure full coverage
+    const bodyChildren = Array.from(document.body.children);
+    bodyChildren.forEach((el) => {
+      // Don't inert the root itself if it contains the menu, but inert other top-level elements
+      if (el.tagName !== 'SCRIPT' && el.tagName !== 'STYLE' && !el.contains(this.el.nativeElement)) {
+        elementsToInert.push(el as HTMLElement);
+      }
+    });
+
+    elementsToInert.forEach((el) => {
+      if (isInert) {
+        this.renderer.setAttribute(el, 'inert', '');
+        this.renderer.setAttribute(el, 'aria-hidden', 'true');
+      } else {
+        this.renderer.removeAttribute(el, 'inert');
+        this.renderer.removeAttribute(el, 'aria-hidden');
+      }
     });
   }
 
@@ -309,7 +353,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       let expandedCount = 0;
       for (const section of this.menuSections) {
         if (this.shouldShowSection(section.titleKey, section.links)) {
-          if (expandedCount < 2) {
+          if (expandedCount < 1) { // Limit to 1 expanded section during search to reduce noise
             this.expandedSections.add(section.id);
             expandedCount++;
           }
