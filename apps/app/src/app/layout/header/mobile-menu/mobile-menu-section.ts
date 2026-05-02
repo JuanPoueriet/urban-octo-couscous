@@ -3,14 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
-
-export interface MobileMenuLink {
-  key: string;
-  route?: any[];
-  href?: string;
-  icon: string;
-  external?: boolean;
-}
+import { MobileMenuLink } from './mobile-menu.constants';
 
 @Component({
   selector: 'jsl-mobile-menu-section',
@@ -48,10 +41,16 @@ export interface MobileMenuLink {
                     {{ link.key | translate }}
                   </a>
                 } @else if (link.href) {
-                  <a [href]="link.href" target="_blank" rel="noopener noreferrer" (click)="onClose.emit()">
+                  <a
+                    [href]="link.href"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    (click)="onClose.emit()"
+                    [attr.aria-label]="(link.key | translate) + ' (' + ('ARIA.EXTERNAL_LINK' | translate) + ')'"
+                  >
                     <lucide-icon [name]="link.icon"></lucide-icon>
                     {{ link.key | translate }}
-                    <lucide-icon name="ExternalLink" class="external-icon-inline" [attr.aria-label]="'ARIA.EXTERNAL_LINK' | translate"></lucide-icon>
+                    <lucide-icon name="ExternalLink" class="external-icon-inline"></lucide-icon>
                   </a>
                 }
               </li>

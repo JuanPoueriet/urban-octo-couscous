@@ -13,9 +13,11 @@ import {
   inject,
   HostListener,
   effect,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { DirectionService } from '@core/services/direction.service';
@@ -24,7 +26,9 @@ import { AnalyticsService } from '@core/services/analytics.service';
 import { MobileMenuGestures, MobileMenuGestureConfig } from './mobile-menu-gestures';
 import { MobileMenuQuickAccess } from './mobile-menu-quick-access';
 import { MobileMenuSearch } from './mobile-menu-search';
-import { MobileMenuSection, MobileMenuLink } from './mobile-menu-section';
+import { MobileMenuSection } from './mobile-menu-section';
+import { getMobileMenuSections, MobileMenuSectionData, MobileMenuLink } from './mobile-menu.constants';
+import { MobileMenuAccessibility } from './mobile-menu-accessibility';
 
 @Component({
   selector: 'jsl-mobile-menu',
@@ -42,6 +46,7 @@ import { MobileMenuSection, MobileMenuLink } from './mobile-menu-section';
   ],
   templateUrl: './mobile-menu.html',
   styleUrl: './mobile-menu.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private directionService = inject(DirectionService);
@@ -65,15 +70,16 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   private menuElement: HTMLElement | null = null;
   private overlayElement: HTMLElement | null = null;
-  private lastFocusedElement: HTMLElement | null = null;
   private searchDebounceTimer: any;
   private gestureHandler: MobileMenuGestures | null = null;
+  private a11y: MobileMenuAccessibility;
 
   public currentYear = new Date().getFullYear();
   public searchQuery = '';
   public searchResultsCount = 0;
 
-  public menuSections: { id: string; titleKey: string; links: MobileMenuLink[] }[] = [];
+  public menuSections: MobileMenuSectionData[] = [];
+  public expandedSections = new Set<string>();
 
   get isMobileMenuOpen() {
     return this.menuService.isMobileMenuOpen();
@@ -82,10 +88,12 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   constructor() {
     this.currentLang = this.translate.getCurrentLang() || this.translate.defaultLang || 'es';
     this.isBrowser = isPlatformBrowser(this.platformId);
+    this.a11y = new MobileMenuAccessibility(this.el);
 
-    this.translate.onLangChange.subscribe((event) => {
+    this.translate.onLangChange.pipe(takeUntilDestroyed()).subscribe((event) => {
       this.currentLang = event.lang;
       this.initMenuSections();
+      this.cdRef.markForCheck();
     });
 
     effect(() => {
@@ -101,70 +109,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private initMenuSections() {
-    this.menuSections = [
-      {
-        id: 'services',
-        titleKey: 'HEADER.SERVICES',
-        links: [
-          { key: 'HEADER.VIEW_ALL_SERVICES', route: [this.currentLang, 'solutions'], icon: 'LayoutGrid' },
-          { key: 'SERVICES_LIST.WEB', route: [this.currentLang, 'solutions', 'web-development'], icon: 'Monitor' },
-          { key: 'SERVICES_LIST.MOBILE', route: [this.currentLang, 'solutions', 'mobile-apps'], icon: 'Smartphone' },
-          { key: 'SERVICES_LIST.DESKTOP', route: [this.currentLang, 'solutions', 'desktop-software'], icon: 'Laptop' },
-          { key: 'SERVICES_LIST.CLOUD', route: [this.currentLang, 'solutions', 'cloud-architecture'], icon: 'CloudCog' },
-          { key: 'HEADER.INDUSTRIES', route: [this.currentLang, 'industries'], icon: 'Building2' },
-        ]
-      },
-      {
-        id: 'products',
-        titleKey: 'HEADER.PRODUCTS',
-        links: [
-          { key: 'HEADER.VIEW_ALL_PRODUCTS', route: [this.currentLang, 'products'], icon: 'Package' },
-          { key: 'PRODUCTS_LIST.ERP', href: 'https://virtex.com', icon: 'ExternalLink' },
-          { key: 'PRODUCTS_LIST.POS', href: 'https://pos.jsl.technology', icon: 'ExternalLink' },
-          { key: 'PRODUCTS_LIST.MOBILE', href: 'https://apps.jsl.technology', icon: 'ExternalLink' },
-          { key: 'HEADER.VIRTEEX_ECOSYSTEM', route: [this.currentLang, 'virteex-ecosystem'], icon: 'Layers' },
-          { key: 'HEADER.PRICING', route: [this.currentLang, 'pricing'], icon: 'CircleDollarSign' },
-        ]
-      },
-      {
-        id: 'company',
-        titleKey: 'FOOTER.COMPANY',
-        links: [
-          { key: 'HEADER.ABOUT', route: [this.currentLang, 'about-us'], icon: 'Users' },
-          { key: 'HEADER.PROCESS', route: [this.currentLang, 'process'], icon: 'Workflow' },
-          { key: 'HEADER.TECH_STACK', route: [this.currentLang, 'tech-stack'], icon: 'Cpu' },
-          { key: 'HEADER.CAREERS', route: [this.currentLang, 'careers'], icon: 'Briefcase' },
-          { key: 'HEADER.PARTNERS', route: [this.currentLang, 'partners'], icon: 'Users' },
-          { key: 'HEADER.LIFE_AT_JSL', route: [this.currentLang, 'life-at-jsl'], icon: 'Heart' },
-          { key: 'HEADER.INVESTORS', route: [this.currentLang, 'investors'], icon: 'TrendingUp' },
-          { key: 'HEADER.VENTURES', route: [this.currentLang, 'ventures'], icon: 'Rocket' },
-          { key: 'HEADER.SECURITY', route: [this.currentLang, 'security'], icon: 'ShieldCheck' },
-        ]
-      },
-      {
-        id: 'resources',
-        titleKey: 'FOOTER.RESOURCES',
-        links: [
-          { key: 'HEADER.PROJECTS', route: [this.currentLang, 'projects'], icon: 'Lightbulb' },
-          { key: 'HEADER.BLOG', route: [this.currentLang, 'blog'], icon: 'Newspaper' },
-          { key: 'HEADER.EVENTS', route: [this.currentLang, 'events'], icon: 'CalendarDays' },
-          { key: 'HEADER.NEWS', route: [this.currentLang, 'news'], icon: 'Radio' },
-          { key: 'HEADER.PRESS', route: [this.currentLang, 'press'], icon: 'BookOpen' },
-          { key: 'HEADER.ROADMAP', route: [this.currentLang, 'roadmap'], icon: 'Map' },
-          { key: 'HEADER.FAQ', route: [this.currentLang, 'faq'], icon: 'HelpCircle' },
-          { key: 'HEADER.DEVELOPERS', route: [this.currentLang, 'developers'], icon: 'Code' },
-        ]
-      },
-      {
-        id: 'login',
-        titleKey: 'HEADER.LOGIN',
-        links: [
-          { key: 'HEADER.LOGIN_VIRTEEX', href: 'https://app.virtex.com', icon: 'ExternalLink' },
-          { key: 'HEADER.LOGIN_CLIENT', href: 'https://portal.jsl.technology', icon: 'ExternalLink' },
-          { key: 'HEADER.LOGIN_SUPPORT', href: 'https://support.jsl.technology', icon: 'ExternalLink' },
-        ]
-      }
-    ];
+    this.menuSections = getMobileMenuSections(this.currentLang);
   }
 
   ngOnInit() {
@@ -189,7 +134,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     if (this.menuElement) {
       this.menuWidth = this.menuElement.offsetWidth || 320;
       this.menuTranslateX = this.directionService.isRtl() ? this.menuWidth : -this.menuWidth;
-      this.cdRef.detectChanges();
+      this.cdRef.markForCheck();
     }
   }
 
@@ -205,7 +150,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
         if (this.overlayElement && progress !== null) {
           this.overlayElement.style.opacity = Math.max(0, Math.min(1, progress * 0.7)).toString();
         }
-        this.cdRef.detectChanges();
+        this.cdRef.markForCheck();
       },
       onOpen: () => this.menuService.open(),
       onClose: () => this.menuService.close(),
@@ -239,7 +184,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     if (this.isBrowser) {
       document.body.classList.add('no-scroll');
-      this.lastFocusedElement = document.activeElement as HTMLElement;
+      this.a11y.saveFocus();
       this.triggerHapticFeedback();
     }
 
@@ -248,14 +193,12 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       this.overlayElement.style.opacity = '';
     }
 
-    this.cdRef.detectChanges();
+    this.cdRef.markForCheck();
 
     setTimeout(() => {
       this.isAnimating = false;
-      const closeBtn = this.el.nativeElement.querySelector('.mobile-close-btn');
-      if (closeBtn) {
-        (closeBtn as HTMLElement).focus();
-      }
+      this.a11y.setInitialFocus();
+      this.cdRef.markForCheck();
     }, 300);
   }
 
@@ -268,10 +211,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     if (this.isBrowser) {
       document.body.classList.remove('no-scroll');
       this.triggerHapticFeedback();
-      if (this.lastFocusedElement) {
-        this.lastFocusedElement.focus();
-        this.lastFocusedElement = null;
-      }
+      this.a11y.restoreFocus();
     }
 
     if (this.overlayElement) {
@@ -279,10 +219,11 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       this.overlayElement.style.opacity = '';
     }
 
-    this.cdRef.detectChanges();
+    this.cdRef.markForCheck();
 
     setTimeout(() => {
       this.isAnimating = false;
+      this.cdRef.markForCheck();
     }, 300);
   }
 
@@ -307,8 +248,6 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     return links.some(link => this.shouldShowLink(link.key));
   }
 
-  public expandedSections = new Set<string>();
-
   toggleSection(section: string) {
     if (this.expandedSections.has(section)) {
       this.expandedSections.delete(section);
@@ -318,6 +257,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
         section_id: section
       });
     }
+    this.cdRef.markForCheck();
   }
 
   isSectionExpanded(section: string): boolean {
@@ -350,6 +290,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     }
+    this.cdRef.markForCheck();
   }
 
   private updateSearchResultsCount() {
@@ -389,45 +330,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     }
 
     if (event.key === 'Tab') {
-      this.trapFocus(event);
-    }
-  }
-
-  private trapFocus(event: KeyboardEvent) {
-    const focusableSelectors =
-      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
-
-    // Query all potential focusable elements including those in subcomponents
-    const allPotential = Array.from(
-      this.el.nativeElement.querySelectorAll(focusableSelectors)
-    ) as HTMLElement[];
-
-    const focusableElements = allPotential.filter(el => {
-      const style = window.getComputedStyle(el);
-      const rect = el.getBoundingClientRect();
-      const isVisible = style.display !== 'none' &&
-                        style.visibility !== 'hidden' &&
-                        style.opacity !== '0' &&
-                        rect.width > 0 &&
-                        rect.height > 0;
-      return isVisible;
-    });
-
-    if (focusableElements.length === 0) return;
-
-    const firstElement = focusableElements[0];
-    const lastElement = focusableElements[focusableElements.length - 1];
-
-    if (event.shiftKey) {
-      if (document.activeElement === firstElement || !this.el.nativeElement.contains(document.activeElement)) {
-        lastElement.focus();
-        event.preventDefault();
-      }
-    } else {
-      if (document.activeElement === lastElement || !this.el.nativeElement.contains(document.activeElement)) {
-        firstElement.focus();
-        event.preventDefault();
-      }
+      this.a11y.trapFocus(event);
     }
   }
 
