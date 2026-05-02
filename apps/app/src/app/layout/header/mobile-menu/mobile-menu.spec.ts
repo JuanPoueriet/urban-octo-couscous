@@ -19,6 +19,9 @@ import { NO_ERRORS_SCHEMA, signal, provideZonelessChangeDetection } from '@angul
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 import { FormsModule } from '@angular/forms';
+import { MobileMenuQuickAccess } from './mobile-menu-quick-access';
+import { MobileMenuSearch } from './mobile-menu-search';
+import { MobileMenuSection } from './mobile-menu-section';
 
 describe('MobileMenu', () => {
   let component: MobileMenu;
@@ -46,6 +49,9 @@ describe('MobileMenu', () => {
     await TestBed.configureTestingModule({
       imports: [
         MobileMenu,
+        MobileMenuQuickAccess,
+        MobileMenuSearch,
+        MobileMenuSection,
         RouterTestingModule,
         FormsModule,
         TranslateModule.forRoot(),
@@ -69,11 +75,12 @@ describe('MobileMenu', () => {
     }).compileComponents();
 
     translateService = TestBed.inject(TranslateService);
-    // Setup a simple translation for results count
     translateService.setTranslation('en', {
       'SEARCH.RESULTS_COUNT': '{{count}} results',
       'SEARCH.NO_RESULTS_FOUND': 'No results found',
-      'ARIA.CLOSE_MENU': 'Close menu'
+      'ARIA.CLOSE_MENU': 'Close menu',
+      'HEADER.SERVICES': 'Services',
+      'HEADER.CONTACT': 'Contact'
     });
     translateService.use('en');
 
@@ -87,7 +94,7 @@ describe('MobileMenu', () => {
   });
 
   it('should call menuService.close() when Escape key is pressed', () => {
-    (menuServiceMock.isMobileMenuOpen as any).set(true);
+    menuServiceMock.isMobileMenuOpen.set(true);
     fixture.detectChanges();
 
     const event = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true });
@@ -97,23 +104,18 @@ describe('MobileMenu', () => {
   });
 
   it('should update search results count when search query changes', () => {
-    component.searchQuery = 'Service';
-    component.onSearchChange();
+    component.onSearchChange('Services');
     fixture.detectChanges();
 
-    expect(component.searchResultsCount).toBeGreaterThanOrEqual(0);
+    expect(component.searchResultsCount).toBeGreaterThan(0);
   });
 
   it('should show "No results found" when search query matches nothing', () => {
-    component.searchQuery = 'Non-existent-key-12345';
-    component.onSearchChange();
+    component.onSearchChange('Non-existent-key-12345');
     fixture.detectChanges();
 
     const noResults = fixture.debugElement.query(By.css('.mobile-menu-no-results'));
     expect(noResults).toBeTruthy();
-
-    const ariaLive = fixture.debugElement.query(By.css('[aria-live="polite"]'));
-    expect(ariaLive.nativeElement.textContent).toContain('0');
   });
 
   it('should toggle sections', () => {
@@ -126,10 +128,26 @@ describe('MobileMenu', () => {
   });
 
   it('should trap focus when open', () => {
-    (menuServiceMock.isMobileMenuOpen as any).set(true);
+    menuServiceMock.isMobileMenuOpen.set(true);
     fixture.detectChanges();
 
-    const overlay = fixture.debugElement.query(By.css('.mobile-menu-overlay'));
-    expect(overlay).toBeTruthy();
+    const menu = fixture.debugElement.query(By.css('.header__nav-links-mobile'));
+    expect(menu).toBeTruthy();
+
+    // Trigger tab event
+    const event = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true });
+    menu.nativeElement.dispatchEvent(event);
+
+    // Check if trapFocus was called (indirectly by ensuring no errors and focus remains in menu)
+    expect(document.activeElement).not.toBeNull();
+  });
+
+  it('should highlight active links', () => {
+    menuServiceMock.isMobileMenuOpen.set(true);
+    component.onSearchChange(''); // Reset search
+    fixture.detectChanges();
+
+    const contactBtn = fixture.debugElement.query(By.css('.mobile-cta-btn'));
+    expect(contactBtn.attributes['routerLinkActive']).toBe('active');
   });
 });

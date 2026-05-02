@@ -14,7 +14,7 @@ import {
   HostListener,
   effect,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
@@ -22,11 +22,24 @@ import { DirectionService } from '@core/services/direction.service';
 import { MenuService } from '@core/services/menu.service';
 import { AnalyticsService } from '@core/services/analytics.service';
 import { MobileMenuGestures, MobileMenuGestureConfig } from './mobile-menu-gestures';
+import { MobileMenuQuickAccess } from './mobile-menu-quick-access';
+import { MobileMenuSearch } from './mobile-menu-search';
+import { MobileMenuSection, MobileMenuLink } from './mobile-menu-section';
 
 @Component({
   selector: 'jsl-mobile-menu',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, TranslateModule, LucideAngularModule],
+  imports: [
+    CommonModule,
+    RouterLink,
+    RouterLinkActive,
+    FormsModule,
+    TranslateModule,
+    LucideAngularModule,
+    MobileMenuQuickAccess,
+    MobileMenuSearch,
+    MobileMenuSection
+  ],
   templateUrl: './mobile-menu.html',
   styleUrl: './mobile-menu.scss',
 })
@@ -60,6 +73,8 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   public searchQuery = '';
   public searchResultsCount = 0;
 
+  public menuSections: { id: string; titleKey: string; links: MobileMenuLink[] }[] = [];
+
   get isMobileMenuOpen() {
     return this.menuService.isMobileMenuOpen();
   }
@@ -70,6 +85,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     this.translate.onLangChange.subscribe((event) => {
       this.currentLang = event.lang;
+      this.initMenuSections();
     });
 
     effect(() => {
@@ -80,6 +96,75 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
         this.closeDrawer();
       }
     });
+
+    this.initMenuSections();
+  }
+
+  private initMenuSections() {
+    this.menuSections = [
+      {
+        id: 'services',
+        titleKey: 'HEADER.SERVICES',
+        links: [
+          { key: 'HEADER.VIEW_ALL_SERVICES', route: [this.currentLang, 'solutions'], icon: 'LayoutGrid' },
+          { key: 'SERVICES_LIST.WEB', route: [this.currentLang, 'solutions', 'web-development'], icon: 'Monitor' },
+          { key: 'SERVICES_LIST.MOBILE', route: [this.currentLang, 'solutions', 'mobile-apps'], icon: 'Smartphone' },
+          { key: 'SERVICES_LIST.DESKTOP', route: [this.currentLang, 'solutions', 'desktop-software'], icon: 'Laptop' },
+          { key: 'SERVICES_LIST.CLOUD', route: [this.currentLang, 'solutions', 'cloud-architecture'], icon: 'CloudCog' },
+          { key: 'HEADER.INDUSTRIES', route: [this.currentLang, 'industries'], icon: 'Building2' },
+        ]
+      },
+      {
+        id: 'products',
+        titleKey: 'HEADER.PRODUCTS',
+        links: [
+          { key: 'HEADER.VIEW_ALL_PRODUCTS', route: [this.currentLang, 'products'], icon: 'Package' },
+          { key: 'PRODUCTS_LIST.ERP', href: 'https://virtex.com', icon: 'ExternalLink' },
+          { key: 'PRODUCTS_LIST.POS', href: 'https://pos.jsl.technology', icon: 'ExternalLink' },
+          { key: 'PRODUCTS_LIST.MOBILE', href: 'https://apps.jsl.technology', icon: 'ExternalLink' },
+          { key: 'HEADER.VIRTEEX_ECOSYSTEM', route: [this.currentLang, 'virteex-ecosystem'], icon: 'Layers' },
+          { key: 'HEADER.PRICING', route: [this.currentLang, 'pricing'], icon: 'CircleDollarSign' },
+        ]
+      },
+      {
+        id: 'company',
+        titleKey: 'FOOTER.COMPANY',
+        links: [
+          { key: 'HEADER.ABOUT', route: [this.currentLang, 'about-us'], icon: 'Users' },
+          { key: 'HEADER.PROCESS', route: [this.currentLang, 'process'], icon: 'Workflow' },
+          { key: 'HEADER.TECH_STACK', route: [this.currentLang, 'tech-stack'], icon: 'Cpu' },
+          { key: 'HEADER.CAREERS', route: [this.currentLang, 'careers'], icon: 'Briefcase' },
+          { key: 'HEADER.PARTNERS', route: [this.currentLang, 'partners'], icon: 'Users' },
+          { key: 'HEADER.LIFE_AT_JSL', route: [this.currentLang, 'life-at-jsl'], icon: 'Heart' },
+          { key: 'HEADER.INVESTORS', route: [this.currentLang, 'investors'], icon: 'TrendingUp' },
+          { key: 'HEADER.VENTURES', route: [this.currentLang, 'ventures'], icon: 'Rocket' },
+          { key: 'HEADER.SECURITY', route: [this.currentLang, 'security'], icon: 'ShieldCheck' },
+        ]
+      },
+      {
+        id: 'resources',
+        titleKey: 'FOOTER.RESOURCES',
+        links: [
+          { key: 'HEADER.PROJECTS', route: [this.currentLang, 'projects'], icon: 'Lightbulb' },
+          { key: 'HEADER.BLOG', route: [this.currentLang, 'blog'], icon: 'Newspaper' },
+          { key: 'HEADER.EVENTS', route: [this.currentLang, 'events'], icon: 'CalendarDays' },
+          { key: 'HEADER.NEWS', route: [this.currentLang, 'news'], icon: 'Radio' },
+          { key: 'HEADER.PRESS', route: [this.currentLang, 'press'], icon: 'BookOpen' },
+          { key: 'HEADER.ROADMAP', route: [this.currentLang, 'roadmap'], icon: 'Map' },
+          { key: 'HEADER.FAQ', route: [this.currentLang, 'faq'], icon: 'HelpCircle' },
+          { key: 'HEADER.DEVELOPERS', route: [this.currentLang, 'developers'], icon: 'Code' },
+        ]
+      },
+      {
+        id: 'login',
+        titleKey: 'HEADER.LOGIN',
+        links: [
+          { key: 'HEADER.LOGIN_VIRTEEX', href: 'https://app.virtex.com', icon: 'ExternalLink' },
+          { key: 'HEADER.LOGIN_CLIENT', href: 'https://portal.jsl.technology', icon: 'ExternalLink' },
+          { key: 'HEADER.LOGIN_SUPPORT', href: 'https://support.jsl.technology', icon: 'ExternalLink' },
+        ]
+      }
+    ];
   }
 
   ngOnInit() {
@@ -205,13 +290,13 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.menuService.close();
   }
 
-  shouldShowLink(linkTextKey: string): boolean {
+  shouldShowLink = (linkTextKey: string): boolean => {
     if (!this.searchQuery) return true;
     const translatedText = this.translate.instant(linkTextKey).toLowerCase();
     return translatedText.includes(this.searchQuery.toLowerCase());
   }
 
-  shouldShowSection(sectionKey: string, links: string[]): boolean {
+  shouldShowSection(sectionKey: string, links: MobileMenuLink[]): boolean {
     if (!this.searchQuery) return true;
 
     const sectionTitle = this.translate.instant(sectionKey).toLowerCase();
@@ -219,7 +304,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       return true;
     }
 
-    return links.some(linkKey => this.shouldShowLink(linkKey));
+    return links.some(link => this.shouldShowLink(link.key));
   }
 
   public expandedSections = new Set<string>();
@@ -239,7 +324,8 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     return this.expandedSections.has(section);
   }
 
-  onSearchChange() {
+  onSearchChange(query: string) {
+    this.searchQuery = query;
     this.updateSearchResultsCount();
 
     if (this.searchQuery) {
@@ -254,17 +340,9 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
         });
       }, 300);
 
-      const sections = [
-        { id: 'services', title: 'HEADER.SERVICES', links: ['HEADER.VIEW_ALL_SERVICES', 'SERVICES_LIST.WEB', 'SERVICES_LIST.MOBILE', 'SERVICES_LIST.DESKTOP', 'SERVICES_LIST.CLOUD', 'HEADER.INDUSTRIES'] },
-        { id: 'products', title: 'HEADER.PRODUCTS', links: ['HEADER.VIEW_ALL_PRODUCTS', 'PRODUCTS_LIST.ERP', 'PRODUCTS_LIST.POS', 'PRODUCTS_LIST.MOBILE', 'HEADER.VIRTEEX_ECOSYSTEM', 'HEADER.PRICING'] },
-        { id: 'company', title: 'FOOTER.COMPANY', links: ['HEADER.ABOUT', 'HEADER.PROCESS', 'HEADER.TECH_STACK', 'HEADER.CAREERS', 'HEADER.PARTNERS', 'HEADER.LIFE_AT_JSL', 'HEADER.INVESTORS', 'HEADER.VENTURES', 'HEADER.SECURITY'] },
-        { id: 'resources', title: 'FOOTER.RESOURCES', links: ['HEADER.PROJECTS', 'HEADER.BLOG', 'HEADER.EVENTS', 'HEADER.NEWS', 'HEADER.PRESS', 'HEADER.ROADMAP', 'HEADER.FAQ', 'HEADER.DEVELOPERS'] },
-        { id: 'login', title: 'HEADER.LOGIN', links: ['HEADER.LOGIN_VIRTEEX', 'HEADER.LOGIN_CLIENT', 'HEADER.LOGIN_SUPPORT'] }
-      ];
-
       let expandedCount = 0;
-      for (const section of sections) {
-        if (this.shouldShowSection(section.title, section.links)) {
+      for (const section of this.menuSections) {
+        if (this.shouldShowSection(section.titleKey, section.links)) {
           if (expandedCount < 3) {
             this.expandedSections.add(section.id);
             expandedCount++;
@@ -281,16 +359,8 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     }
 
     let count = 0;
-    const sections = [
-      { title: 'HEADER.SERVICES', links: ['HEADER.VIEW_ALL_SERVICES', 'SERVICES_LIST.WEB', 'SERVICES_LIST.MOBILE', 'SERVICES_LIST.DESKTOP', 'SERVICES_LIST.CLOUD', 'HEADER.INDUSTRIES'] },
-      { title: 'HEADER.PRODUCTS', links: ['HEADER.VIEW_ALL_PRODUCTS', 'PRODUCTS_LIST.ERP', 'PRODUCTS_LIST.POS', 'PRODUCTS_LIST.MOBILE', 'HEADER.VIRTEEX_ECOSYSTEM', 'HEADER.PRICING'] },
-      { title: 'FOOTER.COMPANY', links: ['HEADER.ABOUT', 'HEADER.PROCESS', 'HEADER.TECH_STACK', 'HEADER.CAREERS', 'HEADER.PARTNERS', 'HEADER.LIFE_AT_JSL', 'HEADER.INVESTORS', 'HEADER.VENTURES', 'HEADER.SECURITY'] },
-      { title: 'FOOTER.RESOURCES', links: ['HEADER.PROJECTS', 'HEADER.BLOG', 'HEADER.EVENTS', 'HEADER.NEWS', 'HEADER.PRESS', 'HEADER.ROADMAP', 'HEADER.FAQ', 'HEADER.DEVELOPERS'] },
-      { title: 'HEADER.LOGIN', links: ['HEADER.LOGIN_VIRTEEX', 'HEADER.LOGIN_CLIENT', 'HEADER.LOGIN_SUPPORT'] }
-    ];
-
-    for (const section of sections) {
-      if (this.shouldShowSection(section.title, section.links)) {
+    for (const section of this.menuSections) {
+      if (this.shouldShowSection(section.titleKey, section.links)) {
         count++;
       }
     }
@@ -326,9 +396,22 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private trapFocus(event: KeyboardEvent) {
     const focusableSelectors =
       'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
-    const focusableElements = Array.from(
+
+    // Query all potential focusable elements including those in subcomponents
+    const allPotential = Array.from(
       this.el.nativeElement.querySelectorAll(focusableSelectors)
     ) as HTMLElement[];
+
+    const focusableElements = allPotential.filter(el => {
+      const style = window.getComputedStyle(el);
+      const rect = el.getBoundingClientRect();
+      const isVisible = style.display !== 'none' &&
+                        style.visibility !== 'hidden' &&
+                        style.opacity !== '0' &&
+                        rect.width > 0 &&
+                        rect.height > 0;
+      return isVisible;
+    });
 
     if (focusableElements.length === 0) return;
 
