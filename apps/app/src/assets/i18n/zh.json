@@ -31,7 +31,12 @@
     "LIFE_AT_JSL": "JSL生活",
     "PRICING": "价格",
     "VIRTEEX_ECOSYSTEM": "virtex生态系统",
-    "NEWS": "新闻"
+    "NEWS": "新闻",
+    "QUICK_ACCESS": "快速访问",
+    "QUICK_CONTACT": "联系我们",
+    "QUICK_PRICING": "定价",
+    "QUICK_FAQ": "常见问题",
+    "QUICK_SUPPORT": "支持"
   },
   "TOP_BAR": {
     "PORTFOLIO": "作品集",
@@ -1478,7 +1483,8 @@
     "HOME_LINK": "JSL Technology 主页",
     "DESKTOP_NAV": "桌面导航",
     "MOBILE_MENU": "移动导航菜单",
-    "SEARCH_MENU": "过滤菜单选项"
+    "SEARCH_MENU": "过滤菜单选项",
+    "MOBILE_MENU_TITLE": "主导航菜单"
   },
   "SEARCH": {
     "PLACEHOLDER": "搜索...",
