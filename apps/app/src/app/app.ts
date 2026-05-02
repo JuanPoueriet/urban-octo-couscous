@@ -56,7 +56,7 @@ export class App implements OnInit, OnDestroy {
     private seo: Seo,
     private analytics: AnalyticsService,
     private directionService: DirectionService, // Inject to initialize
-    private scrollRestoration: ScrollRestorationService,
+    private scrollRestoration: ScrollRestorationService, // Keep to initialize
     private scrollEngine: ScrollEngineService,
     @Inject(PLATFORM_ID) private platformId: object,
     private cookieService: CookieService,
