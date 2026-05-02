@@ -1484,7 +1484,10 @@
     "DESKTOP_NAV": "Navegação de desktop",
     "MOBILE_MENU": "Menu de navegação móvel",
     "SEARCH_MENU": "Filtrar opções do menu",
-    "MOBILE_MENU_TITLE": "Menu de navegação principal"
+    "MOBILE_MENU_TITLE": "Menu de navegação principal",
+    "EXPANDED": "Expandido",
+    "COLLAPSED": "Recolhido",
+    "EXTERNAL_LINK": "Link externo"
   },
   "SEARCH": {
     "PLACEHOLDER": "Pesquisar...",
@@ -1493,7 +1496,10 @@
     "BLOG": "Blog",
     "PRODUCTS": "Produtos",
     "PROJECTS": "Projetos",
-    "VENTURES": "Empresas"
+    "VENTURES": "Empresas",
+    "NO_RESULTS_FOUND": "Nenhum resultado encontrado",
+    "RESULTS_COUNT": "{{count}} resultados",
+    "CLEAR_SEARCH": "Limpar pesquisa"
   },
   "ALT": {
     "AUTHOR": "Autor",

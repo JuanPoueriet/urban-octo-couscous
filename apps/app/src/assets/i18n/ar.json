@@ -1484,7 +1484,10 @@
     "DESKTOP_NAV": "تنقل سطح المكتب",
     "MOBILE_MENU": "قائمة التنقل للهاتف المحمول",
     "SEARCH_MENU": "تصفية خيارات القائمة",
-    "MOBILE_MENU_TITLE": "قائمة التنقل الرئيسية"
+    "MOBILE_MENU_TITLE": "قائمة التنقل الرئيسية",
+    "EXPANDED": "موسع",
+    "COLLAPSED": "مطوي",
+    "EXTERNAL_LINK": "رابط خارجي"
   },
   "SEARCH": {
     "PLACEHOLDER": "بحث...",
@@ -1493,7 +1496,10 @@
     "BLOG": "Blog",
     "PRODUCTS": "المنتجات",
     "PROJECTS": "المشاريع",
-    "VENTURES": "المشاريع الريادية"
+    "VENTURES": "المشاريع الريادية",
+    "NO_RESULTS_FOUND": "لم يتم العثور على نتائج",
+    "RESULTS_COUNT": "{{count}} نتائج",
+    "CLEAR_SEARCH": "مسح البحث"
   },
   "ALT": {
     "AUTHOR": "المؤلف",
