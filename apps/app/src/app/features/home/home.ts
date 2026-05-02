@@ -352,6 +352,26 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         }, 50);
       }
     });
+
+    // Effect to initialize and update offerings swiper
+    effect(() => {
+      const loading = this.isLoading();
+      const items = this.offeringItems();
+      if (!loading && items.length > 0 && this.isBrowser) {
+        setTimeout(() => {
+          const offeringsSwiperEl = this.el.nativeElement.querySelector('.offerings-section swiper-container');
+          if (offeringsSwiperEl) {
+            if (!offeringsSwiperEl.initialized) {
+              Object.assign(offeringsSwiperEl, this.offeringsSwiperConfig);
+              offeringsSwiperEl.initialize();
+              this.setupOfferingsNavigationVisibility();
+            } else if (offeringsSwiperEl.swiper) {
+              offeringsSwiperEl.swiper.update();
+            }
+          }
+        }, 100);
+      }
+    });
   }
 
   ngOnInit() {
@@ -656,16 +676,6 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
             testimonialSwiperEl.swiper.autoplay.start();
           }
         }, 500);
-      }
-
-      // 4. Offerings Slider
-      const offeringsSwiperEl = this.el.nativeElement.querySelector('.offerings-section swiper-container');
-
-      if (offeringsSwiperEl) {
-        Object.assign(offeringsSwiperEl, this.offeringsSwiperConfig);
-
-        offeringsSwiperEl.initialize();
-        this.setupOfferingsNavigationVisibility();
       }
 
       // 4. Latest Insights Slider
