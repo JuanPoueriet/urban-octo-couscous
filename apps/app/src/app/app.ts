@@ -1,6 +1,6 @@
-import { Component, HostListener, Inject, PLATFORM_ID, OnInit, OnDestroy } from '@angular/core';
+import { Component, HostListener, Inject, PLATFORM_ID, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, ChildrenOutletContexts } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
 import { Header } from './layout/header/header';
@@ -15,10 +15,12 @@ import { SUPPORTED_LANGUAGES } from '@core/constants/languages';
 import { ToastComponent } from './shared/components/toast/toast';
 import { CookieBannerComponent } from './shared/components/cookie-banner/cookie-banner';
 import { ScrollRestorationService } from './core/services/scroll-restoration.service';
+import { routeTransition } from './shared/animations/route-animations';
 import Lenis from 'lenis';
 
 @Component({
   selector: 'jsl-root',
+  animations: [routeTransition],
   standalone: true,
   imports: [
     CommonModule,
@@ -35,6 +37,7 @@ import Lenis from 'lenis';
   styleUrl: './app.scss',
 })
 export class App implements OnInit, OnDestroy {
+  private contexts = inject(ChildrenOutletContexts);
   title = 'jsl-technology-web';
   isScrolled = false;
   private isBrowser: boolean;
@@ -224,6 +227,11 @@ export class App implements OnInit, OnDestroy {
   onWindowResize() {
     // Ejecutar al redimensionar la ventana
     this.updateScrollAndResize();
+  }
+
+  getRouteAnimationData() {
+    return this.contexts.getContext('primary')?.route?.snapshot?.data?.['animation'] ||
+           this.contexts.getContext('primary')?.route?.snapshot?.url?.toString();
   }
 
   /**
