@@ -1476,7 +1476,9 @@
     "CLOSE_MENU": "Fechar menu",
     "SELECT_LANGUAGE": "Selecionar idioma",
     "HOME_LINK": "Página inicial da JSL Technology",
-    "DESKTOP_NAV": "Navegação de desktop"
+    "DESKTOP_NAV": "Navegação de desktop",
+    "MOBILE_MENU": "Menu de navegação móvel",
+    "SEARCH_MENU": "Filtrar opções do menu"
   },
   "SEARCH": {
     "PLACEHOLDER": "Pesquisar...",

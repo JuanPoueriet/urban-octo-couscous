@@ -1476,7 +1476,9 @@
     "CLOSE_MENU": "메뉴 닫기",
     "SELECT_LANGUAGE": "언어 선택",
     "HOME_LINK": "JSL Technology 홈",
-    "DESKTOP_NAV": "데스크톱 내비게이션"
+    "DESKTOP_NAV": "데스크톱 내비게이션",
+    "MOBILE_MENU": "모바일 내비게이션 메뉴",
+    "SEARCH_MENU": "메뉴 옵션 필터링"
   },
   "SEARCH": {
     "PLACEHOLDER": "검색...",

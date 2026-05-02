@@ -15,6 +15,9 @@
   (touchstart)="onMenuTouchStart($event)"
   (touchmove)="onMenuTouchMove($event)"
   (touchend)="onMenuTouchEnd($event)"
+  role="navigation"
+  aria-modal="true"
+  [attr.aria-label]="'ARIA.MOBILE_MENU' | translate"
 >
   <!-- Mobile Menu Header -->
   <div class="mobile-menu-top">
@@ -30,282 +33,431 @@
 
   <!-- Mobile Menu Content -->
   <div class="mobile-menu-content">
+    <!-- Search Bar -->
+    <div class="mobile-menu-search">
+      <div class="search-input-wrapper">
+        <lucide-icon name="Search" class="search-icon"></lucide-icon>
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          (ngModelChange)="onSearchChange()"
+          [placeholder]="'SEARCH.PLACEHOLDER' | translate"
+          [attr.aria-label]="'ARIA.SEARCH_MENU' | translate"
+        />
+        @if (searchQuery) {
+          <button class="clear-search" (click)="searchQuery = ''; onSearchChange()">
+            <lucide-icon name="X"></lucide-icon>
+          </button>
+        }
+      </div>
+    </div>
 
     <!-- Section: Services -->
-    <div class="mobile-accordion" [class.expanded]="expandedSection === 'services'">
-      <button class="accordion-header" (click)="toggleSection('services')">
+    @if (shouldShowSection('HEADER.SERVICES', ['HEADER.VIEW_ALL_SERVICES', 'SERVICES_LIST.WEB', 'SERVICES_LIST.MOBILE', 'SERVICES_LIST.DESKTOP', 'SERVICES_LIST.CLOUD', 'HEADER.INDUSTRIES'])) {
+    <div class="mobile-accordion" [class.expanded]="isSectionExpanded('services')">
+      <button
+        id="accordion-services-header"
+        class="accordion-header"
+        (click)="toggleSection('services')"
+        [attr.aria-expanded]="isSectionExpanded('services')"
+        aria-controls="accordion-services-content"
+      >
         <span>{{ 'HEADER.SERVICES' | translate }}</span>
         <lucide-icon name="ChevronDown" class="chevron"></lucide-icon>
       </button>
-      <div class="accordion-content">
+      <div
+        id="accordion-services-content"
+        class="accordion-content"
+        role="region"
+        aria-labelledby="accordion-services-header"
+      >
         <ul class="mobile-links-list">
+          @if (shouldShowLink('HEADER.VIEW_ALL_SERVICES')) {
           <li>
             <a [routerLink]="[currentLang, 'solutions']" (click)="closeMobileMenu()">
               <lucide-icon name="LayoutGrid"></lucide-icon>
               {{ 'HEADER.VIEW_ALL_SERVICES' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('SERVICES_LIST.WEB')) {
           <li>
             <a [routerLink]="[currentLang, 'solutions', 'web-development']" (click)="closeMobileMenu()">
               <lucide-icon name="Monitor"></lucide-icon>
               {{ 'SERVICES_LIST.WEB' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('SERVICES_LIST.MOBILE')) {
           <li>
             <a [routerLink]="[currentLang, 'solutions', 'mobile-apps']" (click)="closeMobileMenu()">
               <lucide-icon name="Smartphone"></lucide-icon>
               {{ 'SERVICES_LIST.MOBILE' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('SERVICES_LIST.DESKTOP')) {
           <li>
             <a [routerLink]="[currentLang, 'solutions', 'desktop-software']" (click)="closeMobileMenu()">
               <lucide-icon name="Laptop"></lucide-icon>
               {{ 'SERVICES_LIST.DESKTOP' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('SERVICES_LIST.CLOUD')) {
           <li>
             <a [routerLink]="[currentLang, 'solutions', 'cloud-architecture']" (click)="closeMobileMenu()">
               <lucide-icon name="CloudCog"></lucide-icon>
               {{ 'SERVICES_LIST.CLOUD' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('HEADER.INDUSTRIES')) {
           <li>
             <a [routerLink]="[currentLang, 'industries']" (click)="closeMobileMenu()">
               <lucide-icon name="Building2"></lucide-icon>
               {{ 'HEADER.INDUSTRIES' | translate }}
             </a>
           </li>
+          }
         </ul>
       </div>
     </div>
+    }
 
     <!-- Section: Products -->
-    <div class="mobile-accordion" [class.expanded]="expandedSection === 'products'">
-      <button class="accordion-header" (click)="toggleSection('products')">
+    @if (shouldShowSection('HEADER.PRODUCTS', ['HEADER.VIEW_ALL_PRODUCTS', 'PRODUCTS_LIST.ERP', 'PRODUCTS_LIST.POS', 'PRODUCTS_LIST.MOBILE', 'HEADER.VIRTEEX_ECOSYSTEM', 'HEADER.PRICING'])) {
+    <div class="mobile-accordion" [class.expanded]="isSectionExpanded('products')">
+      <button
+        id="accordion-products-header"
+        class="accordion-header"
+        (click)="toggleSection('products')"
+        [attr.aria-expanded]="isSectionExpanded('products')"
+        aria-controls="accordion-products-content"
+      >
         <span>{{ 'HEADER.PRODUCTS' | translate }}</span>
         <lucide-icon name="ChevronDown" class="chevron"></lucide-icon>
       </button>
-      <div class="accordion-content">
+      <div
+        id="accordion-products-content"
+        class="accordion-content"
+        role="region"
+        aria-labelledby="accordion-products-header"
+      >
         <ul class="mobile-links-list">
+          @if (shouldShowLink('HEADER.VIEW_ALL_PRODUCTS')) {
           <li>
             <a [routerLink]="[currentLang, 'products']" (click)="closeMobileMenu()">
               <lucide-icon name="Package"></lucide-icon>
               {{ 'HEADER.VIEW_ALL_PRODUCTS' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('PRODUCTS_LIST.ERP')) {
           <li>
-            <a href="https://virtex.com" target="_blank" (click)="closeMobileMenu()">
+            <a href="https://virtex.com" target="_blank" rel="noopener noreferrer" (click)="closeMobileMenu()">
               <lucide-icon name="ExternalLink"></lucide-icon>
               {{ 'PRODUCTS_LIST.ERP' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('PRODUCTS_LIST.POS')) {
           <li>
-            <a href="https://pos.jsl.technology" target="_blank" (click)="closeMobileMenu()">
+            <a href="https://pos.jsl.technology" target="_blank" rel="noopener noreferrer" (click)="closeMobileMenu()">
               <lucide-icon name="ExternalLink"></lucide-icon>
               {{ 'PRODUCTS_LIST.POS' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('PRODUCTS_LIST.MOBILE')) {
           <li>
-            <a href="https://apps.jsl.technology" target="_blank" (click)="closeMobileMenu()">
+            <a href="https://apps.jsl.technology" target="_blank" rel="noopener noreferrer" (click)="closeMobileMenu()">
               <lucide-icon name="ExternalLink"></lucide-icon>
               {{ 'PRODUCTS_LIST.MOBILE' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('HEADER.VIRTEEX_ECOSYSTEM')) {
           <li>
             <a [routerLink]="[currentLang, 'virteex-ecosystem']" (click)="closeMobileMenu()">
               <lucide-icon name="Layers"></lucide-icon>
               {{ 'HEADER.VIRTEEX_ECOSYSTEM' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('HEADER.PRICING')) {
           <li>
             <a [routerLink]="[currentLang, 'pricing']" (click)="closeMobileMenu()">
               <lucide-icon name="CircleDollarSign"></lucide-icon>
               {{ 'HEADER.PRICING' | translate }}
             </a>
           </li>
+          }
         </ul>
       </div>
     </div>
+    }
 
     <!-- Section: Company -->
-    <div class="mobile-accordion" [class.expanded]="expandedSection === 'company'">
-      <button class="accordion-header" (click)="toggleSection('company')">
+    @if (shouldShowSection('FOOTER.COMPANY', ['HEADER.ABOUT', 'HEADER.PROCESS', 'HEADER.TECH_STACK', 'HEADER.CAREERS', 'HEADER.PARTNERS', 'HEADER.LIFE_AT_JSL', 'HEADER.INVESTORS', 'HEADER.VENTURES', 'HEADER.SECURITY'])) {
+    <div class="mobile-accordion" [class.expanded]="isSectionExpanded('company')">
+      <button
+        id="accordion-company-header"
+        class="accordion-header"
+        (click)="toggleSection('company')"
+        [attr.aria-expanded]="isSectionExpanded('company')"
+        aria-controls="accordion-company-content"
+      >
         <span>{{ 'FOOTER.COMPANY' | translate }}</span>
         <lucide-icon name="ChevronDown" class="chevron"></lucide-icon>
       </button>
-      <div class="accordion-content">
+      <div
+        id="accordion-company-content"
+        class="accordion-content"
+        role="region"
+        aria-labelledby="accordion-company-header"
+      >
         <ul class="mobile-links-list">
+          @if (shouldShowLink('HEADER.ABOUT')) {
           <li>
             <a [routerLink]="[currentLang, 'about-us']" (click)="closeMobileMenu()">
               <lucide-icon name="Users"></lucide-icon>
               {{ 'HEADER.ABOUT' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('HEADER.PROCESS')) {
           <li>
             <a [routerLink]="[currentLang, 'process']" (click)="closeMobileMenu()">
               <lucide-icon name="Workflow"></lucide-icon>
               {{ 'HEADER.PROCESS' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('HEADER.TECH_STACK')) {
           <li>
             <a [routerLink]="[currentLang, 'tech-stack']" (click)="closeMobileMenu()">
               <lucide-icon name="Cpu"></lucide-icon>
               {{ 'HEADER.TECH_STACK' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('HEADER.CAREERS')) {
           <li>
             <a [routerLink]="[currentLang, 'careers']" (click)="closeMobileMenu()">
               <lucide-icon name="Briefcase"></lucide-icon>
               {{ 'HEADER.CAREERS' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('HEADER.PARTNERS')) {
           <li>
             <a [routerLink]="[currentLang, 'partners']" (click)="closeMobileMenu()">
               <lucide-icon name="Users"></lucide-icon>
               {{ 'HEADER.PARTNERS' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('HEADER.LIFE_AT_JSL')) {
           <li>
             <a [routerLink]="[currentLang, 'life-at-jsl']" (click)="closeMobileMenu()">
               <lucide-icon name="Heart"></lucide-icon>
               {{ 'HEADER.LIFE_AT_JSL' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('HEADER.INVESTORS')) {
           <li>
             <a [routerLink]="[currentLang, 'investors']" (click)="closeMobileMenu()">
               <lucide-icon name="TrendingUp"></lucide-icon>
               {{ 'HEADER.INVESTORS' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('HEADER.VENTURES')) {
           <li>
             <a [routerLink]="[currentLang, 'ventures']" (click)="closeMobileMenu()">
               <lucide-icon name="Rocket"></lucide-icon>
               {{ 'HEADER.VENTURES' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('HEADER.SECURITY')) {
           <li>
             <a [routerLink]="[currentLang, 'security']" (click)="closeMobileMenu()">
               <lucide-icon name="ShieldCheck"></lucide-icon>
               {{ 'HEADER.SECURITY' | translate }}
             </a>
           </li>
+          }
         </ul>
       </div>
     </div>
+    }
 
     <!-- Section: Resources -->
-    <div class="mobile-accordion" [class.expanded]="expandedSection === 'resources'">
-      <button class="accordion-header" (click)="toggleSection('resources')">
+    @if (shouldShowSection('FOOTER.RESOURCES', ['HEADER.PROJECTS', 'HEADER.BLOG', 'HEADER.EVENTS', 'HEADER.NEWS', 'HEADER.PRESS', 'HEADER.ROADMAP', 'HEADER.FAQ', 'HEADER.DEVELOPERS'])) {
+    <div class="mobile-accordion" [class.expanded]="isSectionExpanded('resources')">
+      <button
+        id="accordion-resources-header"
+        class="accordion-header"
+        (click)="toggleSection('resources')"
+        [attr.aria-expanded]="isSectionExpanded('resources')"
+        aria-controls="accordion-resources-content"
+      >
         <span>{{ 'FOOTER.RESOURCES' | translate }}</span>
         <lucide-icon name="ChevronDown" class="chevron"></lucide-icon>
       </button>
-      <div class="accordion-content">
+      <div
+        id="accordion-resources-content"
+        class="accordion-content"
+        role="region"
+        aria-labelledby="accordion-resources-header"
+      >
         <ul class="mobile-links-list">
+          @if (shouldShowLink('HEADER.PROJECTS')) {
           <li>
             <a [routerLink]="[currentLang, 'projects']" (click)="closeMobileMenu()">
               <lucide-icon name="Lightbulb"></lucide-icon>
               {{ 'HEADER.PROJECTS' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('HEADER.BLOG')) {
           <li>
             <a [routerLink]="[currentLang, 'blog']" (click)="closeMobileMenu()">
               <lucide-icon name="Newspaper"></lucide-icon>
               {{ 'HEADER.BLOG' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('HEADER.EVENTS')) {
           <li>
             <a [routerLink]="[currentLang, 'events']" (click)="closeMobileMenu()">
               <lucide-icon name="CalendarDays"></lucide-icon>
               {{ 'HEADER.EVENTS' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('HEADER.NEWS')) {
           <li>
             <a [routerLink]="[currentLang, 'news']" (click)="closeMobileMenu()">
               <lucide-icon name="Radio"></lucide-icon>
               {{ 'HEADER.NEWS' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('HEADER.PRESS')) {
           <li>
             <a [routerLink]="[currentLang, 'press']" (click)="closeMobileMenu()">
               <lucide-icon name="BookOpen"></lucide-icon>
               {{ 'HEADER.PRESS' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('HEADER.ROADMAP')) {
           <li>
             <a [routerLink]="[currentLang, 'roadmap']" (click)="closeMobileMenu()">
               <lucide-icon name="Map"></lucide-icon>
               {{ 'HEADER.ROADMAP' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('HEADER.FAQ')) {
           <li>
             <a [routerLink]="[currentLang, 'faq']" (click)="closeMobileMenu()">
               <lucide-icon name="HelpCircle"></lucide-icon>
               {{ 'HEADER.FAQ' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('HEADER.DEVELOPERS')) {
           <li>
             <a [routerLink]="[currentLang, 'developers']" (click)="closeMobileMenu()">
               <lucide-icon name="Code"></lucide-icon>
               {{ 'HEADER.DEVELOPERS' | translate }}
             </a>
           </li>
+          }
         </ul>
       </div>
     </div>
+    }
 
     <!-- Section: Login -->
-    <div class="mobile-accordion" [class.expanded]="expandedSection === 'login'">
-      <button class="accordion-header" (click)="toggleSection('login')">
+    @if (shouldShowSection('HEADER.LOGIN', ['HEADER.LOGIN_VIRTEEX', 'HEADER.LOGIN_CLIENT', 'HEADER.LOGIN_SUPPORT'])) {
+    <div class="mobile-accordion" [class.expanded]="isSectionExpanded('login')">
+      <button
+        id="accordion-login-header"
+        class="accordion-header"
+        (click)="toggleSection('login')"
+        [attr.aria-expanded]="isSectionExpanded('login')"
+        aria-controls="accordion-login-content"
+      >
         <span>{{ 'HEADER.LOGIN' | translate }}</span>
         <lucide-icon name="ChevronDown" class="chevron"></lucide-icon>
       </button>
-      <div class="accordion-content">
+      <div
+        id="accordion-login-content"
+        class="accordion-content"
+        role="region"
+        aria-labelledby="accordion-login-header"
+      >
         <ul class="mobile-links-list">
+          @if (shouldShowLink('HEADER.LOGIN_VIRTEEX')) {
           <li>
-            <a href="https://app.virtex.com" target="_blank" (click)="closeMobileMenu()">
+            <a href="https://app.virtex.com" target="_blank" rel="noopener noreferrer" (click)="closeMobileMenu()">
               <lucide-icon name="ExternalLink"></lucide-icon>
               {{ 'HEADER.LOGIN_VIRTEEX' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('HEADER.LOGIN_CLIENT')) {
           <li>
-            <a href="https://portal.jsl.technology" target="_blank" (click)="closeMobileMenu()">
+            <a href="https://portal.jsl.technology" target="_blank" rel="noopener noreferrer" (click)="closeMobileMenu()">
               <lucide-icon name="ExternalLink"></lucide-icon>
               {{ 'HEADER.LOGIN_CLIENT' | translate }}
             </a>
           </li>
+          }
+          @if (shouldShowLink('HEADER.LOGIN_SUPPORT')) {
           <li>
-            <a href="https://support.jsl.technology" target="_blank" (click)="closeMobileMenu()">
+            <a href="https://support.jsl.technology" target="_blank" rel="noopener noreferrer" (click)="closeMobileMenu()">
               <lucide-icon name="ExternalLink"></lucide-icon>
               {{ 'HEADER.LOGIN_SUPPORT' | translate }}
             </a>
           </li>
+          }
         </ul>
       </div>
     </div>
+    }
 
     <!-- Contact Button -->
+    @if (shouldShowLink('HEADER.CONTACT')) {
     <div class="mobile-cta-container">
       <a [routerLink]="[currentLang, 'contact']" class="mobile-cta-btn" (click)="closeMobileMenu()">
         <lucide-icon name="Mail"></lucide-icon>
         {{ 'HEADER.CONTACT' | translate }}
       </a>
     </div>
+    }
 
   </div>
 
   <!-- Mobile Menu Footer -->
   <div class="mobile-menu-footer">
     <div class="mobile-socials">
-      <a href="https://linkedin.com" target="_blank" [attr.aria-label]="'SHARE.LINKEDIN' | translate">
+      <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'SHARE.LINKEDIN' | translate">
         <lucide-icon name="Linkedin"></lucide-icon>
       </a>
-      <a href="https://github.com/jsl-technology" target="_blank" [attr.aria-label]="'SOCIAL.GITHUB' | translate">
+      <a href="https://github.com/jsl-technology" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'SOCIAL.GITHUB' | translate">
         <lucide-icon name="Github"></lucide-icon>
       </a>
-      <a href="https://twitter.com/jsl_tech" target="_blank" [attr.aria-label]="'SHARE.TWITTER' | translate">
+      <a href="https://twitter.com/jsl_tech" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'SHARE.TWITTER' | translate">
         <lucide-icon name="Twitter"></lucide-icon>
       </a>
-      <a href="https://instagram.com/jsl_tech" target="_blank" [attr.aria-label]="'SOCIAL.INSTAGRAM' | translate">
+      <a href="https://instagram.com/jsl_tech" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'SOCIAL.INSTAGRAM' | translate">
         <lucide-icon name="Instagram"></lucide-icon>
       </a>
     </div>

@@ -1476,7 +1476,9 @@
     "CLOSE_MENU": "Fèmen meni",
     "SELECT_LANGUAGE": "Chwazi lang",
     "HOME_LINK": "Akèy JSL Technology",
-    "DESKTOP_NAV": "Navigasyon òdinatè"
+    "DESKTOP_NAV": "Navigasyon òdinatè",
+    "MOBILE_MENU": "Meni navigasyon mobil",
+    "SEARCH_MENU": "Filtre opsyon meni yo"
   },
   "SEARCH": {
     "PLACEHOLDER": "Chèche...",
