@@ -704,8 +704,8 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       // Setup Exit Intent
       this.setupExitIntent();
 
-      // Start Social Proof Toasts
-      this.startSocialProofSimulation();
+      // Social proof toasts intentionally disabled by request.
+      // Keep toast component/service available for other flows.
 
       // Desaparecer indicador de scroll después de 5 segundos
       setTimeout(() => {
