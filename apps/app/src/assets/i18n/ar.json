@@ -31,7 +31,12 @@
     "LIFE_AT_JSL": "الحياة في JSL",
     "PRICING": "الأسعار",
     "VIRTEEX_ECOSYSTEM": "نظام virtex البيئي",
-    "NEWS": "الأخبار"
+    "NEWS": "الأخبار",
+    "QUICK_ACCESS": "الوصول السريع",
+    "QUICK_CONTACT": "اتصل بنا",
+    "QUICK_PRICING": "الأسعار",
+    "QUICK_FAQ": "الأسئلة الشائعة",
+    "QUICK_SUPPORT": "الدعم"
   },
   "TOP_BAR": {
     "PORTFOLIO": "ملف الأعمال",
@@ -1478,7 +1483,8 @@
     "HOME_LINK": "الصفحة الرئيسية لـ JSL Technology",
     "DESKTOP_NAV": "تنقل سطح المكتب",
     "MOBILE_MENU": "قائمة التنقل للهاتف المحمول",
-    "SEARCH_MENU": "تصفية خيارات القائمة"
+    "SEARCH_MENU": "تصفية خيارات القائمة",
+    "MOBILE_MENU_TITLE": "قائمة التنقل الرئيسية"
   },
   "SEARCH": {
     "PLACEHOLDER": "بحث...",

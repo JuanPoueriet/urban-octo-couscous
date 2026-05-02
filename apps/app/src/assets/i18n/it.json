@@ -31,7 +31,12 @@
     "LIFE_AT_JSL": "Vita in JSL",
     "PRICING": "Prezzi",
     "VIRTEEX_ECOSYSTEM": "Ecosistema virtex",
-    "NEWS": "Notizie"
+    "NEWS": "Notizie",
+    "QUICK_ACCESS": "Accesso Rapido",
+    "QUICK_CONTACT": "Contatti",
+    "QUICK_PRICING": "Prezzi",
+    "QUICK_FAQ": "FAQ",
+    "QUICK_SUPPORT": "Supporto"
   },
   "TOP_BAR": {
     "PORTFOLIO": "Portfolio",
@@ -1478,7 +1483,8 @@
     "HOME_LINK": "Home JSL Technology",
     "DESKTOP_NAV": "Navigazione desktop",
     "MOBILE_MENU": "Menu di navigazione mobile",
-    "SEARCH_MENU": "Filtra opzioni menu"
+    "SEARCH_MENU": "Filtra opzioni menu",
+    "MOBILE_MENU_TITLE": "Menu di navigazione principale"
   },
   "SEARCH": {
     "PLACEHOLDER": "Cerca...",

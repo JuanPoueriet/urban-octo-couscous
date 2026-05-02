@@ -31,7 +31,12 @@
     "LIFE_AT_JSL": "JSL의 삶",
     "PRICING": "요금제",
     "VIRTEEX_ECOSYSTEM": "virtex 에코시스템",
-    "NEWS": "뉴스"
+    "NEWS": "뉴스",
+    "QUICK_ACCESS": "빠른 액세스",
+    "QUICK_CONTACT": "문의하기",
+    "QUICK_PRICING": "가격",
+    "QUICK_FAQ": "FAQ",
+    "QUICK_SUPPORT": "지원"
   },
   "TOP_BAR": {
     "PORTFOLIO": "포트폴리오",
@@ -1478,7 +1483,8 @@
     "HOME_LINK": "JSL Technology 홈",
     "DESKTOP_NAV": "데스크톱 내비게이션",
     "MOBILE_MENU": "모바일 내비게이션 메뉴",
-    "SEARCH_MENU": "메뉴 옵션 필터링"
+    "SEARCH_MENU": "메뉴 옵션 필터링",
+    "MOBILE_MENU_TITLE": "메인 내비게이션 메뉴"
   },
   "SEARCH": {
     "PLACEHOLDER": "검색...",
