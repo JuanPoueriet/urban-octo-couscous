@@ -323,6 +323,8 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   private unlistenExitIntent: (() => void) | null = null;
   private unlistenHeroMouseMove: (() => void) | null = null;
   private unlistenHeroMouseLeave: (() => void) | null = null;
+  private unlistenOfferingsMouseMove: (() => void) | null = null;
+  private unlistenOfferingsMouseLeave: (() => void) | null = null;
   private unlistenInsightsMouseMove: (() => void) | null = null;
   private unlistenInsightsMouseLeave: (() => void) | null = null;
   private unlistenProjectsMouseMove: (() => void) | null = null;
@@ -389,6 +391,12 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     }
     if (this.unlistenHeroMouseLeave) {
       this.unlistenHeroMouseLeave();
+    }
+    if (this.unlistenOfferingsMouseMove) {
+      this.unlistenOfferingsMouseMove();
+    }
+    if (this.unlistenOfferingsMouseLeave) {
+      this.unlistenOfferingsMouseLeave();
     }
     if (this.unlistenInsightsMouseMove) {
       this.unlistenInsightsMouseMove();
@@ -650,6 +658,16 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         }, 500);
       }
 
+      // 4. Offerings Slider
+      const offeringsSwiperEl = this.el.nativeElement.querySelector('.offerings-section swiper-container');
+
+      if (offeringsSwiperEl) {
+        Object.assign(offeringsSwiperEl, this.offeringsSwiperConfig);
+
+        offeringsSwiperEl.initialize();
+        this.setupOfferingsNavigationVisibility();
+      }
+
       // 4. Latest Insights Slider
       const insightsSwiperEl = this.el.nativeElement.querySelector('.latest-insights swiper-container');
 
@@ -765,6 +783,32 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     heroSlider.style.setProperty('--hero-nav-right-visibility', '0');
   }
 
+  private setupOfferingsNavigationVisibility(): void {
+    const offeringsSection = this.el.nativeElement.querySelector('.offerings-section') as HTMLElement | null;
+    if (!offeringsSection) return;
+
+    const updateVisibility = (event: MouseEvent) => {
+      const rect = offeringsSection.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const pointerPercent = (x / rect.width) * 100;
+
+      const leftRatio = Math.max(0, Math.min(1, (30 - pointerPercent) / 30));
+      const rightRatio = Math.max(0, Math.min(1, (pointerPercent - 70) / 30));
+
+      offeringsSection.style.setProperty('--offerings-nav-left-visibility', leftRatio.toFixed(3));
+      offeringsSection.style.setProperty('--offerings-nav-right-visibility', rightRatio.toFixed(3));
+    };
+
+    this.unlistenOfferingsMouseMove = this.renderer.listen(offeringsSection, 'mousemove', updateVisibility);
+    this.unlistenOfferingsMouseLeave = this.renderer.listen(offeringsSection, 'mouseleave', () => {
+      offeringsSection.style.setProperty('--offerings-nav-left-visibility', '0');
+      offeringsSection.style.setProperty('--offerings-nav-right-visibility', '0');
+    });
+
+    offeringsSection.style.setProperty('--offerings-nav-left-visibility', '0');
+    offeringsSection.style.setProperty('--offerings-nav-right-visibility', '0');
+  }
+
   private setupInsightsNavigationVisibility(): void {
     const insightsSection = this.el.nativeElement.querySelector('.latest-insights') as HTMLElement | null;
     if (!insightsSection) return;
@@ -876,6 +920,18 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     if (!this.isBrowser) return;
     const heroSwiperEl = this.el.nativeElement.querySelector('.hero-slider swiper-container');
     heroSwiperEl?.swiper?.slideNext();
+  }
+
+  onPrevOfferings() {
+    if (!this.isBrowser) return;
+    const offeringsSwiperEl = this.el.nativeElement.querySelector('.offerings-section swiper-container');
+    offeringsSwiperEl?.swiper?.slidePrev();
+  }
+
+  onNextOfferings() {
+    if (!this.isBrowser) return;
+    const offeringsSwiperEl = this.el.nativeElement.querySelector('.offerings-section swiper-container');
+    offeringsSwiperEl?.swiper?.slideNext();
   }
 
   onPrevInsights() {
