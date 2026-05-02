@@ -9,7 +9,8 @@
 // --- HEADER REFINEMENT ---
 .detail-page-header {
   position: relative;
-  padding: 6rem 0 4rem;
+  padding: calc(var(--page-top-offset) + 6rem) 0 4rem;
+  margin-top: 0px;
   overflow: hidden;
 
   .header-background {
