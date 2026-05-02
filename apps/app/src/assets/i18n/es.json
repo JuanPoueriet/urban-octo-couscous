@@ -1484,11 +1484,16 @@
     "DESKTOP_NAV": "Navegación de escritorio",
     "MOBILE_MENU": "Menú de navegación móvil",
     "SEARCH_MENU": "Filtrar opciones del menú",
-    "MOBILE_MENU_TITLE": "Menú de navegación principal"
+    "MOBILE_MENU_TITLE": "Menú de navegación principal",
+    "EXPANDED": "Expandido",
+    "COLLAPSED": "Contraído"
   },
   "SEARCH": {
     "PLACEHOLDER": "Buscar...",
     "NO_RESULTS": "No se encontraron resultados.",
+    "NO_RESULTS_FOUND": "No se encontraron resultados para su búsqueda.",
+    "RESULTS_COUNT": "Se encontraron {{count}} resultados.",
+    "CLEAR_SEARCH": "Limpiar búsqueda",
     "ALL": "Todos",
     "BLOG": "Blog",
     "PRODUCTS": "Productos",
