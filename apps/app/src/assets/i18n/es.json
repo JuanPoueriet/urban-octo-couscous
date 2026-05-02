@@ -1486,13 +1486,14 @@
     "SEARCH_MENU": "Filtrar opciones del menú",
     "MOBILE_MENU_TITLE": "Menú de navegación principal",
     "EXPANDED": "Expandido",
-    "COLLAPSED": "Contraído"
+    "COLLAPSED": "Colapsado",
+    "EXTERNAL_LINK": "Enlace externo"
   },
   "SEARCH": {
     "PLACEHOLDER": "Buscar...",
     "NO_RESULTS": "No se encontraron resultados.",
-    "NO_RESULTS_FOUND": "No se encontraron resultados para su búsqueda.",
-    "RESULTS_COUNT": "Se encontraron {{count}} resultados.",
+    "NO_RESULTS_FOUND": "No se encontraron resultados",
+    "RESULTS_COUNT": "{{count}} resultados",
     "CLEAR_SEARCH": "Limpiar búsqueda",
     "ALL": "Todos",
     "BLOG": "Blog",
