@@ -33,7 +33,9 @@
 
     <div class="products-grid">
       @for (product of products(); track product.key) {
-        <article class="product-card product-card--{{ product.type }}" jslAnimateOnScroll>
+        <article class="product-card product-card--{{ product.type }}"
+                 jslAnimateOnScroll
+                 [attr.data-scroll-key]="'product-' + product.key">
           <div class="product-card__header">
             <div class="product-card__icon-wrap">
               <lucide-icon [name]="product.icon" [size]="32"></lucide-icon>

@@ -89,6 +89,7 @@
             [title]="'SOLUTIONS.' + solution.key + '_TITLE' | translate"
             [description]="'SOLUTIONS.' + solution.key + '_DESC' | translate"
             [link]="['/', currentLang, 'solutions', solution.slug]"
+            [scrollKey]="'solution-' + solution.key"
             jslAnimateOnScroll>
           </jsl-card>
         }
