@@ -70,6 +70,12 @@ register();
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Home implements OnInit, AfterViewInit, OnDestroy {
+  public canOfferingsPrev = signal(false);
+  public canOfferingsNext = signal(true);
+  public canProjectsPrev = signal(false);
+  public canProjectsNext = signal(true);
+  public canInsightsPrev = signal(false);
+  public canInsightsNext = signal(true);
   public heroSwiperConfig: SwiperOptions = {
     modules: [EffectFade, Autoplay, Pagination, Navigation],
     effect: 'fade',
@@ -98,15 +104,15 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
   public offeringsSwiperConfig: SwiperOptions = {
     modules: [Navigation, Pagination],
-    slidesPerView: 1.2,
+    slidesPerView: 1.25,
     centeredSlides: true,
-    spaceBetween: 16,
+    spaceBetween: 14,
     grabCursor: true,
     loop: false,
     speed: 600,
     pagination: {
       clickable: true,
-      dynamicBullets: true,
+      dynamicBullets: false,
     },
     navigation: {
       nextEl: '.offerings-swiper-button-next',
@@ -114,18 +120,18 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     },
     breakpoints: {
       640: {
-        slidesPerView: 1.5,
-        spaceBetween: 5,
+        slidesPerView: 1.35,
+        spaceBetween: 12,
         centeredSlides: true,
       },
       768: {
-        slidesPerView: 2.2,
-        spaceBetween: 25,
-        centeredSlides: true,
+        slidesPerView: 4,
+        spaceBetween: 24,
+        centeredSlides: false,
       },
       1024: {
-        slidesPerView: 3.2,
-        spaceBetween: 30,
+        slidesPerView: 4,
+        spaceBetween: 24,
         centeredSlides: false,
       },
     },
@@ -189,7 +195,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
   public insightsSwiperConfig: SwiperOptions = {
     modules: [Navigation, Pagination],
-    slidesPerView: 1.2,
+    slidesPerView: 1.25,
     centeredSlides: true,
     spaceBetween: 20,
     grabCursor: true,
@@ -197,7 +203,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     speed: 600,
     pagination: {
       clickable: true,
-      dynamicBullets: true,
+      dynamicBullets: false,
     },
     navigation: {
       nextEl: '.insights-swiper-button-next',
@@ -205,13 +211,13 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     },
     breakpoints: {
       768: {
-        slidesPerView: 2.2,
-        spaceBetween: 25,
-        centeredSlides: true,
+        slidesPerView: 4,
+        spaceBetween: 24,
+        centeredSlides: false,
       },
       1024: {
         slidesPerView: 4,
-        spaceBetween: 30,
+        spaceBetween: 24,
         centeredSlides: false,
       },
     },
@@ -219,7 +225,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
   public projectsSwiperConfig: SwiperOptions = {
     modules: [Navigation, Pagination],
-    slidesPerView: 1.2,
+    slidesPerView: 1.25,
     centeredSlides: true,
     spaceBetween: 20,
     grabCursor: true,
@@ -227,7 +233,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     speed: 600,
     pagination: {
       clickable: true,
-      dynamicBullets: true,
+      dynamicBullets: false,
     },
     navigation: {
       nextEl: '.projects-swiper-button-next',
@@ -235,13 +241,13 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     },
     breakpoints: {
       768: {
-        slidesPerView: 2.2,
-        spaceBetween: 25,
-        centeredSlides: true,
+        slidesPerView: 4,
+        spaceBetween: 24,
+        centeredSlides: false,
       },
       1024: {
         slidesPerView: 4,
-        spaceBetween: 30,
+        spaceBetween: 24,
         centeredSlides: false,
       },
     },
@@ -373,6 +379,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
           if (projectsSwiperEl && projectsSwiperEl.swiper) {
             projectsSwiperEl.swiper.update();
             projectsSwiperEl.swiper.slideTo(0);
+            this.refreshSliderBoundaryState(projectsSwiperEl, this.canProjectsPrev, this.canProjectsNext);
           }
         }, 50);
       }
@@ -452,6 +459,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         const offeringsSwiperEl = this.el.nativeElement.querySelector('.offerings-section swiper-container');
         if (offeringsSwiperEl && offeringsSwiperEl.swiper) {
           offeringsSwiperEl.swiper.slideTo(0);
+          this.refreshSliderBoundaryState(offeringsSwiperEl, this.canOfferingsPrev, this.canOfferingsNext);
         }
       }, 50);
     }
@@ -469,9 +477,43 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     if (!offeringsSwiperEl.swiper) {
       offeringsSwiperEl.initialize();
       this.setupOfferingsNavigationVisibility();
+      this.bindSliderBoundaryState(
+        offeringsSwiperEl,
+        this.canOfferingsPrev,
+        this.canOfferingsNext
+      );
     } else {
       offeringsSwiperEl.swiper.update();
+      this.refreshSliderBoundaryState(
+        offeringsSwiperEl,
+        this.canOfferingsPrev,
+        this.canOfferingsNext
+      );
     }
+  }
+
+  private bindSliderBoundaryState(
+    swiperEl: any,
+    canPrev: { set: (v: boolean) => void },
+    canNext: { set: (v: boolean) => void }
+  ) {
+    const update = () => this.refreshSliderBoundaryState(swiperEl, canPrev, canNext);
+    swiperEl.swiper?.on('slideChange', update);
+    swiperEl.swiper?.on('reachBeginning', update);
+    swiperEl.swiper?.on('reachEnd', update);
+    swiperEl.swiper?.on('fromEdge', update);
+    setTimeout(update, 0);
+  }
+
+  private refreshSliderBoundaryState(
+    swiperEl: any,
+    canPrev: { set: (v: boolean) => void },
+    canNext: { set: (v: boolean) => void }
+  ) {
+    const swiper = swiperEl?.swiper;
+    if (!swiper) return;
+    canPrev.set(!swiper.isBeginning);
+    canNext.set(!swiper.isEnd);
   }
 
   private addSchemaData() {
@@ -716,6 +758,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
         insightsSwiperEl.initialize();
         this.setupInsightsNavigationVisibility();
+        this.bindSliderBoundaryState(insightsSwiperEl, this.canInsightsPrev, this.canInsightsNext);
       }
 
       // 5. Featured Projects Slider
@@ -726,6 +769,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
         projectsSwiperEl.initialize();
         this.setupProjectsNavigationVisibility();
+        this.bindSliderBoundaryState(projectsSwiperEl, this.canProjectsPrev, this.canProjectsNext);
       }
 
       // Setup Exit Intent

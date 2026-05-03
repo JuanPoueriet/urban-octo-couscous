@@ -1458,6 +1458,75 @@ swiper-container {
   }
 }
 
+/* Slider UX refinements: offerings, projects, insights */
+.offerings-swiper,
+.projects-swiper,
+.insights-swiper {
+  --swiper-pagination-bullet-size: 7px;
+  --swiper-pagination-bullet-horizontal-gap: 5px;
+  --swiper-pagination-bullet-inactive-opacity: 0.45;
+}
+
+.offerings-swiper .swiper-wrapper,
+.projects-swiper .swiper-wrapper,
+.insights-swiper .swiper-wrapper {
+  align-items: stretch;
+}
+
+@media (min-width: 768px) {
+  .offerings-swiper .swiper-wrapper,
+  .projects-swiper .swiper-wrapper,
+  .insights-swiper .swiper-wrapper {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 767px) {
+  .offerings-swiper,
+  .projects-swiper,
+  .insights-swiper {
+    overflow: visible;
+  }
+
+  .offering-slide,
+  .project-slide,
+  .insight-slide {
+    transform: scale(0.9);
+    opacity: 0.7;
+    transition: transform 240ms ease, opacity 240ms ease;
+  }
+
+  .offering-slide.swiper-slide-active,
+  .project-slide.swiper-slide-active,
+  .insight-slide.swiper-slide-active {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.offerings-swiper-button-next,
+.offerings-swiper-button-prev,
+.projects-swiper-button-next,
+.projects-swiper-button-prev,
+.insights-swiper-button-next,
+.insights-swiper-button-prev {
+  background: color-mix(in srgb, var(--bg-card) 88%, white 12%);
+  border-color: color-mix(in srgb, var(--border-color) 55%, white 45%);
+  color: var(--text-main);
+  opacity: 0.92;
+}
+
+.offerings-swiper-button-next.is-disabled,
+.offerings-swiper-button-prev.is-disabled,
+.projects-swiper-button-next.is-disabled,
+.projects-swiper-button-prev.is-disabled,
+.insights-swiper-button-next.is-disabled,
+.insights-swiper-button-prev.is-disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 // Global Swiper Pagination Modernization
 swiper-container {
   &::part(bullet) {
