@@ -142,11 +142,15 @@ describe('ScrollRestorationService', () => {
     });
   });
 
-  it('should persist and load history from sessionStorage', () => {
+  it('should persist and load history from sessionStorage using versioned key', () => {
     const mockHistory = {
       '/test': { y: 100, anchor: null, scrollKey: null, relativeTop: null }
     };
-    spyOn(sessionStorage, 'getItem').and.returnValue(JSON.stringify(mockHistory));
+    const storageKey = 'jsl_scroll_history_v1';
+    spyOn(sessionStorage, 'getItem').and.callFake((key) => {
+        if (key === storageKey) return JSON.stringify(mockHistory);
+        return null;
+    });
     spyOn(sessionStorage, 'setItem');
 
     const newService = new ScrollRestorationService(routerMock, scrollEngineMock, 'browser' as any, documentMock);
@@ -188,6 +192,68 @@ describe('ScrollRestorationService', () => {
         resolve();
       }, 500);
     });
+  });
+
+  it('should perform late reconciliation if element shifts', (done) => {
+    const mockEl = document.createElement('div');
+    mockEl.setAttribute('data-scroll-key', 'late-item');
+    // Initial position
+    spyOn(mockEl, 'getBoundingClientRect').and.returnValue({ top: 100 } as any);
+    document.body.appendChild(mockEl);
+
+    spyOn(documentMock, 'querySelector').and.callFake((selector: string) => {
+        if (selector === '[data-scroll-key="late-item"]') return mockEl;
+        return null;
+    });
+
+    // Capture state
+    const clickEvent = new MouseEvent('click', { bubbles: true });
+    mockEl.dispatchEvent(clickEvent);
+    routerEvents.next(new NavigationStart(1, '/detail'));
+
+    // Restore state
+    const navEnd = new NavigationEnd(2, '/list', '/list');
+    const scrollEvent = new Scroll(navEnd, [0, 500], null);
+    routerEvents.next(scrollEvent);
+
+    setTimeout(() => {
+        expect(scrollEngineMock.scrollTo).toHaveBeenCalledWith(mockEl, jasmine.objectContaining({
+            offset: 100,
+            immediate: true
+        }));
+
+        // Simulate layout shift before late reconciliation
+        (mockEl.getBoundingClientRect as jasmine.Spy).and.returnValue({ top: 150 } as any);
+
+        setTimeout(() => {
+            // Should have called scrollTo again for reconciliation
+            expect(scrollEngineMock.scrollTo).toHaveBeenCalledWith(mockEl, jasmine.objectContaining({
+                offset: 100,
+                immediate: false
+            }));
+            expect(service.getDiagnostics().lateAdjustments).toBe(1);
+            document.body.removeChild(mockEl);
+            done();
+        }, 700);
+    }, 500);
+  });
+
+  it('should track restoration metrics', (done) => {
+    // 1. Top restoration
+    routerEvents.next(new Scroll(new NavigationEnd(1, '/a', '/a'), null, null));
+
+    setTimeout(() => {
+        expect(service.getDiagnostics().top).toBe(1);
+
+        // 2. Y restoration
+        const navEnd = new NavigationEnd(2, '/b', '/b');
+        routerEvents.next(new Scroll(navEnd, [0, 200], null));
+
+        setTimeout(() => {
+            expect(service.getDiagnostics().y).toBe(1);
+            done();
+        }, 500);
+    }, 500);
   });
 
   it('should abort restoration if a new navigation occurs', () => {

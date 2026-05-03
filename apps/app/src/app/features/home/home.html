@@ -144,9 +144,9 @@
     <div class="partners-header">
       <span class="partners-title">{{ 'HOME.PARTNERS_TITLE' | translate }}</span>
     </div>
-    <div class="partners-grid">
+    <div class="partners-grid" data-scroll-anchor="partners">
       @for (partner of partners(); track partner.name) {
-        <div class="partner-logo">
+        <div class="partner-logo" [attr.data-scroll-key]="'home-partner-' + partner.name">
           <img [src]="partner.imageUrl" [alt]="partner.name" loading="lazy" width="150" height="60">
         </div>
       }
@@ -251,6 +251,7 @@
                 [title]="(activeTab() === 'services' ? 'SOLUTIONS.' : 'PRODUCTS.') + item.key + '_TITLE' | translate"
                 [description]="(activeTab() === 'services' ? 'SOLUTIONS.' : 'PRODUCTS.') + item.key + '_DESC' | translate"
                 [link]="['/', currentLang, activeTab() === 'services' ? 'solutions' : 'products', item.slug]"
+                [scrollKey]="'home-offering-' + item.key"
                 jslAnimateOnScroll
               >
               </jsl-card>
@@ -343,6 +344,7 @@
             [description]="'PROJECTS.' + project.key + '_DESC' | translate"
             [link]="['/', currentLang, 'projects', project.slug]"
             [metrics]="project.metrics || []"
+            [scrollKey]="'home-project-' + project.key"
             jslAnimateOnScroll
           >
           </jsl-card>
@@ -413,7 +415,7 @@
     </div>
     <swiper-container init="false" class="testimonial-slider" [attr.dir]="directionService.isRtl() ? 'rtl' : 'ltr'">
       @for (testimonial of testimonials(); track testimonial.nameKey) {
-        <swiper-slide class="testimonial-card">
+        <swiper-slide class="testimonial-card" [attr.data-scroll-key]="'home-testimonial-' + testimonial.nameKey">
           <div class="testimonial-card__stars">
             @for (star of getStars(5); track $index) {
               <lucide-icon name="Star"></lucide-icon>
@@ -503,6 +505,7 @@
             [title]="'BLOG.' + post.key + '_TITLE' | translate"
             [description]="'BLOG.' + post.key + '_EXCERPT' | translate"
             [link]="['/', currentLang, 'blog', post.slug]"
+            [scrollKey]="'home-blog-' + post.key"
             jslAnimateOnScroll
           >
           </jsl-card>

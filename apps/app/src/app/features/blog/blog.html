@@ -1,8 +1,8 @@
-<div class="page-container container">
+<div class="page-container container" data-scroll-anchor="top">
   <h1 class="page-title" jslAnimateOnScroll>{{ 'BLOG.TITLE' | translate }}</h1>
   <p class="page-subtitle" jslAnimateOnScroll>{{ 'BLOG.SUBTITLE' | translate }}</p>
 
-  <div class="blog-controls" jslAnimateOnScroll>
+  <div class="blog-controls" jslAnimateOnScroll data-scroll-anchor="controls">
     <div class="search-bar-wrapper">
       <div class="search-bar">
         <lucide-icon name="Search"></lucide-icon>
@@ -40,7 +40,7 @@
       <swiper-container #featuredSwiper init="false" class="featured-slider">
         @for (post of featuredPosts(); track post.key) {
           <swiper-slide>
-            <div class="featured-post-card">
+            <div class="featured-post-card" [attr.data-scroll-key]="'blog-featured-' + post.key">
               <a [routerLink]="['/', currentLang, 'blog', post.slug]" class="featured-post__image">
                 <img [src]="post.imageUrl" [alt]="'BLOG.' + post.key + '_TITLE' | translate" width="1200" height="600" loading="eager" fetchpriority="high" />
               </a>
@@ -79,7 +79,7 @@
     </div>
   }
 
-  <div class="blog-grid">
+  <div class="blog-grid" data-scroll-anchor="grid">
     @for (post of paginatedPosts(); track post.key) {
       <jsl-card
         [imageUrl]="post.imageUrl"

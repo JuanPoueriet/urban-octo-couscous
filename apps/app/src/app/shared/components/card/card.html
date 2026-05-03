@@ -4,8 +4,7 @@
      rel="noopener noreferrer"
      class="card"
      [class.card--service]="!imageUrl && icon"
-     [class.card--article]="imageUrl"
-     [attr.data-scroll-key]="scrollKey">
+     [class.card--article]="imageUrl">
 
     @if (imageUrl) {
       <div class="card__image-wrapper">
@@ -58,8 +57,7 @@
   <a [routerLink]="link"
      class="card"
      [class.card--service]="!imageUrl && icon"
-     [class.card--article]="imageUrl"
-     [attr.data-scroll-key]="scrollKey">
+     [class.card--article]="imageUrl">
 
     @if (imageUrl) {
       <div class="card__image-wrapper">
@@ -111,8 +109,7 @@
 } @else {
   <div class="card"
        [class.card--service]="!imageUrl && icon"
-       [class.card--article]="imageUrl"
-       [attr.data-scroll-key]="scrollKey">
+       [class.card--article]="imageUrl">
 
     @if (imageUrl) {
       <div class="card__image-wrapper">
