@@ -99,7 +99,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   public offeringsSwiperConfig: SwiperOptions = {
     modules: [Navigation, Pagination],
     slidesPerView: 1.2,
-    centeredSlides: false,
+    centeredSlides: true,
     spaceBetween: 16,
     grabCursor: true,
     loop: false,
@@ -114,18 +114,19 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     },
     breakpoints: {
       640: {
-        centeredSlides: true,
         slidesPerView: 1.5,
         spaceBetween: 5,
+        centeredSlides: true,
       },
       768: {
-        centeredSlides: true,
         slidesPerView: 2.2,
         spaceBetween: 25,
+        centeredSlides: true,
       },
       1024: {
         slidesPerView: 4,
         spaceBetween: 30,
+        centeredSlides: false,
       },
     },
   };
@@ -206,10 +207,12 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       768: {
         slidesPerView: 2.2,
         spaceBetween: 25,
+        centeredSlides: true,
       },
       1024: {
-        slidesPerView: 3,
+        slidesPerView: 4,
         spaceBetween: 30,
+        centeredSlides: false,
       },
     },
   };
@@ -234,10 +237,12 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       768: {
         slidesPerView: 2.2,
         spaceBetween: 25,
+        centeredSlides: true,
       },
       1024: {
-        slidesPerView: 3,
+        slidesPerView: 4,
         spaceBetween: 30,
+        centeredSlides: false,
       },
     },
   };
