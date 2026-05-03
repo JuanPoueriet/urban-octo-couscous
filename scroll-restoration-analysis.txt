@@ -1,0 +1,44 @@
+# Informe Técnico: Funcionalidad de Restauración de Scroll
+# Fecha: 2024-05-03
+# Autor: Jules (AI Software Engineer)
+
+## 1. Calificación General: 9/10
+
+La funcionalidad de restauración de scroll implementada en este proyecto es sobresaliente. No se limita a la restauración básica nativa del navegador, sino que emplea una estrategia de "caída en cascada" (fallback) de múltiples niveles que garantiza una experiencia de usuario fluida y precisa, incluso en aplicaciones dinámicas con carga asíncrona de contenido.
+
+## 2. Análisis Detallado de la Estrategia
+
+El sistema utiliza el `ScrollRestorationService` para gestionar la posición del scroll mediante cuatro niveles de precisión:
+
+### Nivel 1: Alta Precisión (High-Precision)
+Utiliza el atributo `data-scroll-key` para identificar elementos específicos con los que el usuario ha interactuado. Al navegar hacia atrás, el sistema localiza el elemento y restaura su posición exacta relativa al viewport. Esto evita el salto visual común cuando se insertan elementos dinámicamente por encima del punto de interés.
+
+### Nivel 2: Restauración Semántica (Semantic Anchors)
+Si no hay una clave de interacción, busca anclas semánticas (`data-scroll-anchor` o `id`) basadas en lo que el usuario estaba viendo (utilizando `elementFromPoint` en varios puntos de control). Esto asegura que el contexto visual se mantenga si el elemento exacto ya no está disponible pero la sección sí.
+
+### Nivel 3: Coordenadas Absolutas (Coordinate Fallback)
+Como tercer recurso, utiliza la coordenada Y absoluta. Es el método estándar, pero aquí sirve como red de seguridad para los casos donde las técnicas anteriores no aplican.
+
+### Nivel 4: Reset al Top
+Si no hay historial previo, el scroll se reinicia al inicio (0,0), que es el comportamiento esperado en una navegación nueva.
+
+## 3. Fortalezas Técnicas
+
+- **Estabilidad del Layout:** El uso de `waitForStableLayout` es una decisión de ingeniería brillante. Espera a que el `scrollHeight` del documento deje de cambiar (vía `ResizeObserver`) antes de intentar restaurar el scroll, solucionando el problema crónico de las SPAs donde el scroll falla porque el contenido aún no se ha renderizado.
+- **Integración con Lenis:** La delegación del scroll a `Lenis` a través de `ScrollEngineService` permite suavizado (smooth scrolling) y un control programático superior sin sacrificar el rendimiento.
+- **Desacoplamiento:** La lógica está bien aislada en servicios específicos, facilitando su mantenimiento y pruebas unitarias.
+- **Consideración de Header:** Calcula automáticamente el offset del header (`jsl-header`) para evitar que el contenido restaurado quede oculto bajo la navegación fija.
+
+## 4. Áreas de Mejora (Justificación del -1 punto)
+
+- **Dependencia de Interacción:** La "Alta Precisión" depende de que el usuario haya hecho clic en un elemento con `data-scroll-key`. Si el usuario simplemente hace scroll y navega mediante otro método, el sistema cae al Nivel 2 o 3. Se podría mejorar rastreando el elemento más prominente en el viewport durante el scroll pasivo.
+- **Complejidad de Mantenimiento:** Requiere que los desarrolladores añadan manualmente `data-scroll-key` o `scrollKey` en los componentes (como se ve en `jsl-card` y listas de productos). Si se olvida, la precisión disminuye.
+- **Timeout en Estabilidad:** El tiempo de espera de 3000ms en `waitForStableLayout` es seguro pero podría percibirse un retraso si el layout tarda mucho en estabilizarse, aunque es un compromiso necesario para la precisión.
+- **Efectos Secundarios Globales:** El uso de listeners globales en `document` dentro de un servicio singleton (`providedIn: 'root'`) puede introducir efectos secundarios en entornos de prueba si no se gestiona cuidadosamente el ciclo de vida del servicio, lo que puede derivar en una mayor fragilidad de la suite de tests.
+
+## 5. Conclusión
+
+El sistema es robusto, moderno y maneja proactivamente los problemas típicos de las aplicaciones Angular modernas. La implementación de la estabilidad del layout y la restauración basada en claves sitúa esta funcionalidad muy por encima del estándar de la industria.
+
+---
+*Fin del informe*
