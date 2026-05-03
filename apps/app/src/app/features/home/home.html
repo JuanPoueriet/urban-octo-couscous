@@ -273,6 +273,8 @@
         <!-- Custom Navigation Buttons -->
         <div
           class="offerings-swiper-button-prev"
+          [class.is-disabled]="!canOfferingsPrev()"
+          [attr.aria-disabled]="!canOfferingsPrev()"
           [attr.aria-label]="'ARIA.PREVIOUS_SLIDE' | translate"
           role="button"
           tabindex="0"
@@ -283,6 +285,8 @@
         </div>
         <div
           class="offerings-swiper-button-next"
+          [class.is-disabled]="!canOfferingsNext()"
+          [attr.aria-disabled]="!canOfferingsNext()"
           [attr.aria-label]="'ARIA.NEXT_SLIDE' | translate"
           role="button"
           tabindex="0"
@@ -375,6 +379,8 @@
     <!-- Custom Navigation Buttons -->
     <div
       class="projects-swiper-button-prev"
+      [class.is-disabled]="!canProjectsPrev()"
+      [attr.aria-disabled]="!canProjectsPrev()"
       [attr.aria-label]="'ARIA.PREVIOUS_SLIDE' | translate"
       role="button"
       tabindex="0"
@@ -385,6 +391,8 @@
     </div>
     <div
       class="projects-swiper-button-next"
+      [class.is-disabled]="!canProjectsNext()"
+      [attr.aria-disabled]="!canProjectsNext()"
       [attr.aria-label]="'ARIA.NEXT_SLIDE' | translate"
       role="button"
       tabindex="0"
@@ -547,6 +555,8 @@
     <!-- Custom Navigation Buttons -->
     <div
       class="insights-swiper-button-prev"
+      [class.is-disabled]="!canInsightsPrev()"
+      [attr.aria-disabled]="!canInsightsPrev()"
       [attr.aria-label]="'ARIA.PREVIOUS_SLIDE' | translate"
       role="button"
       tabindex="0"
@@ -557,6 +567,8 @@
     </div>
     <div
       class="insights-swiper-button-next"
+      [class.is-disabled]="!canInsightsNext()"
+      [attr.aria-disabled]="!canInsightsNext()"
       [attr.aria-label]="'ARIA.NEXT_SLIDE' | translate"
       role="button"
       tabindex="0"
