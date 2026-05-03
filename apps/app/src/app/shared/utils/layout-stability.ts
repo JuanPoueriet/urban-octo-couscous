@@ -9,7 +9,7 @@ import { isPlatformBrowser } from '@angular/common';
  */
 export async function waitForStableLayout(
   maxWaitMs: number = 3000,
-  quietWindowMs: number = 200,
+  quietWindowMs: number = 150,
   platformId?: object
 ): Promise<void> {
   if (platformId && !isPlatformBrowser(platformId)) {
@@ -21,9 +21,21 @@ export async function waitForStableLayout(
     return Promise.resolve();
   }
 
+  // Ensure fonts are loaded as they often cause layout shifts
+  if ('fonts' in document) {
+    try {
+      await Promise.race([
+        (document as any).fonts.ready,
+        new Promise((resolve) => setTimeout(resolve, maxWaitMs)),
+      ]);
+    } catch (e) {
+      // Ignore font loading errors
+    }
+  }
+
   return new Promise((resolve) => {
     let timeoutId: any;
-    let startTime = Date.now();
+    const startTime = Date.now();
     let lastHeight = document.documentElement.scrollHeight;
 
     const cleanup = () => {
