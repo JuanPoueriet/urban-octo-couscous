@@ -41,7 +41,7 @@ import { PictureComponent } from '@shared/components/picture/picture';
 import { computed } from '@angular/core';
 
 // Swiper Web Components
-import { Pagination, Autoplay, EffectCoverflow, EffectFade, Navigation } from 'swiper/modules';
+import { Pagination, Autoplay, EffectCoverflow, EffectFade, Navigation, EffectCreative } from 'swiper/modules';
 import { register } from 'swiper/element/bundle';
 
 register();
@@ -103,7 +103,23 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   };
 
   public offeringsSwiperConfig: SwiperOptions = {
-    modules: [Navigation, Pagination],
+    modules: [Navigation, Pagination, EffectCreative],
+    effect: 'creative',
+    watchSlidesProgress: true,
+    creativeEffect: {
+      limitProgress: 2,
+      perspective: true,
+      prev: {
+        translate: ['-68%', 0, -120],
+        scale: 0.82,
+        opacity: 0.42,
+      },
+      next: {
+        translate: ['70%', 0, -120],
+        scale: 0.82,
+        opacity: 0.42,
+      },
+    },
     slidesPerView: 1.25,
     centeredSlides: true,
     spaceBetween: 14,
@@ -125,11 +141,13 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         centeredSlides: true,
       },
       768: {
+        effect: 'slide',
         slidesPerView: 4,
         spaceBetween: 24,
         centeredSlides: false,
       },
       1024: {
+        effect: 'slide',
         slidesPerView: 4,
         spaceBetween: 24,
         centeredSlides: false,
