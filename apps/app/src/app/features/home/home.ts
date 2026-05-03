@@ -1018,6 +1018,20 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
+  private easeOutBounce = (x: number) => {
+    const n1 = 7.5625;
+    const d1 = 2.75;
+    if (x < 1 / d1) {
+      return n1 * x * x;
+    } else if (x < 2 / d1) {
+      return n1 * (x -= 1.5 / d1) * x + 0.75;
+    } else if (x < 2.5 / d1) {
+      return n1 * (x -= 2.25 / d1) * x + 0.9375;
+    } else {
+      return n1 * (x -= 2.625 / d1) * x + 0.984375;
+    }
+  };
+
   private runScrollPeekAnimation() {
     if (!this.isBrowser || sessionStorage.getItem('jsl_home_idle_animated')) return;
 
@@ -1027,33 +1041,19 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
     // Funciones de easing personalizadas para un efecto más natural
     const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
-    const easeOutBounce = (x: number) => {
-      const n1 = 7.5625;
-      const d1 = 2.75;
-      if (x < 1 / d1) {
-        return n1 * x * x;
-      } else if (x < 2 / d1) {
-        return n1 * (x -= 1.5 / d1) * x + 0.75;
-      } else if (x < 2.5 / d1) {
-        return n1 * (x -= 2.25 / d1) * x + 0.9375;
-      } else {
-        return n1 * (x -= 2.625 / d1) * x + 0.984375;
-      }
-    };
 
-    // Animación de bajada sutil
+    // Misma animación, pero más rápida
     this.scrollEngine.scrollTo(peekAmount, {
-      duration: 1.5,
+      duration: 1.0,
       easing: easeOutCubic,
       onComplete: () => {
-        // Pausa breve y vuelta arriba con efecto de "pelota rebotando" (choque elástico)
-        // Se aumenta la duración para que el rebote sea elegante y no brusco.
+        // Pausa breve y vuelta arriba con rebote, en menor tiempo.
         setTimeout(() => {
           this.scrollEngine.scrollTo(0, {
-            duration: 2.5,
-            easing: easeOutBounce,
+            duration: 1.8,
+            easing: this.easeOutBounce,
           });
-        }, 800);
+        }, 400);
       }
     });
   }
