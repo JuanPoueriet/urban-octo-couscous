@@ -212,7 +212,23 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   };
 
   public insightsSwiperConfig: SwiperOptions = {
-    modules: [Navigation, Pagination],
+    modules: [Navigation, Pagination, EffectCreative],
+    effect: 'creative',
+    watchSlidesProgress: true,
+    creativeEffect: {
+      limitProgress: 2,
+      perspective: true,
+      prev: {
+        translate: ['-64%', 0, -110],
+        scale: 0.84,
+        opacity: 0.45,
+      },
+      next: {
+        translate: ['66%', 0, -110],
+        scale: 0.84,
+        opacity: 0.45,
+      },
+    },
     slidesPerView: 1.25,
     centeredSlides: true,
     spaceBetween: 20,
@@ -229,11 +245,19 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     },
     breakpoints: {
       768: {
+        effect: 'slide',
         slidesPerView: 4,
         spaceBetween: 24,
         centeredSlides: false,
       },
       1024: {
+        effect: 'slide',
+        slidesPerView: 4,
+        spaceBetween: 24,
+        centeredSlides: false,
+      },
+      1440: {
+        effect: 'slide',
         slidesPerView: 4,
         spaceBetween: 24,
         centeredSlides: false,
@@ -242,7 +266,23 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   };
 
   public projectsSwiperConfig: SwiperOptions = {
-    modules: [Navigation, Pagination],
+    modules: [Navigation, Pagination, EffectCreative],
+    effect: 'creative',
+    watchSlidesProgress: true,
+    creativeEffect: {
+      limitProgress: 2,
+      perspective: true,
+      prev: {
+        translate: ['-64%', 0, -110],
+        scale: 0.84,
+        opacity: 0.45,
+      },
+      next: {
+        translate: ['66%', 0, -110],
+        scale: 0.84,
+        opacity: 0.45,
+      },
+    },
     slidesPerView: 1.25,
     centeredSlides: true,
     spaceBetween: 20,
@@ -259,11 +299,19 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     },
     breakpoints: {
       768: {
+        effect: 'slide',
         slidesPerView: 4,
         spaceBetween: 24,
         centeredSlides: false,
       },
       1024: {
+        effect: 'slide',
+        slidesPerView: 4,
+        spaceBetween: 24,
+        centeredSlides: false,
+      },
+      1440: {
+        effect: 'slide',
         slidesPerView: 4,
         spaceBetween: 24,
         centeredSlides: false,

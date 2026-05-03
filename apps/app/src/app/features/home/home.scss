@@ -1488,28 +1488,38 @@ swiper-container {
     padding-block: 0.75rem 1.25rem;
   }
 
-  .offerings-swiper .swiper-wrapper {
+  .offerings-swiper .swiper-wrapper,
+  .projects-swiper .swiper-wrapper,
+  .insights-swiper .swiper-wrapper {
     align-items: stretch;
   }
 
-  .offering-slide {
+  .offering-slide,
+  .project-slide,
+  .insight-slide {
     transition: filter 220ms ease, opacity 220ms ease;
     will-change: transform, opacity;
     opacity: 1;
     filter: saturate(0.88);
   }
 
-  .offering-slide.swiper-slide-active {
+  .offering-slide.swiper-slide-active,
+  .project-slide.swiper-slide-active,
+  .insight-slide.swiper-slide-active {
     filter: saturate(1);
   }
 
-  .offering-slide .card {
+  .offering-slide .card,
+  .project-slide .card,
+  .insight-slide .card {
     box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14);
     border-radius: 20px;
     transition: box-shadow 220ms ease;
   }
 
-  .offering-slide.swiper-slide-active .card {
+  .offering-slide.swiper-slide-active .card,
+  .project-slide.swiper-slide-active .card,
+  .insight-slide.swiper-slide-active .card {
     box-shadow: 0 16px 34px rgba(0, 0, 0, 0.22);
   }
 }
