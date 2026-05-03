@@ -1005,10 +1005,10 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       fromEvent(window, 'scroll')
     ).pipe(startWith(null));
 
-    // Esperar 10 segundos de inactividad
+    // Esperar 8 segundos de inactividad para sugerir scroll antes
     interactions$
       .pipe(
-        switchMap(() => timer(10000)),
+        switchMap(() => timer(8000)),
         takeUntil(this.destroy$),
         // Solo si el usuario está al inicio de la página
         filter(() => window.scrollY < 50)
