@@ -85,7 +85,9 @@
       },
       "defaultConfiguration": "development",
       "options": {
-        "prebundle": false
+        "prebundle": false,
+        "allowedHosts": true,
+        "host": "0.0.0.0"
       }
     },
     "extract-i18n": {

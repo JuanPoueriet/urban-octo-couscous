@@ -435,7 +435,14 @@ app.use((req, res, next) => {
   );
 
   const dynamicBaseUrl = resolveCanonicalBaseUrl(req);
-  const requestHost = req.get('host');
+  const requestHost = req.get('host') ?? '';
+  const requestHostname = (() => {
+    try {
+      return new URL(`http://${requestHost}`).hostname;
+    } catch {
+      return requestHost;
+    }
+  })();
 
   angularApp
     .handle(req, {
@@ -446,7 +453,14 @@ app.use((req, res, next) => {
         { provide: GA_MEASUREMENT_ID, useValue: ENV_GA_MEASUREMENT_ID },
         { provide: GSC_VERIFICATION_TOKEN, useValue: ENV_GSC_VERIFICATION_TOKEN },
       ],
-      allowedHosts: ['127.0.0.1', 'localhost', '127.0.0.1:4000', 'localhost:4000', requestHost],
+      allowedHosts: [
+        '127.0.0.1',
+        'localhost',
+        '127.0.0.1:4000',
+        'localhost:4000',
+        requestHost,
+        requestHostname,
+      ],
     })
     .then((response) =>
       response ? writeResponseToNodeResponse(response, res) : next(),
