@@ -5,7 +5,9 @@ import { CanActivateFn, ActivatedRouteSnapshot, Router, RouterStateSnapshot } fr
 import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
 import { SUPPORTED_LANGUAGES } from '../constants/languages';
-import { buildLocalizedUrl, normalizeLang } from '../utils/language-url';
+import { buildLocalizedUrl, normalizeLang, detectPreferredLanguage } from '../utils/language-url';
+import { Optional } from '@angular/core';
+import { REQUEST } from '../constants/tokens';
 
 @Injectable({ providedIn: 'root' })
 export class LanguageInitService {
@@ -15,7 +17,8 @@ export class LanguageInitService {
     private cookieService: CookieService,
     @Inject(PLATFORM_ID) private platformId: object,
     // --- 2. INYECTAR DOCUMENT ---
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    @Optional() @Inject(REQUEST) private request: any
   ) {}
 
   initLanguage(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
@@ -51,6 +54,14 @@ export class LanguageInitService {
           const browserLang = this.translate.getBrowserLang() || '';
           langToUse = supportedLangs.includes(browserLang) ? browserLang : defaultLang;
         }
+      } else if (this.request) {
+        // SSR Language Detection
+        langToUse = detectPreferredLanguage(
+          this.request.headers['accept-language'],
+          this.request.headers['cookie'],
+          supportedLangs,
+          defaultLang
+        );
       }
 
       // Prependemos el idioma detectado a la URL original.
