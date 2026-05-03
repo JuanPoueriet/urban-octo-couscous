@@ -1041,19 +1041,18 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       }
     };
 
-    // Animación de bajada sutil
+    // Misma animación, pero más rápida
     this.scrollEngine.scrollTo(peekAmount, {
-      duration: 1.5,
+      duration: 1.0,
       easing: easeOutCubic,
       onComplete: () => {
-        // Pausa breve y vuelta arriba con efecto de "pelota rebotando" (choque elástico)
-        // Se aumenta la duración para que el rebote sea elegante y no brusco.
+        // Pausa breve y vuelta arriba con rebote, en menor tiempo.
         setTimeout(() => {
           this.scrollEngine.scrollTo(0, {
-            duration: 2.5,
+            duration: 1.8,
             easing: easeOutBounce,
           });
-        }, 800);
+        }, 400);
       }
     });
   }
