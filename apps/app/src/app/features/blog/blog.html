@@ -86,7 +86,6 @@
         [title]="'BLOG.' + post.key + '_TITLE' | translate"
         [description]="'BLOG.' + post.key + '_EXCERPT' | translate"
         [link]="['/', currentLang, 'blog', post.slug]"
-        [scrollKey]="'blog-' + post.key"
         [meta]="{
           date: post.date,
           readTime: post.readTime,

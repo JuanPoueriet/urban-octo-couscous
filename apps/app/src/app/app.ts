@@ -14,7 +14,6 @@ import { WhatsAppButtonComponent } from './shared/components/whatsapp-button/wha
 import { SUPPORTED_LANGUAGES } from '@core/constants/languages';
 import { ToastComponent } from './shared/components/toast/toast';
 import { CookieBannerComponent } from './shared/components/cookie-banner/cookie-banner';
-import { ScrollRestorationService } from './core/services/scroll-restoration.service';
 import { ScrollEngineService } from './core/services/scroll-engine.service';
 import Lenis from 'lenis';
 
@@ -56,7 +55,6 @@ export class App implements OnInit, OnDestroy {
     private seo: Seo,
     private analytics: AnalyticsService,
     private directionService: DirectionService, // Inject to initialize
-    private scrollRestoration: ScrollRestorationService, // Keep to initialize
     private scrollEngine: ScrollEngineService,
     @Inject(PLATFORM_ID) private platformId: object,
     private cookieService: CookieService,

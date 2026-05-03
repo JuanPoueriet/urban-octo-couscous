@@ -14,8 +14,7 @@
       <span class="section-eyebrow" jslAnimateOnScroll>{{ 'PROJECTS.FEATURED_EYEBROW' | translate }}</span>
       <a [routerLink]="['/', currentLang, 'projects', featuredProject()!.slug]"
          class="featured-card"
-         jslAnimateOnScroll
-         [attr.data-scroll-key]="'project-featured-' + featuredProject()!.key">
+         jslAnimateOnScroll>
         <div class="featured-card__image">
           <img
             [src]="featuredProject()!.imageUrl"
@@ -74,7 +73,6 @@
           [title]="'PROJECTS.' + project.key + '_TITLE' | translate"
           [description]="'PROJECTS.' + project.key + '_DESC' | translate"
           [link]="['/', currentLang, 'projects', project.slug]"
-          [scrollKey]="'project-' + project.key"
           jslAnimateOnScroll>
         </jsl-card>
       } @empty {
