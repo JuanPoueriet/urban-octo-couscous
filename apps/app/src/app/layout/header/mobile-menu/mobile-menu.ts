@@ -344,9 +344,12 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private triggerHapticFeedback() {
-    if (this.isBrowser && navigator.vibrate) {
-      navigator.vibrate(5);
-    }
+    if (!this.isBrowser || !navigator.vibrate) return;
+
+    // Chrome blocks vibration when there is no user activation yet.
+    if (navigator.userActivation && !navigator.userActivation.isActive) return;
+
+    navigator.vibrate(5);
   }
 
   @HostListener('document:keydown', ['$event'])
