@@ -122,7 +122,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         spaceBetween: 25,
       },
       1024: {
-        slidesPerView: 3,
+        slidesPerView: 3.2,
         spaceBetween: 30,
       },
     },
@@ -206,7 +206,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         spaceBetween: 25,
       },
       1024: {
-        slidesPerView: 3,
+        slidesPerView: 3.2,
         spaceBetween: 30,
       },
     },
@@ -234,7 +234,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         spaceBetween: 25,
       },
       1024: {
-        slidesPerView: 3,
+        slidesPerView: 3.2,
         spaceBetween: 30,
       },
     },
