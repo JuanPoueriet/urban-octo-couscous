@@ -4,6 +4,8 @@ import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { CanActivateFn, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
+import { SUPPORTED_LANGUAGES } from '../constants/languages';
+import { buildLocalizedUrl, normalizeLang } from '../utils/language-url';
 
 @Injectable({ providedIn: 'root' })
 export class LanguageInitService {
@@ -17,8 +19,8 @@ export class LanguageInitService {
   ) {}
 
   initLanguage(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    const lang = route.params['lang'];
-    const supportedLangs = this.translate.getLangs();
+    const lang = normalizeLang(route.params['lang']);
+    const supportedLangs = this.translate.getLangs().length ? this.translate.getLangs() : SUPPORTED_LANGUAGES;
 
     if (supportedLangs.includes(lang)) {
       // 1. Activar el idioma en ngx-translate (Se ejecuta en servidor y cliente)
@@ -53,7 +55,7 @@ export class LanguageInitService {
 
       // Prependemos el idioma detectado a la URL original.
       // state.url contiene la ruta completa empezando por '/'.
-      const targetUrl = `/${langToUse}${state.url}`;
+      const targetUrl = buildLocalizedUrl(state.url, langToUse, supportedLangs);
 
       this.router.navigateByUrl(targetUrl, { replaceUrl: true });
       return false;

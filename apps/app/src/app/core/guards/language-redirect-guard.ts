@@ -1,8 +1,10 @@
 import { Injectable, inject, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
+import { CanActivateFn, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
+import { SUPPORTED_LANGUAGES } from '../constants/languages';
+import { buildLocalizedUrl } from '../utils/language-url';
 
 @Injectable({ providedIn: 'root' })
 export class LanguageRedirectService {
@@ -13,36 +15,25 @@ export class LanguageRedirectService {
     @Inject(PLATFORM_ID) private platformId: object
   ) {}
 
-  redirect(state: RouterStateSnapshot): boolean {
+  redirect(state: RouterStateSnapshot): UrlTree {
+    const defaultLang = 'en';
+    const supportedLangs = this.translate.getLangs().length ? this.translate.getLangs() : SUPPORTED_LANGUAGES;
+
+    let storedLang: string | null = null;
+
     if (isPlatformBrowser(this.platformId)) {
-      const defaultLang = 'en';
-      const supportedLangs = this.translate.getLangs();
+      storedLang = this.cookieService.get('lang') || localStorage.getItem('jsl_lang');
 
-      // 1. Intentar obtener el idioma desde cookies o localStorage (visitas anteriores)
-      let storedLang = this.cookieService.get('lang') || localStorage.getItem('jsl_lang');
-
-      // 2. Si no está, detectar el idioma del navegador
       if (!storedLang) {
         const browserLang = this.translate.getBrowserLang() || '';
-        storedLang = supportedLangs.includes(browserLang)
-          ? browserLang
-          : defaultLang;
+        storedLang = supportedLangs.includes(browserLang) ? browserLang : defaultLang;
       }
-
-      // 3. Validar que el idioma esté soportado
-      const langToUse =
-        storedLang && supportedLangs.includes(storedLang)
-          ? storedLang
-          : defaultLang;
-
-      // Construir la nueva URL preservando la ruta original
-      const targetUrl = `/${langToUse}${state.url === '/' ? '' : state.url}`;
-
-      // Redirigir a la ruta con el idioma, manteniendo la URL limpia
-      this.router.navigateByUrl(targetUrl, { replaceUrl: true });
     }
-    // Prevenimos la navegación a la ruta vacía, ya que la redirección se encargará.
-    return false;
+
+    const langToUse = storedLang && supportedLangs.includes(storedLang) ? storedLang : defaultLang;
+    const targetUrl = buildLocalizedUrl(state.url, langToUse, supportedLangs);
+
+    return this.router.parseUrl(targetUrl);
   }
 }
 

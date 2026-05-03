@@ -1,17 +1,44 @@
+import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { CanActivateFn } from '@angular/router';
+import { RouterStateSnapshot } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateService } from '@ngx-translate/core';
+import { CookieService } from 'ngx-cookie-service';
 
-import { languageRedirectGuard } from './language-redirect-guard';
+import { LanguageRedirectService } from './language-redirect-guard';
 
-describe('languageRedirectGuard', () => {
-  const executeGuard: CanActivateFn = (...guardParameters) => 
-      TestBed.runInInjectionContext(() => languageRedirectGuard(...guardParameters));
+describe('LanguageRedirectService', () => {
+  const createState = (url: string) => ({ url } as RouterStateSnapshot);
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
+  it('returns UrlTree with default language on server', () => {
+    TestBed.configureTestingModule({
+      imports: [RouterTestingModule],
+      providers: [
+        LanguageRedirectService,
+        { provide: PLATFORM_ID, useValue: 'server' },
+        { provide: CookieService, useValue: { get: () => '' } },
+        { provide: TranslateService, useValue: { getLangs: () => ['en', 'es'], getBrowserLang: () => 'es' } },
+      ],
+    });
+
+    const service = TestBed.inject(LanguageRedirectService);
+    const tree = service.redirect(createState('/solutions/web-development'));
+    expect(tree.toString()).toBe('/en/solutions/web-development');
   });
 
-  it('should be created', () => {
-    expect(executeGuard).toBeTruthy();
+  it('does not duplicate language in URL', () => {
+    TestBed.configureTestingModule({
+      imports: [RouterTestingModule],
+      providers: [
+        LanguageRedirectService,
+        { provide: PLATFORM_ID, useValue: 'browser' },
+        { provide: CookieService, useValue: { get: () => 'es' } },
+        { provide: TranslateService, useValue: { getLangs: () => ['en', 'es'], getBrowserLang: () => 'es' } },
+      ],
+    });
+
+    const service = TestBed.inject(LanguageRedirectService);
+    const tree = service.redirect(createState('/en/solutions/web-development'));
+    expect(tree.toString()).toBe('/en/solutions/web-development');
   });
 });
