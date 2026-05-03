@@ -26,13 +26,22 @@ interface ScrollState {
   providedIn: 'root',
 })
 export class ScrollRestorationService implements OnDestroy {
-  private readonly STORAGE_KEY = 'jsl_scroll_history';
+  private readonly STORAGE_KEY = 'jsl_scroll_history_v1';
   private readonly MAX_HISTORY_SIZE = 100;
   private destroy$ = new Subject<void>();
   private isBrowser: boolean;
   private scrollHistory = new Map<string, ScrollState>();
   private lastInteractedKey: string | null = null;
   private currentNavigationId = 0;
+
+  // Diagnostics: metrics about restoration strategies used
+  private metrics = {
+    key: 0,
+    anchor: 0,
+    y: 0,
+    top: 0,
+    lateAdjustments: 0,
+  };
 
   constructor(
     private router: Router,
@@ -216,10 +225,7 @@ export class ScrollRestorationService implements OnDestroy {
 
     // 1. High-precision restoration via scrollKey and relative position
     if (state?.scrollKey && state.relativeTop !== null) {
-      const element =
-        this.document.querySelector(`[data-scroll-key="${state.scrollKey}"]`) ||
-        this.document.querySelector(`[data-scroll-anchor="${state.scrollKey}"]`) ||
-        this.document.getElementById(state.scrollKey);
+      const element = this.getElementByKey(state.scrollKey);
 
       if (element) {
         if (navId !== this.currentNavigationId) return;
@@ -228,10 +234,14 @@ export class ScrollRestorationService implements OnDestroy {
             `[ScrollRestoration] High-precision restore: ${state.scrollKey} at relTop ${state.relativeTop}`
           );
         }
+        this.metrics.key++;
         this.scrollEngine.scrollTo(element as HTMLElement, {
           offset: state.relativeTop,
           immediate: true,
         });
+
+        // Trigger late reconciliation for dynamic layouts
+        this.scheduleLateReconciliation(state.scrollKey, state.relativeTop, navId);
         return;
       }
     }
@@ -247,6 +257,7 @@ export class ScrollRestorationService implements OnDestroy {
         if (isDevMode()) {
           console.log(`[ScrollRestoration] Restoring via anchor: ${state.anchor} for ${url}`);
         }
+        this.metrics.anchor++;
         this.scrollEngine.scrollTo(element as HTMLElement, {
           offset: -headerOffset,
           immediate: true,
@@ -261,7 +272,43 @@ export class ScrollRestorationService implements OnDestroy {
     if (isDevMode()) {
       console.log(`[ScrollRestoration] Restoring via Y coordinate: ${targetY} for ${url}`);
     }
+    this.metrics.y++;
     this.scrollEngine.scrollTo(targetY, { immediate: true });
+  }
+
+  /**
+   * Schedules a second restoration attempt after a delay to account for late layout shifts.
+   */
+  private scheduleLateReconciliation(key: string, expectedRelTop: number, navId: number): void {
+    setTimeout(() => {
+      if (navId !== this.currentNavigationId) return;
+
+      const element = this.getElementByKey(key);
+      if (element) {
+        const currentRelTop = element.getBoundingClientRect().top;
+        const diff = Math.abs(currentRelTop - expectedRelTop);
+
+        // If shifted more than 5px, reconcile
+        if (diff > 5) {
+          if (isDevMode()) {
+            console.log(`[ScrollRestoration] Late reconciliation for ${key}. Diff: ${diff}px`);
+          }
+          this.metrics.lateAdjustments++;
+          this.scrollEngine.scrollTo(element as HTMLElement, {
+            offset: expectedRelTop,
+            immediate: false, // Smooth adjustment if it's late
+          });
+        }
+      }
+    }, 600); // Wait for potential late lazy loads or font shifts
+  }
+
+  private getElementByKey(key: string): HTMLElement | null {
+    return (
+      this.document.querySelector(`[data-scroll-key="${key}"]`) ||
+      this.document.querySelector(`[data-scroll-anchor="${key}"]`) ||
+      this.document.getElementById(key)
+    ) as HTMLElement | null;
   }
 
   private loadHistoryFromStorage(): void {
@@ -302,7 +349,15 @@ export class ScrollRestorationService implements OnDestroy {
   }
 
   private scrollToTop(): void {
+    this.metrics.top++;
     this.scrollEngine.scrollTo(0, { immediate: true });
+  }
+
+  /**
+   * Returns diagnostics metrics for the restoration service.
+   */
+  getDiagnostics() {
+    return { ...this.metrics };
   }
 
   ngOnDestroy(): void {

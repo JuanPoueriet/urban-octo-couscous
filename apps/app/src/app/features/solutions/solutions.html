@@ -4,7 +4,7 @@
   <div class="bg-glow bg-glow--2"></div>
 
   <!-- Hero Section -->
-  <section class="solutions-hero">
+  <section class="solutions-hero" data-scroll-anchor="hero">
     <div class="container">
       <div class="hero-content">
         <span class="section-eyebrow" jslAnimateOnScroll>{{ 'SOLUTIONS.EYEBROW' | translate }}</span>
@@ -21,7 +21,7 @@
   </section>
 
   <!-- Stats Section -->
-  <section class="solutions-stats">
+  <section class="solutions-stats" data-scroll-anchor="stats">
     <div class="container">
       <div class="stats-grid">
         @for (stat of stats; track stat.labelKey) {
@@ -40,7 +40,7 @@
   </section>
 
   <!-- Narrative Intro -->
-  <section class="solutions-narrative">
+  <section class="solutions-narrative" data-scroll-anchor="narrative">
     <div class="container">
       <div class="narrative-grid">
         <div class="narrative-text" jslAnimateOnScroll>

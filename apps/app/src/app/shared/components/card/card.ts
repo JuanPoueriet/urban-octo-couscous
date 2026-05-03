@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, HostBinding } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
 import { RouterLink } from '@angular/router';
@@ -16,7 +16,10 @@ export class Card {
   @Input() imageUrl: string | null = null;
   @Input() title = 'Card Title';
   @Input() description = 'Card description goes here.';
-  @Input() scrollKey: string | null = null;
+
+  @Input()
+  @HostBinding('attr.data-scroll-key')
+  scrollKey: string | null = null;
 
   @Input() link: any[] | string | null = null;
   @Input() externalLink: string | null | undefined = null;
