@@ -1030,18 +1030,18 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     const easeInOutCubic = (t: number) =>
       t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
-    // Animación de bajada más ágil y fluida
+    // Misma animación, pero más rápida
     this.scrollEngine.scrollTo(peekAmount, {
       duration: 1.0,
       easing: easeOutCubic,
       onComplete: () => {
-        // Pausa corta y regreso suave sin rebote para no fatigar al usuario.
+        // Pausa breve y vuelta arriba con rebote, en menor tiempo.
         setTimeout(() => {
           this.scrollEngine.scrollTo(0, {
-            duration: 1.2,
-            easing: easeInOutCubic,
+            duration: 1.8,
+            easing: easeOutBounce,
           });
-        }, 250);
+        }, 400);
       }
     });
   }
