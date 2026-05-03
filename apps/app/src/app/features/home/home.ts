@@ -1013,18 +1013,35 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
     sessionStorage.setItem('jsl_home_idle_animated', 'true');
 
+    // Funciones de easing personalizadas para un efecto más natural
+    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+    const easeOutBounce = (x: number) => {
+      const n1 = 7.5625;
+      const d1 = 2.75;
+      if (x < 1 / d1) {
+        return n1 * x * x;
+      } else if (x < 2 / d1) {
+        return n1 * (x -= 1.5 / d1) * x + 0.75;
+      } else if (x < 2.5 / d1) {
+        return n1 * (x -= 2.25 / d1) * x + 0.9375;
+      } else {
+        return n1 * (x -= 2.625 / d1) * x + 0.984375;
+      }
+    };
+
     // Animación de bajada sutil
     this.scrollEngine.scrollTo(peekAmount, {
-      duration: 1.2,
-      easing: (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2, // easeInOutCubic
+      duration: 1.5,
+      easing: easeOutCubic,
       onComplete: () => {
-        // Pausa breve y vuelta arriba
+        // Pausa breve y vuelta arriba con efecto de "pelota rebotando" (choque elástico)
+        // Se aumenta la duración para que el rebote sea elegante y no brusco.
         setTimeout(() => {
           this.scrollEngine.scrollTo(0, {
-            duration: 1,
-            easing: (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
+            duration: 2.5,
+            easing: easeOutBounce,
           });
-        }, 500);
+        }, 800);
       }
     });
   }
