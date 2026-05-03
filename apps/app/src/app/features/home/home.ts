@@ -124,7 +124,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         centeredSlides: true,
       },
       1024: {
-        slidesPerView: 4,
+        slidesPerView: 3.2,
         spaceBetween: 30,
         centeredSlides: false,
       },
