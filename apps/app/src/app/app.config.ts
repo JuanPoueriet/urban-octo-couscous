@@ -79,8 +79,12 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(
       routes,
-      withInMemoryScrolling({ scrollPositionRestoration: 'disabled' }),
+      withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }),
     ),
+    /*
+      NOTE: Native scroll restoration only handles the main window scroll.
+      Internal scroll containers (overflow: auto/scroll) are not covered by this solution.
+    */
     provideHttpClient(withFetch()),
     provideAnimationsAsync(),
     provideTranslateService({
