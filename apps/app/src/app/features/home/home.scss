@@ -279,9 +279,6 @@ swiper-container {
     position: relative;
     width: 100%;
     padding: 1rem 0 3rem;
-
-    --offerings-nav-left-visibility: 0;
-    --offerings-nav-right-visibility: 0;
   }
 
   .offerings-swiper {
@@ -295,12 +292,25 @@ swiper-container {
     --swiper-pagination-bullet-horizontal-gap: 6px;
   }
 
+  @mixin slide-peek-effect {
+    transition:
+      transform 0.4s ease,
+      opacity 0.4s ease;
+
+    &:not(.swiper-slide-active) {
+      transform: scale(0.9);
+      opacity: 0.6;
+    }
+  }
+
   .offering-slide {
     height: auto;
     display: flex;
     justify-content: center;
 
     padding: 20px 0px !important;
+
+    @include slide-peek-effect;
 
     jsl-card {
       width: min(100%, 275px);
@@ -326,7 +336,12 @@ swiper-container {
     color: rgba(255, 255, 255, 0.8);
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    opacity: 0.5;
+    opacity: 0.35;
+
+    &.swiper-button-disabled {
+      opacity: 0.1;
+      pointer-events: none;
+    }
 
     @media (max-width: 768px) {
       display: none !important;
@@ -357,7 +372,6 @@ swiper-container {
 
   .offerings-swiper-button-prev {
     inset-inline-start: -1rem;
-    opacity: calc(0.1 + (var(--offerings-nav-left-visibility, 0) * 0.9));
 
     @media (min-width: 1400px) {
       inset-inline-start: -2rem;
@@ -366,7 +380,6 @@ swiper-container {
 
   .offerings-swiper-button-next {
     inset-inline-end: -1rem;
-    opacity: calc(0.1 + (var(--offerings-nav-right-visibility, 0) * 0.9));
 
     @media (min-width: 1400px) {
       inset-inline-end: -2rem;
@@ -915,9 +928,6 @@ swiper-container {
 
 .featured-projects {
   position: relative;
-
-  --projects-nav-left-visibility: 0;
-  --projects-nav-right-visibility: 0;
 }
 
 .featured-services__header,
@@ -978,6 +988,7 @@ swiper-container {
 .project-slide {
   height: auto;
   display: flex;
+  @include slide-peek-effect;
 }
 
 .projects-swiper-button-next,
@@ -999,7 +1010,12 @@ swiper-container {
   color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  opacity: 0.5;
+    opacity: 0.35;
+
+    &.swiper-button-disabled {
+      opacity: 0.1;
+      pointer-events: none;
+    }
 
   @media (max-width: 768px) {
     display: none !important;
@@ -1030,7 +1046,6 @@ swiper-container {
 
 .projects-swiper-button-prev {
   inset-inline-start: -1rem;
-  opacity: calc(0.1 + (var(--projects-nav-left-visibility, 0) * 0.9));
 
   @media (min-width: 1400px) {
     inset-inline-start: -2rem;
@@ -1039,7 +1054,6 @@ swiper-container {
 
 .projects-swiper-button-next {
   inset-inline-end: -1rem;
-  opacity: calc(0.1 + (var(--projects-nav-right-visibility, 0) * 0.9));
 
   @media (min-width: 1400px) {
     inset-inline-end: -2rem;
@@ -1136,9 +1150,6 @@ swiper-container {
   padding: 6rem 0;
   border-top: 1px solid var(--border-color);
   position: relative;
-
-  --insights-nav-left-visibility: 0;
-  --insights-nav-right-visibility: 0;
 }
 
 .latest-insights__header {
@@ -1168,6 +1179,7 @@ swiper-container {
 .insight-slide {
   height: auto;
   display: flex;
+  @include slide-peek-effect;
 }
 
 // Replicating Hero-style Navigation for Insights Slider
@@ -1190,7 +1202,12 @@ swiper-container {
   color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  opacity: 0.5;
+  opacity: 0.35;
+
+  &.swiper-button-disabled {
+    opacity: 0.1;
+    pointer-events: none;
+  }
 
   @media (max-width: 768px) {
     display: none !important; // Hide buttons on mobile as requested
@@ -1221,7 +1238,6 @@ swiper-container {
 
 .insights-swiper-button-prev {
   inset-inline-start: -1rem; // Slight overlap or outside depending on container
-  opacity: calc(0.1 + (var(--insights-nav-left-visibility, 0) * 0.9));
 
   @media (min-width: 1400px) {
     inset-inline-start: -2rem;
@@ -1230,7 +1246,6 @@ swiper-container {
 
 .insights-swiper-button-next {
   inset-inline-end: -1rem;
-  opacity: calc(0.1 + (var(--insights-nav-right-visibility, 0) * 0.9));
 
   @media (min-width: 1400px) {
     inset-inline-end: -2rem;
@@ -1329,18 +1344,6 @@ swiper-container {
     padding: 4rem 0;
   }
 
-  .offering-slide,
-  .project-slide,
-  .insight-slide {
-    transition:
-      transform 0.4s ease,
-      opacity 0.4s ease;
-
-    &:not(.swiper-slide-active) {
-      transform: scale(0.9);
-      opacity: 0.6;
-    }
-  }
 
   .testimonials-header {
     margin-bottom: 3rem;
@@ -1462,8 +1465,6 @@ swiper-container {
   }
 
   &::part(bullet-active) {
-    width: 24px;
-    border-radius: 6px;
     background: var(--primary);
     opacity: 1;
     box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.5);
