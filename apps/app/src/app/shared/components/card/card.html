@@ -1,4 +1,51 @@
-@if (externalLink) {
+@if (loading) {
+  <div class="card"
+       [class.card--service]="!imageUrl && icon"
+       [class.card--article]="imageUrl">
+
+    @if (imageUrl) {
+      <div class="card__image-wrapper">
+        <app-skeleton-loader width="100%" height="100%"></app-skeleton-loader>
+      </div>
+    }
+
+    @if (!imageUrl && icon) {
+      <div class="card__icon">
+        <app-skeleton-loader shape="circle" width="28px" height="28px"></app-skeleton-loader>
+      </div>
+    }
+
+    <div class="card__content">
+      @if (imageUrl) {
+        <div class="card__meta" style="margin-bottom: 1rem;">
+          <app-skeleton-loader width="80px" height="14px"></app-skeleton-loader>
+          <app-skeleton-loader width="60px" height="14px"></app-skeleton-loader>
+        </div>
+      }
+      <h3 class="card__title">
+        <app-skeleton-loader width="80%" height="1.4rem"></app-skeleton-loader>
+      </h3>
+
+      @if (metrics.length > 0) {
+        <div class="card__metrics">
+          @for (metric of metrics; track $index) {
+            <app-skeleton-loader width="60px" height="24px" style="border-radius: 99px;"></app-skeleton-loader>
+          }
+        </div>
+      }
+
+      <p class="card__description">
+        <app-skeleton-loader width="100%" height="0.95rem"></app-skeleton-loader>
+        <app-skeleton-loader width="100%" height="0.95rem"></app-skeleton-loader>
+        <app-skeleton-loader width="70%" height="0.95rem"></app-skeleton-loader>
+      </p>
+
+      <div class="card__link" style="width: fit-content; min-width: 120px;">
+        <app-skeleton-loader width="100%" height="1.5rem"></app-skeleton-loader>
+      </div>
+    </div>
+  </div>
+} @else if (externalLink) {
   <a [href]="externalLink"
      target="_blank"
      rel="noopener noreferrer"

@@ -231,12 +231,7 @@
     @if (isLoading()) {
       <div class="solutions-grid">
          @for (i of [1,2,3]; track $index) {
-           <div class="skeleton-wrapper">
-             <app-skeleton-loader shape="circle" width="48px" height="48px"></app-skeleton-loader>
-             <app-skeleton-loader width="60%" height="24px"></app-skeleton-loader>
-             <app-skeleton-loader width="100%" height="16px"></app-skeleton-loader>
-             <app-skeleton-loader width="90%" height="16px"></app-skeleton-loader>
-           </div>
+           <jsl-card [loading]="true"></jsl-card>
          }
       </div>
     } @else {

@@ -35,7 +35,6 @@ import { VideoModal } from '@shared/components/video-modal/video-modal';
 import { BookingModal } from '@shared/components/booking-modal/booking-modal';
 import { ExitIntentModal } from './components/exit-intent-modal/exit-intent-modal';
 import { ImageComparisonComponent } from '@shared/components/image-comparison/image-comparison';
-import { SkeletonLoaderComponent } from '@shared/components/skeleton-loader/skeleton-loader.component';
 import { RoiCalculatorComponent } from '@shared/components/roi-calculator/roi-calculator.component';
 import { PictureComponent } from '@shared/components/picture/picture';
 import { computed } from '@angular/core';
@@ -61,7 +60,6 @@ register();
     BookingModal,
     ExitIntentModal,
     ImageComparisonComponent,
-    SkeletonLoaderComponent,
     RoiCalculatorComponent,
     PictureComponent
   ],
@@ -745,7 +743,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       this.socialProofInterval = setInterval(() => {
         this.showRandomSocialProof();
       }, 45000); // Every 45 seconds
-    }, 10000); // Start 10s after load
+    }, 1500); // Start 1.5s after load
   }
 
   private showRandomSocialProof() {
@@ -1029,6 +1027,19 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
     const easeInOutCubic = (t: number) =>
       t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    const easeOutBounce = (t: number) => {
+      const n1 = 7.5625;
+      const d1 = 2.75;
+      if (t < 1 / d1) {
+        return n1 * t * t;
+      } else if (t < 2 / d1) {
+        return n1 * (t -= 1.5 / d1) * t + 0.75;
+      } else if (t < 2.5 / d1) {
+        return n1 * (t -= 2.25 / d1) * t + 0.9375;
+      } else {
+        return n1 * (t -= 2.625 / d1) * t + 0.984375;
+      }
+    };
 
     // Misma animación, pero más rápida
     this.scrollEngine.scrollTo(peekAmount, {
