@@ -1,7 +1,7 @@
 import { Injectable, Inject, PLATFORM_ID, OnDestroy, isDevMode } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Router, Scroll, Event, NavigationEnd, NavigationStart } from '@angular/router';
-import { filter, takeUntil, first } from 'rxjs/operators';
+import { Router, Scroll, Event, NavigationStart } from '@angular/router';
+import { filter, takeUntil } from 'rxjs/operators';
 import { Subject, fromEvent, firstValueFrom } from 'rxjs';
 import { ScrollEngineService } from './scroll-engine.service';
 import { waitForStableLayout } from '../../shared/utils/layout-stability';
@@ -9,8 +9,18 @@ import { waitForStableLayout } from '../../shared/utils/layout-stability';
 interface ScrollState {
   y: number;
   anchor: string | null;
+  scrollKey: string | null;
+  relativeTop: number | null;
 }
 
+/**
+ * Service responsible for restoring scroll position with high precision.
+ * It uses a cascading strategy:
+ * 1. High-precision: Restore an element (identified by data-scroll-key) to its exact relative position in the viewport.
+ * 2. Semantic: Restore to a saved anchor (data-scroll-anchor or ID).
+ * 3. Coordinate: Restore to absolute Y position.
+ * 4. Fallback: Scroll to top.
+ */
 @Injectable({
   providedIn: 'root',
 })
@@ -18,6 +28,7 @@ export class ScrollRestorationService implements OnDestroy {
   private destroy$ = new Subject<void>();
   private isBrowser: boolean;
   private scrollHistory = new Map<string, ScrollState>();
+  private lastInteractedKey: string | null = null;
 
   constructor(
     private router: Router,
@@ -31,6 +42,19 @@ export class ScrollRestorationService implements OnDestroy {
   }
 
   private init(): void {
+    // Track the last clicked element with a scroll key
+    fromEvent<MouseEvent>(document, 'click', { capture: true })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((event) => {
+        const target = event.target as HTMLElement;
+        const scrollEl = target.closest('[data-scroll-key]');
+        if (scrollEl) {
+          this.lastInteractedKey = scrollEl.getAttribute('data-scroll-key');
+        } else {
+          this.lastInteractedKey = null;
+        }
+      });
+
     // Capture state before navigation
     this.router.events
       .pipe(
@@ -70,23 +94,34 @@ export class ScrollRestorationService implements OnDestroy {
 
     const y = window.scrollY;
     const anchor = this.findSemanticAnchor();
+    let scrollKey = this.lastInteractedKey;
+    let relativeTop: number | null = null;
 
-    if (isDevMode()) {
-      console.log(`[ScrollRestoration] Capturing state for ${url}: y=${y}, anchor=${anchor}`);
+    if (scrollKey) {
+      const el = document.querySelector(`[data-scroll-key="${scrollKey}"]`);
+      if (el) {
+        relativeTop = el.getBoundingClientRect().top;
+      } else {
+        scrollKey = null;
+      }
     }
 
-    this.scrollHistory.set(url, { y, anchor });
+    if (isDevMode()) {
+      console.log(`[ScrollRestoration] Capturing state for ${url}: y=${y}, anchor=${anchor}, key=${scrollKey}, relTop=${relativeTop}`);
+    }
+
+    this.scrollHistory.set(url, { y, anchor, scrollKey, relativeTop });
+    // Reset interacted key after capture
+    this.lastInteractedKey = null;
   }
 
   private findSemanticAnchor(): string | null {
-    // 1. Try to find an element with data-scroll-anchor near the top of viewport
     const viewportHeight = window.innerHeight;
-    const checkPoints = [0.1, 0.2, 0.3, 0.5]; // Check various points in top half
+    const checkPoints = [0.1, 0.2, 0.3, 0.5];
 
     for (const point of checkPoints) {
       const el = document.elementFromPoint(window.innerWidth / 2, viewportHeight * point);
       if (el) {
-        // Find closest ancestor with id or data-scroll-anchor
         const anchorEl = el.closest('[id], [data-scroll-anchor]');
         if (anchorEl) {
           return anchorEl.getAttribute('data-scroll-anchor') || anchorEl.id;
@@ -94,7 +129,6 @@ export class ScrollRestorationService implements OnDestroy {
       }
     }
 
-    // 2. Fallback to first visible heading
     const headings = document.querySelectorAll('h1, h2, h3');
     for (let i = 0; i < headings.length; i++) {
       const rect = headings[i].getBoundingClientRect();
@@ -110,6 +144,25 @@ export class ScrollRestorationService implements OnDestroy {
     const state = this.scrollHistory.get(url);
     const headerOffset = this.scrollEngine.getHeaderOffset();
 
+    // 1. High-precision restoration via scrollKey and relative position
+    if (state?.scrollKey && state.relativeTop !== null) {
+      const element = document.querySelector(`[data-scroll-key="${state.scrollKey}"]`);
+      if (element) {
+        if (isDevMode()) {
+          console.log(`[ScrollRestoration] High-precision restore: ${state.scrollKey} at relTop ${state.relativeTop}`);
+        }
+        // To put the element at state.relativeTop from the top of the viewport,
+        // we use it as the offset in scrollTo(element).
+        // Lenis/Native scrollTo(el, {offset}) calculates target = el.top - offset.
+        this.scrollEngine.scrollTo(element as HTMLElement, {
+          offset: state.relativeTop,
+          immediate: true
+        });
+        return;
+      }
+    }
+
+    // 2. Restoration via semantic anchor
     if (state?.anchor) {
       const element = document.getElementById(state.anchor) ||
                       document.querySelector(`[data-scroll-anchor="${state.anchor}"]`);
@@ -126,7 +179,7 @@ export class ScrollRestorationService implements OnDestroy {
       }
     }
 
-    // Fallback to absolute Y
+    // 3. Fallback to absolute Y coordinate
     const targetY = state ? state.y : fallbackY;
     if (isDevMode()) {
       console.log(`[ScrollRestoration] Restoring via Y coordinate: ${targetY} for ${url}`);

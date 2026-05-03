@@ -16,8 +16,9 @@ export class Card {
   @Input() imageUrl: string | null = null;
   @Input() title = 'Card Title';
   @Input() description = 'Card description goes here.';
-  
-  @Input() link: any[] | string | null = null; 
+  @Input() scrollKey: string | null = null;
+
+  @Input() link: any[] | string | null = null;
   @Input() externalLink: string | null | undefined = null;
   @Input() metrics: string[] = [];
   @Input() meta: {
