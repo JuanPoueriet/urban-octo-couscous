@@ -1018,6 +1018,20 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
+  private easeOutBounce = (x: number) => {
+    const n1 = 7.5625;
+    const d1 = 2.75;
+    if (x < 1 / d1) {
+      return n1 * x * x;
+    } else if (x < 2 / d1) {
+      return n1 * (x -= 1.5 / d1) * x + 0.75;
+    } else if (x < 2.5 / d1) {
+      return n1 * (x -= 2.25 / d1) * x + 0.9375;
+    } else {
+      return n1 * (x -= 2.625 / d1) * x + 0.984375;
+    }
+  };
+
   private runScrollPeekAnimation() {
     if (!this.isBrowser || sessionStorage.getItem('jsl_home_idle_animated')) return;
 
@@ -1027,8 +1041,6 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
     // Funciones de easing personalizadas para un efecto más natural
     const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
-    const easeInOutCubic = (t: number) =>
-      t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
     // Misma animación, pero más rápida
     this.scrollEngine.scrollTo(peekAmount, {
@@ -1039,7 +1051,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         setTimeout(() => {
           this.scrollEngine.scrollTo(0, {
             duration: 1.8,
-            easing: easeOutBounce,
+            easing: this.easeOutBounce,
           });
         }, 400);
       }
