@@ -25,10 +25,13 @@ interface ScrollState {
   providedIn: 'root',
 })
 export class ScrollRestorationService implements OnDestroy {
+  private readonly STORAGE_KEY = 'jsl_scroll_history';
+  private readonly MAX_HISTORY_SIZE = 100;
   private destroy$ = new Subject<void>();
   private isBrowser: boolean;
   private scrollHistory = new Map<string, ScrollState>();
   private lastInteractedKey: string | null = null;
+  private currentNavigationId = 0;
 
   constructor(
     private router: Router,
@@ -37,23 +40,27 @@ export class ScrollRestorationService implements OnDestroy {
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
     if (this.isBrowser) {
+      this.loadHistoryFromStorage();
       this.init();
     }
   }
 
   private init(): void {
-    // Track the last clicked element with a scroll key
-    fromEvent<MouseEvent>(document, 'click', { capture: true })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((event) => {
-        const target = event.target as HTMLElement;
-        const scrollEl = target.closest('[data-scroll-key]');
-        if (scrollEl) {
-          this.lastInteractedKey = scrollEl.getAttribute('data-scroll-key');
-        } else {
-          this.lastInteractedKey = null;
-        }
-      });
+    // Track the last clicked or focused element with a scroll key
+    const interactionEvents = ['click', 'focusin'];
+    interactionEvents.forEach((eventType) => {
+      fromEvent<UIEvent>(document, eventType, { capture: true })
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((event) => {
+          const target = event.target as HTMLElement;
+          const scrollEl = target.closest('[data-scroll-key]');
+          if (scrollEl) {
+            this.lastInteractedKey = scrollEl.getAttribute('data-scroll-key');
+          } else if (eventType === 'click') {
+            this.lastInteractedKey = null;
+          }
+        });
+    });
 
     // Capture state before navigation
     this.router.events
@@ -71,14 +78,19 @@ export class ScrollRestorationService implements OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe(async (e) => {
+        const navId = ++this.currentNavigationId;
+
         // Wait for engine and layout stability
-        await firstValueFrom(this.scrollEngine.isReady$().pipe(filter(ready => ready)));
+        await firstValueFrom(this.scrollEngine.isReady$().pipe(filter((ready) => ready)));
+        if (navId !== this.currentNavigationId) return;
+
         await waitForStableLayout(3000, 200, this.platformId);
+        if (navId !== this.currentNavigationId) return;
 
         if (e.position) {
           // backward/forward navigation
           const url = (e.routerEvent as any).urlAfterRedirects || (e.routerEvent as any).url || '';
-          this.restoreScroll(url, e.position[1]);
+          this.restoreScroll(url, e.position[1], navId);
         } else if (e.anchor) {
           // anchor navigation
           this.scrollToAnchor(e.anchor);
@@ -107,10 +119,23 @@ export class ScrollRestorationService implements OnDestroy {
     }
 
     if (isDevMode()) {
-      console.log(`[ScrollRestoration] Capturing state for ${url}: y=${y}, anchor=${anchor}, key=${scrollKey}, relTop=${relativeTop}`);
+      console.log(
+        `[ScrollRestoration] Capturing state for ${url}: y=${y}, anchor=${anchor}, key=${scrollKey}, relTop=${relativeTop}`
+      );
     }
 
+    // LRU-like eviction: if we exceed MAX_HISTORY_SIZE, remove the oldest entry
+    if (this.scrollHistory.size >= this.MAX_HISTORY_SIZE && !this.scrollHistory.has(url)) {
+      const firstKey = this.scrollHistory.keys().next().value;
+      if (firstKey) this.scrollHistory.delete(firstKey);
+    }
+
+    // Set or update (updates order for LRU)
+    this.scrollHistory.delete(url);
     this.scrollHistory.set(url, { y, anchor, scrollKey, relativeTop });
+
+    this.saveHistoryToStorage();
+
     // Reset interacted key after capture
     this.lastInteractedKey = null;
   }
@@ -140,7 +165,7 @@ export class ScrollRestorationService implements OnDestroy {
     return null;
   }
 
-  private async restoreScroll(url: string, fallbackY: number): Promise<void> {
+  private async restoreScroll(url: string, fallbackY: number, navId: number): Promise<void> {
     const state = this.scrollHistory.get(url);
     const headerOffset = this.scrollEngine.getHeaderOffset();
 
@@ -148,15 +173,15 @@ export class ScrollRestorationService implements OnDestroy {
     if (state?.scrollKey && state.relativeTop !== null) {
       const element = document.querySelector(`[data-scroll-key="${state.scrollKey}"]`);
       if (element) {
+        if (navId !== this.currentNavigationId) return;
         if (isDevMode()) {
-          console.log(`[ScrollRestoration] High-precision restore: ${state.scrollKey} at relTop ${state.relativeTop}`);
+          console.log(
+            `[ScrollRestoration] High-precision restore: ${state.scrollKey} at relTop ${state.relativeTop}`
+          );
         }
-        // To put the element at state.relativeTop from the top of the viewport,
-        // we use it as the offset in scrollTo(element).
-        // Lenis/Native scrollTo(el, {offset}) calculates target = el.top - offset.
         this.scrollEngine.scrollTo(element as HTMLElement, {
           offset: state.relativeTop,
-          immediate: true
+          immediate: true,
         });
         return;
       }
@@ -164,27 +189,53 @@ export class ScrollRestorationService implements OnDestroy {
 
     // 2. Restoration via semantic anchor
     if (state?.anchor) {
-      const element = document.getElementById(state.anchor) ||
-                      document.querySelector(`[data-scroll-anchor="${state.anchor}"]`);
+      const element =
+        document.getElementById(state.anchor) ||
+        document.querySelector(`[data-scroll-anchor="${state.anchor}"]`);
 
       if (element) {
+        if (navId !== this.currentNavigationId) return;
         if (isDevMode()) {
           console.log(`[ScrollRestoration] Restoring via anchor: ${state.anchor} for ${url}`);
         }
         this.scrollEngine.scrollTo(element as HTMLElement, {
           offset: -headerOffset,
-          immediate: true
+          immediate: true,
         });
         return;
       }
     }
 
     // 3. Fallback to absolute Y coordinate
+    if (navId !== this.currentNavigationId) return;
     const targetY = state ? state.y : fallbackY;
     if (isDevMode()) {
       console.log(`[ScrollRestoration] Restoring via Y coordinate: ${targetY} for ${url}`);
     }
     this.scrollEngine.scrollTo(targetY, { immediate: true });
+  }
+
+  private loadHistoryFromStorage(): void {
+    if (!this.isBrowser) return;
+    try {
+      const stored = sessionStorage.getItem(this.STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        this.scrollHistory = new Map(Object.entries(parsed));
+      }
+    } catch (e) {
+      if (isDevMode()) console.error('[ScrollRestoration] Error loading history', e);
+    }
+  }
+
+  private saveHistoryToStorage(): void {
+    if (!this.isBrowser) return;
+    try {
+      const obj = Object.fromEntries(this.scrollHistory);
+      sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify(obj));
+    } catch (e) {
+      if (isDevMode()) console.error('[ScrollRestoration] Error saving history', e);
+    }
   }
 
   private scrollToAnchor(anchor: string): void {
