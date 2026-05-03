@@ -255,7 +255,6 @@ swiper-container {
   .offerings-content {
     min-height: 400px; // Evitar saltos grandes
     position: relative;
-    overflow: hidden;
   }
 
   .offerings-slider-wrapper {
@@ -296,18 +295,18 @@ swiper-container {
     z-index: 20;
     width: 50px;
     height: 50px;
-    background-color: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.8);
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    opacity: 0.2;
+    opacity: 0.5;
 
     @media (max-width: 768px) {
       display: none !important;
@@ -882,7 +881,6 @@ swiper-container {
 
 .featured-projects {
   position: relative;
-  overflow: hidden;
 
   --projects-nav-left-visibility: 0;
   --projects-nav-right-visibility: 0;
@@ -929,11 +927,11 @@ swiper-container {
 .projects-slider-wrapper {
   position: relative;
   width: 100%;
+  padding: 1rem 0 3rem;
 }
 
 .projects-swiper {
   width: 100%;
-  padding: 1rem 0 3rem;
 
   --swiper-pagination-bottom: 0px;
   --swiper-pagination-color: var(--primary);
@@ -956,18 +954,18 @@ swiper-container {
   z-index: 20;
   width: 50px;
   height: 50px;
-  background-color: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  opacity: 0.2;
+  opacity: 0.5;
 
   @media (max-width: 768px) {
     display: none !important;
@@ -1102,7 +1100,6 @@ swiper-container {
   padding: 6rem 0;
   border-top: 1px solid var(--border-color);
   position: relative;
-  overflow: hidden; // Important for button proximity tracking logic
 
   --insights-nav-left-visibility: 0;
   --insights-nav-right-visibility: 0;
@@ -1117,11 +1114,11 @@ swiper-container {
 .insights-slider-wrapper {
   position: relative;
   width: 100%;
+  padding: 1rem 0 3rem;
 }
 
 .insights-swiper {
   width: 100%;
-  padding: 1rem 0 3rem; // Add padding for shadows and pagination
 
   // Modern way to style Swiper Web Components (Shadow DOM safe)
   --swiper-pagination-bottom: 0px;
@@ -1146,18 +1143,18 @@ swiper-container {
   z-index: 20;
   width: 50px;
   height: 50px;
-  background-color: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  opacity: 0.2;
+  opacity: 0.5;
 
   @media (max-width: 768px) {
     display: none !important; // Hide buttons on mobile as requested
@@ -1295,6 +1292,17 @@ swiper-container {
   .testimonials-section { // Añadido
     padding: 4rem 0;
   }
+
+  .offering-slide,
+  .project-slide,
+  .insight-slide {
+    transition: transform 0.4s ease, opacity 0.4s ease;
+
+    &:not(.swiper-slide-active) {
+      transform: scale(0.9);
+      opacity: 0.6;
+    }
+  }
   
   .testimonials-header {
     margin-bottom: 3rem;
@@ -1416,10 +1424,11 @@ swiper-container {
   }
 
   &::part(bullet-active) {
-    width: 20px;
-    border-radius: 4px;
+    width: 24px;
+    border-radius: 6px;
     background: var(--primary);
     opacity: 1;
+    box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.5);
   }
 
   // Section specific overrides using CSS variables or more specific selectors if needed
