@@ -98,7 +98,8 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
   public offeringsSwiperConfig: SwiperOptions = {
     modules: [Navigation, Pagination],
-    slidesPerView: 1.1,
+    slidesPerView: 1.2,
+    centeredSlides: true,
     spaceBetween: 16,
     grabCursor: true,
     loop: false,
@@ -186,6 +187,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   public insightsSwiperConfig: SwiperOptions = {
     modules: [Navigation, Pagination],
     slidesPerView: 1.2,
+    centeredSlides: true,
     spaceBetween: 20,
     grabCursor: true,
     loop: false,
@@ -213,6 +215,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   public projectsSwiperConfig: SwiperOptions = {
     modules: [Navigation, Pagination],
     slidesPerView: 1.2,
+    centeredSlides: true,
     spaceBetween: 20,
     grabCursor: true,
     loop: false,
