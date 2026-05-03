@@ -12,6 +12,18 @@
 @use '../projects/projects.scss';
 // --- CAMBIO: Eliminado @use '../tech-stack/tech-stack.scss'; ---
 
+
+@mixin slide-peek-effect {
+  transition:
+    transform 0.4s ease,
+    opacity 0.4s ease;
+
+  &:not(.swiper-slide-active) {
+    transform: scale(0.9);
+    opacity: 0.6;
+  }
+}
+
 // --- 1. Hero Slider ---
 .hero-slider {
   width: 100%;
@@ -290,17 +302,6 @@ swiper-container {
     --swiper-pagination-bullet-inactive-opacity: 0.5;
     --swiper-pagination-bullet-size: 8px;
     --swiper-pagination-bullet-horizontal-gap: 6px;
-  }
-
-  @mixin slide-peek-effect {
-    transition:
-      transform 0.4s ease,
-      opacity 0.4s ease;
-
-    &:not(.swiper-slide-active) {
-      transform: scale(0.9);
-      opacity: 0.6;
-    }
   }
 
   .offering-slide {
