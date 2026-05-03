@@ -1,0 +1,90 @@
+
+> nx run app:serve:development
+
+[33m❯[39m Building...
+[32m✔[39m Building...
+[37m[35mBrowser bundles[37m
+[1mInitial chunk files[22m [2m | [22m[1mNames[22m           [2m | [22m [1mRaw size[22m
+[32mmain.js[37m             [2m | [22m[2mmain[22m            [2m | [22m  [36m1.83 MB[37m[2m | [22m
+[32mchunk-7HVSI5AB.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m1.09 MB[37m[2m | [22m
+[32mchunk-6IGBR5LP.js[37m   [2m | [22m[2m-[22m               [2m | [22m[36m748.52 kB[37m[2m | [22m
+[32mchunk-HPELK6A2.js[37m   [2m | [22m[2m-[22m               [2m | [22m[36m569.17 kB[37m[2m | [22m
+[32mchunk-W25634SV.js[37m   [2m | [22m[2m-[22m               [2m | [22m[36m232.10 kB[37m[2m | [22m
+[32mchunk-KWMLBWAB.js[37m   [2m | [22m[2m-[22m               [2m | [22m [36m39.05 kB[37m[2m | [22m
+[32mchunk-F33XZCNM.js[37m   [2m | [22m[2m-[22m               [2m | [22m [36m26.84 kB[37m[2m | [22m
+[32mchunk-IOBJ72UO.js[37m   [2m | [22m[2m-[22m               [2m | [22m [36m19.36 kB[37m[2m | [22m
+[32mstyles.css[37m          [2m | [22m[2mstyles[22m          [2m | [22m  [36m5.47 kB[37m[2m | [22m
+[32mchunk-7KDLMAR7.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m4.62 kB[37m[2m | [22m
+[32mchunk-6KMIK7RT.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m3.62 kB[37m[2m | [22m
+[32mchunk-KR52Y3QS.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m3.05 kB[37m[2m | [22m
+[32mchunk-D7MF2QZF.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m1.74 kB[37m[2m | [22m
+[32mchunk-SWIJLL2I.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m1.56 kB[37m[2m | [22m
+[32mchunk-GYOF7OFK.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m1.46 kB[37m[2m | [22m
+[32mchunk-2NI3WEO6.js[37m   [2m | [22m[2m-[22m               [2m | [22m[36m980 bytes[37m[2m | [22m
+[1m [22m                   [2m | [22m[1mInitial total[22m   [2m | [22m  [1m4.59 MB[22[39m[37mm
+[1mLazy chunk files[22m    [2m | [22m[1mNames[22m           [2m | [22m [1mRaw size[22m
+[32mchunk-2JWMQAKQ.js[37m   [2m | [22m[2mhome[22m            [2m | [22m[36m364.03 kB[37m[2m | [22m
+[32mchunk-VZPMEG3K.js[37m   [2m | [22m[2m-[22m               [2m | [22m[36m361.55 kB[37m[2m | [22m
+[32mchunk-65TN6GNJ.js[37m   [2m | [22m[2mcareers[22m         [2m | [22m[36m185.12 kB[37m[2m | [22m
+[32mchunk-P3TMWLIJ.js[37m   [2m | [22m[2mblog-detail[22m     [2m | [22m[36m167.03 kB[37m[2m | [22m
+[32mchunk-PB5OKGK7.js[37m   [2m | [22m[2mbrowser[22m         [2m | [22m[36m149.16 kB[37m[2m | [22m
+[32mchunk-34O3JI6H.js[37m   [2m | [22m[2mproduct-detail[22m  [2m | [22m [36m89.24 kB[37m[2m | [22m
+[32mchunk-MKQTJ4VU.js[37m   [2m | [22m[2mpress[22m           [2m | [22m [36m70.52 kB[37m[2m | [22m
+[32mchunk-2XTXRPYM.js[37m   [2m | [22m[2mcontact[22m         [2m | [22m [36m68.05 kB[37m[2m | [22m
+[32mchunk-BJYHXUXK.js[37m   [2m | [22m[2msolution-detail[22m [2m | [22m [36m66.81 kB[37m[2m | [22m
+[32mchunk-N3KFSXJP.js[37m   [2m | [22m[2mprism[22m           [2m | [22m [36m58.55 kB[37m[2m | [22m
+[32mchunk-Q7SK7CX7.js[37m   [2m | [22m[2mpricing[22m         [2m | [22m [36m47.03 kB[37m[2m | [22m
+[32mchunk-JA353NAF.js[37m   [2m | [22m[2mfaq[22m             [2m | [22m [36m45.75 kB[37m[2m | [22m
+[32mchunk-BLBX3CU2.js[37m   [2m | [22m[2mdevelopers[22m      [2m | [22m [36m44.56 kB[37m[2m | [22m
+[32mchunk-TFELMDKO.js[37m   [2m | [22m[2mblog[22m            [2m | [22m [36m39.15 kB[37m[2m | [22m
+[32mchunk-HV53GZER.js[37m   [2m | [22m[2mtrust[22m           [2m | [22m [36m37.22 kB[37m[2m | [22m
+[2m...and 28 more lazy chunks files. Use "--verbose" to show all the files.[22m
+[35mServer bundles[37m
+[1mInitial chunk files[22m [2m | [22m[1mNames[22m           [2m | [22m [1mRaw size[22m
+[32mmain.server.mjs[3[39m[37m9m     [2m | [22m[2mmain.server[22m     [2m | [22m  [36m2.78 MB[37m[2m | [22m
+[32mserver.mjs[37m          [2m | [22m[2mserver[22m          [2m | [22m  [36m2.15 MB[37m[2m | [22m
+[32mchunk-TLWUAQGE.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m1.05 MB[37m[2m | [22m
+[32mchunk-4ZRJIXMU.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m[36m748.56 kB[37m[2m | [22m
+[32mchunk-ICOWOG74.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m[36m565.29 kB[37m[2m | [22m
+[32mpolyfills.server.mjs[37m[2m | [22m[2mpolyfills.server[22m[2m | [22m[36m493.23 kB[37m[2m | [22m
+[32mchunk-DXNE6WYS.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m[36m232.14 kB[37m[2m | [22m
+[32mchunk-KKXFH5JY.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m [36m39.08 kB[37m[2m | [22m
+[32mchunk-2K4LZN2L.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m [36m26.88 kB[37m[2m | [22m
+[32mchunk-WJUYCA34.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m [36m13.41 kB[37m[2m | [22m
+[32mchunk-QTX4UZWU.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m6.43 kB[37m[2m | [22m
+[32mchunk-GTLPYHRM.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m4.66 kB[37m[2m | [22m
+[32mchunk-DT7R4BHB.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m3.65 kB[37m[2m | [22m
+[32mchunk-HLWOUPLB.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m3.25 kB[37m[2m | [22m
+[32mchunk-OZZOEXYK.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m3.09 kB[37m[2m | [22m
+[32mchunk-4KGORVLN.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m2.15 kB[37m[2m | [22m
+[32mchunk-Y5ISMVJU.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m1.59 kB[37m[2m | [22m
+[32mchunk-3JW5QTAN.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m1.49 kB[37m[2m | [22m
+[32mchunk-J3QJP255.mjs[[39m
+[37m39m  [2m | [22m[2m-[22m               [2m | [22m  [36m1.01 kB[37m[2m | [22m
+[1mLazy chunk files[22m    [2m | [22m[1mNames[22m           [2m | [22m [1mRaw size[22m
+[32mchunk-BLUI2RE3.mjs[37m  [2m | [22m[2mhome[22m            [2m | [22m[36m364.12 kB[37m[2m | [22m
+[32mchunk-JPJUR4DP.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m[36m361.59 kB[37m[2m | [22m
+[32mchunk-LQGAHHXO.mjs[37m  [2m | [22m[2mcareers[22m         [2m | [22m[36m185.20 kB[37m[2m | [22m
+[32mchunk-ZR5I52KJ.mjs[37m  [2m | [22m[2mblog-detail[22m     [2m | [22m[36m167.11 kB[37m[2m | [22m
+[32mchunk-2RV5TNWA.mjs[37m  [2m | [22m[2mbrowser[22m         [2m | [22m[36m149.19 kB[37m[2m | [22m
+[32mchunk-RBWY7DS2.mjs[37m  [2m | [22m[2mproduct-detail[22m  [2m | [22m [36m89.31 kB[37m[2m | [22m
+[32mchunk-GSN2WPBD.mjs[37m  [2m | [22m[2mpress[22m           [2m | [22m [36m70.56 kB[37m[2m | [22m
+[32mchunk-7KMJLPSK.mjs[37m  [2m | [22m[2mcontact[22m         [2m | [22m [36m68.10 kB[37m[2m | [22m
+[32mchunk-XXPE5VHK.mjs[37m  [2m | [22m[2msolution-detail[22m [2m | [22m [36m66.89 kB[37m[2m | [22m
+[32mchunk-FHS5ZTG4.mjs[37m  [2m | [22m[2mprism[22m           [2m | [22m [36m58.58 kB[37m[2m | [22m
+[32mchunk-6OCPNXGJ.mjs[37m  [2m | [22m[2mpricing[22m         [2m | [22m [36m47.07 kB[37m[2m | [22m
+[32mchunk-4HZMBOKZ.mjs[37m  [2m | [22m[2mfaq[22m             [2m | [22m [36m45.83 kB[37m[2m | [22m
+[32mchunk-LRJQTLQG.mjs[37m  [2m | [22m[2mdevelopers[22m      [2m | [22m [36m44.60 kB[37m[2m | [22m
+[32mchunk-6BLJJBTG.mjs[37m  [2m | [22m[2mxhr2[22m            [2m | [22m [36m40.11 kB[37m[2m | [22m
+[32mchunk-W264NDHE.mjs[37m  [2m | [22m[2mxhr2[22m            [2m | [22m [36m40.04 kB[37m[2m | [22m
+[2m...and 31 more lazy chunks files. Use "--verbose" to show all the files.[22m
+Application bundle generation complete. [29.170 seconds] - 2026-05-0[39m[37m3T00:59:01.365Z
+[39m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: BreadcrumbsComponent is not used within the template of App[0m [1m[35m[plugin angular-compiler][0m
+    apps/app/src/app/app.ts:29:4:
+[37m      29 │     [32mBreadcrumbsComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~[0m
+[39m[22m
+[37mWatch mode enabled. Watching for file changes...[39m
+[37mNOTE: Raw file sizes do not reflect development server per-request transformations.[39m
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m4200[22m/[39m
