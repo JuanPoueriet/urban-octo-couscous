@@ -8,6 +8,7 @@ export interface ScrollToOptions {
   immediate?: boolean;
   duration?: number;
   easing?: (t: number) => number;
+  onComplete?: (lenis: any) => void;
 }
 
 // Interface to handle Lenis typing issues if necessary
@@ -59,6 +60,7 @@ export class ScrollEngineService {
         immediate: options?.immediate,
         duration: options?.duration,
         easing: options?.easing,
+        onComplete: options?.onComplete,
       });
     } else {
       let top = 0;
@@ -76,6 +78,15 @@ export class ScrollEngineService {
         top: top + (options?.offset || 0),
         behavior: options?.immediate ? 'auto' : 'smooth',
       });
+
+      if (options?.onComplete) {
+        if (options.immediate) {
+          options.onComplete(null);
+        } else {
+          // Simple approximation for native smooth scroll completion
+          setTimeout(() => options.onComplete?.(null), (options.duration || 1) * 1000);
+        }
+      }
     }
   }
 

@@ -20,13 +20,14 @@ import { CommonModule, isPlatformBrowser, DOCUMENT } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { RouterLink } from '@angular/router';
-import { map } from 'rxjs/operators';
+import { map, switchMap, timer, fromEvent, merge, takeUntil, Subject, filter, startWith } from 'rxjs';
 import { Card } from '@shared/components/card/card';
 import { AnimateOnScroll } from '@shared/directives/animate-on-scroll';
 import { DataService, Technology, Testimonial, Project, Solution, Product, ProcessStep, Partner, BlogPost } from '@core/services/data.service';
 import { Seo } from '@core/services/seo';
 import { AnalyticsService } from '@core/services/analytics.service';
 import { ToastService } from '@core/services/toast.service';
+import { ScrollEngineService } from '@core/services/scroll-engine.service';
 import { SwiperOptions } from 'swiper/types';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { DigitalMaturitySelector } from './components/digital-maturity-selector/digital-maturity-selector';
@@ -319,6 +320,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   private searchUiService = inject(SearchUiService);
   private seoService = inject(Seo);
   private analyticsService = inject(AnalyticsService);
+  private scrollEngine = inject(ScrollEngineService);
   public directionService: DirectionService = inject(DirectionService);
   private unlistenExitIntent: (() => void) | null = null;
   private unlistenHeroMouseMove: (() => void) | null = null;
@@ -331,8 +333,9 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   private unlistenProjectsMouseLeave: (() => void) | null = null;
   private socialProofInterval: any;
   private isBrowser: boolean;
+  private destroy$ = new Subject<void>();
 
-  @Inject(PLATFORM_ID) private platformId = inject(PLATFORM_ID);
+  private platformId = inject(PLATFORM_ID);
 
   constructor() {
     this.currentLang = this.translate.currentLang || this.translate.defaultLang || 'es';
@@ -386,6 +389,8 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     if (this.unlistenExitIntent) {
       this.unlistenExitIntent();
     }
@@ -714,6 +719,8 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
           localStorage.setItem('jsl_scroll_indicator_seen', 'true');
         }
       }, 5000);
+
+      this.setupIdleAnimation();
     }, 100); // Aumentado a 100ms para asegurar que el DOM esté listo
   }
 
@@ -969,6 +976,57 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     if (!this.isBrowser) return;
     const projectsSwiperEl = this.el.nativeElement.querySelector('.featured-projects swiper-container');
     projectsSwiperEl?.swiper?.slideNext();
+  }
+
+  private setupIdleAnimation() {
+    if (!this.isBrowser) return;
+
+    // Solo una vez por sesión
+    const hasAnimated = sessionStorage.getItem('jsl_home_idle_animated');
+    if (hasAnimated) return;
+
+    const interactions$ = merge(
+      fromEvent(this.document, 'mousemove'),
+      fromEvent(this.document, 'mousedown'),
+      fromEvent(this.document, 'keydown'),
+      fromEvent(this.document, 'touchstart'),
+      fromEvent(window, 'scroll')
+    ).pipe(startWith(null));
+
+    // Esperar 10 segundos de inactividad
+    interactions$
+      .pipe(
+        switchMap(() => timer(10000)),
+        takeUntil(this.destroy$),
+        // Solo si el usuario está al inicio de la página
+        filter(() => window.scrollY < 50)
+      )
+      .subscribe(() => {
+        this.runScrollPeekAnimation();
+      });
+  }
+
+  private runScrollPeekAnimation() {
+    if (!this.isBrowser || sessionStorage.getItem('jsl_home_idle_animated')) return;
+
+    const peekAmount = window.innerWidth < 768 ? 80 : 150;
+
+    sessionStorage.setItem('jsl_home_idle_animated', 'true');
+
+    // Animación de bajada sutil
+    this.scrollEngine.scrollTo(peekAmount, {
+      duration: 1.2,
+      easing: (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2, // easeInOutCubic
+      onComplete: () => {
+        // Pausa breve y vuelta arriba
+        setTimeout(() => {
+          this.scrollEngine.scrollTo(0, {
+            duration: 1,
+            easing: (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
+          });
+        }, 500);
+      }
+    });
   }
 
   downloadLeadMagnet() {
