@@ -87,10 +87,16 @@ export class RelatedContentComponent implements AfterViewChecked {
       slidesPerView: 1.15,
       pagination: { clickable: true, dynamicBullets: true },
       navigation: prevEl && nextEl ? { prevEl, nextEl } : false,
+      allowTouchMove: this.items.length > 1,
+      watchOverflow: false,
       breakpoints: {
         600: { slidesPerView: 1.6, spaceBetween: 20 },
         768: { slidesPerView: 2.1, spaceBetween: 24 },
-        1024: { slidesPerView: Math.min(this.items.length, 3), spaceBetween: 28 },
+        1024: {
+          slidesPerView: Math.min(this.items.length, 4),
+          spaceBetween: 28,
+          allowTouchMove: this.items.length > 4,
+        },
       },
     });
 
