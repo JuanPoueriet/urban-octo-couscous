@@ -12,7 +12,8 @@ import rateLimit from 'express-rate-limit';
 // --- AÑADIDO: Importar los datos para el sitemap dinámico ---
 import { PROJECTS, BLOG_POSTS, SOLUTIONS, PRODUCTS } from './app/core/data/mock-data';
 import { SUPPORTED_LANGUAGES } from './app/core/constants/languages';
-import { BASE_URL, RESPONSE, GA_MEASUREMENT_ID, GSC_VERIFICATION_TOKEN } from './app/core/constants/tokens';
+import { BASE_URL, RESPONSE, REQUEST, GA_MEASUREMENT_ID, GSC_VERIFICATION_TOKEN } from './app/core/constants/tokens';
+import { detectPreferredLanguage } from './app/core/utils/language-url';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
@@ -66,7 +67,7 @@ const limiter = rateLimit({
 app.use(limiter);
 
 app.get('/', (req, res) => {
-  const lang = detectPreferredLanguage(req.headers['accept-language'], SUPPORTED_LANGUAGES, defaultLang);
+  const lang = detectPreferredLanguage(req.headers['accept-language'], req.headers['cookie'], SUPPORTED_LANGUAGES, defaultLang);
   res.redirect(301, `/${lang}`);
 });
 
@@ -81,7 +82,7 @@ app.use((req, res, next) => {
     return next();
   }
 
-  const lang = detectPreferredLanguage(req.headers['accept-language'], SUPPORTED_LANGUAGES, defaultLang);
+  const lang = detectPreferredLanguage(req.headers['accept-language'], req.headers['cookie'], SUPPORTED_LANGUAGES, defaultLang);
   const redirectPath = `/${lang}${req.originalUrl.startsWith('/') ? req.originalUrl : `/${req.originalUrl}`}`;
   return res.redirect(301, redirectPath);
 });
@@ -167,29 +168,11 @@ const STATIC_LASTMOD = process.env['BUILD_DATE'] || new Date().toISOString().spl
 const NOINDEX_ROUTES = ['/status', '/thank-you', '/server-error', '/not-found'];
 
 
-function detectPreferredLanguage(acceptLanguage: string | undefined, supported: readonly string[], fallback: string): string {
-  if (!acceptLanguage) return fallback;
-
-  const langs = acceptLanguage.split(',').map(lang => {
-    const parts = lang.trim().split(';');
-    return {
-      code: (parts[0].split('-')[0] || '').toLowerCase(),
-      q: parts[1] ? parseFloat(parts[1].split('=')[1]) : 1.0,
-    };
-  }).sort((a, b) => b.q - a.q);
-
-  for (const lang of langs) {
-    if (supported.includes(lang.code)) {
-      return lang.code;
-    }
-  }
-
-  return fallback;
-}
 
 function shouldSkipLanguageRedirect(pathname: string): boolean {
   if (pathname === '/') return true;
   if (pathname.startsWith('/api/') || pathname === '/api') return true;
+  if (pathname.startsWith('/seo/') || pathname === '/seo') return true;
   if (pathname.startsWith('/assets/')) return true;
   if (pathname === '/robots.txt' || pathname === '/sitemap.xml' || pathname === '/favicon.ico') return true;
   return /\.[a-z0-9]+$/i.test(pathname);
@@ -454,16 +437,21 @@ app.use((req, res, next) => {
 
   const dynamicBaseUrl = resolveCanonicalBaseUrl(req);
   const requestHost = req.get('host');
+  const allowedHosts = ['127.0.0.1', 'localhost', '0.0.0.0', '[::1]', '127.0.0.1:4000', 'localhost:4000', '127.0.0.1:4100', 'localhost:4100'];
+  if (requestHost) {
+    allowedHosts.push(requestHost);
+  }
 
   angularApp
     .handle(req, {
       providers: [
         { provide: BASE_URL, useValue: dynamicBaseUrl },
         { provide: RESPONSE, useValue: res },
+        { provide: REQUEST, useValue: req },
         { provide: GA_MEASUREMENT_ID, useValue: ENV_GA_MEASUREMENT_ID },
         { provide: GSC_VERIFICATION_TOKEN, useValue: ENV_GSC_VERIFICATION_TOKEN },
       ],
-      allowedHosts: ['127.0.0.1', 'localhost', '127.0.0.1:4000', 'localhost:4000', requestHost],
+      allowedHosts,
     })
     .then((response) =>
       response ? writeResponseToNodeResponse(response, res) : next(),
