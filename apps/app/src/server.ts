@@ -12,7 +12,13 @@ import rateLimit from 'express-rate-limit';
 // --- AÑADIDO: Importar los datos para el sitemap dinámico ---
 import { PROJECTS, BLOG_POSTS, SOLUTIONS, PRODUCTS } from './app/core/data/mock-data';
 import { SUPPORTED_LANGUAGES } from './app/core/constants/languages';
-import { BASE_URL, RESPONSE, REQUEST, GA_MEASUREMENT_ID, GSC_VERIFICATION_TOKEN } from './app/core/constants/tokens';
+import {
+  BASE_URL,
+  RESPONSE,
+  REQUEST,
+  GA_MEASUREMENT_ID,
+  GSC_VERIFICATION_TOKEN,
+} from './app/core/constants/tokens';
 import { detectPreferredLanguage } from './app/core/utils/language-url';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
@@ -32,13 +38,15 @@ type SeoHealthSnapshot = {
 
 let latestSeoHealthSnapshot: SeoHealthSnapshot | null = null;
 
-const CANONICAL_BASE_URL = (process.env['CANONICAL_BASE_URL'] ?? 'https://www.jsl.technology').replace(/\/+$/, '');
+const CANONICAL_BASE_URL = (
+  process.env['CANONICAL_BASE_URL'] ?? 'https://www.jsl.technology'
+).replace(/\/+$/, '');
 const ENV_GA_MEASUREMENT_ID = process.env['GA_MEASUREMENT_ID'] ?? '';
 const ENV_GSC_VERIFICATION_TOKEN = process.env['GSC_VERIFICATION_TOKEN'] ?? '';
 const CANONICAL_HOSTS = new Set(
   (process.env['CANONICAL_HOSTS'] ?? 'www.jsl.technology,jsl.technology')
     .split(',')
-    .map(host => host.trim().toLowerCase())
+    .map((host) => host.trim().toLowerCase())
     .filter(Boolean),
 );
 
@@ -58,16 +66,21 @@ app.use((req, res, next) => {
 
 // --- SEGURIDAD: Rate Limiting ---
 const limiter = rateLimit({
-	windowMs: 15 * 60 * 1000, // 15 minutos
-	max: 10000, // Límite aumentado significativamente para permitir tests E2E paralelos sin bloqueos 429
-	standardHeaders: true, // Devuelve info en cabeceras `RateLimit-*`
-	legacyHeaders: false, // Deshabilita cabeceras `X-RateLimit-*`
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 10000, // Límite aumentado significativamente para permitir tests E2E paralelos sin bloqueos 429
+  standardHeaders: true, // Devuelve info en cabeceras `RateLimit-*`
+  legacyHeaders: false, // Deshabilita cabeceras `X-RateLimit-*`
 });
 // Aplicar rate limiting a todas las rutas
 app.use(limiter);
 
 app.get('/', (req, res) => {
-  const lang = detectPreferredLanguage(req.headers['accept-language'], req.headers['cookie'], SUPPORTED_LANGUAGES, defaultLang);
+  const lang = detectPreferredLanguage(
+    req.headers['accept-language'],
+    req.headers['cookie'],
+    SUPPORTED_LANGUAGES,
+    defaultLang,
+  );
   res.redirect(301, `/${lang}`);
 });
 
@@ -82,12 +95,15 @@ app.use((req, res, next) => {
     return next();
   }
 
-  const lang = detectPreferredLanguage(req.headers['accept-language'], req.headers['cookie'], SUPPORTED_LANGUAGES, defaultLang);
+  const lang = detectPreferredLanguage(
+    req.headers['accept-language'],
+    req.headers['cookie'],
+    SUPPORTED_LANGUAGES,
+    defaultLang,
+  );
   const redirectPath = `/${lang}${req.originalUrl.startsWith('/') ? req.originalUrl : `/${req.originalUrl}`}`;
   return res.redirect(301, redirectPath);
 });
-
-
 
 // --- INICIO: Funciones para generar el Sitemap ---
 
@@ -97,7 +113,7 @@ const staticRoutes = [
   'solutions',
   'products',
   'projects', // Página índice de proyectos
-  'blog',     // Página índice de blog
+  'blog', // Página índice de blog
   'ventures',
   'investors',
   'virteex-ecosystem',
@@ -119,45 +135,45 @@ const staticRoutes = [
   'life-at-jsl',
   'press',
   'pricing',
-  'security'
+  'security',
 ];
 
 // Priority and changefreq per static route (influences crawl budget allocation)
 const ROUTE_META: Record<string, { priority: string; changefreq: string }> = {
-  '':                   { priority: '1.0', changefreq: 'weekly' },
-  'solutions':          { priority: '0.9', changefreq: 'monthly' },
-  'products':           { priority: '0.9', changefreq: 'monthly' },
-  'blog':               { priority: '0.9', changefreq: 'weekly' },
-  'projects':           { priority: '0.8', changefreq: 'monthly' },
-  'about-us':           { priority: '0.8', changefreq: 'monthly' },
-  'contact':            { priority: '0.8', changefreq: 'yearly' },
-  'careers':            { priority: '0.7', changefreq: 'weekly' },
-  'faq':                { priority: '0.7', changefreq: 'monthly' },
-  'pricing':            { priority: '0.7', changefreq: 'monthly' },
-  'industries':         { priority: '0.7', changefreq: 'monthly' },
-  'tech-stack':         { priority: '0.6', changefreq: 'monthly' },
-  'ventures':           { priority: '0.6', changefreq: 'monthly' },
-  'investors':          { priority: '0.6', changefreq: 'monthly' },
-  'process':            { priority: '0.6', changefreq: 'monthly' },
-  'virteex-ecosystem':  { priority: '0.6', changefreq: 'monthly' },
-  'events':             { priority: '0.5', changefreq: 'weekly' },
-  'news':               { priority: '0.5', changefreq: 'weekly' },
-  'partners':           { priority: '0.5', changefreq: 'monthly' },
-  'developers':         { priority: '0.5', changefreq: 'monthly' },
-  'roadmap':            { priority: '0.5', changefreq: 'monthly' },
-  'press':              { priority: '0.5', changefreq: 'monthly' },
-  'life-at-jsl':        { priority: '0.5', changefreq: 'monthly' },
-  'security':           { priority: '0.4', changefreq: 'yearly' },
-  'privacy-policy':     { priority: '0.3', changefreq: 'yearly' },
-  'terms-of-service':   { priority: '0.3', changefreq: 'yearly' },
-  'cookie-policy':      { priority: '0.3', changefreq: 'yearly' },
+  '': { priority: '1.0', changefreq: 'weekly' },
+  solutions: { priority: '0.9', changefreq: 'monthly' },
+  products: { priority: '0.9', changefreq: 'monthly' },
+  blog: { priority: '0.9', changefreq: 'weekly' },
+  projects: { priority: '0.8', changefreq: 'monthly' },
+  'about-us': { priority: '0.8', changefreq: 'monthly' },
+  contact: { priority: '0.8', changefreq: 'yearly' },
+  careers: { priority: '0.7', changefreq: 'weekly' },
+  faq: { priority: '0.7', changefreq: 'monthly' },
+  pricing: { priority: '0.7', changefreq: 'monthly' },
+  industries: { priority: '0.7', changefreq: 'monthly' },
+  'tech-stack': { priority: '0.6', changefreq: 'monthly' },
+  ventures: { priority: '0.6', changefreq: 'monthly' },
+  investors: { priority: '0.6', changefreq: 'monthly' },
+  process: { priority: '0.6', changefreq: 'monthly' },
+  'virteex-ecosystem': { priority: '0.6', changefreq: 'monthly' },
+  events: { priority: '0.5', changefreq: 'weekly' },
+  news: { priority: '0.5', changefreq: 'weekly' },
+  partners: { priority: '0.5', changefreq: 'monthly' },
+  developers: { priority: '0.5', changefreq: 'monthly' },
+  roadmap: { priority: '0.5', changefreq: 'monthly' },
+  press: { priority: '0.5', changefreq: 'monthly' },
+  'life-at-jsl': { priority: '0.5', changefreq: 'monthly' },
+  security: { priority: '0.4', changefreq: 'yearly' },
+  'privacy-policy': { priority: '0.3', changefreq: 'yearly' },
+  'terms-of-service': { priority: '0.3', changefreq: 'yearly' },
+  'cookie-policy': { priority: '0.3', changefreq: 'yearly' },
 };
 
 const DYNAMIC_ROUTE_META: Record<string, { priority: string; changefreq: string }> = {
-  'solutions':  { priority: '0.8', changefreq: 'monthly' },
-  'products':   { priority: '0.8', changefreq: 'monthly' },
-  'projects':   { priority: '0.7', changefreq: 'monthly' },
-  'blog':       { priority: '0.8', changefreq: 'weekly' },
+  solutions: { priority: '0.8', changefreq: 'monthly' },
+  products: { priority: '0.8', changefreq: 'monthly' },
+  projects: { priority: '0.7', changefreq: 'monthly' },
+  blog: { priority: '0.8', changefreq: 'weekly' },
 };
 
 const supportedLangs = SUPPORTED_LANGUAGES;
@@ -167,16 +183,14 @@ const defaultLang = 'en';
 const STATIC_LASTMOD = process.env['BUILD_DATE'] || new Date().toISOString().split('T')[0];
 const NOINDEX_ROUTES = ['/status', '/thank-you', '/server-error', '/not-found'];
 
-
-
 function shouldSkipLanguageRedirect(pathname: string): boolean {
   if (pathname === '/') return true;
   if (pathname.startsWith('/api/') || pathname === '/api') return true;
   if (pathname.startsWith('/assets/')) return true;
-  if (pathname === '/robots.txt' || pathname === '/sitemap.xml' || pathname === '/favicon.ico') return true;
+  if (pathname === '/robots.txt' || pathname === '/sitemap.xml' || pathname === '/favicon.ico')
+    return true;
   return /\.[a-z0-9]+$/i.test(pathname);
 }
-
 
 /**
  * Genera el XML del sitemap dinámicamente.
@@ -198,7 +212,8 @@ const DYNAMIC_SITEMAP_COLLECTIONS: DynamicCollection[] = [
 
 function generateSitemap(domain: string): string {
   let xml = '<?xml version="1.0" encoding="UTF-8"?>';
-  xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">';
+  xml +=
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">';
 
   const now = new Date().toISOString().split('T')[0];
 
@@ -212,7 +227,10 @@ function generateSitemap(domain: string): string {
 
   xml += '</urlset>';
 
-  const dynamicEntriesCount = DYNAMIC_SITEMAP_COLLECTIONS.reduce((total, collection) => total + collection.items.length, 0);
+  const dynamicEntriesCount = DYNAMIC_SITEMAP_COLLECTIONS.reduce(
+    (total, collection) => total + collection.items.length,
+    0,
+  );
   const indexedRouteCount = staticRoutes.length + dynamicEntriesCount;
   const sitemapEntryCount = indexedRouteCount * supportedLangs.length;
 
@@ -223,7 +241,19 @@ function generateSitemap(domain: string): string {
     localeCount: supportedLangs.length,
     sitemapEntryCount,
     noindexRoutes: NOINDEX_ROUTES,
-    schemaTypes: ['Organization', 'LocalBusiness', 'WebSite', 'BreadcrumbList', 'BlogPosting', 'FAQPage', 'Product', 'Service', 'JobPosting', 'Review', 'AggregateRating'],
+    schemaTypes: [
+      'Organization',
+      'LocalBusiness',
+      'WebSite',
+      'BreadcrumbList',
+      'BlogPosting',
+      'FAQPage',
+      'Product',
+      'Service',
+      'JobPosting',
+      'Review',
+      'AggregateRating',
+    ],
   };
 
   return xml;
@@ -234,7 +264,7 @@ function generateSitemap(domain: string): string {
  */
 function generateStaticEntriesXml(domain: string): string {
   let xml = '';
-  staticRoutes.forEach(route => {
+  staticRoutes.forEach((route) => {
     const meta = ROUTE_META[route] ?? { priority: '0.5', changefreq: 'monthly' };
     xml += generateUrlEntry(route, STATIC_LASTMOD, domain, meta.priority, meta.changefreq);
   });
@@ -253,7 +283,7 @@ function generateDynamicEntriesXml(
 ): string {
   const meta = DYNAMIC_ROUTE_META[basePath] ?? { priority: '0.6', changefreq: 'monthly' };
   let xml = '';
-  collection.forEach(item => {
+  collection.forEach((item) => {
     const images: SitemapImage[] = [];
     if (item.imageUrl && item.imageUrl.startsWith('http')) {
       images.push({ loc: item.imageUrl, title: item.key ?? item.slug });
@@ -283,7 +313,7 @@ function generateUrlEntry(
 ): string {
   let entryXml = '';
 
-  supportedLangs.forEach(lang => {
+  supportedLangs.forEach((lang) => {
     const url = `${domain}/${lang}${route ? '/' + route : ''}`;
 
     entryXml += '<url>';
@@ -294,7 +324,7 @@ function generateUrlEntry(
 
     // image:image extensions (only on the canonical lang entry to avoid duplication)
     if (lang === defaultLang && images.length > 0) {
-      images.forEach(img => {
+      images.forEach((img) => {
         entryXml += '<image:image>';
         entryXml += `<image:loc>${escapeXml(img.loc)}</image:loc>`;
         if (img.title) entryXml += `<image:title>${escapeXml(img.title)}</image:title>`;
@@ -304,7 +334,7 @@ function generateUrlEntry(
     }
 
     // hreflang alternates
-    supportedLangs.forEach(altLang => {
+    supportedLangs.forEach((altLang) => {
       const altUrl = `${domain}/${altLang}${route ? '/' + route : ''}`;
       entryXml += `<xhtml:link rel="alternate" hreflang="${altLang}" href="${altUrl}" />`;
     });
@@ -329,13 +359,6 @@ function escapeXml(str: string): string {
 }
 // --- FIN: Funciones para generar el Sitemap ---
 
-
-
-
-
-
-
-
 /**
  * Example Express Rest API endpoints can be defined here.
  * Uncomment and define endpoints as necessary.
@@ -348,7 +371,6 @@ function escapeXml(str: string): string {
  * ```
  */
 
-
 app.get('/sitemap.xml', (req, res) => {
   const domain = resolveCanonicalBaseUrl(req);
 
@@ -360,7 +382,10 @@ app.get('/sitemap.xml', (req, res) => {
 app.get('/seo/health', (req, res) => {
   const canonicalBaseUrl = resolveCanonicalBaseUrl(req);
   if (!latestSeoHealthSnapshot) {
-    const dynamicEntriesCount = DYNAMIC_SITEMAP_COLLECTIONS.reduce((total, collection) => total + collection.items.length, 0);
+    const dynamicEntriesCount = DYNAMIC_SITEMAP_COLLECTIONS.reduce(
+      (total, collection) => total + collection.items.length,
+      0,
+    );
     const indexedRouteCount = staticRoutes.length + dynamicEntriesCount;
     latestSeoHealthSnapshot = {
       generatedAt: new Date(0).toISOString(),
@@ -382,7 +407,6 @@ app.get('/seo/health', (req, res) => {
     },
   });
 });
-
 
 /**
  * Serve static files from /browser
@@ -416,7 +440,7 @@ app.use((req, res, next) => {
   res.setHeader('Vary', 'Accept-Language');
 
   // Defense-in-depth: X-Robots-Tag for noindex routes (supplements meta robots tag)
-  const isNoindexRoute = NOINDEX_ROUTES.some(route => req.path.includes(route));
+  const isNoindexRoute = NOINDEX_ROUTES.some((route) => req.path.includes(route));
   if (isNoindexRoute) {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow');
   }
@@ -435,14 +459,7 @@ app.use((req, res, next) => {
   );
 
   const dynamicBaseUrl = resolveCanonicalBaseUrl(req);
-  const requestHost = req.get('host') ?? '';
-  const requestHostname = (() => {
-    try {
-      return new URL(`http://${requestHost}`).hostname;
-    } catch {
-      return requestHost;
-    }
-  })();
+  const requestHost = req.get('host');
 
   angularApp
     .handle(req, {
@@ -453,18 +470,9 @@ app.use((req, res, next) => {
         { provide: GA_MEASUREMENT_ID, useValue: ENV_GA_MEASUREMENT_ID },
         { provide: GSC_VERIFICATION_TOKEN, useValue: ENV_GSC_VERIFICATION_TOKEN },
       ],
-      allowedHosts: [
-        '127.0.0.1',
-        'localhost',
-        '127.0.0.1:4000',
-        'localhost:4000',
-        requestHost,
-        requestHostname,
-      ],
+      allowedHosts: ['127.0.0.1', 'localhost', '127.0.0.1:4000', 'localhost:4000', requestHost],
     })
-    .then((response) =>
-      response ? writeResponseToNodeResponse(response, res) : next(),
-    )
+    .then((response) => (response ? writeResponseToNodeResponse(response, res) : next()))
     .catch(next);
 });
 
