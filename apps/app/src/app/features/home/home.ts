@@ -102,6 +102,10 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     grabCursor: true,
     loop: false,
     speed: 600,
+    pagination: {
+      clickable: true,
+      dynamicBullets: true,
+    },
     navigation: {
       nextEl: '.offerings-swiper-button-next',
       prevEl: '.offerings-swiper-button-prev',
@@ -185,6 +189,10 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     grabCursor: true,
     loop: false,
     speed: 600,
+    pagination: {
+      clickable: true,
+      dynamicBullets: true,
+    },
     navigation: {
       nextEl: '.insights-swiper-button-next',
       prevEl: '.insights-swiper-button-prev',
@@ -208,6 +216,10 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     grabCursor: true,
     loop: false,
     speed: 600,
+    pagination: {
+      clickable: true,
+      dynamicBullets: true,
+    },
     navigation: {
       nextEl: '.projects-swiper-button-next',
       prevEl: '.projects-swiper-button-prev',
