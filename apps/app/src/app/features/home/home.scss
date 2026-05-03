@@ -1483,9 +1483,7 @@ swiper-container {
 }
 
 @media (max-width: 767px) {
-  .offerings-swiper,
-  .projects-swiper,
-  .insights-swiper {
+  .offerings-swiper {
     overflow: visible;
     padding-block: 0.75rem 1.25rem;
   }
