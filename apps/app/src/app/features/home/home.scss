@@ -20,7 +20,7 @@
   // max-height: 900px; // Límite para pantallas muy altas
   background-color: var(--bg-primary);
   position: relative; // Contexto para la barra inferior
-  
+
   // ← NUEVO: Contexto para posicionamiento absoluto de los botones
   .swiper {
     width: 100%;
@@ -93,14 +93,16 @@ swiper-container {
     border-radius: var(--radius-md);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    transition:
+      transform var(--transition-speed) ease,
+      box-shadow var(--transition-speed) ease;
     animation: fadeInUp 1s ease-out 1s both;
 
     &:hover {
       transform: translateY(-3px);
       box-shadow: 0 10px 20px rgba(255, 65, 108, 0.2);
     }
-    
+
     // --- Sazón: Micro-interacción de clic ---
     &:active {
       transform: translateY(-1px);
@@ -128,12 +130,12 @@ swiper-container {
     flex-wrap: wrap;
 
     @media (max-width: 576px) {
-       flex-direction: column;
-       align-items: stretch;
-       .hero-slide__cta {
-         text-align: center;
-         justify-content: center;
-       }
+      flex-direction: column;
+      align-items: stretch;
+      .hero-slide__cta {
+        text-align: center;
+        justify-content: center;
+      }
     }
   }
 }
@@ -150,7 +152,9 @@ swiper-container {
   gap: 0.5rem;
   z-index: 15;
   opacity: 0.7;
-  transition: opacity 1s ease, visibility 1s ease;
+  transition:
+    opacity 1s ease,
+    visibility 1s ease;
 
   &.hidden {
     opacity: 0;
@@ -161,7 +165,7 @@ swiper-container {
   .mouse {
     width: 30px;
     height: 50px;
-    border: 2px solid rgba(255,255,255,0.6);
+    border: 2px solid rgba(255, 255, 255, 0.6);
     border-radius: 15px;
     position: relative;
 
@@ -181,8 +185,8 @@ swiper-container {
   .arrow {
     width: 10px;
     height: 10px;
-    border-inline-end: 2px solid rgba(255,255,255,0.6);
-    border-bottom: 2px solid rgba(255,255,255,0.6);
+    border-inline-end: 2px solid rgba(255, 255, 255, 0.6);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.6);
     transform: rotate(45deg);
     animation: scrollArrow 2s infinite;
     animation-delay: 0.2s;
@@ -194,16 +198,30 @@ swiper-container {
 }
 
 @keyframes scrollWheel {
-  0% { top: 10px; opacity: 1; }
-  100% { top: 30px; opacity: 0; }
+  0% {
+    top: 10px;
+    opacity: 1;
+  }
+  100% {
+    top: 30px;
+    opacity: 0;
+  }
 }
 
 @keyframes scrollArrow {
-  0% { opacity: 0; transform: rotate(45deg) translateY(-5px); }
-  50% { opacity: 1; transform: rotate(45deg) translateY(0); }
-  100% { opacity: 0; transform: rotate(45deg) translateY(5px); }
+  0% {
+    opacity: 0;
+    transform: rotate(45deg) translateY(-5px);
+  }
+  50% {
+    opacity: 1;
+    transform: rotate(45deg) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(45deg) translateY(5px);
+  }
 }
-
 
 // --- NUEVO: Offerings Tabs Section ---
 .offerings-section {
@@ -243,7 +261,7 @@ swiper-container {
       &.active {
         background: var(--bg-card);
         color: var(--text-main);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
       }
 
       &:hover:not(.active) {
@@ -282,8 +300,10 @@ swiper-container {
     display: flex;
     justify-content: center;
 
+    padding: 20px 0px !important;
+
     jsl-card {
-      width: min(100%, 340px);
+      width: min(100%, 275px);
     }
   }
 
@@ -427,7 +447,7 @@ swiper-container {
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(5px);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2); 
+  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .hero-bottom-bar__container {
@@ -449,7 +469,7 @@ swiper-container {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--text-main);
-    flex-shrink: 0; 
+    flex-shrink: 0;
   }
   &--center {
     font-size: 0.9rem;
@@ -490,19 +510,20 @@ swiper-container {
   justify-content: center;
   color: rgba(255, 255, 255, 0.58); // Icono más visible
   cursor: pointer;
-  transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+  transition:
+    opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1),
     background-color 0.25s ease,
     border-color 0.25s ease,
     color 0.25s ease,
     box-shadow 0.25s ease;
   opacity: 0.2; // Visible sin ser dominante
   visibility: visible;
-  
+
   // Efecto de brillo sutil en hover
-  box-shadow: 
+  box-shadow:
     0 4px 20px rgba(0, 0, 0, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  
+
   lucide-icon {
     width: 26px;
     height: 26px;
@@ -517,13 +538,13 @@ swiper-container {
     background-color: rgba(255, 255, 255, 0.12);
     border-color: rgba(255, 255, 255, 0.3);
     color: rgba(255, 255, 255, 0.95);
-    
+
     // Efecto de elevación y brillo
-    box-shadow: 
+    box-shadow:
       0 8px 30px rgba(0, 0, 0, 0.15),
       0 0 0 1px rgba(255, 255, 255, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.15);
-    
+
     lucide-icon {
       stroke-width: 2;
     }
@@ -558,7 +579,7 @@ swiper-container {
   position: relative;
   --hero-nav-left-visibility: 0;
   --hero-nav-right-visibility: 0;
-  
+
   // Zonas de detección de proximidad para mostrar botones
   &::before,
   &::after {
@@ -571,22 +592,22 @@ swiper-container {
     pointer-events: none;
     transition: background 0.3s ease;
   }
-  
+
   &::before {
     inset-inline-start: 0;
     // background: linear-gradient(to right, rgba(0,0,0,0.1), transparent);
   }
-  
+
   &::after {
     inset-inline-end: 0;
     // background: linear-gradient(to left, rgba(0,0,0,0.1), transparent);
   }
-  
+
   // Mostrar botones cuando el cursor está cerca de los bordes
   &:hover::before {
     // background: linear-gradient(to right, rgba(0,0,0,0.2), transparent);
   }
-  
+
   &:hover::after {
     // background: linear-gradient(to left, rgba(0,0,0,0.2), transparent);
   }
@@ -599,17 +620,28 @@ swiper-container {
   .hero-slider .swiper-button-prev {
     display: none !important;
   }
-
 }
 
 // Keyframes para animación
 @keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-30px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 // --- NUEVO: Tech Stack Slider (Marquee) ---
@@ -636,7 +668,9 @@ swiper-container {
   align-items: center;
   justify-content: center;
   opacity: 0.5;
-  transition: opacity 0.3s ease, filter 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    filter 0.3s ease;
   filter: grayscale(100%); // Escala de grises por defecto
 
   img {
@@ -657,7 +691,8 @@ swiper-container {
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
   align-items: center;
-  background: linear-gradient(345deg, hsla(0, 0%, 100%, 0.2) -2%, transparent 10.12%),
+  background:
+    linear-gradient(345deg, hsla(0, 0%, 100%, 0.2) -2%, transparent 10.12%),
     linear-gradient(160deg, hsla(0, 0%, 100%, 0.2), transparent 15.27%), var(--bg-primary);
   overflow: hidden;
   border-radius: 16px;
@@ -671,8 +706,12 @@ swiper-container {
   border-radius: 16px;
   content: '';
   inset: 0;
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   mask-composite: add, add;
   -webkit-mask-composite: exclude;
   mask-composite: exclude;
@@ -750,16 +789,9 @@ swiper-container {
 .testimonials-section {
   padding: 6rem 0;
   // 1. Fondo con gradiente sutil para un look más premium
-  background: radial-gradient(
-      circle at 0% 100%,
-      rgba(var(--primary-rgb), 0.1),
-      transparent 40%
-    ),
-    radial-gradient(
-      circle at 100% 50%,
-      rgba(var(--accent-secondary-rgb), 0.1),
-      transparent 40%
-    ),
+  background:
+    radial-gradient(circle at 0% 100%, rgba(var(--primary-rgb), 0.1), transparent 40%),
+    radial-gradient(circle at 100% 50%, rgba(var(--accent-secondary-rgb), 0.1), transparent 40%),
     var(--bg-secondary);
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
@@ -805,9 +837,11 @@ swiper-container {
   width: 100%;
   max-width: 400px; // Ancho máximo de la tarjeta
   height: auto;
-  
+
   // Sombra y efecto 3D
-  transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+  transition:
+    transform var(--transition-speed) ease,
+    box-shadow var(--transition-speed) ease;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   z-index: 2; // 5. Asegurar que la tarjeta esté sobre el glow
 
@@ -848,18 +882,18 @@ swiper-container {
   gap: 1rem;
   margin-top: auto;
   z-index: 3; // Sobre el icono de comillas
-  
+
   img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     border: 2px solid var(--border-color);
   }
-  
+
   &-info {
     display: flex;
     flex-direction: column;
-    
+
     .name {
       font-size: 1rem;
       font-weight: 600;
@@ -917,9 +951,9 @@ swiper-container {
     }
 
     &.active {
-      background: var(--primary);
       color: white;
       border-color: var(--primary);
+      background: var(--primary);
     }
   }
 }
@@ -1040,7 +1074,9 @@ swiper-container {
   text-align: center;
   position: relative;
   z-index: 2;
-  transition: transform var(--transition-speed) ease, border-color var(--transition-speed) ease;
+  transition:
+    transform var(--transition-speed) ease,
+    border-color var(--transition-speed) ease;
 
   &:hover {
     transform: translateY(-5px);
@@ -1201,7 +1237,6 @@ swiper-container {
   }
 }
 
-
 // --- 6. Final CTA Section ---
 .final-cta-section {
   padding: 6rem 0;
@@ -1231,7 +1266,7 @@ swiper-container {
 // --- RESPONSIVIDAD ---
 @media (max-width: 992px) {
   .hero-bottom-bar__col--center {
-    display: none; 
+    display: none;
   }
   .hero-bottom-bar__container {
     justify-content: space-between;
@@ -1289,21 +1324,24 @@ swiper-container {
   .featured-projects,
   .process-section,
   .final-cta-section,
-  .testimonials-section { // Añadido
+  .testimonials-section {
+    // Añadido
     padding: 4rem 0;
   }
 
   .offering-slide,
   .project-slide,
   .insight-slide {
-    transition: transform 0.4s ease, opacity 0.4s ease;
+    transition:
+      transform 0.4s ease,
+      opacity 0.4s ease;
 
     &:not(.swiper-slide-active) {
       transform: scale(0.9);
       opacity: 0.6;
     }
   }
-  
+
   .testimonials-header {
     margin-bottom: 3rem;
   }
@@ -1315,7 +1353,7 @@ swiper-container {
   .final-cta__content .section-title {
     font-size: 2rem;
   }
-  
+
   // Ajustar posición del paginador para compensar
   :host::ng-deep {
     .hero-slider .swiper-pagination {
@@ -1494,7 +1532,10 @@ swiper-container {
     padding: 2rem 1.5rem;
     text-align: center;
     overflow: hidden;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    transition:
+      border-color 0.3s ease,
+      box-shadow 0.3s ease,
+      transform 0.3s ease;
 
     &::after {
       content: '';
@@ -1514,7 +1555,9 @@ swiper-container {
       box-shadow: 0 8px 32px rgba(var(--primary-rgb), 0.08);
       transform: translateY(-4px);
 
-      &::after { opacity: 1; }
+      &::after {
+        opacity: 1;
+      }
 
       .stat-card__icon {
         color: var(--primary);
@@ -1532,7 +1575,9 @@ swiper-container {
       align-items: center;
       justify-content: center;
       margin: 0 auto 1.25rem;
-      transition: background 0.3s ease, color 0.3s ease;
+      transition:
+        background 0.3s ease,
+        color 0.3s ease;
     }
 
     &__value {
@@ -1593,11 +1638,7 @@ swiper-container {
 .welcome-photo-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(var(--primary-rgb), 0.08) 0%,
-    transparent 60%
-  );
+  background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.08) 0%, transparent 60%);
   pointer-events: none;
 }
 
@@ -1708,8 +1749,8 @@ swiper-container {
     background: var(--accent-gradient);
     border-radius: 4px;
     box-shadow:
-      -10px 10px 20px rgba(0,0,0,0.3),
-      -2px 0 0 rgba(255,255,255,0.2) inset; // Spine effect
+      -10px 10px 20px rgba(0, 0, 0, 0.3),
+      -2px 0 0 rgba(255, 255, 255, 0.2) inset; // Spine effect
     position: relative;
     transform: rotateY(-15deg) rotateX(5deg);
     display: flex;
@@ -1846,13 +1887,6 @@ swiper-container {
 
 // --- CAMBIO: Estilos .clients-section eliminados ---
 
-
-
-
-
-
-
-
 // Partners Section
 .partners-section {
   padding: 4rem 0;
@@ -1867,7 +1901,13 @@ swiper-container {
     top: 0;
     inset-inline: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent 0%, var(--border-color) 25%, var(--border-color) 75%, transparent 100%);
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--border-color) 25%,
+      var(--border-color) 75%,
+      transparent 100%
+    );
   }
 
   &::after {
@@ -1876,7 +1916,13 @@ swiper-container {
     bottom: 0;
     inset-inline: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent 0%, var(--border-color) 25%, var(--border-color) 75%, transparent 100%);
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--border-color) 25%,
+      var(--border-color) 75%,
+      transparent 100%
+    );
   }
 
   .partners-header {
@@ -1926,9 +1972,10 @@ swiper-container {
       padding: 1rem 1.75rem;
       border-radius: var(--radius-md);
       border: 1px solid transparent;
-      transition: background var(--transition-speed) ease,
-                  border-color var(--transition-speed) ease,
-                  box-shadow var(--transition-speed) ease;
+      transition:
+        background var(--transition-speed) ease,
+        border-color var(--transition-speed) ease,
+        box-shadow var(--transition-speed) ease;
       cursor: default;
 
       &:hover {
@@ -1948,7 +1995,9 @@ swiper-container {
         object-fit: contain;
         filter: grayscale(100%) brightness(0.65);
         opacity: 0.45;
-        transition: filter 0.4s ease, opacity 0.4s ease;
+        transition:
+          filter 0.4s ease,
+          opacity 0.4s ease;
       }
     }
   }
@@ -2028,7 +2077,7 @@ swiper-container {
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border-color);
   border-radius: 50px;
   padding: 0.8rem 1.5rem;
@@ -2039,7 +2088,7 @@ swiper-container {
   color: var(--text-muted);
 
   &:hover {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     border-color: var(--primary);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     color: var(--text-main);
@@ -2057,8 +2106,12 @@ swiper-container {
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .lead-magnet-btn:disabled {
@@ -2088,8 +2141,7 @@ swiper-container {
   .welcome-section {
     background:
       linear-gradient(15deg, hsla(0, 0%, 100%, 0.2) -2%, transparent 10.12%),
-      linear-gradient(200deg, hsla(0, 0%, 100%, 0.2), transparent 15.27%),
-      var(--bg-primary);
+      linear-gradient(200deg, hsla(0, 0%, 100%, 0.2), transparent 15.27%), var(--bg-primary);
   }
 
   // Welcome card diagonal border glow: flip from upper-left to upper-right
@@ -2103,11 +2155,7 @@ swiper-container {
   // Welcome photo overlay: primary-colour wash mirrors from top-left to top-right
   // LTR: 135° (top-left → bottom-right) → RTL: 225° (top-right → bottom-left)
   .welcome-photo-overlay {
-    background: linear-gradient(
-      225deg,
-      rgba(var(--primary-rgb), 0.08) 0%,
-      transparent 60%
-    );
+    background: linear-gradient(225deg, rgba(var(--primary-rgb), 0.08) 0%, transparent 60%);
   }
 
   // Partners header flanking lines.
