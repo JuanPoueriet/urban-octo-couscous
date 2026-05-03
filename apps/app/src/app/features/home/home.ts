@@ -116,14 +116,17 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       640: {
         slidesPerView: 1.5,
         spaceBetween: 5,
+        centeredSlides: true,
       },
       768: {
         slidesPerView: 2.2,
         spaceBetween: 25,
+        centeredSlides: true,
       },
       1024: {
         slidesPerView: 3.2,
         spaceBetween: 30,
+        centeredSlides: false,
       },
     },
   };
@@ -204,10 +207,12 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       768: {
         slidesPerView: 2.2,
         spaceBetween: 25,
+        centeredSlides: true,
       },
       1024: {
-        slidesPerView: 3.2,
+        slidesPerView: 4,
         spaceBetween: 30,
+        centeredSlides: false,
       },
     },
   };
@@ -232,10 +237,12 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       768: {
         slidesPerView: 2.2,
         spaceBetween: 25,
+        centeredSlides: true,
       },
       1024: {
-        slidesPerView: 3.2,
+        slidesPerView: 4,
         spaceBetween: 30,
+        centeredSlides: false,
       },
     },
   };

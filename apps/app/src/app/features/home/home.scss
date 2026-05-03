@@ -12,7 +12,6 @@
 @use '../projects/projects.scss';
 // --- CAMBIO: Eliminado @use '../tech-stack/tech-stack.scss'; ---
 
-
 @mixin slide-peek-effect {
   transition:
     transform 0.4s ease,
@@ -311,7 +310,9 @@ swiper-container {
 
     padding: 20px 0px !important;
 
-    @include slide-peek-effect;
+    @media (max-width: 1023px) {
+      @include slide-peek-effect;
+    }
 
     jsl-card {
       width: min(100%, 275px);
@@ -326,21 +327,21 @@ swiper-container {
     z-index: 20;
     width: 50px;
     height: 50px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.9);
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    opacity: 0.35;
+    opacity: 0.6;
 
     &.swiper-button-disabled {
-      opacity: 0.1;
+      opacity: 0.15;
       pointer-events: none;
     }
 
@@ -989,7 +990,9 @@ swiper-container {
 .project-slide {
   height: auto;
   display: flex;
-  @include slide-peek-effect;
+  @media (max-width: 1023px) {
+    @include slide-peek-effect;
+  }
 }
 
 .projects-swiper-button-next,
@@ -1000,23 +1003,23 @@ swiper-container {
   z-index: 20;
   width: 50px;
   height: 50px;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    opacity: 0.35;
+  opacity: 0.6;
 
-    &.swiper-button-disabled {
-      opacity: 0.1;
-      pointer-events: none;
-    }
+  &.swiper-button-disabled {
+    opacity: 0.15;
+    pointer-events: none;
+  }
 
   @media (max-width: 768px) {
     display: none !important;
@@ -1180,7 +1183,9 @@ swiper-container {
 .insight-slide {
   height: auto;
   display: flex;
-  @include slide-peek-effect;
+  @media (max-width: 1023px) {
+    @include slide-peek-effect;
+  }
 }
 
 // Replicating Hero-style Navigation for Insights Slider
@@ -1192,21 +1197,21 @@ swiper-container {
   z-index: 20;
   width: 50px;
   height: 50px;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  opacity: 0.35;
+  opacity: 0.6;
 
   &.swiper-button-disabled {
-    opacity: 0.1;
+    opacity: 0.15;
     pointer-events: none;
   }
 
