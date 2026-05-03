@@ -3,22 +3,22 @@
 // 1. Definición de Variables CSS (Design Tokens)
 :root {
   // Colores principales
-  --primary: #FF4B2B;
+  --primary: #ff4b2b;
   --primary-rgb: 255, 75, 43;
-  --secondary: #FF416C;
+  --secondary: #ff416c;
   --secondary-rgb: 255, 65, 108;
   --accent-gradient: linear-gradient(90deg, var(--primary), var(--secondary));
 
   // Fondos
-  --bg-primary: #0D0D0D;
-  --bg-secondary: #1A1A1A;
+  --bg-primary: #0d0d0d;
+  --bg-secondary: #1a1a1a;
   --bg-card: #242424;
-  --border-color: #2C2C2C;
+  --border-color: #2c2c2c;
 
   // Texto
-  --text-main: #F5F5F5;
-  --text-muted: #A0A0A0;
-  --text-inverse: #0D0D0D;
+  --text-main: #f5f5f5;
+  --text-muted: #a0a0a0;
+  --text-inverse: #0d0d0d;
 
   // Tipografía
   --font-family-base: 'Poppins', sans-serif;
@@ -88,13 +88,21 @@
   box-sizing: border-box;
 }
 
-html, body {
+@media (max-width: 768px) {
+  * {
+    cursor: default !important;
+  }
+}
+
+html,
+body {
   height: auto;
   overscroll-behavior-x: none;
   scroll-behavior: smooth;
 }
 
-html.lenis, html.lenis body {
+html.lenis,
+html.lenis body {
   height: auto;
 }
 
@@ -175,7 +183,9 @@ a {
 [jslAnimateOnScroll] {
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
 
   &.is-visible {
     opacity: 1;
@@ -190,13 +200,23 @@ lucide-icon {
 }
 
 // Utility Classes (Minimal set to avoid full framework)
-.mx-auto { margin-inline: auto; }
-.px-4 { padding-inline: 1rem; }
-.mt-20 { margin-top: 5rem; }
-.text-center { text-align: center; }
+.mx-auto {
+  margin-inline: auto;
+}
+.px-4 {
+  padding-inline: 1rem;
+}
+.mt-20 {
+  margin-top: 5rem;
+}
+.text-center {
+  text-align: center;
+}
 
 @media (min-width: 1024px) {
-  .lg\:mt-24 { margin-top: 6rem; }
+  .lg\:mt-24 {
+    margin-top: 6rem;
+  }
 }
 
 /* ─── RTL / Bidirectional Support ─────────────────────────────── */
@@ -204,9 +224,11 @@ lucide-icon {
 // ── Direction multiplier token ────────────────────────────────────────────────
 // Use in transforms: translateX(calc(var(--dir) * Xpx))
 // 1 = LTR (default), -1 = RTL
-:root { --dir: 1; }
+:root {
+  --dir: 1;
+}
 
-[dir="rtl"] {
+[dir='rtl'] {
   // Token override — consumed by DirectionService and any calc()-based rules
   --dir: -1;
 
@@ -219,19 +241,38 @@ lucide-icon {
   // ── Arabic typography ───────────────────────────────────────────────────────
   // Arabic script has tall ascenders/descenders that need extra leading.
   // 1.9 prevents clipping without breaking card/badge layouts.
-  p, li, dt, dd, blockquote, td, th, label, figcaption,
-  .body-text, .lead, .description, .section-subtitle, .section-text {
+  p,
+  li,
+  dt,
+  dd,
+  blockquote,
+  td,
+  th,
+  label,
+  figcaption,
+  .body-text,
+  .lead,
+  .description,
+  .section-subtitle,
+  .section-text {
     line-height: 1.9;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     line-height: 1.4;
     // Arabic has no inter-character spacing; positive letter-spacing breaks the script.
     letter-spacing: 0;
   }
 
   // Arabic is a connected script — never break mid-word.
-  p, li, blockquote {
+  p,
+  li,
+  blockquote {
     word-break: normal;
     overflow-wrap: break-word;
     hyphens: none;
@@ -241,7 +282,9 @@ lucide-icon {
   // unicode-bidi: plaintext lets the browser infer direction from the first
   // strongly-directional character, enabling natural mixed-language typing.
   // direction: rtl sets the base direction for the placeholder and caret.
-  input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='color']):not([type='file']):not([type='image']):not([type='submit']):not([type='reset']):not([type='button']),
+  input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='color']):not(
+      [type='file']
+    ):not([type='image']):not([type='submit']):not([type='reset']):not([type='button']),
   textarea,
   select,
   [contenteditable='true'],
@@ -254,21 +297,23 @@ lucide-icon {
   // ── Directional icon mirroring ───────────────────────────────────────────────
   // scaleX(-1) is preferred over rotate(180deg): it preserves the icon's
   // vertical centre, prevents layout shift, and works with currentColor.
-  lucide-icon[name="ArrowRight"],
-  lucide-icon[name="ArrowLeft"],
-  lucide-icon[name="ChevronRight"],
-  lucide-icon[name="ChevronLeft"],
-  lucide-icon[name="ArrowRightCircle"],
-  lucide-icon[name="ArrowLeftCircle"],
-  lucide-icon[name="MoveRight"],
-  lucide-icon[name="MoveLeft"],
-  lucide-icon[name="ChevronsLeftRight"] {
+  lucide-icon[name='ArrowRight'],
+  lucide-icon[name='ArrowLeft'],
+  lucide-icon[name='ChevronRight'],
+  lucide-icon[name='ChevronLeft'],
+  lucide-icon[name='ArrowRightCircle'],
+  lucide-icon[name='ArrowLeftCircle'],
+  lucide-icon[name='MoveRight'],
+  lucide-icon[name='MoveLeft'],
+  lucide-icon[name='ChevronsLeftRight'] {
     transform: scaleX(-1);
   }
 
   // CSS-class-based icon selectors (breadcrumbs, pagination rendered without [name])
-  .lucide-chevron-right, .lucide-chevron-left,
-  .lucide-arrow-right,  .lucide-arrow-left {
+  .lucide-chevron-right,
+  .lucide-chevron-left,
+  .lucide-arrow-right,
+  .lucide-arrow-left {
     transform: scaleX(-1);
   }
 }
