@@ -281,6 +281,11 @@ swiper-container {
   .offering-slide {
     height: auto;
     display: flex;
+    justify-content: center;
+
+    jsl-card {
+      width: min(100%, 340px);
+    }
   }
 
   .offerings-swiper-button-next,
