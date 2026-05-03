@@ -3,6 +3,7 @@
 @use 'swiper/css' as *;
 @use 'swiper/css/effect-fade' as *;
 @use 'swiper/css/pagination' as *;
+@use 'swiper/css/effect-creative' as *;
 // --- NUEVO: Imports para el slider de testimonios ---
 @use 'swiper/css/effect-coverflow' as *;
 @use 'swiper/css/navigation' as *; // ← AÑADIDO: Para estilos base de navegación
@@ -1482,25 +1483,34 @@ swiper-container {
 }
 
 @media (max-width: 767px) {
-  .offerings-swiper,
-  .projects-swiper,
-  .insights-swiper {
+  .offerings-swiper {
     overflow: visible;
+    padding-block: 0.75rem 1.25rem;
   }
 
-  .offering-slide,
-  .project-slide,
-  .insight-slide {
-    transform: scale(0.9);
-    opacity: 0.7;
-    transition: transform 240ms ease, opacity 240ms ease;
+  .offerings-swiper .swiper-wrapper {
+    align-items: stretch;
   }
 
-  .offering-slide.swiper-slide-active,
-  .project-slide.swiper-slide-active,
-  .insight-slide.swiper-slide-active {
-    transform: scale(1);
+  .offering-slide {
+    transition: filter 220ms ease, opacity 220ms ease;
+    will-change: transform, opacity;
     opacity: 1;
+    filter: saturate(0.88);
+  }
+
+  .offering-slide.swiper-slide-active {
+    filter: saturate(1);
+  }
+
+  .offering-slide .card {
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14);
+    border-radius: 20px;
+    transition: box-shadow 220ms ease;
+  }
+
+  .offering-slide.swiper-slide-active .card {
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.22);
   }
 }
 
