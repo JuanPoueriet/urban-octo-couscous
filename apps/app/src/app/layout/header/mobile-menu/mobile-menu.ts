@@ -152,6 +152,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private setupGestures() {
     const config: MobileMenuGestureConfig = {
       menuWidth: this.menuWidth,
+      elasticResistance: 100,
       isRtl: () => this.directionService.isRtl(),
       isOpen: () => this.isMobileMenuOpen,
       isAnimating: () => this.isAnimating,
