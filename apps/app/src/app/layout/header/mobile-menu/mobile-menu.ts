@@ -147,10 +147,28 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       onUpdateTranslate: (translateX, progress) => {
         this.menuTranslateX = translateX;
         this.menuTransition = 'none';
+
         if (this.overlayElement && progress !== null) {
-          this.overlayElement.style.opacity = Math.max(0, Math.min(1, progress * 0.7)).toString();
+          const clampedProgress = Math.max(0, Math.min(1, progress));
+          const opacity = clampedProgress * 0.7;
+          const blur = clampedProgress * 10;
+
+          this.renderer.setStyle(this.overlayElement, 'opacity', opacity.toString());
+          this.renderer.setStyle(this.overlayElement, 'backdrop-filter', `blur(${blur}px)`);
+          this.renderer.setStyle(this.overlayElement, '-webkit-backdrop-filter', `blur(${blur}px)`);
         }
+
         this.cdRef.markForCheck();
+      },
+      onDraggingChange: (isDragging) => {
+        if (this.menuElement) {
+          if (isDragging) {
+            this.renderer.addClass(this.menuElement, 'dragging');
+          } else {
+            this.renderer.removeClass(this.menuElement, 'dragging');
+          }
+          this.cdRef.markForCheck();
+        }
       },
       onOpen: () => this.menuService.open(),
       onClose: () => this.menuService.close(),
@@ -179,6 +197,11 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private openDrawer() {
     if (this.isAnimating) return;
     this.isAnimating = true;
+
+    if (this.menuElement) {
+      this.renderer.removeClass(this.menuElement, 'dragging');
+    }
+
     this.menuTransition = 'transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)';
     this.menuTranslateX = 0;
 
@@ -190,7 +213,9 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     if (this.overlayElement) {
       this.overlayElement.classList.add('visible');
-      this.overlayElement.style.opacity = '';
+      this.renderer.removeStyle(this.overlayElement, 'opacity');
+      this.renderer.removeStyle(this.overlayElement, 'backdrop-filter');
+      this.renderer.removeStyle(this.overlayElement, '-webkit-backdrop-filter');
     }
 
     this.cdRef.markForCheck();
@@ -205,6 +230,11 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private closeDrawer() {
     if (this.isAnimating) return;
     this.isAnimating = true;
+
+    if (this.menuElement) {
+      this.renderer.removeClass(this.menuElement, 'dragging');
+    }
+
     this.menuTransition = 'transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)';
     this.menuTranslateX = this.directionService.isRtl() ? this.menuWidth : -this.menuWidth;
 
@@ -216,7 +246,9 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     if (this.overlayElement) {
       this.overlayElement.classList.remove('visible');
-      this.overlayElement.style.opacity = '';
+      this.renderer.removeStyle(this.overlayElement, 'opacity');
+      this.renderer.removeStyle(this.overlayElement, 'backdrop-filter');
+      this.renderer.removeStyle(this.overlayElement, '-webkit-backdrop-filter');
     }
 
     this.cdRef.markForCheck();

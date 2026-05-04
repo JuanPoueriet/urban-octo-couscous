@@ -99,7 +99,10 @@
   &.dragging {
     transition: none !important;
     overflow: hidden;
-    a { pointer-events: none; }
+
+    a, button {
+      pointer-events: none !important;
+    }
   }
 }
 
