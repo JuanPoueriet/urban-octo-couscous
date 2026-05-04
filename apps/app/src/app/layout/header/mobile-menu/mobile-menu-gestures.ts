@@ -18,6 +18,7 @@ export interface MobileMenuGestureConfig {
   isRtl: () => boolean;
   isOpen: () => boolean;
   isAnimating: () => boolean;
+  getTranslateX?: () => number;
   onUpdateTranslate: (
     translateX: number,
     progress: number | null,
@@ -145,7 +146,10 @@ export class MobileMenuGestures {
   }
 
   public onMenuPointerDown(event: PointerEvent) {
-    if (!this.config.isOpen() || this.config.isAnimating() || this.activePointerId !== null) return;
+    if (this.activePointerId !== null) return;
+
+    // We allow interaction if the menu is open OR if it's currently animating (interruption)
+    if (!this.config.isOpen() && !this.config.isAnimating()) return;
 
     event.stopPropagation();
     this.activePointerId = event.pointerId;
@@ -158,9 +162,9 @@ export class MobileMenuGestures {
     this.isHorizontalGesture = false;
     this.wasOvershooting = false;
 
-    // When already open, the initial translation is 0
-    this.initialTranslateX = 0;
-    this.lastDragPosition = 0;
+    // Use current translation if provided (useful for interruption), otherwise default to 0 (open)
+    this.initialTranslateX = this.config.getTranslateX ? this.config.getTranslateX() : 0;
+    this.lastDragPosition = this.initialTranslateX;
 
     this.ngZone.runOutsideAngular(() => {
       document.addEventListener('pointermove', this.handleMenuDragMove);
@@ -273,6 +277,7 @@ export class MobileMenuGestures {
   }
 
   public handleWindowPointerDown = (event: PointerEvent) => {
+    // Only allow edge swipe if the menu is fully closed AND not currently animating
     if (this.config.isOpen() || this.isDragging || this.config.isAnimating() || this.activePointerId !== null) return;
 
     const startX = event.clientX;

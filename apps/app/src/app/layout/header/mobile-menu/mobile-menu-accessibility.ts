@@ -2,6 +2,7 @@ import { ElementRef } from '@angular/core';
 
 export class MobileMenuAccessibility {
   private lastFocusedElement: HTMLElement | null = null;
+  private focusableElements: HTMLElement[] = [];
 
   constructor(private el: ElementRef) {}
 
@@ -22,7 +23,7 @@ export class MobileMenuAccessibility {
     }
   }
 
-  public trapFocus(event: KeyboardEvent) {
+  public refreshFocusableElements() {
     const focusableSelectors =
       'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
 
@@ -30,7 +31,7 @@ export class MobileMenuAccessibility {
       this.el.nativeElement.querySelectorAll(focusableSelectors)
     ) as HTMLElement[];
 
-    const focusableElements = allPotential.filter(el => {
+    this.focusableElements = allPotential.filter(el => {
       const style = window.getComputedStyle(el);
       const rect = el.getBoundingClientRect();
       const isVisible = style.display !== 'none' &&
@@ -40,11 +41,17 @@ export class MobileMenuAccessibility {
                         rect.height > 0;
       return isVisible;
     });
+  }
 
-    if (focusableElements.length === 0) return;
+  public trapFocus(event: KeyboardEvent) {
+    if (this.focusableElements.length === 0) {
+      this.refreshFocusableElements();
+    }
 
-    const firstElement = focusableElements[0];
-    const lastElement = focusableElements[focusableElements.length - 1];
+    if (this.focusableElements.length === 0) return;
+
+    const firstElement = this.focusableElements[0];
+    const lastElement = this.focusableElements[this.focusableElements.length - 1];
 
     if (event.shiftKey) {
       if (document.activeElement === firstElement || !this.el.nativeElement.contains(document.activeElement)) {
