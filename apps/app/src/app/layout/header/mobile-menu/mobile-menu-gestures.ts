@@ -52,6 +52,10 @@ export class MobileMenuGestures {
     return this.isHorizontalGesture;
   }
 
+  public updateMenuWidth(width: number) {
+    this.config.menuWidth = width;
+  }
+
 
   private getClosedPosition(menuWidth: number): number {
     return this.config.isRtl() ? menuWidth : -menuWidth;

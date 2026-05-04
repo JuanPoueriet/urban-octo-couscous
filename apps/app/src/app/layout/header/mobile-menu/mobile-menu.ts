@@ -78,6 +78,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private menuElement: HTMLElement | null = null;
   private overlayElement: HTMLElement | null = null;
   private searchDebounceTimer: any;
+  private transitionTimer: ReturnType<typeof setTimeout> | null = null;
   private gestureHandler: MobileMenuGestures | null = null;
   private a11y: MobileMenuAccessibility;
 
@@ -219,6 +220,11 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       this.searchDebounceTimer = null;
     }
 
+    if (this.transitionTimer) {
+      clearTimeout(this.transitionTimer);
+      this.transitionTimer = null;
+    }
+
     if (this.isMobileMenuOpen) {
       document.body.classList.remove('no-scroll');
       this.toggleBackgroundInert(false);
@@ -230,8 +236,10 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private toggleBackgroundInert(isInert: boolean) {
     if (!this.isBrowser) return;
 
-    const targets = Array.from(document.querySelectorAll('main, jsl-footer'));
+    const targets = Array.from(document.querySelectorAll('main, jsl-footer, jsl-header-top-bar, .header__nav'));
     for (const target of targets) {
+      if (target.contains(this.el.nativeElement)) continue;
+
       if (isInert) {
         target.setAttribute('inert', '');
         target.setAttribute('aria-hidden', 'true');
@@ -309,9 +317,16 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
+    if (this.transitionTimer) {
+      clearTimeout(this.transitionTimer);
+    }
+
+    let resolved = false;
     const unlisten = this.renderer.listen(this.menuElement, 'transitionend', (event: TransitionEvent) => {
-      if (event.propertyName === 'transform') {
+      if (event.propertyName === 'transform' && !resolved) {
+        resolved = true;
         unlisten();
+        if (this.transitionTimer) clearTimeout(this.transitionTimer);
         this.ngZone.run(() => {
           callback();
         });
@@ -319,13 +334,14 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     });
 
     // Fallback for cases where transition might not fire
-    setTimeout(() => {
-      unlisten();
-      this.ngZone.run(() => {
-        if (this.isAnimating) {
+    this.transitionTimer = setTimeout(() => {
+      if (!resolved) {
+        resolved = true;
+        unlisten();
+        this.ngZone.run(() => {
           callback();
-        }
-      });
+        });
+      }
     }, 400);
   }
 
@@ -398,7 +414,11 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       let expandedCount = 0;
       for (const section of this.menuSections) {
         if (this.shouldShowSection(section.titleKey, section.links)) {
-          if (expandedCount < 2) {
+          // If the section was manually expanded before search or during search, keep it.
+          // Otherwise, auto-expand up to 2 sections.
+          if (this.expandedSections.has(section.id)) {
+             expandedCount++;
+          } else if (expandedCount < 2) {
             this.expandedSections.add(section.id);
             expandedCount++;
           }
@@ -506,6 +526,22 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   onDocumentTouchMove(event: TouchEvent) {
     if (this.gestureHandler && this.gestureHandler.getIsDragging() && this.gestureHandler.getIsHorizontalGesture() && this.isBrowser) {
       event.preventDefault();
+    }
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    if (this.isBrowser && this.menuElement) {
+      this.menuWidth = this.menuElement.offsetWidth || 320;
+      if (this.gestureHandler) {
+        this.gestureHandler.updateMenuWidth(this.menuWidth);
+      }
+
+      // Update position if closed
+      if (!this.isMobileMenuOpen) {
+        this.menuTranslateX = this.directionService.isRtl() ? this.menuWidth : -this.menuWidth;
+        this.cdRef.markForCheck();
+      }
     }
   }
 }
