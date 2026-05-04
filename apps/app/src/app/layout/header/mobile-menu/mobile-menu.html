@@ -19,14 +19,14 @@
   (touchcancel)="onMenuTouchCancel($event)"
   role="dialog"
   aria-modal="true"
-  [attr.aria-labelledby]="'mobile-menu-title'"
+  [attr.aria-labelledby]="menuTitleId"
 >
-  <h2 id="mobile-menu-title" class="sr-only">{{ 'ARIA.MOBILE_MENU_TITLE' | translate }}</h2>
+  <h2 [id]="menuTitleId" class="sr-only">{{ 'ARIA.MOBILE_MENU_TITLE' | translate }}</h2>
 
   <!-- Mobile Menu Header -->
   <div class="mobile-menu-top">
     <div class="mobile-logo-container">
-      <a [routerLink]="[currentLang, 'home']" class="header__logo mobile-logo" (click)="closeMobileMenu()">
+      <a [routerLink]="[currentLang, 'home']" class="header__logo mobile-logo" (click)="onMenuRouteNavigate([currentLang, 'home'], 'home_logo'); $event.preventDefault()">
         {{ 'COMMON.BRAND_NAME' | translate }}
       </a>
     </div>
@@ -83,6 +83,7 @@
           [shouldShowLinkFn]="shouldShowLink"
           (onToggle)="toggleSection($event)"
           (onClose)="closeMobileMenu()"
+          (onRouteNavigate)="onMenuRouteNavigate($event.route, $event.source)"
         ></jsl-mobile-menu-section>
       }
     }
@@ -90,7 +91,7 @@
     <!-- Contact Button -->
     @if (shouldShowLink('HEADER.CONTACT')) {
     <div class="mobile-cta-container">
-      <a [routerLink]="[currentLang, 'contact']" routerLinkActive="active" class="mobile-cta-btn" (click)="closeMobileMenu()">
+      <a [routerLink]="[currentLang, 'contact']" routerLinkActive="active" class="mobile-cta-btn" (click)="onMenuRouteNavigate([currentLang, 'contact'], 'contact_cta'); $event.preventDefault()">
         <lucide-icon name="Mail"></lucide-icon>
         {{ 'HEADER.CONTACT' | translate }}
       </a>

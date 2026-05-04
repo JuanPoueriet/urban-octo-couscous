@@ -36,7 +36,7 @@ import { MobileMenuLink } from './mobile-menu.constants';
             @if (shouldShowLink(link.key)) {
               <li>
                 @if (link.route) {
-                  <a [routerLink]="link.route" routerLinkActive="active" (click)="onClose.emit()">
+                  <a [routerLink]="link.route" routerLinkActive="active" (click)="handleRouteClick(link.route, link.key, $event)">
                     <lucide-icon [name]="link.icon"></lucide-icon>
                     {{ link.key | translate }}
                   </a>
@@ -78,10 +78,16 @@ export class MobileMenuSection {
 
   @Output() onToggle = new EventEmitter<string>();
   @Output() onClose = new EventEmitter<void>();
+  @Output() onRouteNavigate = new EventEmitter<{ route: string[]; source: string }>();
 
   @Input() shouldShowLinkFn!: (linkKey: string) => boolean;
 
   shouldShowLink(linkKey: string): boolean {
     return this.shouldShowLinkFn ? this.shouldShowLinkFn(linkKey) : true;
+  }
+
+  handleRouteClick(route: string[], key: string, event: Event): void {
+    event.preventDefault();
+    this.onRouteNavigate.emit({ route, source: key });
   }
 }

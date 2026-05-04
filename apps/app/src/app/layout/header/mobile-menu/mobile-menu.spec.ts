@@ -180,4 +180,18 @@ describe('MobileMenu', () => {
     const contactBtn = fixture.debugElement.query(By.css('.mobile-cta-btn'));
     expect(contactBtn.attributes['routerLinkActive']).toBe('active');
   });
+
+  it('should restore expanded sections after clearing search query', () => {
+    component.toggleSection('services');
+    expect(component.expandedSections.has('services')).toBeTrue();
+
+    component.onSearchChange('serv');
+    component.onSearchChange('');
+
+    expect(component.expandedSections.has('services')).toBeTrue();
+  });
+
+  it('should generate an instance-safe aria title id', () => {
+    expect(component.menuTitleId).toMatch(/^mobile-menu-title-/);
+  });
 });
