@@ -1515,7 +1515,7 @@
     "CONTACT_DESC": "다음 소프트웨어 프로젝트에 대해 JSL Technology 전문가와 상담하십시오. 비즈니스 성장을 위한 맞춤형 컨설팅과 고급 기술 솔루션을 제공합니다."
   },
   "LANGUAGE_SUGGESTION": {
-    "MESSAGE": "{{language}}(으)로 전환하시겠습니까?",
+    "MESSAGE": "현재 이 페이지를 {{currentLanguage}}로 보고 있습니다. {{targetLanguage}}로 전환하시겠습니까?",
     "SWITCH": "전환"
   }
 }

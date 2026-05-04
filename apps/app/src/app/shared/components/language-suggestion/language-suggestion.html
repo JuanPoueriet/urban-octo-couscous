@@ -4,7 +4,7 @@
       <lucide-icon name="Languages"></lucide-icon>
     </div>
     <div class="language-suggestion__text">
-      <p>{{ 'LANGUAGE_SUGGESTION.MESSAGE' | translate:{ language: suggestion.name } }}</p>
+      <p>{{ 'LANGUAGE_SUGGESTION.MESSAGE' | translate:{ currentLanguage: suggestion.currentName, targetLanguage: suggestion.name } }}</p>
     </div>
   </div>
   <div class="language-suggestion__actions">
