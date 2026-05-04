@@ -147,8 +147,8 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       onUpdateTranslate: (translateX, progress) => {
         this.menuTranslateX = translateX;
         this.menuTransition = 'none';
-        if (this.overlayElement && progress !== null) {
-          this.overlayElement.style.opacity = Math.max(0, Math.min(1, progress * 0.7)).toString();
+        if (progress !== null) {
+          this.updateOverlayVisual(progress);
         }
         this.cdRef.markForCheck();
       },
@@ -164,6 +164,24 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
         passive: false,
       });
     });
+  }
+
+
+  private clamp01(value: number): number {
+    return Math.max(0, Math.min(1, value));
+  }
+
+  private updateOverlayVisual(progress: number) {
+    if (!this.overlayElement) return;
+
+    const normalized = this.clamp01(progress);
+    const eased = 1 - Math.pow(1 - normalized, 2);
+    const opacity = 0.08 + eased * 0.62;
+    const blur = eased * 8;
+
+    this.overlayElement.style.opacity = opacity.toFixed(3);
+    this.overlayElement.style.backdropFilter = `blur(${blur.toFixed(2)}px)`;
+    this.overlayElement.style.webkitBackdropFilter = `blur(${blur.toFixed(2)}px)`;
   }
 
   private cleanup() {
@@ -190,7 +208,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     if (this.overlayElement) {
       this.overlayElement.classList.add('visible');
-      this.overlayElement.style.opacity = '';
+      this.updateOverlayVisual(1);
     }
 
     this.cdRef.markForCheck();
@@ -217,6 +235,8 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     if (this.overlayElement) {
       this.overlayElement.classList.remove('visible');
       this.overlayElement.style.opacity = '';
+      this.overlayElement.style.backdropFilter = '';
+      this.overlayElement.style.webkitBackdropFilter = '';
     }
 
     this.cdRef.markForCheck();
@@ -387,9 +407,15 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  onMenuTouchEnd(event: TouchEvent) {
+  onMenuTouchEnd(_event: TouchEvent) {
     if (this.gestureHandler) {
       this.gestureHandler.onMenuTouchEnd();
+    }
+  }
+
+  onMenuTouchCancel(_event: TouchEvent) {
+    if (this.gestureHandler) {
+      this.gestureHandler.onMenuTouchCancel();
     }
   }
 

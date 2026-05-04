@@ -17,7 +17,8 @@ export class MobileMenuGestures {
   private readonly OPEN_THRESHOLD = 0.3;
   private readonly MIN_SWIPE_DISTANCE = 30;
   private readonly VELOCITY_THRESHOLD = 0.3;
-  private readonly MAX_OVERDRAG = 30;
+  private readonly MAX_OVERDRAG = 40;
+  private readonly OVERDRAG_RESISTANCE = 0.35;
   private readonly HORIZONTAL_THRESHOLD = 10;
   private readonly VERTICAL_LOCK_THRESHOLD = 10;
 
@@ -42,6 +43,32 @@ export class MobileMenuGestures {
 
   public getIsHorizontalGesture(): boolean {
     return this.isHorizontalGesture;
+  }
+
+
+  private getClosedPosition(menuWidth: number): number {
+    return this.config.isRtl() ? menuWidth : -menuWidth;
+  }
+
+  private getProgress(translateX: number, menuWidth: number): number {
+    const closed = this.getClosedPosition(menuWidth);
+    const progress = this.config.isRtl()
+      ? (closed - translateX) / menuWidth
+      : (translateX - closed) / menuWidth;
+
+    return Math.max(0, Math.min(1, progress));
+  }
+
+  private applyOverdragResistance(value: number, min: number, max: number): number {
+    if (value < min) {
+      return min + (value - min) * this.OVERDRAG_RESISTANCE;
+    }
+
+    if (value > max) {
+      return max + (value - max) * this.OVERDRAG_RESISTANCE;
+    }
+
+    return value;
   }
 
   public onMenuTouchStart(event: TouchEvent) {
@@ -95,30 +122,14 @@ export class MobileMenuGestures {
     event.preventDefault();
     event.stopPropagation();
 
-    let translateX = diffX;
-    const isRtl = this.config.isRtl();
     const menuWidth = this.config.menuWidth;
+    const minTranslate = -this.MAX_OVERDRAG;
+    const maxTranslate = this.MAX_OVERDRAG;
 
-    if (!isRtl) {
-      if (translateX > this.MAX_OVERDRAG) {
-        translateX = this.MAX_OVERDRAG + (translateX - this.MAX_OVERDRAG) * 0.3;
-      }
-      if (translateX < -menuWidth - this.MAX_OVERDRAG) {
-        const overPull = -menuWidth - this.MAX_OVERDRAG - translateX;
-        translateX = -menuWidth - this.MAX_OVERDRAG + overPull * 0.3;
-      }
-    } else {
-      if (translateX < -this.MAX_OVERDRAG) {
-        translateX = -this.MAX_OVERDRAG + (translateX + this.MAX_OVERDRAG) * 0.3;
-      }
-      if (translateX > menuWidth + this.MAX_OVERDRAG) {
-        translateX = menuWidth + this.MAX_OVERDRAG + (translateX - menuWidth - this.MAX_OVERDRAG) * 0.3;
-      }
-    }
+    const translateX = this.applyOverdragResistance(diffX, this.config.isRtl() ? minTranslate : -menuWidth - this.MAX_OVERDRAG, this.config.isRtl() ? menuWidth + this.MAX_OVERDRAG : maxTranslate);
 
     this.lastDragPosition = translateX;
-    const progress = (translateX + menuWidth) / menuWidth;
-    this.config.onUpdateTranslate(translateX, progress);
+    this.config.onUpdateTranslate(translateX, this.getProgress(translateX, menuWidth));
   }
 
   public onMenuTouchEnd() {
@@ -135,7 +146,7 @@ export class MobileMenuGestures {
     const elapsedTime = Date.now() - this.startTime;
     const velocity = elapsedTime > 0 ? Math.abs(diffX) / elapsedTime : 0;
     const menuWidth = this.config.menuWidth;
-    const currentProgress = (this.lastDragPosition + menuWidth) / menuWidth;
+    const currentProgress = this.getProgress(this.lastDragPosition, menuWidth);
 
     let shouldOpen = false;
     const isRtl = this.config.isRtl();
@@ -220,19 +231,19 @@ export class MobileMenuGestures {
       event.stopPropagation();
 
       const menuWidth = this.config.menuWidth;
-      let translateX = isRtl ? menuWidth + diffX : -menuWidth + diffX;
-
-      if (!isRtl && translateX > this.MAX_OVERDRAG) {
-        translateX = this.MAX_OVERDRAG + (translateX - this.MAX_OVERDRAG) * 0.3;
-      } else if (isRtl && translateX < -this.MAX_OVERDRAG) {
-        translateX = -this.MAX_OVERDRAG + (translateX + this.MAX_OVERDRAG) * 0.3;
-      }
+      const baseTranslate = isRtl ? menuWidth + diffX : -menuWidth + diffX;
+      const min = isRtl ? -this.MAX_OVERDRAG : -menuWidth - this.MAX_OVERDRAG;
+      const max = isRtl ? menuWidth + this.MAX_OVERDRAG : this.MAX_OVERDRAG;
+      const translateX = this.applyOverdragResistance(baseTranslate, min, max);
 
       this.lastDragPosition = translateX;
-      const progress = (translateX + menuWidth) / menuWidth;
-      this.config.onUpdateTranslate(translateX, progress);
+      this.config.onUpdateTranslate(translateX, this.getProgress(translateX, menuWidth));
     }
   };
+
+  public onMenuTouchCancel() {
+    this.onMenuTouchEnd();
+  }
 
   private handleEdgeSwipeEnd = () => {
     if (!this.isDragging) return;
@@ -256,7 +267,7 @@ export class MobileMenuGestures {
     const elapsedTime = Date.now() - this.startTime;
     const velocity = elapsedTime > 0 ? Math.abs(diffX) / elapsedTime : 0;
     const menuWidth = this.config.menuWidth;
-    const currentProgress = (this.lastDragPosition + menuWidth) / menuWidth;
+    const currentProgress = this.getProgress(this.lastDragPosition, menuWidth);
 
     let shouldOpen = false;
 
