@@ -152,8 +152,14 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
         }
         this.cdRef.markForCheck();
       },
-      onOpen: () => this.menuService.open(),
-      onClose: () => this.menuService.close(),
+      onOpen: () => {
+        this.menuService.open();
+        this.openDrawer();
+      },
+      onClose: () => {
+        this.menuService.close();
+        this.closeDrawer();
+      },
       onToggleHaptic: () => this.triggerHapticFeedback()
     };
 
