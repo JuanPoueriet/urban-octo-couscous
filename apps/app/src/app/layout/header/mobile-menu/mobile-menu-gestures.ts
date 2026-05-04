@@ -68,7 +68,7 @@ export class MobileMenuGestures {
     return progress;
   }
 
-  private readonly DEFAULT_MAX_STRETCH_PERCENT = 8;
+  private readonly DEFAULT_MAX_STRETCH_PERCENT = 4;
   private readonly ELASTIC_OVERSHOOT_REFERENCE_RATIO = 0.25;
   private readonly DEFAULT_ELASTIC_RESISTANCE = 50;
   private readonly MIN_ELASTIC_EXPONENT = 1;
