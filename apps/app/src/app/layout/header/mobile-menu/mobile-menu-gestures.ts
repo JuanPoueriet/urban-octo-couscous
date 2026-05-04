@@ -3,6 +3,8 @@ import { NgZone } from '@angular/core';
 export interface MobileMenuGestureConfig {
   /** Percentage cap for elastic X scale (e.g. 8 => scaleX <= 1.08). */
   maxStretchPercent?: number;
+  /** Elastic resistance strength (0-100). Higher = harder near the max stretch cap. */
+  elasticResistance?: number;
   menuWidth: number;
   isRtl: () => boolean;
   isOpen: () => boolean;
@@ -68,6 +70,9 @@ export class MobileMenuGestures {
 
   private readonly DEFAULT_MAX_STRETCH_PERCENT = 8;
   private readonly ELASTIC_OVERSHOOT_REFERENCE_RATIO = 0.25;
+  private readonly DEFAULT_ELASTIC_RESISTANCE = 50;
+  private readonly MIN_ELASTIC_EXPONENT = 1;
+  private readonly MAX_ELASTIC_EXPONENT = 5;
 
   private calculateElasticScale(overshoot: number): number {
     const safeOvershoot = Math.max(0, overshoot);
@@ -79,7 +84,16 @@ export class MobileMenuGestures {
     const referenceOvershootPx = Math.max(1, this.config.menuWidth * this.ELASTIC_OVERSHOOT_REFERENCE_RATIO);
     const normalizedOvershoot = Math.min(safeOvershoot / referenceOvershootPx, 1);
 
-    const damped = Math.sqrt(normalizedOvershoot);
+    const safeResistanceInput = Number.isFinite(this.config.elasticResistance)
+      ? Number(this.config.elasticResistance)
+      : this.DEFAULT_ELASTIC_RESISTANCE;
+    const normalizedResistance = Math.min(100, Math.max(0, safeResistanceInput)) / 100;
+    const exponent =
+      this.MIN_ELASTIC_EXPONENT +
+      normalizedResistance * (this.MAX_ELASTIC_EXPONENT - this.MIN_ELASTIC_EXPONENT);
+
+    // Ease-out damping: near max stretch, each extra pixel contributes less.
+    const damped = 1 - Math.pow(1 - normalizedOvershoot, exponent);
     return 1 + damped * (maxScale - 1);
   }
 
