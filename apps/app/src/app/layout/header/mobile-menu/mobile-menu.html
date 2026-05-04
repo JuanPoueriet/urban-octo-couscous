@@ -1,15 +1,16 @@
-<!-- Overlay para menú móvil -->
-<div
-  class="mobile-menu-overlay"
-  [class.visible]="isMobileMenuOpen"
-  (click)="closeMobileMenu()"
-  (touchstart)="onOverlayTouch($event)"
-></div>
+<div class="mobile-menu-container">
+  <!-- Overlay para menú móvil -->
+  <div
+    class="mobile-menu-overlay"
+    [class.visible]="isMobileMenuOpen"
+    (click)="closeMobileMenu()"
+    (touchstart)="onOverlayTouch($event)"
+  ></div>
 
-<!-- Menú móvil tipo Drawer Navigation -->
-<div
-  class="header__nav-links-mobile"
-  [class.open]="isMobileMenuOpen"
+  <!-- Menú móvil tipo Drawer Navigation -->
+  <div
+    class="header__nav-links-mobile"
+    [class.open]="isMobileMenuOpen"
   [style.transform]="'translateX(' + menuTranslateX + 'px) scaleX(' + menuScaleX + ')'"
   [style.transform-origin]="menuTransformOrigin"
   [style.transition]="menuTransition"
@@ -100,24 +101,25 @@
 
   </div>
 
-  <!-- Mobile Menu Footer -->
-  <div class="mobile-menu-footer">
-    <div class="mobile-socials">
-      <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'SHARE.LINKEDIN' | translate">
-        <lucide-icon name="Linkedin"></lucide-icon>
-      </a>
-      <a href="https://github.com/jsl-technology" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'SOCIAL.GITHUB' | translate">
-        <lucide-icon name="Github"></lucide-icon>
-      </a>
-      <a href="https://twitter.com/jsl_tech" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'SHARE.TWITTER' | translate">
-        <lucide-icon name="Twitter"></lucide-icon>
-      </a>
-      <a href="https://instagram.com/jsl_tech" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'SOCIAL.INSTAGRAM' | translate">
-        <lucide-icon name="Instagram"></lucide-icon>
-      </a>
-    </div>
-    <div class="mobile-copyright">
-      © {{ currentYear }} {{ 'COMMON.BRAND_NAME' | translate }}.
+    <!-- Mobile Menu Footer -->
+    <div class="mobile-menu-footer">
+      <div class="mobile-socials">
+        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'SHARE.LINKEDIN' | translate">
+          <lucide-icon name="Linkedin"></lucide-icon>
+        </a>
+        <a href="https://github.com/jsl-technology" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'SOCIAL.GITHUB' | translate">
+          <lucide-icon name="Github"></lucide-icon>
+        </a>
+        <a href="https://twitter.com/jsl_tech" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'SHARE.TWITTER' | translate">
+          <lucide-icon name="Twitter"></lucide-icon>
+        </a>
+        <a href="https://instagram.com/jsl_tech" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'SOCIAL.INSTAGRAM' | translate">
+          <lucide-icon name="Instagram"></lucide-icon>
+        </a>
+      </div>
+      <div class="mobile-copyright">
+        © {{ currentYear }} {{ 'COMMON.BRAND_NAME' | translate }}.
+      </div>
     </div>
   </div>
 </div>

@@ -40,17 +40,6 @@ import { LucideAngularModule } from 'lucide-angular';
       </div>
     </div>
   `,
-  styles: [`
-    .external-icon-sm {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      width: 12px;
-      height: 12px;
-      opacity: 0.5;
-    }
-    .quick-tile { position: relative; }
-  `]
 })
 export class MobileMenuQuickAccess {
   @Input() currentLang = 'en';
