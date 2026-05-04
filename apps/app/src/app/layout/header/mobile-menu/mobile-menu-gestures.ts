@@ -5,7 +5,12 @@ export interface MobileMenuGestureConfig {
   isRtl: () => boolean;
   isOpen: () => boolean;
   isAnimating: () => boolean;
-  onUpdateTranslate: (translateX: number, progress: number | null) => void;
+  onUpdateTranslate: (
+    translateX: number,
+    progress: number | null,
+    scaleX?: number,
+    transformOrigin?: string
+  ) => void;
   onOpen: () => void;
   onClose: () => void;
   onToggleHaptic: () => void;
@@ -17,8 +22,6 @@ export class MobileMenuGestures {
   private readonly OPEN_THRESHOLD = 0.3;
   private readonly MIN_SWIPE_DISTANCE = 30;
   private readonly VELOCITY_THRESHOLD = 0.3;
-  private readonly MAX_OVERDRAG = 80;
-  private readonly OVERDRAG_RESISTANCE = 0.35;
   private readonly HORIZONTAL_THRESHOLD = 10;
   private readonly VERTICAL_LOCK_THRESHOLD = 10;
 
@@ -31,6 +34,7 @@ export class MobileMenuGestures {
   private startTime = 0;
   private isHorizontalGesture = false;
   private lastDragPosition = 0;
+  private wasOvershooting = false;
 
   constructor(
     private config: MobileMenuGestureConfig,
@@ -59,18 +63,40 @@ export class MobileMenuGestures {
     return progress;
   }
 
-  private applyOverdragResistance(value: number, min: number, max: number): number {
-    if (value < min) {
-      const delta = min - value;
-      return min - (this.MAX_OVERDRAG * delta) / (delta + this.MAX_OVERDRAG);
+  private calculateElasticScale(overshoot: number): number {
+    // scaleX = 1 + f(exceso), where f is a damping function: overshoot^(0.5) * factor
+    const factor = 0.015;
+    const scale = 1 + Math.pow(overshoot, 0.5) * factor;
+    return Math.min(scale, 1.2); // Cap at 1.2
+  }
+
+  private getElasticTransform(
+    translateX: number,
+    min: number,
+    max: number,
+    isRtl: boolean
+  ): { translateX: number; scaleX: number; transformOrigin: string } {
+    let finalTranslateX = translateX;
+    let scaleX = 1;
+    let transformOrigin = isRtl ? 'right' : 'left';
+
+    if (translateX > max) {
+      // Overshoot right
+      finalTranslateX = max;
+      const overshoot = translateX - max;
+      scaleX = this.calculateElasticScale(overshoot);
+      // LTR: opening more (max=0), anchor left. RTL: closing more (max=W), anchor left.
+      transformOrigin = 'left';
+    } else if (translateX < min) {
+      // Overshoot left
+      finalTranslateX = min;
+      const overshoot = min - translateX;
+      scaleX = this.calculateElasticScale(overshoot);
+      // LTR: closing more (min=-W), anchor right. RTL: opening more (min=0), anchor right.
+      transformOrigin = 'right';
     }
 
-    if (value > max) {
-      const delta = value - max;
-      return max + (this.MAX_OVERDRAG * delta) / (delta + this.MAX_OVERDRAG);
-    }
-
-    return value;
+    return { translateX: finalTranslateX, scaleX, transformOrigin };
   }
 
   public onMenuTouchStart(event: TouchEvent) {
@@ -130,10 +156,21 @@ export class MobileMenuGestures {
     const min = isRtl ? 0 : -menuWidth;
     const max = isRtl ? menuWidth : 0;
 
-    const translateX = this.applyOverdragResistance(diffX, min, max);
+    const transform = this.getElasticTransform(diffX, min, max, isRtl);
 
-    this.lastDragPosition = translateX;
-    this.config.onUpdateTranslate(translateX, this.getProgress(translateX, menuWidth));
+    const isOvershooting = transform.scaleX > 1;
+    if (isOvershooting && !this.wasOvershooting) {
+      this.config.onToggleHaptic();
+    }
+    this.wasOvershooting = isOvershooting;
+
+    this.lastDragPosition = transform.translateX;
+    this.config.onUpdateTranslate(
+      transform.translateX,
+      this.getProgress(transform.translateX, menuWidth),
+      transform.scaleX,
+      transform.transformOrigin
+    );
   }
 
   public onMenuTouchEnd() {
@@ -238,10 +275,21 @@ export class MobileMenuGestures {
       const baseTranslate = isRtl ? menuWidth + diffX : -menuWidth + diffX;
       const min = isRtl ? 0 : -menuWidth;
       const max = isRtl ? menuWidth : 0;
-      const translateX = this.applyOverdragResistance(baseTranslate, min, max);
+      const transform = this.getElasticTransform(baseTranslate, min, max, isRtl);
 
-      this.lastDragPosition = translateX;
-      this.config.onUpdateTranslate(translateX, this.getProgress(translateX, menuWidth));
+      const isOvershooting = transform.scaleX > 1;
+      if (isOvershooting && !this.wasOvershooting) {
+        this.config.onToggleHaptic();
+      }
+      this.wasOvershooting = isOvershooting;
+
+      this.lastDragPosition = transform.translateX;
+      this.config.onUpdateTranslate(
+        transform.translateX,
+        this.getProgress(transform.translateX, menuWidth),
+        transform.scaleX,
+        transform.transformOrigin
+      );
     }
   };
 
