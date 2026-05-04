@@ -1515,7 +1515,7 @@
     "CONTACT_DESC": "次回のソフトウェアプロジェクトについて、JSL Technologyのエキスパートにご相談ください。お客様のビジネス成長のために、カスタムコンサルティングとハイエンドな技術ソリューションを提供します。"
   },
   "LANGUAGE_SUGGESTION": {
-    "MESSAGE": "{{language}} に切り替えますか？",
+    "MESSAGE": "現在 {{currentLanguage}} で表示しています。 {{targetLanguage}} に切り替えますか？",
     "SWITCH": "切り替え"
   }
 }

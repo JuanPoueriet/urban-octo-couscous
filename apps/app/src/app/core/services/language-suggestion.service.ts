@@ -8,6 +8,7 @@ import { BehaviorSubject, filter } from 'rxjs';
 export interface LanguageSuggestion {
   code: string;
   name: string;
+  currentName: string;
 }
 
 @Injectable({
@@ -55,10 +56,15 @@ export class LanguageSuggestionService {
 
     const preferredLang = this.getPreferredLanguage();
 
-    if (preferredLang && preferredLang !== currentUrlLang && supportedLangs.includes(preferredLang)) {
+    if (
+      preferredLang &&
+      preferredLang !== currentUrlLang &&
+      supportedLangs.includes(preferredLang)
+    ) {
       this.suggestionSubject.next({
         code: preferredLang,
-        name: this.getLanguageName(preferredLang)
+        name: this.getLanguageName(preferredLang),
+        currentName: this.getLanguageName(currentUrlLang),
       });
     } else {
       this.suggestionSubject.next(null);
