@@ -33,6 +33,7 @@ export class MobileMenuGestures {
   private currentY = 0;
   private startTime = 0;
   private isHorizontalGesture = false;
+  private initialTranslateX = 0;
   private lastDragPosition = 0;
   private wasOvershooting = false;
 
@@ -111,9 +112,11 @@ export class MobileMenuGestures {
     this.startTime = Date.now();
     this.isDragging = false;
     this.isHorizontalGesture = false;
+    this.wasOvershooting = false;
 
-    // We notify that we might start dragging
-    this.config.onUpdateTranslate(this.lastDragPosition, null); // Just to reset transition if needed
+    // When already open, the initial translation is 0
+    this.initialTranslateX = 0;
+    this.lastDragPosition = 0;
   }
 
   public onMenuTouchMove(event: TouchEvent) {
@@ -156,7 +159,8 @@ export class MobileMenuGestures {
     const min = isRtl ? 0 : -menuWidth;
     const max = isRtl ? menuWidth : 0;
 
-    const transform = this.getElasticTransform(diffX, min, max, isRtl);
+    const targetTranslate = this.initialTranslateX + diffX;
+    const transform = this.getElasticTransform(targetTranslate, min, max, isRtl);
 
     const isOvershooting = transform.scaleX > 1;
     if (isOvershooting && !this.wasOvershooting) {
@@ -177,6 +181,8 @@ export class MobileMenuGestures {
     if (!this.isDragging || !this.isHorizontalGesture) {
       this.isDragging = false;
       this.isHorizontalGesture = false;
+      // When the touch ends without a horizontal gesture, notify to restore transitions
+      this.config.onUpdateTranslate(this.lastDragPosition, null);
       return;
     }
 
@@ -207,6 +213,8 @@ export class MobileMenuGestures {
     } else {
       this.config.onClose();
     }
+    // Also notify that we are no longer dragging to restore transitions for the final animation
+    this.config.onUpdateTranslate(this.lastDragPosition, null);
   }
 
   public handleWindowTouchStart = (event: TouchEvent) => {
@@ -229,6 +237,11 @@ export class MobileMenuGestures {
       this.startTime = Date.now();
       this.isDragging = true;
       this.isHorizontalGesture = false;
+      this.wasOvershooting = false;
+
+      const menuWidth = this.config.menuWidth;
+      this.initialTranslateX = isRtl ? menuWidth : -menuWidth;
+      this.lastDragPosition = this.initialTranslateX;
 
       this.ngZone.runOutsideAngular(() => {
         document.addEventListener('touchmove', this.handleEdgeSwipeMove, { passive: false });
@@ -272,7 +285,7 @@ export class MobileMenuGestures {
       event.stopPropagation();
 
       const menuWidth = this.config.menuWidth;
-      const baseTranslate = isRtl ? menuWidth + diffX : -menuWidth + diffX;
+      const baseTranslate = this.initialTranslateX + diffX;
       const min = isRtl ? 0 : -menuWidth;
       const max = isRtl ? menuWidth : 0;
       const transform = this.getElasticTransform(baseTranslate, min, max, isRtl);
@@ -309,7 +322,7 @@ export class MobileMenuGestures {
       this.isDragging = false;
       this.isHorizontalGesture = false;
       const menuWidth = this.config.menuWidth;
-      this.config.onUpdateTranslate(this.config.isRtl() ? menuWidth : -menuWidth, 0);
+      this.config.onUpdateTranslate(this.config.isRtl() ? menuWidth : -menuWidth, null);
       return;
     }
 
@@ -334,6 +347,8 @@ export class MobileMenuGestures {
     } else {
       this.config.onClose();
     }
+    // Also notify that we are no longer dragging to restore transitions for the final animation
+    this.config.onUpdateTranslate(this.lastDragPosition, null);
   };
 
   private cancelEdgeSwipe() {
@@ -345,7 +360,7 @@ export class MobileMenuGestures {
     this.isDragging = false;
     this.isHorizontalGesture = false;
     const menuWidth = this.config.menuWidth;
-    this.config.onUpdateTranslate(this.config.isRtl() ? menuWidth : -menuWidth, 0);
+    this.config.onUpdateTranslate(this.config.isRtl() ? menuWidth : -menuWidth, null);
   }
 
   public destroy() {
