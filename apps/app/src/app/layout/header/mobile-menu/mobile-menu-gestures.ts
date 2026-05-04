@@ -66,9 +66,9 @@ export class MobileMenuGestures {
 
   private calculateElasticScale(overshoot: number): number {
     // scaleX = 1 + f(exceso), where f is a damping function: overshoot^(0.5) * factor
-    const factor = 0.015;
+    const factor = 0.01;
     const scale = 1 + Math.pow(overshoot, 0.5) * factor;
-    return Math.min(scale, 1.2); // Cap at 1.2
+    return Math.min(scale, 1.12); // Cap at 1.12 for subtler stretch
   }
 
   private getElasticTransform(
