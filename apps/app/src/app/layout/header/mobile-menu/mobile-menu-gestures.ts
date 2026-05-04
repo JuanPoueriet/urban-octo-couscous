@@ -281,6 +281,9 @@ export class MobileMenuGestures {
       shouldOpen = true;
     }
 
+    this.isDragging = false;
+    this.isHorizontalGesture = false;
+
     if (shouldOpen) {
       this.config.onOpen();
     } else {
