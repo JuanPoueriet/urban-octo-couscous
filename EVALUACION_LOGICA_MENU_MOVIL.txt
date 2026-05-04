@@ -1,0 +1,42 @@
+# INFORME DE AUDITORÍA: LÓGICA DE INTERACCIÓN Y GESTOS - MENÚ MÓVIL
+
+## 1. Calificación General: 9/10
+
+### Justificación:
+La implementación de la lógica del menú móvil es de una calidad excepcional. Utiliza estándares modernos (PointerEvents, Signals, ResizeObserver) y aborda con éxito desafíos complejos como el soporte nativo para RTL (Right-to-Left), efectos elásticos ("rubber-banding") y la gestión de accesibilidad mediante trampas de foco e inercia de fondo. La separación de responsabilidades entre el componente de UI (`MobileMenu`) y la lógica de gestos (`MobileMenuGestures`) es excelente. Los pequeños puntos de mejora se centran en la unificación de curvas de transición y la optimización de la interrupción de animaciones para evitar saltos visuales mínimos.
+
+---
+
+## 2. Hallazgos y Propuestas de Solución
+
+### A. Hallazgo: Desincronización de curvas de Bezier (Easings)
+- **Descripción:** Existe una inconsistencia entre el easing definido en el archivo SCSS (`cubic-bezier(0.16, 1, 0.3, 1)`) y el definido mediante TypeScript en el componente (`cubic-bezier(0.4, 0.0, 0.2, 1)`). Esto puede provocar que el movimiento se sienta ligeramente diferente dependiendo de si la transición es disparada por una clase de CSS o por una actualización de estado de Angular.
+- **Impacto:** Menor. Afecta la fluidez visual y la consistencia de la marca en la interacción.
+- **Propuesta de Solución:** Unificar ambas curvas. Se recomienda utilizar una variable global de CSS (ej. `--transition-timing-main`) para asegurar que tanto el CSS como el TypeScript utilicen exactamente la misma definición.
+
+### B. Hallazgo: Salto visual al interrumpir animaciones
+- **Descripción:** El método `stopTransition()` fuerza un reflow y elimina la transición para permitir el control manual (arrastre). Sin embargo, al iniciar el gesto (`onMenuPointerDown`), la lógica asume una posición inicial de 0 (abierto) o -width (cerrado). Si el usuario intercepta el menú mientras se está abriendo, este "salta" a su posición final antes de empezar a seguir el dedo.
+- **Impacto:** Moderado. Degrada la sensación de "componente físico" que se busca con los gestos de arrastre.
+- **Propuesta de Solución:** Al llamar a `stopTransition()`, se debe capturar el valor actual de `translateX` mediante `getComputedStyle(menuElement).transform` y establecerlo como el punto de partida real para el siguiente gesto de arrastre.
+
+### C. Hallazgo: Redundancia de eventos en el Overlay
+- **Descripción:** El overlay utiliza `(click)` y `(touchstart)` simultáneamente. En dispositivos modernos que soportan PointerEvents, esto puede generar una doble ejecución o conflictos menores de gestión de eventos, aunque el `preventDefault()` en `onOverlayTouch` mitiga la mayoría.
+- **Impacto:** Bajo. Es principalmente un problema de limpieza de código y mantenimiento.
+- **Propuesta de Solución:** Migrar la lógica del overlay a PointerEvents, igual que el drawer, o centralizar la lógica de cierre en un único manejador que detecte el tipo de interacción de forma unificada.
+
+### D. Hallazgo: Frecuencia de actualización en ResizeObserver
+- **Descripción:** El `ResizeObserver` ejecuta `updateMenuWidth()` y dispara la detección de cambios (`cdRef.markForCheck()`) inmediatamente en cada cambio de tamaño. Aunque es necesario para mantener los gestos precisos, cambios mínimos de píxeles (causados por barras de herramientas del navegador desapareciendo) podrían causar ejecuciones innecesarias.
+- **Impacto:** Bajo. Potencial impacto en el rendimiento en dispositivos de gama muy baja.
+- **Propuesta de Solución:** Implementar un umbral mínimo de cambio (ej. 5px) o un breve debounce para evitar actualizaciones constantes por cambios triviales en el viewport.
+
+### E. Hallazgo: Accesibilidad - Refresco de elementos enfocables
+- **Descripción:** Tras una búsqueda, el trap de foco se actualiza con un `setTimeout` de 100ms. Si el usuario es extremadamente rápido pulsando 'Tab' justo después de escribir, el trap de foco podría no incluir los nuevos resultados o intentar enfocar elementos que ya no existen.
+- **Impacto:** Bajo. Afecta solo a usuarios de tecnologías de asistencia en condiciones de uso muy rápidas.
+- **Propuesta de Solución:** Utilizar un ciclo de vida más determinista o forzar la actualización de la lista de elementos enfocables inmediatamente después de que Angular termine de renderizar los resultados de búsqueda (ej. mediante un `effect` que observe los resultados).
+
+---
+
+## 3. Conclusión de Interacción Táctil
+El sistema de "Rubber Banding" (elasticidad) está muy bien calibrado, ofreciendo un feedback táctil que mejora la usabilidad. El soporte para el gesto desde el borde de la pantalla (`edgeThreshold`) es una característica avanzada que pocos menús web implementan correctamente, y aquí funciona de manera fluida tanto en LTR como en RTL.
+
+El informe ha sido generado basándose exclusivamente en la lógica de comportamiento y componentes encontrada en el código fuente de la aplicación.
