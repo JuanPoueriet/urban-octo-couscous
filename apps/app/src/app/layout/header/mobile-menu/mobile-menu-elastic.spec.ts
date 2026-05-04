@@ -120,4 +120,46 @@ describe('MobileMenuElastic', () => {
     expect(args[2]).toBeCloseTo(1.063, 2);
     expect(args[3]).toBe('right');
   });
+
+  it('should open with edge swipe in LTR', () => {
+    gestures.handleWindowTouchStart({ touches: [{ clientX: 5, clientY: 20 }] } as any);
+    (gestures as any).handleEdgeSwipeMove({
+      touches: [{ clientX: 120, clientY: 25 }],
+      preventDefault: () => {},
+      stopPropagation: () => {}
+    } as any);
+    (gestures as any).handleEdgeSwipeEnd();
+
+    expect(mockConfig.onOpen).toHaveBeenCalled();
+    expect(mockConfig.onUpdateTranslate).toHaveBeenCalled();
+  });
+
+  it('should cancel edge swipe on vertical gesture', () => {
+    gestures.handleWindowTouchStart({ touches: [{ clientX: 5, clientY: 20 }] } as any);
+    (gestures as any).handleEdgeSwipeMove({
+      touches: [{ clientX: 8, clientY: 80 }],
+      preventDefault: () => {},
+      stopPropagation: () => {}
+    } as any);
+
+    expect(gestures.getIsDragging()).toBeFalse();
+    const args = (mockConfig.onUpdateTranslate as jasmine.Spy).calls.mostRecent().args;
+    expect(args[0]).toBe(-320);
+    expect(args[1]).toBeNull();
+  });
+
+  it('should open with edge swipe in RTL', () => {
+    mockConfig.isRtl = () => true;
+    spyOnProperty(window, 'innerWidth', 'get').and.returnValue(400);
+
+    gestures.handleWindowTouchStart({ touches: [{ clientX: 395, clientY: 40 }] } as any);
+    (gestures as any).handleEdgeSwipeMove({
+      touches: [{ clientX: 260, clientY: 44 }],
+      preventDefault: () => {},
+      stopPropagation: () => {}
+    } as any);
+    (gestures as any).handleEdgeSwipeEnd();
+
+    expect(mockConfig.onOpen).toHaveBeenCalled();
+  });
 });

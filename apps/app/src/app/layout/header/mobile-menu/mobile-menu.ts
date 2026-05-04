@@ -14,8 +14,10 @@ import {
   HostListener,
   effect,
   ChangeDetectionStrategy,
+  DestroyRef,
 } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -57,6 +59,8 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private renderer = inject(Renderer2);
   private ngZone = inject(NgZone);
   private cdRef = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
   @Inject(PLATFORM_ID) private platformId = inject(PLATFORM_ID);
 
   public currentLang: string;
@@ -69,6 +73,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   public menuTransition = 'transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)';
   private menuWidth = 320;
   private isAnimating = false;
+  private drawerState: 'closed' | 'opening' | 'open' | 'closing' = 'closed';
 
   private menuElement: HTMLElement | null = null;
   private overlayElement: HTMLElement | null = null;
@@ -82,7 +87,9 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   public menuSections: MobileMenuSectionData[] = [];
   public expandedSections = new Set<string>();
+  private expandedSectionsBeforeSearch: Set<string> | null = null;
   private translationCache = new Map<string, string>();
+  public readonly menuTitleId = `mobile-menu-title-${Math.random().toString(36).slice(2, 10)}`;
 
   get isMobileMenuOpen() {
     return this.menuService.isMobileMenuOpen();
@@ -93,7 +100,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.isBrowser = isPlatformBrowser(this.platformId);
     this.a11y = new MobileMenuAccessibility(this.el);
 
-    this.translate.onLangChange.pipe(takeUntilDestroyed()).subscribe((event) => {
+    this.translate.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
       this.currentLang = event.lang;
       this.initMenuSections();
       this.cdRef.markForCheck();
@@ -235,8 +242,10 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     }
   }
   private openDrawer() {
-    if (this.isAnimating) return;
+    if (this.drawerState === 'open' || this.drawerState === 'opening') return;
+    if (this.isAnimating && this.drawerState === 'closing') return;
     this.isAnimating = true;
+    this.drawerState = 'opening';
     this.menuTransition = 'transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)';
     this.menuTranslateX = 0;
     this.menuScaleX = 1;
@@ -257,14 +266,17 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     this.handleTransitionEnd(() => {
       this.isAnimating = false;
+      this.drawerState = 'open';
       this.a11y.setInitialFocus();
       this.cdRef.markForCheck();
     });
   }
 
   private closeDrawer() {
-    if (this.isAnimating) return;
+    if (this.drawerState === 'closed' || this.drawerState === 'closing') return;
+    if (this.isAnimating && this.drawerState === 'opening') return;
     this.isAnimating = true;
+    this.drawerState = 'closing';
     this.menuTransition = 'transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)';
     this.menuTranslateX = this.directionService.isRtl() ? this.menuWidth : -this.menuWidth;
     this.menuScaleX = 1;
@@ -286,6 +298,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     this.handleTransitionEnd(() => {
       this.isAnimating = false;
+      this.drawerState = 'closed';
       this.cdRef.markForCheck();
     });
   }
@@ -362,10 +375,15 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onSearchChange(query: string) {
+    const hadQuery = !!this.searchQuery;
     this.searchQuery = query;
     this.updateSearchResultsCount();
 
     if (this.searchQuery) {
+      if (!hadQuery) {
+        this.expandedSectionsBeforeSearch = new Set(this.expandedSections);
+        this.expandedSections.clear();
+      }
       if (this.searchDebounceTimer) {
         clearTimeout(this.searchDebounceTimer);
       }
@@ -386,8 +404,22 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
           }
         }
       }
+    } else if (hadQuery) {
+      this.expandedSections = this.expandedSectionsBeforeSearch ?? new Set<string>();
+      this.expandedSectionsBeforeSearch = null;
     }
     this.cdRef.markForCheck();
+  }
+
+  onMenuRouteNavigate(route: string[], source: string) {
+    this.router.navigate(route).then((ok) => {
+      if (!ok) {
+        this.analyticsService.trackEvent('mobile_menu_navigation_failed', { source, route: route.join('/') });
+      }
+    }).catch(() => {
+      this.analyticsService.trackEvent('mobile_menu_navigation_failed', { source, route: route.join('/') });
+    });
+    this.closeMobileMenu();
   }
 
   private updateSearchResultsCount() {
