@@ -16,6 +16,7 @@ import {
   Twitter, Instagram
 } from 'lucide-angular';
 import { NO_ERRORS_SCHEMA, signal, provideZonelessChangeDetection } from '@angular/core';
+import { fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 import { FormsModule } from '@angular/forms';
@@ -150,19 +151,31 @@ describe('MobileMenu', () => {
     expect().nothing();
   });
 
-  it('should set background inert when menu opens and remove when closes', () => {
+  it('should set background inert when menu opens and remove when closes', async () => {
     const main = document.createElement('main');
     const footer = document.createElement('jsl-footer');
     document.body.appendChild(main);
     document.body.appendChild(footer);
 
+    // Initial state: not inert
+    expect(main.hasAttribute('inert')).toBeFalse();
+
     menuServiceMock.isMobileMenuOpen.set(true);
+    fixture.detectChanges();
+
+    // We wait for the effect to run and the transition fallback timeout if necessary.
+    // In many testing environments, effects run after detectChanges().
+    // We add a manual delay to be safe since we don't have fakeAsync here.
+    await new Promise(resolve => setTimeout(resolve, 500));
     fixture.detectChanges();
 
     expect(main.hasAttribute('inert')).toBeTrue();
     expect(footer.hasAttribute('inert')).toBeTrue();
 
     menuServiceMock.isMobileMenuOpen.set(false);
+    fixture.detectChanges();
+
+    await new Promise(resolve => setTimeout(resolve, 500));
     fixture.detectChanges();
 
     expect(main.hasAttribute('inert')).toBeFalse();

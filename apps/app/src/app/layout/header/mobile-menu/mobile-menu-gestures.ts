@@ -5,6 +5,15 @@ export interface MobileMenuGestureConfig {
   maxStretchPercent?: number;
   /** Elastic resistance strength (0-100). Higher = harder near the max stretch cap. */
   elasticResistance?: number;
+
+  // Customizable thresholds
+  edgeThreshold?: number;
+  openThreshold?: number;
+  minSwipeDistance?: number;
+  velocityThreshold?: number;
+  horizontalThreshold?: number;
+  verticalLockThreshold?: number;
+
   menuWidth: number;
   isRtl: () => boolean;
   isOpen: () => boolean;
@@ -18,17 +27,17 @@ export interface MobileMenuGestureConfig {
   onOpen: () => void;
   onClose: () => void;
   onToggleHaptic: () => void;
+  onTrackMetric?: (metric: string, data: any) => void;
 }
 
 export class MobileMenuGestures {
-  // Configuración de gestos
-  private readonly EDGE_THRESHOLD = 20;
-  private readonly OPEN_THRESHOLD = 0.3;
-  private readonly MIN_SWIPE_DISTANCE = 30;
-  private readonly VELOCITY_THRESHOLD = 0.3;
-  private readonly HORIZONTAL_THRESHOLD = 10;
-  private readonly VERTICAL_LOCK_THRESHOLD = 10;
-
+  // Configuración de gestos (defaults)
+  private readonly DEFAULT_EDGE_THRESHOLD = 20;
+  private readonly DEFAULT_OPEN_THRESHOLD = 0.3;
+  private readonly DEFAULT_MIN_SWIPE_DISTANCE = 30;
+  private readonly DEFAULT_VELOCITY_THRESHOLD = 0.3;
+  private readonly DEFAULT_HORIZONTAL_THRESHOLD = 10;
+  private readonly DEFAULT_VERTICAL_LOCK_THRESHOLD = 10;
   // Estado del gesto
   private isDragging = false;
   private startX = 0;
@@ -40,11 +49,20 @@ export class MobileMenuGestures {
   private initialTranslateX = 0;
   private lastDragPosition = 0;
   private wasOvershooting = false;
+  private activePointerId: number | null = null;
 
   constructor(
     private config: MobileMenuGestureConfig,
     private ngZone: NgZone
   ) {}
+
+  // Threshold getters with fallback to defaults
+  private get edgeThreshold(): number { return this.config.edgeThreshold ?? this.DEFAULT_EDGE_THRESHOLD; }
+  private get openThreshold(): number { return this.config.openThreshold ?? this.DEFAULT_OPEN_THRESHOLD; }
+  private get minSwipeDistance(): number { return this.config.minSwipeDistance ?? this.DEFAULT_MIN_SWIPE_DISTANCE; }
+  private get velocityThreshold(): number { return this.config.velocityThreshold ?? this.DEFAULT_VELOCITY_THRESHOLD; }
+  private get horizontalThreshold(): number { return this.config.horizontalThreshold ?? this.DEFAULT_HORIZONTAL_THRESHOLD; }
+  private get verticalLockThreshold(): number { return this.config.verticalLockThreshold ?? this.DEFAULT_VERTICAL_LOCK_THRESHOLD; }
 
   public getIsDragging(): boolean {
     return this.isDragging;
@@ -126,13 +144,13 @@ export class MobileMenuGestures {
     return { translateX: finalTranslateX, scaleX, transformOrigin };
   }
 
-  public onMenuTouchStart(event: TouchEvent) {
-    if (!this.config.isOpen() || this.config.isAnimating()) return;
+  public onMenuPointerDown(event: PointerEvent) {
+    if (!this.config.isOpen() || this.config.isAnimating() || this.activePointerId !== null) return;
 
     event.stopPropagation();
-    const touch = event.touches[0];
-    this.startX = touch.clientX;
-    this.startY = touch.clientY;
+    this.activePointerId = event.pointerId;
+    this.startX = event.clientX;
+    this.startY = event.clientY;
     this.currentX = this.startX;
     this.currentY = this.startY;
     this.startTime = Date.now();
@@ -145,18 +163,17 @@ export class MobileMenuGestures {
     this.lastDragPosition = 0;
 
     this.ngZone.runOutsideAngular(() => {
-      document.addEventListener('touchmove', this.handleMenuDragMove, { passive: false });
-      document.addEventListener('touchend', this.handleMenuDragEnd);
-      document.addEventListener('touchcancel', this.handleMenuDragCancel);
+      document.addEventListener('pointermove', this.handleMenuDragMove);
+      document.addEventListener('pointerup', this.handleMenuDragEnd);
+      document.addEventListener('pointercancel', this.handleMenuDragCancel);
     });
   }
 
-  public onMenuTouchMove(event: TouchEvent) {
-    if (!this.config.isOpen()) return;
+  public onMenuPointerMove(event: PointerEvent) {
+    if (!this.config.isOpen() || event.pointerId !== this.activePointerId) return;
 
-    const touch = event.touches[0];
-    this.currentX = touch.clientX;
-    this.currentY = touch.clientY;
+    this.currentX = event.clientX;
+    this.currentY = event.clientY;
 
     const diffX = this.currentX - this.startX;
     const diffY = this.currentY - this.startY;
@@ -164,16 +181,14 @@ export class MobileMenuGestures {
     const absDiffY = Math.abs(diffY);
 
     if (!this.isDragging && !this.isHorizontalGesture) {
-      if (absDiffY > this.VERTICAL_LOCK_THRESHOLD && absDiffY > absDiffX) {
+      if (absDiffY > this.verticalLockThreshold && absDiffY > absDiffX) {
         this.isHorizontalGesture = false;
         return;
       }
 
-      if (absDiffX > this.HORIZONTAL_THRESHOLD && absDiffX > absDiffY) {
+      if (absDiffX > this.horizontalThreshold && absDiffX > absDiffY) {
         this.isHorizontalGesture = true;
         this.isDragging = true;
-        event.preventDefault();
-        event.stopPropagation();
         this.config.onToggleHaptic();
       } else {
         return;
@@ -181,9 +196,6 @@ export class MobileMenuGestures {
     }
 
     if (!this.isHorizontalGesture || !this.isDragging) return;
-
-    event.preventDefault();
-    event.stopPropagation();
 
     const menuWidth = this.config.menuWidth;
     const isRtl = this.config.isRtl();
@@ -209,14 +221,17 @@ export class MobileMenuGestures {
     );
   }
 
-  public onMenuTouchEnd() {
+  public onMenuPointerEnd(event: PointerEvent) {
+    if (event.pointerId !== this.activePointerId) return;
     this.removeMenuDragListeners();
 
     if (!this.isDragging || !this.isHorizontalGesture) {
       this.isDragging = false;
       this.isHorizontalGesture = false;
-      // When the touch ends without a horizontal gesture, notify to restore transitions
+      this.activePointerId = null;
+      // When the gesture ends without reaching threshold, notify to restore transitions
       this.config.onUpdateTranslate(this.lastDragPosition, null);
+      this.trackMetric('gesture_cancel', { source: 'drawer' });
       return;
     }
 
@@ -226,44 +241,50 @@ export class MobileMenuGestures {
     const menuWidth = this.config.menuWidth;
     const currentProgress = this.getProgress(this.lastDragPosition, menuWidth);
 
-    let shouldOpen = false;
+    let shouldStayOpen = false;
     const isRtl = this.config.isRtl();
 
-    if (velocity > this.VELOCITY_THRESHOLD) {
-      shouldOpen = isRtl ? diffX < 0 : diffX > 0;
-    } else if (currentProgress > this.OPEN_THRESHOLD) {
-      shouldOpen = true;
-    } else if (Math.abs(diffX) > this.MIN_SWIPE_DISTANCE) {
-      shouldOpen = isRtl ? diffX < 0 : diffX > 0;
+    if (velocity > this.velocityThreshold) {
+      // In LTR: diffX < 0 is closing (moving left).
+      // In RTL: diffX > 0 is closing (moving right).
+      // If we are swipe-closing with high velocity, shouldStayOpen should be false.
+      shouldStayOpen = isRtl ? diffX < 0 : diffX > 0;
+    } else if (currentProgress > this.openThreshold) {
+      shouldStayOpen = true;
+    } else if (Math.abs(diffX) > this.minSwipeDistance) {
+      shouldStayOpen = isRtl ? diffX < 0 : diffX > 0;
     } else {
-      shouldOpen = currentProgress > 0.5;
+      shouldStayOpen = currentProgress > 0.5;
     }
 
     this.isDragging = false;
     this.isHorizontalGesture = false;
+    this.activePointerId = null;
 
-    if (shouldOpen) {
+    if (shouldStayOpen) {
       this.config.onOpen();
+      this.trackMetric('gesture_complete', { action: 'stay_open', source: 'drawer' });
     } else {
       this.config.onClose();
+      this.trackMetric('gesture_complete', { action: 'close', source: 'drawer' });
     }
     // Also notify that we are no longer dragging to restore transitions for the final animation
     this.config.onUpdateTranslate(this.lastDragPosition, null);
   }
 
-  public handleWindowTouchStart = (event: TouchEvent) => {
-    if (this.config.isOpen() || this.isDragging || this.config.isAnimating()) return;
+  public handleWindowPointerDown = (event: PointerEvent) => {
+    if (this.config.isOpen() || this.isDragging || this.config.isAnimating() || this.activePointerId !== null) return;
 
-    const touch = event.touches[0];
-    const startX = touch.clientX;
-    const startY = touch.clientY;
+    const startX = event.clientX;
+    const startY = event.clientY;
 
     const isRtl = this.config.isRtl();
     const isEdge = isRtl
-      ? startX > window.innerWidth - this.EDGE_THRESHOLD
-      : startX < this.EDGE_THRESHOLD;
+      ? startX > window.innerWidth - this.edgeThreshold
+      : startX < this.edgeThreshold;
 
     if (isEdge) {
+      this.activePointerId = event.pointerId;
       this.startX = startX;
       this.startY = startY;
       this.currentX = startX;
@@ -278,18 +299,18 @@ export class MobileMenuGestures {
       this.lastDragPosition = this.initialTranslateX;
 
       this.ngZone.runOutsideAngular(() => {
-        document.addEventListener('touchmove', this.handleEdgeSwipeMove, { passive: false });
-        document.addEventListener('touchend', this.handleEdgeSwipeEnd);
+        document.addEventListener('pointermove', this.handleEdgeSwipeMove);
+        document.addEventListener('pointerup', this.handleEdgeSwipeEnd);
+        document.addEventListener('pointercancel', this.handleEdgeSwipeEnd);
       });
     }
   };
 
-  private handleEdgeSwipeMove = (event: TouchEvent) => {
-    if (!this.isDragging || this.config.isOpen()) return;
+  private handleEdgeSwipeMove = (event: PointerEvent) => {
+    if (!this.isDragging || this.config.isOpen() || event.pointerId !== this.activePointerId) return;
 
-    const touch = event.touches[0];
-    this.currentX = touch.clientX;
-    this.currentY = touch.clientY;
+    this.currentX = event.clientX;
+    this.currentY = event.clientY;
 
     const diffX = this.currentX - this.startX;
     const diffY = this.currentY - this.startY;
@@ -297,13 +318,13 @@ export class MobileMenuGestures {
     const absDiffY = Math.abs(diffY);
 
     if (!this.isHorizontalGesture) {
-      if (absDiffY > this.VERTICAL_LOCK_THRESHOLD && absDiffY > absDiffX) {
+      if (absDiffY > this.verticalLockThreshold && absDiffY > absDiffX) {
         this.isHorizontalGesture = false;
         this.cancelEdgeSwipe();
         return;
       }
 
-      if (absDiffX > this.HORIZONTAL_THRESHOLD && absDiffX > absDiffY) {
+      if (absDiffX > this.horizontalThreshold && absDiffX > absDiffY) {
         this.isHorizontalGesture = true;
         this.config.onToggleHaptic();
       } else {
@@ -315,8 +336,6 @@ export class MobileMenuGestures {
     const isValidDirection = isRtl ? diffX < 0 : diffX > 0;
 
     if (this.isHorizontalGesture && isValidDirection) {
-      event.preventDefault();
-      event.stopPropagation();
 
       const menuWidth = this.config.menuWidth;
       const baseTranslate = this.initialTranslateX + diffX;
@@ -340,43 +359,46 @@ export class MobileMenuGestures {
     }
   };
 
-  public onMenuTouchCancel() {
-    this.onMenuTouchEnd();
+  public onMenuPointerCancel(event: PointerEvent) {
+    this.onMenuPointerEnd(event);
   }
 
-  private handleMenuDragMove = (event: TouchEvent) => {
-    this.onMenuTouchMove(event);
+  private handleMenuDragMove = (event: PointerEvent) => {
+    this.onMenuPointerMove(event);
   };
 
-  private handleMenuDragEnd = () => {
-    this.onMenuTouchEnd();
+  private handleMenuDragEnd = (event: PointerEvent) => {
+    this.onMenuPointerEnd(event);
   };
 
-  private handleMenuDragCancel = () => {
-    this.onMenuTouchCancel();
+  private handleMenuDragCancel = (event: PointerEvent) => {
+    this.onMenuPointerCancel(event);
   };
 
   private removeMenuDragListeners() {
     this.ngZone.runOutsideAngular(() => {
-      document.removeEventListener('touchmove', this.handleMenuDragMove);
-      document.removeEventListener('touchend', this.handleMenuDragEnd);
-      document.removeEventListener('touchcancel', this.handleMenuDragCancel);
+      document.removeEventListener('pointermove', this.handleMenuDragMove);
+      document.removeEventListener('pointerup', this.handleMenuDragEnd);
+      document.removeEventListener('pointercancel', this.handleMenuDragCancel);
     });
   }
 
-  private handleEdgeSwipeEnd = () => {
-    if (!this.isDragging) return;
+  private handleEdgeSwipeEnd = (event: PointerEvent) => {
+    if (event.pointerId !== this.activePointerId) return;
 
     this.ngZone.runOutsideAngular(() => {
-      document.removeEventListener('touchmove', this.handleEdgeSwipeMove);
-      document.removeEventListener('touchend', this.handleEdgeSwipeEnd);
+      document.removeEventListener('pointermove', this.handleEdgeSwipeMove);
+      document.removeEventListener('pointerup', this.handleEdgeSwipeEnd);
+      document.removeEventListener('pointercancel', this.handleEdgeSwipeEnd);
     });
 
-    if (!this.isHorizontalGesture) {
+    if (!this.isDragging || !this.isHorizontalGesture) {
       this.isDragging = false;
       this.isHorizontalGesture = false;
+      this.activePointerId = null;
       const menuWidth = this.config.menuWidth;
       this.config.onUpdateTranslate(this.config.isRtl() ? menuWidth : -menuWidth, null);
+      this.trackMetric('gesture_cancel', { source: 'edge' });
       return;
     }
 
@@ -388,18 +410,24 @@ export class MobileMenuGestures {
 
     let shouldOpen = false;
 
-    if (velocity > this.VELOCITY_THRESHOLD) {
+    if (velocity > this.velocityThreshold) {
       shouldOpen = true;
-    } else if (currentProgress > this.OPEN_THRESHOLD) {
+    } else if (currentProgress > this.openThreshold) {
       shouldOpen = true;
-    } else if (Math.abs(diffX) > this.MIN_SWIPE_DISTANCE) {
+    } else if (Math.abs(diffX) > this.minSwipeDistance) {
       shouldOpen = true;
     }
 
+    this.isDragging = false;
+    this.isHorizontalGesture = false;
+    this.activePointerId = null;
+
     if (shouldOpen) {
       this.config.onOpen();
+      this.trackMetric('gesture_complete', { action: 'open', source: 'edge' });
     } else {
       this.config.onClose();
+      this.trackMetric('gesture_complete', { action: 'close_abort', source: 'edge' });
     }
     // Also notify that we are no longer dragging to restore transitions for the final animation
     this.config.onUpdateTranslate(this.lastDragPosition, null);
@@ -407,22 +435,32 @@ export class MobileMenuGestures {
 
   private cancelEdgeSwipe() {
     this.ngZone.runOutsideAngular(() => {
-      document.removeEventListener('touchmove', this.handleEdgeSwipeMove);
-      document.removeEventListener('touchend', this.handleEdgeSwipeEnd);
+      document.removeEventListener('pointermove', this.handleEdgeSwipeMove);
+      document.removeEventListener('pointerup', this.handleEdgeSwipeEnd);
+      document.removeEventListener('pointercancel', this.handleEdgeSwipeEnd);
     });
 
     this.isDragging = false;
     this.isHorizontalGesture = false;
+    this.activePointerId = null;
     const menuWidth = this.config.menuWidth;
     this.config.onUpdateTranslate(this.config.isRtl() ? menuWidth : -menuWidth, null);
+    this.trackMetric('gesture_cancel', { source: 'edge_lock' });
+  }
+
+  private trackMetric(metric: string, data: any) {
+    if (this.config.onTrackMetric) {
+      this.config.onTrackMetric(metric, data);
+    }
   }
 
   public destroy() {
     this.removeMenuDragListeners();
     this.ngZone.runOutsideAngular(() => {
-      document.removeEventListener('touchstart', this.handleWindowTouchStart);
-      document.removeEventListener('touchmove', this.handleEdgeSwipeMove);
-      document.removeEventListener('touchend', this.handleEdgeSwipeEnd);
+      document.removeEventListener('pointerdown', this.handleWindowPointerDown);
+      document.removeEventListener('pointermove', this.handleEdgeSwipeMove);
+      document.removeEventListener('pointerup', this.handleEdgeSwipeEnd);
+      document.removeEventListener('pointercancel', this.handleEdgeSwipeEnd);
     });
   }
 }
