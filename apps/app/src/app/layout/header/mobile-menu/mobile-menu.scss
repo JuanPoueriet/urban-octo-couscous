@@ -1,3 +1,11 @@
+// ─── Layout & animation variables ─────────────────────────────────────────────
+// Keep in sync with the constants exported from mobile-menu.constants.ts
+$mm-drawer-max-width:   380px;
+$mm-mobile-breakpoint:  992px;
+$mm-drawer-duration:    400ms;
+$mm-drawer-easing:      cubic-bezier(0.16, 1, 0.3, 1);
+$mm-overlay-duration:   0.3s;
+
 .mobile-menu-container {
   .header__logo {
     font-size: 1.75rem;
@@ -31,7 +39,7 @@
     top: 0;
     inset-inline-start: 0;
     width: 85%;
-    max-width: 380px;
+    max-width: $mm-drawer-max-width;
     height: 100vh;
     background: rgba(18, 18, 18, 0.85);
     backdrop-filter: blur(20px);
@@ -41,28 +49,23 @@
     display: flex;
     flex-direction: column;
     z-index: 1300;
-    transform: translateX(calc(var(--dir) * -100%));
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    // P5 — initial transform is controlled exclusively via Angular inline style;
+    //      no CSS transform declaration needed (it would be overridden anyway).
+    //      The CSS-only fallback for SSR is preserved through the initial inline value set in .ts.
     will-change: transform;
     box-shadow: 10px 0 40px rgba(0, 0, 0, 0.5);
 
     touch-action: pan-y;
     -webkit-overflow-scrolling: touch;
 
-    &.open {
-      transform: translateX(0);
-    }
-
     @media (prefers-reduced-motion: reduce) {
-      transition: none !important;
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
       background: rgb(18, 18, 18) !important;
     }
 
     // Performance tuning for low-power devices
-    @media screen and (max-width: 768px) and (update: slow) {
-      transition: none !important;
+    @media screen and (max-width: #{$mm-mobile-breakpoint}) and (update: slow) {
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
       background: rgb(18, 18, 18) !important;
@@ -417,10 +420,9 @@
       }
 
       .accordion-content {
-        max-height: 1000px;
+        grid-template-rows: 1fr;
         opacity: 1;
         pointer-events: auto;
-        padding-bottom: 16px;
       }
     }
 
@@ -460,11 +462,23 @@
       }
     }
 
+    // P6 — CSS Grid row animation replaces the max-height:1000px hack.
+    //      grid-template-rows: 0fr → 1fr animates the real content height,
+    //      so the easing curve is applied correctly regardless of section length.
     .accordion-content {
-      max-height: 0;
+      display: grid;
+      grid-template-rows: 0fr;
       opacity: 0;
-      overflow: hidden;
-      transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+      transition:
+        grid-template-rows $mm-drawer-duration cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.35s ease;
+
+      > * {
+        // overflow: hidden on the grid item is required for 0fr to fully collapse the row
+        overflow: hidden;
+        min-height: 0;
+        padding-bottom: 16px; // spacing that was previously on .expanded .accordion-content
+      }
     }
   }
 
@@ -639,27 +653,32 @@
   }
 }
 
+// P1 / P4 — The overlay is always in the DOM (never display:none).
+// - opacity: 0 + pointer-events: none → invisible and non-interactive when closed.
+// - .visible adds pointer-events: auto for click-to-close.
+// - Opacity is always controlled via JS inline style (updateOverlayVisual), so
+//   the CSS transition from current inline value → 0 fires correctly on close.
+// - This approach also makes the overlay visible during edge-swipe gestures (P1),
+//   since JS can set inline opacity at any time regardless of DOM visibility.
 .mobile-menu-overlay {
   position: fixed;
-  inset-block-start: 0;
-  inset-inline-start: 0;
-  width: 100%;
-  height: 100vh;
+  inset: 0;
   background-color: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   z-index: 1200;
   opacity: 0;
-  transition: opacity 0.3s ease;
-  touch-action: none;
   pointer-events: none;
   cursor: pointer;
-  display: none;
+  touch-action: none;
+  // Transition is on the base state so it applies in BOTH directions (P4)
+  transition: opacity $mm-overlay-duration ease, backdrop-filter $mm-overlay-duration ease;
 
   &.visible {
-    display: block;
-    opacity: 1;
     pointer-events: auto;
+    // opacity is set via inline style in updateOverlayVisual(); the CSS value
+    // acts only as a semantic marker and is overridden by the inline style.
+    opacity: 1;
   }
 
   @media (prefers-reduced-motion: reduce), (update: slow) {

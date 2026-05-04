@@ -11,17 +11,18 @@
   <div
     class="header__nav-links-mobile"
     [class.open]="isMobileMenuOpen"
-  [style.transform]="'translateX(' + menuTranslateX + 'px) scaleX(' + menuScaleX + ')'"
-  [style.transform-origin]="menuTransformOrigin"
-  [style.transition]="menuTransition"
-  (pointerdown)="onMenuPointerDown($event)"
-  (pointermove)="onMenuPointerMove($event)"
-  (pointerup)="onMenuPointerEnd($event)"
-  (pointercancel)="onMenuPointerCancel($event)"
-  role="dialog"
-  aria-modal="true"
-  [attr.aria-labelledby]="menuTitleId"
->
+    [style.transform]="'translateX(' + menuTranslateX + 'px) scaleX(' + menuScaleX + ')'"
+    [style.transform-origin]="menuTransformOrigin"
+    [style.transition]="menuTransition"
+    (pointerdown)="onMenuPointerDown($event)"
+    (pointermove)="onMenuPointerMove($event)"
+    (pointerup)="onMenuPointerEnd($event)"
+    (pointercancel)="onMenuPointerCancel($event)"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="menuTitleId"
+    [attr.aria-hidden]="isDrawerClosed ? 'true' : null"
+  >
   <h2 [id]="menuTitleId" class="sr-only">{{ 'ARIA.MOBILE_MENU_TITLE' | translate }}</h2>
 
   <!-- Mobile Menu Header -->

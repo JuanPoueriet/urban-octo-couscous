@@ -1,3 +1,24 @@
+// ─── Layout & Animation Constants ────────────────────────────────────────────
+// Single source of truth for all numeric values used by the mobile menu.
+// Keep the SCSS counterparts ($mm-*) in mobile-menu.scss in sync with these.
+export const MOBILE_MENU_MAX_WIDTH = 380; // px — matches CSS max-width
+export const MOBILE_MENU_DEFAULT_WIDTH = 320; // px — fallback before DOM measurement
+export const MOBILE_BREAKPOINT_PX = 992; // px — matches header/breakpoint.service
+export const DRAWER_TRANSITION_DURATION_MS = 400;
+export const DRAWER_EASING = 'cubic-bezier(0.16, 1, 0.3, 1)';
+export const DRAWER_TRANSITION = `transform ${DRAWER_TRANSITION_DURATION_MS}ms ${DRAWER_EASING}`;
+
+// Gesture defaults (overridable via MobileMenuGestureConfig)
+export const GESTURE_EDGE_THRESHOLD = 30; // px from screen edge to trigger edge-swipe
+export const GESTURE_OPEN_THRESHOLD = 0.3; // fraction of menu width to confirm open
+export const GESTURE_MIN_SWIPE_DISTANCE = 30; // px
+export const GESTURE_VELOCITY_THRESHOLD = 0.25; // px/ms
+export const GESTURE_HORIZONTAL_THRESHOLD = 10; // px before locking to horizontal
+export const GESTURE_VERTICAL_LOCK_THRESHOLD = 10; // px vertical movement that cancels gesture
+export const GESTURE_VELOCITY_WINDOW_MS = 100; // ms window for instantaneous velocity
+export const GESTURE_ELASTIC_RESISTANCE = 100; // 0-100
+export const GESTURE_MAX_STRETCH_PERCENT = 4; // %
+
 export interface MobileMenuLink {
   key: string;
   route?: any[];

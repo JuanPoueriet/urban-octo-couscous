@@ -2,7 +2,6 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   Component,
   ElementRef,
-  Inject,
   ViewEncapsulation,
   PLATFORM_ID,
   OnInit,
@@ -30,7 +29,17 @@ import { MobileMenuGestures, MobileMenuGestureConfig } from './mobile-menu-gestu
 import { MobileMenuQuickAccess } from './mobile-menu-quick-access';
 import { MobileMenuSearch } from './mobile-menu-search';
 import { MobileMenuSection } from './mobile-menu-section';
-import { getMobileMenuSections, MobileMenuSectionData, MobileMenuLink } from './mobile-menu.constants';
+import {
+  getMobileMenuSections,
+  MobileMenuSectionData,
+  MobileMenuLink,
+  MOBILE_MENU_MAX_WIDTH,
+  DRAWER_TRANSITION,
+  DRAWER_TRANSITION_DURATION_MS,
+  GESTURE_EDGE_THRESHOLD,
+  GESTURE_VELOCITY_THRESHOLD,
+  GESTURE_ELASTIC_RESISTANCE,
+} from './mobile-menu.constants';
 import { MobileMenuAccessibility } from './mobile-menu-accessibility';
 
 @Component({
@@ -45,7 +54,7 @@ import { MobileMenuAccessibility } from './mobile-menu-accessibility';
     LucideAngularModule,
     MobileMenuQuickAccess,
     MobileMenuSearch,
-    MobileMenuSection
+    MobileMenuSection,
   ],
   templateUrl: './mobile-menu.html',
   styleUrl: './mobile-menu.scss',
@@ -54,55 +63,74 @@ import { MobileMenuAccessibility } from './mobile-menu-accessibility';
 })
 export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private directionService = inject(DirectionService);
-  private menuService = inject(MenuService);
+  private menuService      = inject(MenuService);
   private analyticsService = inject(AnalyticsService);
-  private translate = inject(TranslateService);
-  private el = inject(ElementRef);
-  private renderer = inject(Renderer2);
-  private ngZone = inject(NgZone);
-  private cdRef = inject(ChangeDetectorRef);
-  private destroyRef = inject(DestroyRef);
-  private router = inject(Router);
-  @Inject(PLATFORM_ID) private platformId = inject(PLATFORM_ID);
+  private translate        = inject(TranslateService);
+  private el               = inject(ElementRef);
+  private renderer         = inject(Renderer2);
+  private ngZone           = inject(NgZone);
+  private cdRef            = inject(ChangeDetectorRef);
+  private destroyRef       = inject(DestroyRef);
+  private router           = inject(Router);
+  // P10 — functional inject(); @Inject() decorator was redundant and removed
+  private platformId       = inject(PLATFORM_ID);
 
   public currentLang: string;
   private isBrowser: boolean;
 
-  // Drawer state
-  public menuTranslateX = -320;
-  public menuScaleX = 1;
+  // ── Drawer animation state ──────────────────────────────────────────────────
+  // P8 — use MOBILE_MENU_MAX_WIDTH to guarantee the drawer is always fully off-screen
+  //      before ngAfterViewInit measures the real width.
+  public menuTranslateX  = -MOBILE_MENU_MAX_WIDTH;
+  public menuScaleX      = 1;
   public menuTransformOrigin = 'left';
-  public menuTransition = 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1)';
-  private menuWidth = 320;
-  private isAnimating = false;
+  public menuTransition  = DRAWER_TRANSITION;  // P5 — single constant, not repeated strings
+  private menuWidth      = MOBILE_MENU_MAX_WIDTH;
+  private isAnimating    = false;
   private drawerState: 'closed' | 'opening' | 'open' | 'closing' = 'closed';
 
-  private menuElement: HTMLElement | null = null;
+  // ── DOM references ──────────────────────────────────────────────────────────
+  private menuElement:    HTMLElement | null = null;
   private overlayElement: HTMLElement | null = null;
   private resizeObserver: ResizeObserver | null = null;
-  private searchDebounceTimer: any;
+
+  // ── P2 — single, cancellable transitionend listener + fallback timer ─────────
+  private transitionEndUnlisten: (() => void) | null = null;
+  private transitionFallbackTimer: ReturnType<typeof setTimeout> | null = null;
+
+  // ── Search / debounce ────────────────────────────────────────────────────────
+  private searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;  // P11 — typed
+
+  // ── Gesture handler ─────────────────────────────────────────────────────────
   private gestureHandler: MobileMenuGestures | null = null;
   private gestureConfig: MobileMenuGestureConfig | null = null;
   private a11y: MobileMenuAccessibility;
 
+  // ── View data ────────────────────────────────────────────────────────────────
   public currentYear = new Date().getFullYear();
   public searchQuery = '';
   public searchResultsCount = 0;
-
   public menuSections: MobileMenuSectionData[] = [];
   public expandedSections = new Set<string>();
   private expandedSectionsBeforeSearch: Set<string> | null = null;
   private translationCache = new Map<string, string>();
   public readonly menuTitleId = `mobile-menu-title-${Math.random().toString(36).slice(2, 10)}`;
 
-  get isMobileMenuOpen() {
+  // ── Computed state accessors ─────────────────────────────────────────────────
+
+  get isMobileMenuOpen(): boolean {
     return this.menuService.isMobileMenuOpen();
+  }
+
+  /** P7 — used in template to hide the closed drawer from the accessibility tree. */
+  get isDrawerClosed(): boolean {
+    return this.drawerState === 'closed';
   }
 
   constructor() {
     this.currentLang = this.translate.getCurrentLang() || this.translate.defaultLang || 'es';
-    this.isBrowser = isPlatformBrowser(this.platformId);
-    this.a11y = new MobileMenuAccessibility(this.el);
+    this.isBrowser   = isPlatformBrowser(this.platformId);
+    this.a11y        = new MobileMenuAccessibility(this.el);
 
     this.translate.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
       this.currentLang = event.lang;
@@ -122,16 +150,14 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.initMenuSections();
   }
 
-  private initMenuSections() {
+  private initMenuSections(): void {
     this.menuSections = getMobileMenuSections(this.currentLang);
     this.translationCache.clear();
   }
 
-  ngOnInit() {
-    // Logic if needed
-  }
+  ngOnInit(): void { /* reserved */ }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     if (this.isBrowser) {
       this.initializeMenu();
       this.setupGestures();
@@ -139,12 +165,14 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.cleanup();
   }
 
-  private initializeMenu() {
-    this.menuElement = this.el.nativeElement.querySelector('.header__nav-links-mobile');
+  // ── Initialisation ──────────────────────────────────────────────────────────
+
+  private initializeMenu(): void {
+    this.menuElement    = this.el.nativeElement.querySelector('.header__nav-links-mobile');
     this.overlayElement = this.el.nativeElement.querySelector('.mobile-menu-overlay');
 
     if (this.menuElement) {
@@ -152,15 +180,13 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private setupResizeObserver() {
+  private setupResizeObserver(): void {
     if (!this.menuElement || !this.isBrowser) return;
 
     this.resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         if (entry.target === this.menuElement) {
-          this.ngZone.run(() => {
-            this.updateMenuWidth();
-          });
+          this.ngZone.run(() => this.updateMenuWidth());
         }
       }
     });
@@ -168,10 +194,10 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.resizeObserver.observe(this.menuElement);
   }
 
-  private updateMenuWidth() {
+  private updateMenuWidth(): void {
     if (!this.menuElement) return;
 
-    const newWidth = this.menuElement.offsetWidth || 320;
+    const newWidth = this.menuElement.offsetWidth || MOBILE_MENU_MAX_WIDTH;
     if (this.menuWidth === newWidth) return;
 
     this.menuWidth = newWidth;
@@ -187,44 +213,40 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.cdRef.markForCheck();
   }
 
-  private setupGestures() {
+  private setupGestures(): void {
     this.gestureConfig = {
-      menuWidth: this.menuWidth,
-      elasticResistance: 100,
-      edgeThreshold: 30, // Customizing threshold as per recommendation
-      velocityThreshold: 0.25,
-      isRtl: () => this.directionService.isRtl(),
-      isOpen: () => this.isMobileMenuOpen,
-      isAnimating: () => this.isAnimating,
+      menuWidth:          this.menuWidth,
+      elasticResistance:  GESTURE_ELASTIC_RESISTANCE,
+      edgeThreshold:      GESTURE_EDGE_THRESHOLD,
+      velocityThreshold:  GESTURE_VELOCITY_THRESHOLD,
+      isRtl:        () => this.directionService.isRtl(),
+      isOpen:       () => this.isMobileMenuOpen,
+      isAnimating:  () => this.isAnimating,
+      // P3 — exposes current visual position so mid-animation gestures start correctly
+      getCurrentTranslateX: () => this.menuTranslateX,
+
       onUpdateTranslate: (translateX, progress, scaleX, transformOrigin) => {
-        this.menuTranslateX = translateX;
-        this.menuScaleX = scaleX ?? 1;
+        this.menuTranslateX     = translateX;
+        this.menuScaleX         = scaleX ?? 1;
         this.menuTransformOrigin = transformOrigin ?? (this.directionService.isRtl() ? 'right' : 'left');
 
         if (progress !== null) {
+          // During active drag: disable CSS transition so motion tracks the finger
           this.menuTransition = 'none';
-          this.updateOverlayVisual(progress);
-          if (this.menuElement) {
-            this.renderer.addClass(this.menuElement, 'dragging');
-          }
+          this.updateOverlayVisual(progress); // P1 — overlay opacity tracks drag
+          if (this.menuElement) this.renderer.addClass(this.menuElement, 'dragging');
         } else {
-          this.menuTransition = 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1)';
-          if (this.menuElement) {
-            this.renderer.removeClass(this.menuElement, 'dragging');
-          }
+          // Drag released: re-enable transition for the snap animation
+          this.menuTransition = DRAWER_TRANSITION;
+          if (this.menuElement) this.renderer.removeClass(this.menuElement, 'dragging');
         }
         this.cdRef.markForCheck();
       },
-      onOpen: () => {
-        this.menuService.open();
-      },
-      onClose: () => {
-        this.menuService.close();
-      },
+
+      onOpen:  () => this.menuService.open(),
+      onClose: () => this.menuService.close(),
       onToggleHaptic: () => this.triggerHapticFeedback(),
-      onTrackMetric: (metric, data) => {
-        this.analyticsService.trackEvent(`mobile_menu_${metric}`, data);
-      }
+      onTrackMetric:  (metric, data) => this.analyticsService.trackEvent(`mobile_menu_${metric}`, data),
     };
 
     this.gestureHandler = new MobileMenuGestures(this.gestureConfig, this.ngZone);
@@ -234,68 +256,17 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+  // ── Open / close drawer ─────────────────────────────────────────────────────
 
-  private clamp01(value: number): number {
-    return Math.max(0, Math.min(1, value));
-  }
-
-  private updateOverlayVisual(progress: number) {
-    if (!this.overlayElement) return;
-
-    const normalized = this.clamp01(progress);
-    const eased = 1 - Math.pow(1 - normalized, 2);
-    const opacity = 0.08 + eased * 0.62;
-    const blur = eased * 8;
-
-    this.overlayElement.style.opacity = opacity.toFixed(3);
-    this.overlayElement.style.backdropFilter = `blur(${blur.toFixed(2)}px)`;
-  }
-
-  private cleanup() {
-    if (this.gestureHandler) {
-      this.gestureHandler.destroy();
-    }
-
-    if (this.resizeObserver) {
-      this.resizeObserver.disconnect();
-      this.resizeObserver = null;
-    }
-
-    if (this.searchDebounceTimer) {
-      clearTimeout(this.searchDebounceTimer);
-      this.searchDebounceTimer = null;
-    }
-
-    if (this.isMobileMenuOpen) {
-      document.body.classList.remove('no-scroll');
-      this.toggleBackgroundInert(false);
-    }
-  }
-
-
-
-  private toggleBackgroundInert(isInert: boolean) {
-    if (!this.isBrowser) return;
-
-    const targets = Array.from(document.querySelectorAll('main, jsl-footer, .header__nav, jsl-top-bar'));
-    for (const target of targets) {
-      if (isInert) {
-        target.setAttribute('inert', '');
-        target.setAttribute('aria-hidden', 'true');
-      } else {
-        target.removeAttribute('inert');
-        target.removeAttribute('aria-hidden');
-      }
-    }
-  }
-  private openDrawer() {
+  private openDrawer(): void {
     if (this.drawerState === 'open' || this.drawerState === 'opening') return;
     if (this.isAnimating && this.drawerState === 'closing') return;
-    this.isAnimating = true;
-    this.drawerState = 'opening';
-    this.menuTransition = 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1)';
+
+    this.isAnimating  = true;
+    this.drawerState  = 'opening';
+    this.menuTransition = DRAWER_TRANSITION;
     this.menuTranslateX = 0;
-    this.menuScaleX = 1;
+    this.menuScaleX     = 1;
 
     if (this.isBrowser) {
       document.body.classList.add('no-scroll');
@@ -304,6 +275,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       this.triggerHapticFeedback();
     }
 
+    // P1 / P4 — overlay is always in DOM (no display:none); just enable pointer-events
     if (this.overlayElement) {
       this.overlayElement.classList.add('visible');
       this.updateOverlayVisual(1);
@@ -320,14 +292,15 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private closeDrawer() {
+  private closeDrawer(): void {
     if (this.drawerState === 'closed' || this.drawerState === 'closing') return;
     if (this.isAnimating && this.drawerState === 'opening') return;
-    this.isAnimating = true;
-    this.drawerState = 'closing';
-    this.menuTransition = 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1)';
+
+    this.isAnimating  = true;
+    this.drawerState  = 'closing';
+    this.menuTransition = DRAWER_TRANSITION;
     this.menuTranslateX = this.directionService.isRtl() ? this.menuWidth : -this.menuWidth;
-    this.menuScaleX = 1;
+    this.menuScaleX     = 1;
 
     if (this.isBrowser) {
       document.body.classList.remove('no-scroll');
@@ -336,6 +309,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       this.a11y.restoreFocus();
     }
 
+    // P4 — clear inline styles so CSS transition fades opacity from current value → 0
     if (this.overlayElement) {
       this.overlayElement.classList.remove('visible');
       this.overlayElement.style.opacity = '';
@@ -351,165 +325,132 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private handleTransitionEnd(callback: () => void) {
+  // ── Transition lifecycle (P2) ────────────────────────────────────────────────
+
+  private clearTransitionListeners(): void {
+    if (this.transitionEndUnlisten) {
+      this.transitionEndUnlisten();
+      this.transitionEndUnlisten = null;
+    }
+    if (this.transitionFallbackTimer !== null) {
+      clearTimeout(this.transitionFallbackTimer);
+      this.transitionFallbackTimer = null;
+    }
+  }
+
+  private handleTransitionEnd(callback: () => void): void {
+    // P2 — cancel any stale listener/timer before registering a new one,
+    // so interrupted animations never fire old callbacks on the next transition.
+    this.clearTransitionListeners();
+
     if (!this.isBrowser || !this.menuElement) {
       callback();
       return;
     }
 
-    const unlisten = this.renderer.listen(this.menuElement, 'transitionend', (event: TransitionEvent) => {
-      if (event.propertyName === 'transform') {
-        unlisten();
-        this.ngZone.run(() => {
-          callback();
-        });
+    const unlisten = this.renderer.listen(
+      this.menuElement,
+      'transitionend',
+      (event: TransitionEvent) => {
+        if (event.propertyName !== 'transform') return;
+        this.clearTransitionListeners();
+        this.ngZone.run(() => callback());
       }
-    });
+    );
+    this.transitionEndUnlisten = unlisten;
 
-    // Fallback for cases where transition might not fire
-    setTimeout(() => {
-      unlisten();
+    // Fallback: if transitionend never fires (e.g. prefers-reduced-motion suppresses it)
+    this.transitionFallbackTimer = setTimeout(() => {
+      this.transitionFallbackTimer = null;
+      if (this.transitionEndUnlisten) {
+        this.transitionEndUnlisten();
+        this.transitionEndUnlisten = null;
+      }
       this.ngZone.run(() => {
-        if (this.isAnimating) {
-          callback();
-        }
+        if (this.isAnimating) callback();
       });
-    }, 500);
+    }, DRAWER_TRANSITION_DURATION_MS + 100);
   }
 
-  closeMobileMenu() {
+  // ── Overlay helpers ─────────────────────────────────────────────────────────
+
+  private clamp01(value: number): number {
+    return Math.max(0, Math.min(1, value));
+  }
+
+  private updateOverlayVisual(progress: number): void {
+    if (!this.overlayElement) return;
+    const normalized = this.clamp01(progress);
+    const eased      = 1 - Math.pow(1 - normalized, 2);
+    // P1 — inline opacity is set directly; the overlay is always in the DOM
+    //      so this is immediately visible during edge-swipe gestures too.
+    this.overlayElement.style.opacity        = (0.08 + eased * 0.62).toFixed(3);
+    this.overlayElement.style.backdropFilter = `blur(${(eased * 8).toFixed(2)}px)`;
+  }
+
+  // ── Background inert management ─────────────────────────────────────────────
+
+  private toggleBackgroundInert(isInert: boolean): void {
+    if (!this.isBrowser) return;
+    const targets = Array.from(document.querySelectorAll('main, jsl-footer, .header__nav, jsl-top-bar'));
+    for (const target of targets) {
+      if (isInert) {
+        target.setAttribute('inert', '');
+        target.setAttribute('aria-hidden', 'true');
+      } else {
+        target.removeAttribute('inert');
+        target.removeAttribute('aria-hidden');
+      }
+    }
+  }
+
+  // ── Public menu actions ─────────────────────────────────────────────────────
+
+  closeMobileMenu(): void {
     this.menuService.close();
   }
 
-  private getTranslatedLowercase(key: string): string {
-    const cached = this.translationCache.get(key);
-    if (cached) return cached;
+  // ── Pointer event delegation ────────────────────────────────────────────────
 
-    const translated = this.translate.instant(key).toLowerCase();
-    this.translationCache.set(key, translated);
-    return translated;
+  onMenuPointerDown(event: PointerEvent): void {
+    if (this.isAnimating) this.stopTransition();
+    this.gestureHandler?.onMenuPointerDown(event);
   }
 
-  shouldShowLink = (linkTextKey: string): boolean => {
-    if (!this.searchQuery) return true;
-    return this.getTranslatedLowercase(linkTextKey).includes(this.searchQuery.toLowerCase());
+  onMenuPointerMove(event: PointerEvent): void {
+    this.gestureHandler?.onMenuPointerMove(event);
   }
 
-  shouldShowSection(sectionKey: string, links: MobileMenuLink[]): boolean {
-    if (!this.searchQuery) return true;
-
-    const sectionTitle = this.getTranslatedLowercase(sectionKey);
-    if (sectionTitle.includes(this.searchQuery.toLowerCase())) {
-      return true;
-    }
-
-    return links.some(link => this.shouldShowLink(link.key));
+  onMenuPointerEnd(event: PointerEvent): void {
+    this.gestureHandler?.onMenuPointerEnd(event);
   }
 
-  toggleSection(section: string) {
-    if (this.expandedSections.has(section)) {
-      this.expandedSections.delete(section);
-    } else {
-      this.expandedSections.add(section);
-      this.analyticsService.trackEvent('mobile_menu_expand_section', {
-        section_id: section
-      });
-    }
+  onMenuPointerCancel(event: PointerEvent): void {
+    this.gestureHandler?.onMenuPointerCancel(event);
+  }
+
+  private stopTransition(): void {
+    this.isAnimating    = false;
+    this.menuTransition = 'none';
+    if (this.menuElement) void this.menuElement.offsetHeight; // force reflow
     this.cdRef.markForCheck();
   }
 
-  isSectionExpanded(section: string): boolean {
-    return this.expandedSections.has(section);
-  }
+  // ── Overlay touch handler ───────────────────────────────────────────────────
 
-  onSearchChange(query: string) {
-    const hadQuery = !!this.searchQuery;
-    this.searchQuery = query;
-    this.updateSearchResultsCount();
-
-    // After search results change, we need to refresh the focus trap cache
-    setTimeout(() => {
-      this.a11y.refreshFocusableElements();
-    }, 100);
-
-    if (this.searchQuery) {
-      if (!hadQuery) {
-        this.expandedSectionsBeforeSearch = new Set(this.expandedSections);
-        this.expandedSections.clear();
-      }
-      if (this.searchDebounceTimer) {
-        clearTimeout(this.searchDebounceTimer);
-      }
-
-      this.searchDebounceTimer = setTimeout(() => {
-        this.analyticsService.trackEvent('mobile_menu_search', {
-          search_term: this.searchQuery,
-          results_count: this.searchResultsCount
-        });
-      }, 300);
-
-      let expandedCount = 0;
-      for (const section of this.menuSections) {
-        if (this.shouldShowSection(section.titleKey, section.links)) {
-          if (expandedCount < 2) {
-            this.expandedSections.add(section.id);
-            expandedCount++;
-          }
-        }
-      }
-    } else if (hadQuery) {
-      this.expandedSections = this.expandedSectionsBeforeSearch ?? new Set<string>();
-      this.expandedSectionsBeforeSearch = null;
+  onOverlayTouch(event: TouchEvent): void {
+    if (this.isAnimating) this.stopTransition();
+    if (this.isMobileMenuOpen && !this.gestureHandler?.getIsDragging()) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.closeMobileMenu();
     }
-    this.cdRef.markForCheck();
   }
 
-  onMenuRouteNavigate(route: string[], source: string) {
-    this.router.navigate(route).then((ok) => {
-      if (!ok) {
-        this.analyticsService.trackEvent('mobile_menu_navigation_failed', { source, route: route.join('/') });
-      }
-    }).catch(() => {
-      this.analyticsService.trackEvent('mobile_menu_navigation_failed', { source, route: route.join('/') });
-    });
-    this.closeMobileMenu();
-  }
-
-  private updateSearchResultsCount() {
-    if (!this.searchQuery) {
-      this.searchResultsCount = 0;
-      return;
-    }
-
-    let count = 0;
-    for (const section of this.menuSections) {
-      // Count individual matching links in each section
-      section.links.forEach(link => {
-        if (this.shouldShowLink(link.key)) {
-          count++;
-        }
-      });
-    }
-
-    // Include contact button if it matches
-    if (this.shouldShowLink('HEADER.CONTACT')) {
-      count++;
-    }
-
-    this.searchResultsCount = count;
-  }
-
-  private triggerHapticFeedback() {
-    if (!this.isBrowser || !navigator.vibrate) return;
-
-    // Chrome blocks vibration when there is no user activation yet.
-    if (navigator.userActivation && !navigator.userActivation.isActive) return;
-
-    navigator.vibrate(5);
-  }
+  // ── Keyboard events ─────────────────────────────────────────────────────────
 
   @HostListener('document:keydown', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent) {
+  handleKeyboardEvent(event: KeyboardEvent): void {
     if (!this.isBrowser || !this.isMobileMenuOpen) return;
 
     if (event.key === 'Escape') {
@@ -523,59 +464,138 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  onOverlayTouch(event: TouchEvent) {
-    if (this.isAnimating) {
-      this.stopTransition();
-    }
-    if (this.isMobileMenuOpen && (!this.gestureHandler || !this.gestureHandler.getIsDragging())) {
+  @HostListener('document:touchmove', ['$event'])
+  onDocumentTouchMove(event: TouchEvent): void {
+    if (this.gestureHandler?.getIsDragging() && this.gestureHandler.getIsHorizontalGesture() && this.isBrowser) {
       event.preventDefault();
-      event.stopPropagation();
-      this.closeMobileMenu();
     }
   }
 
-  private stopTransition() {
-    this.isAnimating = false;
-    this.menuTransition = 'none';
-    if (this.menuElement) {
-      // Forcing reflow to stop transition immediately
-      void this.menuElement.offsetHeight;
+  // ── Search ─────────────────────────────────────────────────────────────────
+
+  private getTranslatedLowercase(key: string): string {
+    const cached = this.translationCache.get(key);
+    if (cached !== undefined) return cached;
+    const translated = this.translate.instant(key).toLowerCase();
+    this.translationCache.set(key, translated);
+    return translated;
+  }
+
+  shouldShowLink = (linkTextKey: string): boolean => {
+    if (!this.searchQuery) return true;
+    return this.getTranslatedLowercase(linkTextKey).includes(this.searchQuery.toLowerCase());
+  };
+
+  shouldShowSection(sectionKey: string, links: MobileMenuLink[]): boolean {
+    if (!this.searchQuery) return true;
+    if (this.getTranslatedLowercase(sectionKey).includes(this.searchQuery.toLowerCase())) return true;
+    return links.some(link => this.shouldShowLink(link.key));
+  }
+
+  onSearchChange(query: string): void {
+    const hadQuery = !!this.searchQuery;
+    this.searchQuery = query;
+    this.updateSearchResultsCount();
+
+    setTimeout(() => this.a11y.refreshFocusableElements(), 100);
+
+    if (this.searchQuery) {
+      if (!hadQuery) {
+        this.expandedSectionsBeforeSearch = new Set(this.expandedSections);
+        this.expandedSections.clear();
+      }
+
+      if (this.searchDebounceTimer !== null) clearTimeout(this.searchDebounceTimer);
+
+      this.searchDebounceTimer = setTimeout(() => {
+        this.analyticsService.trackEvent('mobile_menu_search', {
+          search_term:   this.searchQuery,
+          results_count: this.searchResultsCount,
+        });
+      }, 300);
+
+      let expandedCount = 0;
+      for (const section of this.menuSections) {
+        if (this.shouldShowSection(section.titleKey, section.links) && expandedCount < 2) {
+          this.expandedSections.add(section.id);
+          expandedCount++;
+        }
+      }
+    } else if (hadQuery) {
+      this.expandedSections = this.expandedSectionsBeforeSearch ?? new Set<string>();
+      this.expandedSectionsBeforeSearch = null;
+    }
+
+    this.cdRef.markForCheck();
+  }
+
+  private updateSearchResultsCount(): void {
+    if (!this.searchQuery) {
+      this.searchResultsCount = 0;
+      return;
+    }
+
+    let count = 0;
+    for (const section of this.menuSections) {
+      section.links.forEach(link => { if (this.shouldShowLink(link.key)) count++; });
+    }
+    if (this.shouldShowLink('HEADER.CONTACT')) count++;
+    this.searchResultsCount = count;
+  }
+
+  // ── Sections ────────────────────────────────────────────────────────────────
+
+  toggleSection(section: string): void {
+    if (this.expandedSections.has(section)) {
+      this.expandedSections.delete(section);
+    } else {
+      this.expandedSections.add(section);
+      this.analyticsService.trackEvent('mobile_menu_expand_section', { section_id: section });
     }
     this.cdRef.markForCheck();
   }
 
-  onMenuPointerDown(event: PointerEvent) {
-    if (this.isAnimating) {
-      this.stopTransition();
-    }
-    if (this.gestureHandler) {
-      this.gestureHandler.onMenuPointerDown(event);
-    }
+  isSectionExpanded(section: string): boolean {
+    return this.expandedSections.has(section);
   }
 
-  onMenuPointerMove(event: PointerEvent) {
-    if (this.gestureHandler) {
-      this.gestureHandler.onMenuPointerMove(event);
-    }
+  // ── Navigation ───────────────────────────────────────────────────────────────
+
+  onMenuRouteNavigate(route: string[], source: string): void {
+    this.router.navigate(route).then((ok) => {
+      if (!ok) {
+        this.analyticsService.trackEvent('mobile_menu_navigation_failed', { source, route: route.join('/') });
+      }
+    }).catch(() => {
+      this.analyticsService.trackEvent('mobile_menu_navigation_failed', { source, route: route.join('/') });
+    });
+    this.closeMobileMenu();
   }
 
-  onMenuPointerEnd(event: PointerEvent) {
-    if (this.gestureHandler) {
-      this.gestureHandler.onMenuPointerEnd(event);
-    }
+  // ── Haptic feedback ─────────────────────────────────────────────────────────
+
+  private triggerHapticFeedback(): void {
+    if (!this.isBrowser || !navigator.vibrate) return;
+    if (navigator.userActivation && !navigator.userActivation.isActive) return;
+    navigator.vibrate(5);
   }
 
-  onMenuPointerCancel(event: PointerEvent) {
-    if (this.gestureHandler) {
-      this.gestureHandler.onMenuPointerCancel(event);
-    }
-  }
+  // ── Cleanup ─────────────────────────────────────────────────────────────────
 
-  @HostListener('document:touchmove', ['$event'])
-  onDocumentTouchMove(event: TouchEvent) {
-    // Keep this to prevent default scroll on touch devices when dragging
-    if (this.gestureHandler && this.gestureHandler.getIsDragging() && this.gestureHandler.getIsHorizontalGesture() && this.isBrowser) {
-      event.preventDefault();
+  private cleanup(): void {
+    this.gestureHandler?.destroy();
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = null;
+    this.clearTransitionListeners();
+
+    if (this.searchDebounceTimer !== null) {
+      clearTimeout(this.searchDebounceTimer);
+      this.searchDebounceTimer = null;
+    }
+
+    if (this.isMobileMenuOpen) {
+      document.body.classList.remove('no-scroll');
+      this.toggleBackgroundInert(false);
     }
   }
 }
