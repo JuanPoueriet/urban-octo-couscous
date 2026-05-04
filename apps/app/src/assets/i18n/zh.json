@@ -1513,5 +1513,9 @@
   "SEO": {
     "CONTACT_TITLE": "联系 JSL Technology - 企业级软件解决方案",
     "CONTACT_DESC": "联系 JSL Technology 专家讨论您的下一个软件项目。我们为您的业务增长提供定制咨询和高端技术解决方案。"
+  },
+  "LANGUAGE_SUGGESTION": {
+    "MESSAGE": "切换到 {{language}}？",
+    "SWITCH": "切换"
   }
 }

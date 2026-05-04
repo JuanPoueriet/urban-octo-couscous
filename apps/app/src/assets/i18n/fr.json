@@ -1513,5 +1513,9 @@
   "SEO": {
     "CONTACT_TITLE": "Contactez JSL Technology - Solutions Logicielles d'Entreprise",
     "CONTACT_DESC": "Contactez les experts de JSL Technology pour discuter de votre prochain projet logiciel. Nous proposons des conseils personnalisés et des solutions technologiques haut de gamme."
+  },
+  "LANGUAGE_SUGGESTION": {
+    "MESSAGE": "Passer à {{language}} ?",
+    "SWITCH": "Changer"
   }
 }

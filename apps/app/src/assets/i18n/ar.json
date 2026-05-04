@@ -1513,5 +1513,9 @@
   "SEO": {
     "CONTACT_TITLE": "اتصل بـ JSL Technology - حلول البرمجيات للمؤسسات",
     "CONTACT_DESC": "تواصل مع خبراء JSL Technology لمناقشة مشروعك البرمجي القادم. نحن نقدم استشارات مخصصة وحلولًا تقنية متطورة لتنمية أعمالك."
+  },
+  "LANGUAGE_SUGGESTION": {
+    "MESSAGE": "هل تريد التبديل إلى {{language}}؟",
+    "SWITCH": "تبديل"
   }
 }
