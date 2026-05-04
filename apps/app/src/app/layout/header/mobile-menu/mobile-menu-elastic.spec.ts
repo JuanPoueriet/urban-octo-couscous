@@ -28,20 +28,24 @@ describe('MobileMenuElastic', () => {
 
   it('should calculate scaleX > 1 when overshooting right in LTR (opening more)', () => {
     // LTR: opening more is translateX > 0
-    const touchStartEvent = {
-      touches: [{ clientX: 100, clientY: 100 }],
+    const pointerDownEvent = {
+      pointerId: 1,
+      clientX: 100,
+      clientY: 100,
       stopPropagation: () => {},
     } as any;
 
-    gestures.onMenuTouchStart(touchStartEvent);
+    gestures.onMenuPointerDown(pointerDownEvent);
 
-    const touchMoveEvent = {
-      touches: [{ clientX: 150, clientY: 100 }], // Move 50px right
+    const pointerMoveEvent = {
+      pointerId: 1,
+      clientX: 150, // Move 50px right
+      clientY: 100,
       preventDefault: () => {},
       stopPropagation: () => {},
     } as any;
 
-    gestures.onMenuTouchMove(touchMoveEvent);
+    gestures.onMenuPointerMove(pointerMoveEvent);
 
     // diffX = 150 - 100 = 50. In LTR, max = 0.
     // Overshoot = 50.
@@ -59,33 +63,39 @@ describe('MobileMenuElastic', () => {
 
   it('should calculate scaleX > 1 when overshooting left in LTR (closing more)', () => {
     // LTR: closing more is translateX < -menuWidth
-    const touchStartEvent = {
-      touches: [{ clientX: 100, clientY: 100 }],
+    const pointerDownEvent = {
+      pointerId: 1,
+      clientX: 100,
+      clientY: 100,
       stopPropagation: () => {},
     } as any;
 
-    gestures.onMenuTouchStart(touchStartEvent);
+    gestures.onMenuPointerDown(pointerDownEvent);
 
-    const touchMoveEvent = {
-      touches: [{ clientX: 20, clientY: 100 }], // Move 80px left
+    const pointerMoveEvent = {
+      pointerId: 1,
+      clientX: 20, // Move 80px left
+      clientY: 100,
       preventDefault: () => {},
       stopPropagation: () => {},
     } as any;
 
-    gestures.onMenuTouchMove(touchMoveEvent);
+    gestures.onMenuPointerMove(pointerMoveEvent);
 
     // diffX = 20 - 100 = -80. In LTR, min = -320.
     // Wait, the starting position of the gesture matters.
-    // For onMenuTouchMove (dragging an already open menu), diffX IS the translateX.
+    // For onMenuPointerMove (dragging an already open menu), diffX IS the translateX.
     // If diffX = -80, it's not overshooting -320.
 
     // Let's simulate overshooting -320
-    const touchMoveOvershoot = {
-      touches: [{ clientX: -300, clientY: 100 }], // Move 400px left
+    const pointerMoveOvershoot = {
+      pointerId: 1,
+      clientX: -300, // Move 400px left
+      clientY: 100,
       preventDefault: () => {},
       stopPropagation: () => {},
     } as any;
-    gestures.onMenuTouchMove(touchMoveOvershoot);
+    gestures.onMenuPointerMove(pointerMoveOvershoot);
 
     // diffX = -300 - 100 = -400. In LTR, min = -320.
     // Overshoot = -320 - (-400) = 80.
@@ -100,20 +110,24 @@ describe('MobileMenuElastic', () => {
     mockConfig.isRtl = () => true;
 
     // RTL: opening more is translateX < 0 (menu comes from right, 0 is fully open)
-    const touchStartEvent = {
-      touches: [{ clientX: 300, clientY: 100 }],
+    const pointerDownEvent = {
+      pointerId: 1,
+      clientX: 300,
+      clientY: 100,
       stopPropagation: () => {},
     } as any;
 
-    gestures.onMenuTouchStart(touchStartEvent);
+    gestures.onMenuPointerDown(pointerDownEvent);
 
-    const touchMoveEvent = {
-      touches: [{ clientX: 250, clientY: 100 }], // Move 50px left
+    const pointerMoveEvent = {
+      pointerId: 1,
+      clientX: 250, // Move 50px left
+      clientY: 100,
       preventDefault: () => {},
       stopPropagation: () => {},
     } as any;
 
-    gestures.onMenuTouchMove(touchMoveEvent);
+    gestures.onMenuPointerMove(pointerMoveEvent);
 
     // diffX = 250 - 300 = -50. In RTL, min = 0.
     // Overshoot = 0 - (-50) = 50.
@@ -125,43 +139,76 @@ describe('MobileMenuElastic', () => {
   });
 
   it('should open with edge swipe in LTR', () => {
-    gestures.handleWindowTouchStart({ touches: [{ clientX: 5, clientY: 20 }] } as any);
+    mockConfig.isOpen = () => false;
+    const pointerId = 1;
+    gestures.handleWindowPointerDown({ pointerId, clientX: 5, clientY: 20 } as any);
+
+    // Initial move to trigger horizontal gesture
     (gestures as any).handleEdgeSwipeMove({
-      touches: [{ clientX: 120, clientY: 25 }],
+      pointerId,
+      clientX: 20,
+      clientY: 20,
       preventDefault: () => {},
       stopPropagation: () => {}
     } as any);
-    (gestures as any).handleEdgeSwipeEnd();
+
+    (gestures as any).handleEdgeSwipeMove({
+      pointerId,
+      clientX: 120,
+      clientY: 25,
+      preventDefault: () => {},
+      stopPropagation: () => {}
+    } as any);
+    (gestures as any).handleEdgeSwipeEnd({ pointerId } as any);
 
     expect(mockConfig.onOpen).toHaveBeenCalled();
     expect(mockConfig.onUpdateTranslate).toHaveBeenCalled();
   });
 
   it('should cancel edge swipe on vertical gesture', () => {
-    gestures.handleWindowTouchStart({ touches: [{ clientX: 5, clientY: 20 }] } as any);
+    mockConfig.isOpen = () => false;
+    const pointerId = 1;
+    gestures.handleWindowPointerDown({ pointerId, clientX: 5, clientY: 20 } as any);
     (gestures as any).handleEdgeSwipeMove({
-      touches: [{ clientX: 8, clientY: 80 }],
+      pointerId,
+      clientX: 8,
+      clientY: 80,
       preventDefault: () => {},
       stopPropagation: () => {}
     } as any);
 
     expect(gestures.getIsDragging()).toBeFalse();
-    const args = (mockConfig.onUpdateTranslate as jasmine.Spy).calls.mostRecent().args;
-    expect(args[0]).toBe(-320);
-    expect(args[1]).toBeNull();
+    const call = (mockConfig.onUpdateTranslate as jasmine.Spy).calls.mostRecent();
+    expect(call).toBeDefined();
+    expect(call.args[0]).toBe(-320);
+    expect(call.args[1]).toBeNull();
   });
 
   it('should open with edge swipe in RTL', () => {
     mockConfig.isRtl = () => true;
+    mockConfig.isOpen = () => false;
     spyOnProperty(window, 'innerWidth', 'get').and.returnValue(400);
 
-    gestures.handleWindowTouchStart({ touches: [{ clientX: 395, clientY: 40 }] } as any);
+    const pointerId = 1;
+    gestures.handleWindowPointerDown({ pointerId, clientX: 395, clientY: 40 } as any);
+
+    // Initial move to trigger horizontal gesture
     (gestures as any).handleEdgeSwipeMove({
-      touches: [{ clientX: 260, clientY: 44 }],
+      pointerId,
+      clientX: 380,
+      clientY: 40,
       preventDefault: () => {},
       stopPropagation: () => {}
     } as any);
-    (gestures as any).handleEdgeSwipeEnd();
+
+    (gestures as any).handleEdgeSwipeMove({
+      pointerId,
+      clientX: 260,
+      clientY: 44,
+      preventDefault: () => {},
+      stopPropagation: () => {}
+    } as any);
+    (gestures as any).handleEdgeSwipeEnd({ pointerId } as any);
 
     expect(mockConfig.onOpen).toHaveBeenCalled();
   });

@@ -155,6 +155,8 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     const config: MobileMenuGestureConfig = {
       menuWidth: this.menuWidth,
       elasticResistance: 100,
+      edgeThreshold: 30, // Customizing threshold as per recommendation
+      velocityThreshold: 0.25,
       isRtl: () => this.directionService.isRtl(),
       isOpen: () => this.isMobileMenuOpen,
       isAnimating: () => this.isAnimating,
@@ -183,15 +185,16 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       onClose: () => {
         this.menuService.close();
       },
-      onToggleHaptic: () => this.triggerHapticFeedback()
+      onToggleHaptic: () => this.triggerHapticFeedback(),
+      onTrackMetric: (metric, data) => {
+        this.analyticsService.trackEvent(`mobile_menu_${metric}`, data);
+      }
     };
 
     this.gestureHandler = new MobileMenuGestures(config, this.ngZone);
 
     this.ngZone.runOutsideAngular(() => {
-      document.addEventListener('touchstart', this.gestureHandler!.handleWindowTouchStart, {
-        passive: false,
-      });
+      document.addEventListener('pointerdown', this.gestureHandler!.handleWindowPointerDown);
     });
   }
 
@@ -481,32 +484,33 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  onMenuTouchStart(event: TouchEvent) {
+  onMenuPointerDown(event: PointerEvent) {
     if (this.gestureHandler) {
-      this.gestureHandler.onMenuTouchStart(event);
+      this.gestureHandler.onMenuPointerDown(event);
     }
   }
 
-  onMenuTouchMove(event: TouchEvent) {
+  onMenuPointerMove(event: PointerEvent) {
     if (this.gestureHandler) {
-      this.gestureHandler.onMenuTouchMove(event);
+      this.gestureHandler.onMenuPointerMove(event);
     }
   }
 
-  onMenuTouchEnd(_event: TouchEvent) {
+  onMenuPointerEnd(event: PointerEvent) {
     if (this.gestureHandler) {
-      this.gestureHandler.onMenuTouchEnd();
+      this.gestureHandler.onMenuPointerEnd(event);
     }
   }
 
-  onMenuTouchCancel(_event: TouchEvent) {
+  onMenuPointerCancel(event: PointerEvent) {
     if (this.gestureHandler) {
-      this.gestureHandler.onMenuTouchCancel();
+      this.gestureHandler.onMenuPointerCancel(event);
     }
   }
 
   @HostListener('document:touchmove', ['$event'])
   onDocumentTouchMove(event: TouchEvent) {
+    // Keep this to prevent default scroll on touch devices when dragging
     if (this.gestureHandler && this.gestureHandler.getIsDragging() && this.gestureHandler.getIsHorizontalGesture() && this.isBrowser) {
       event.preventDefault();
     }
