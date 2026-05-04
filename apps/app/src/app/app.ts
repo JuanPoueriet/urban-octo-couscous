@@ -11,6 +11,7 @@ import { DirectionService } from './core/services/direction.service';
 import { ChatBubbleComponent } from './shared/components/chat-bubble/chat-bubble';
 import { BreadcrumbsComponent } from './shared/components/breadcrumbs/breadcrumbs';
 import { WhatsAppButtonComponent } from './shared/components/whatsapp-button/whatsapp-button';
+import { LanguageSuggestionComponent } from './shared/components/language-suggestion/language-suggestion';
 import { SUPPORTED_LANGUAGES } from '@core/constants/languages';
 import { ToastComponent } from './shared/components/toast/toast';
 import { CookieBannerComponent } from './shared/components/cookie-banner/cookie-banner';
@@ -28,6 +29,7 @@ import Lenis from 'lenis';
     BreadcrumbsComponent,
     // ChatBubbleComponent,
     WhatsAppButtonComponent,
+    LanguageSuggestionComponent,
     ToastComponent,
     CookieBannerComponent,
   ],

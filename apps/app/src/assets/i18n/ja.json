@@ -1513,5 +1513,9 @@
   "SEO": {
     "CONTACT_TITLE": "JSL Technologyに問い合わせる - エンタープライズソフトウェアソリューション",
     "CONTACT_DESC": "次回のソフトウェアプロジェクトについて、JSL Technologyのエキスパートにご相談ください。お客様のビジネス成長のために、カスタムコンサルティングとハイエンドな技術ソリューションを提供します。"
+  },
+  "LANGUAGE_SUGGESTION": {
+    "MESSAGE": "{{language}} に切り替えますか？",
+    "SWITCH": "切り替え"
   }
 }

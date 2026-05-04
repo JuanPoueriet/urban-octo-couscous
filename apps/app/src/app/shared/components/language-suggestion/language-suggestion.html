@@ -1,0 +1,18 @@
+<div *ngIf="suggestion$ | async as suggestion" class="language-suggestion" @slideInOut>
+  <div class="language-suggestion__content">
+    <div class="language-suggestion__icon">
+      <lucide-icon name="Languages"></lucide-icon>
+    </div>
+    <div class="language-suggestion__text">
+      <p>{{ 'LANGUAGE_SUGGESTION.MESSAGE' | translate:{ language: suggestion.name } }}</p>
+    </div>
+  </div>
+  <div class="language-suggestion__actions">
+    <button (click)="onSwitch(suggestion.code)" class="btn-switch">
+      {{ 'LANGUAGE_SUGGESTION.SWITCH' | translate }}
+    </button>
+    <button (click)="onDismiss()" class="btn-close" aria-label="Close">
+      <lucide-icon name="X" [size]="18"></lucide-icon>
+    </button>
+  </div>
+</div>
