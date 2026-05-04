@@ -44,10 +44,10 @@ describe('MobileMenuElastic', () => {
 
     // diffX = 150 - 100 = 50. In LTR, max = 0.
     // Overshoot = 50.
-    // scaleX = 1 + Math.pow(50, 0.5) * 0.015 = 1 + 7.07 * 0.015 = 1.106
+    // scaleX = 1 + Math.pow(50, 0.5) * 0.01 = 1 + 7.07 * 0.01 = 1.071
     const args = (mockConfig.onUpdateTranslate as jasmine.Spy).calls.mostRecent().args;
     expect(args[0]).toBe(0);
-    expect(args[2]).toBeCloseTo(1.106, 1);
+    expect(args[2]).toBeCloseTo(1.071, 1);
     expect(args[3]).toBe('left');
   });
 
@@ -83,10 +83,10 @@ describe('MobileMenuElastic', () => {
 
     // diffX = -300 - 100 = -400. In LTR, min = -320.
     // Overshoot = -320 - (-400) = 80.
-    // scaleX = 1 + Math.pow(80, 0.5) * 0.015 = 1 + 8.94 * 0.015 = 1.134
+    // scaleX = 1 + Math.pow(80, 0.5) * 0.01 = 1 + 8.94 * 0.01 = 1.089
     const args = (mockConfig.onUpdateTranslate as jasmine.Spy).calls.mostRecent().args;
     expect(args[0]).toBe(-320);
-    expect(args[2]).toBeCloseTo(1.134, 1);
+    expect(args[2]).toBeCloseTo(1.089, 1);
     expect(args[3]).toBe('right');
   });
 
@@ -111,10 +111,10 @@ describe('MobileMenuElastic', () => {
 
     // diffX = 250 - 300 = -50. In RTL, min = 0.
     // Overshoot = 0 - (-50) = 50.
-    // scaleX = 1.106
+    // scaleX = 1.071
     const args = (mockConfig.onUpdateTranslate as jasmine.Spy).calls.mostRecent().args;
     expect(args[0]).toBe(0);
-    expect(args[2]).toBeCloseTo(1.106, 1);
+    expect(args[2]).toBeCloseTo(1.071, 1);
     expect(args[3]).toBe('right');
   });
 });
