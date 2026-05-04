@@ -68,6 +68,7 @@ export class MobileMenuGestures {
 
   private readonly DEFAULT_MAX_STRETCH_PERCENT = 8;
   private readonly ELASTIC_OVERSHOOT_REFERENCE_RATIO = 0.25;
+  private readonly ELASTIC_RESISTANCE_EXPONENT = 2;
 
   private calculateElasticScale(overshoot: number): number {
     const safeOvershoot = Math.max(0, overshoot);
@@ -79,7 +80,9 @@ export class MobileMenuGestures {
     const referenceOvershootPx = Math.max(1, this.config.menuWidth * this.ELASTIC_OVERSHOOT_REFERENCE_RATIO);
     const normalizedOvershoot = Math.min(safeOvershoot / referenceOvershootPx, 1);
 
-    const damped = Math.sqrt(normalizedOvershoot);
+    // Non-linear resistance: as stretch approaches its max, each extra pixel contributes less.
+    const resisted = Math.pow(normalizedOvershoot, this.ELASTIC_RESISTANCE_EXPONENT);
+    const damped = Math.sqrt(resisted);
     return 1 + damped * (maxScale - 1);
   }
 
