@@ -117,6 +117,12 @@ export class MobileMenuGestures {
     // When already open, the initial translation is 0
     this.initialTranslateX = 0;
     this.lastDragPosition = 0;
+
+    this.ngZone.runOutsideAngular(() => {
+      document.addEventListener('touchmove', this.handleMenuDragMove, { passive: false });
+      document.addEventListener('touchend', this.handleMenuDragEnd);
+      document.addEventListener('touchcancel', this.handleMenuDragCancel);
+    });
   }
 
   public onMenuTouchMove(event: TouchEvent) {
@@ -178,6 +184,8 @@ export class MobileMenuGestures {
   }
 
   public onMenuTouchEnd() {
+    this.removeMenuDragListeners();
+
     if (!this.isDragging || !this.isHorizontalGesture) {
       this.isDragging = false;
       this.isHorizontalGesture = false;
@@ -310,6 +318,26 @@ export class MobileMenuGestures {
     this.onMenuTouchEnd();
   }
 
+  private handleMenuDragMove = (event: TouchEvent) => {
+    this.onMenuTouchMove(event);
+  };
+
+  private handleMenuDragEnd = () => {
+    this.onMenuTouchEnd();
+  };
+
+  private handleMenuDragCancel = () => {
+    this.onMenuTouchCancel();
+  };
+
+  private removeMenuDragListeners() {
+    this.ngZone.runOutsideAngular(() => {
+      document.removeEventListener('touchmove', this.handleMenuDragMove);
+      document.removeEventListener('touchend', this.handleMenuDragEnd);
+      document.removeEventListener('touchcancel', this.handleMenuDragCancel);
+    });
+  }
+
   private handleEdgeSwipeEnd = () => {
     if (!this.isDragging) return;
 
@@ -364,6 +392,7 @@ export class MobileMenuGestures {
   }
 
   public destroy() {
+    this.removeMenuDragListeners();
     this.ngZone.runOutsideAngular(() => {
       document.removeEventListener('touchstart', this.handleWindowTouchStart);
       document.removeEventListener('touchmove', this.handleEdgeSwipeMove);
