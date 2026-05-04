@@ -150,9 +150,18 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
         this.menuTranslateX = translateX;
         this.menuScaleX = scaleX ?? 1;
         this.menuTransformOrigin = transformOrigin ?? (this.directionService.isRtl() ? 'right' : 'left');
-        this.menuTransition = 'none';
+
         if (progress !== null) {
+          this.menuTransition = 'none';
           this.updateOverlayVisual(progress);
+          if (this.menuElement) {
+            this.renderer.addClass(this.menuElement, 'dragging');
+          }
+        } else {
+          this.menuTransition = 'transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)';
+          if (this.menuElement) {
+            this.renderer.removeClass(this.menuElement, 'dragging');
+          }
         }
         this.cdRef.markForCheck();
       },
