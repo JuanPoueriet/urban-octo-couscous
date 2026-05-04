@@ -72,15 +72,17 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   public menuTranslateX = -320;
   public menuScaleX = 1;
   public menuTransformOrigin = 'left';
-  public menuTransition = 'transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)';
+  public menuTransition = 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1)';
   private menuWidth = 320;
   private isAnimating = false;
   private drawerState: 'closed' | 'opening' | 'open' | 'closing' = 'closed';
 
   private menuElement: HTMLElement | null = null;
   private overlayElement: HTMLElement | null = null;
+  private resizeObserver: ResizeObserver | null = null;
   private searchDebounceTimer: any;
   private gestureHandler: MobileMenuGestures | null = null;
+  private gestureConfig: MobileMenuGestureConfig | null = null;
   private a11y: MobileMenuAccessibility;
 
   public currentYear = new Date().getFullYear();
@@ -133,6 +135,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     if (this.isBrowser) {
       this.initializeMenu();
       this.setupGestures();
+      this.setupResizeObserver();
     }
   }
 
@@ -145,14 +148,47 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.overlayElement = this.el.nativeElement.querySelector('.mobile-menu-overlay');
 
     if (this.menuElement) {
-      this.menuWidth = this.menuElement.offsetWidth || 320;
-      this.menuTranslateX = this.directionService.isRtl() ? this.menuWidth : -this.menuWidth;
-      this.cdRef.markForCheck();
+      this.updateMenuWidth();
     }
   }
 
+  private setupResizeObserver() {
+    if (!this.menuElement || !this.isBrowser) return;
+
+    this.resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === this.menuElement) {
+          this.ngZone.run(() => {
+            this.updateMenuWidth();
+          });
+        }
+      }
+    });
+
+    this.resizeObserver.observe(this.menuElement);
+  }
+
+  private updateMenuWidth() {
+    if (!this.menuElement) return;
+
+    const newWidth = this.menuElement.offsetWidth || 320;
+    if (this.menuWidth === newWidth) return;
+
+    this.menuWidth = newWidth;
+
+    if (this.gestureConfig) {
+      this.gestureConfig.menuWidth = this.menuWidth;
+    }
+
+    if (this.drawerState === 'closed') {
+      this.menuTranslateX = this.directionService.isRtl() ? this.menuWidth : -this.menuWidth;
+    }
+
+    this.cdRef.markForCheck();
+  }
+
   private setupGestures() {
-    const config: MobileMenuGestureConfig = {
+    this.gestureConfig = {
       menuWidth: this.menuWidth,
       elasticResistance: 100,
       edgeThreshold: 30, // Customizing threshold as per recommendation
@@ -172,7 +208,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
             this.renderer.addClass(this.menuElement, 'dragging');
           }
         } else {
-          this.menuTransition = 'transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)';
+          this.menuTransition = 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1)';
           if (this.menuElement) {
             this.renderer.removeClass(this.menuElement, 'dragging');
           }
@@ -191,7 +227,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       }
     };
 
-    this.gestureHandler = new MobileMenuGestures(config, this.ngZone);
+    this.gestureHandler = new MobileMenuGestures(this.gestureConfig, this.ngZone);
 
     this.ngZone.runOutsideAngular(() => {
       document.addEventListener('pointerdown', this.gestureHandler!.handleWindowPointerDown);
@@ -220,6 +256,11 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       this.gestureHandler.destroy();
     }
 
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    }
+
     if (this.searchDebounceTimer) {
       clearTimeout(this.searchDebounceTimer);
       this.searchDebounceTimer = null;
@@ -236,7 +277,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private toggleBackgroundInert(isInert: boolean) {
     if (!this.isBrowser) return;
 
-    const targets = Array.from(document.querySelectorAll('main, jsl-footer'));
+    const targets = Array.from(document.querySelectorAll('main, jsl-footer, .header__nav, jsl-top-bar'));
     for (const target of targets) {
       if (isInert) {
         target.setAttribute('inert', '');
@@ -252,7 +293,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     if (this.isAnimating && this.drawerState === 'closing') return;
     this.isAnimating = true;
     this.drawerState = 'opening';
-    this.menuTransition = 'transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)';
+    this.menuTransition = 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1)';
     this.menuTranslateX = 0;
     this.menuScaleX = 1;
 
@@ -273,6 +314,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.handleTransitionEnd(() => {
       this.isAnimating = false;
       this.drawerState = 'open';
+      this.a11y.refreshFocusableElements();
       this.a11y.setInitialFocus();
       this.cdRef.markForCheck();
     });
@@ -283,7 +325,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     if (this.isAnimating && this.drawerState === 'opening') return;
     this.isAnimating = true;
     this.drawerState = 'closing';
-    this.menuTransition = 'transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)';
+    this.menuTransition = 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1)';
     this.menuTranslateX = this.directionService.isRtl() ? this.menuWidth : -this.menuWidth;
     this.menuScaleX = 1;
 
@@ -332,7 +374,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
           callback();
         }
       });
-    }, 400);
+    }, 500);
   }
 
   closeMobileMenu() {
@@ -384,6 +426,11 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     const hadQuery = !!this.searchQuery;
     this.searchQuery = query;
     this.updateSearchResultsCount();
+
+    // After search results change, we need to refresh the focus trap cache
+    setTimeout(() => {
+      this.a11y.refreshFocusableElements();
+    }, 100);
 
     if (this.searchQuery) {
       if (!hadQuery) {
@@ -477,6 +524,9 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onOverlayTouch(event: TouchEvent) {
+    if (this.isAnimating) {
+      this.stopTransition();
+    }
     if (this.isMobileMenuOpen && (!this.gestureHandler || !this.gestureHandler.getIsDragging())) {
       event.preventDefault();
       event.stopPropagation();
@@ -484,7 +534,20 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  private stopTransition() {
+    this.isAnimating = false;
+    this.menuTransition = 'none';
+    if (this.menuElement) {
+      // Forcing reflow to stop transition immediately
+      void this.menuElement.offsetHeight;
+    }
+    this.cdRef.markForCheck();
+  }
+
   onMenuPointerDown(event: PointerEvent) {
+    if (this.isAnimating) {
+      this.stopTransition();
+    }
     if (this.gestureHandler) {
       this.gestureHandler.onMenuPointerDown(event);
     }
