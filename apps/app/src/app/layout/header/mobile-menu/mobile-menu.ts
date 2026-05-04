@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   Inject,
+  ViewEncapsulation,
   PLATFORM_ID,
   OnInit,
   OnDestroy,
@@ -49,6 +50,7 @@ import { MobileMenuAccessibility } from './mobile-menu-accessibility';
   templateUrl: './mobile-menu.html',
   styleUrl: './mobile-menu.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private directionService = inject(DirectionService);

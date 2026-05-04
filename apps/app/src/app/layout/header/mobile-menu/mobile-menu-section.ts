@@ -60,14 +60,6 @@ import { MobileMenuLink } from './mobile-menu.constants';
       </div>
     </div>
   `,
-  styles: [`
-    .external-icon-inline {
-      width: 14px;
-      height: 14px;
-      margin-inline-start: auto;
-      opacity: 0.6;
-    }
-  `]
 })
 export class MobileMenuSection {
   @Input() sectionId = '';
