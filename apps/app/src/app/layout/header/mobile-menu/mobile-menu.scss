@@ -26,13 +26,14 @@
   opacity: 0;
   transition: opacity 0.3s ease;
   touch-action: none;
-  pointer-events: auto;
+  pointer-events: none;
   cursor: pointer;
   display: none;
 
   &.visible {
     display: block;
     opacity: 1;
+    pointer-events: auto;
   }
 
   @media (prefers-reduced-motion: reduce), (update: slow) {
@@ -229,6 +230,7 @@
     color: #D0D0D0;
     margin-bottom: 12px;
     opacity: 1;
+    pointer-events: auto;
   }
 
   .quick-access-grid {
@@ -375,6 +377,7 @@
     .accordion-content {
       max-height: 800px;
       opacity: 1;
+    pointer-events: auto;
       padding-bottom: 12px;
     }
   }
@@ -451,6 +454,7 @@
 
         lucide-icon {
           opacity: 1;
+    pointer-events: auto;
           color: var(--primary);
         }
       }
