@@ -1,6 +1,8 @@
 import { NgZone } from '@angular/core';
 
 export interface MobileMenuGestureConfig {
+  /** Percentage cap for elastic X scale (e.g. 8 => scaleX <= 1.08). */
+  maxStretchPercent?: number;
   menuWidth: number;
   isRtl: () => boolean;
   isOpen: () => boolean;
@@ -64,11 +66,21 @@ export class MobileMenuGestures {
     return progress;
   }
 
+  private readonly DEFAULT_MAX_STRETCH_PERCENT = 8;
+  private readonly ELASTIC_OVERSHOOT_REFERENCE_RATIO = 0.25;
+
   private calculateElasticScale(overshoot: number): number {
-    // scaleX = 1 + f(exceso), where f is a damping function: overshoot^(0.5) * factor
-    const factor = 0.01;
-    const scale = 1 + Math.pow(overshoot, 0.5) * factor;
-    return Math.min(scale, 1.12); // Cap at 1.12 for subtler stretch
+    const safeOvershoot = Math.max(0, overshoot);
+    if (safeOvershoot === 0) return 1;
+
+    const maxStretchPercent = Math.max(0, this.config.maxStretchPercent ?? this.DEFAULT_MAX_STRETCH_PERCENT);
+    const maxScale = 1 + maxStretchPercent / 100;
+
+    const referenceOvershootPx = Math.max(1, this.config.menuWidth * this.ELASTIC_OVERSHOOT_REFERENCE_RATIO);
+    const normalizedOvershoot = Math.min(safeOvershoot / referenceOvershootPx, 1);
+
+    const damped = Math.sqrt(normalizedOvershoot);
+    return 1 + damped * (maxScale - 1);
   }
 
   private getElasticTransform(
