@@ -145,7 +145,10 @@ export class MobileMenuGestures {
   }
 
   public onMenuPointerDown(event: PointerEvent) {
-    if (!this.config.isOpen() || this.config.isAnimating() || this.activePointerId !== null) return;
+    if (this.activePointerId !== null) return;
+
+    // We allow interaction if the menu is open OR if it's currently animating (interruption)
+    if (!this.config.isOpen() && !this.config.isAnimating()) return;
 
     event.stopPropagation();
     this.activePointerId = event.pointerId;
@@ -273,6 +276,7 @@ export class MobileMenuGestures {
   }
 
   public handleWindowPointerDown = (event: PointerEvent) => {
+    // Only allow edge swipe if the menu is fully closed AND not currently animating
     if (this.config.isOpen() || this.isDragging || this.config.isAnimating() || this.activePointerId !== null) return;
 
     const startX = event.clientX;
