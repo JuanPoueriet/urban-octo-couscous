@@ -142,6 +142,36 @@ describe('MobileMenu', () => {
     expect(document.activeElement).not.toBeNull();
   });
 
+
+
+  it('should clear debounce timer on destroy', () => {
+    component.onSearchChange('Serv');
+    fixture.destroy();
+    expect().nothing();
+  });
+
+  it('should set background inert when menu opens and remove when closes', () => {
+    const main = document.createElement('main');
+    const footer = document.createElement('jsl-footer');
+    document.body.appendChild(main);
+    document.body.appendChild(footer);
+
+    menuServiceMock.isMobileMenuOpen.set(true);
+    fixture.detectChanges();
+
+    expect(main.hasAttribute('inert')).toBeTrue();
+    expect(footer.hasAttribute('inert')).toBeTrue();
+
+    menuServiceMock.isMobileMenuOpen.set(false);
+    fixture.detectChanges();
+
+    expect(main.hasAttribute('inert')).toBeFalse();
+    expect(footer.hasAttribute('inert')).toBeFalse();
+
+    main.remove();
+    footer.remove();
+  });
+
   it('should highlight active links', () => {
     menuServiceMock.isMobileMenuOpen.set(true);
     component.onSearchChange(''); // Reset search

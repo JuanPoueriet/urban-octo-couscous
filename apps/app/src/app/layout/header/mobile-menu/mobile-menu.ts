@@ -82,6 +82,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   public menuSections: MobileMenuSectionData[] = [];
   public expandedSections = new Set<string>();
+  private translationCache = new Map<string, string>();
 
   get isMobileMenuOpen() {
     return this.menuService.isMobileMenuOpen();
@@ -112,6 +113,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   private initMenuSections() {
     this.menuSections = getMobileMenuSections(this.currentLang);
+    this.translationCache.clear();
   }
 
   ngOnInit() {
@@ -167,11 +169,9 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       },
       onOpen: () => {
         this.menuService.open();
-        this.openDrawer();
       },
       onClose: () => {
         this.menuService.close();
-        this.closeDrawer();
       },
       onToggleHaptic: () => this.triggerHapticFeedback()
     };
@@ -207,11 +207,33 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       this.gestureHandler.destroy();
     }
 
+    if (this.searchDebounceTimer) {
+      clearTimeout(this.searchDebounceTimer);
+      this.searchDebounceTimer = null;
+    }
+
     if (this.isMobileMenuOpen) {
-       document.body.classList.remove('no-scroll');
+      document.body.classList.remove('no-scroll');
+      this.toggleBackgroundInert(false);
     }
   }
 
+
+
+  private toggleBackgroundInert(isInert: boolean) {
+    if (!this.isBrowser) return;
+
+    const targets = Array.from(document.querySelectorAll('main, jsl-footer'));
+    for (const target of targets) {
+      if (isInert) {
+        target.setAttribute('inert', '');
+        target.setAttribute('aria-hidden', 'true');
+      } else {
+        target.removeAttribute('inert');
+        target.removeAttribute('aria-hidden');
+      }
+    }
+  }
   private openDrawer() {
     if (this.isAnimating) return;
     this.isAnimating = true;
@@ -221,6 +243,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     if (this.isBrowser) {
       document.body.classList.add('no-scroll');
+      this.toggleBackgroundInert(true);
       this.a11y.saveFocus();
       this.triggerHapticFeedback();
     }
@@ -248,6 +271,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     if (this.isBrowser) {
       document.body.classList.remove('no-scroll');
+      this.toggleBackgroundInert(false);
       this.triggerHapticFeedback();
       this.a11y.restoreFocus();
     }
@@ -296,16 +320,24 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.menuService.close();
   }
 
+  private getTranslatedLowercase(key: string): string {
+    const cached = this.translationCache.get(key);
+    if (cached) return cached;
+
+    const translated = this.translate.instant(key).toLowerCase();
+    this.translationCache.set(key, translated);
+    return translated;
+  }
+
   shouldShowLink = (linkTextKey: string): boolean => {
     if (!this.searchQuery) return true;
-    const translatedText = this.translate.instant(linkTextKey).toLowerCase();
-    return translatedText.includes(this.searchQuery.toLowerCase());
+    return this.getTranslatedLowercase(linkTextKey).includes(this.searchQuery.toLowerCase());
   }
 
   shouldShowSection(sectionKey: string, links: MobileMenuLink[]): boolean {
     if (!this.searchQuery) return true;
 
-    const sectionTitle = this.translate.instant(sectionKey).toLowerCase();
+    const sectionTitle = this.getTranslatedLowercase(sectionKey);
     if (sectionTitle.includes(this.searchQuery.toLowerCase())) {
       return true;
     }
