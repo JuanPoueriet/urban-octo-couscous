@@ -9,6 +9,7 @@ describe('MobileMenuElastic', () => {
   beforeEach(() => {
     mockConfig = {
       menuWidth: 320,
+      elasticResistance: 50,
       isRtl: () => false,
       isOpen: () => true,
       isAnimating: () => false,
@@ -46,12 +47,13 @@ describe('MobileMenuElastic', () => {
     // Overshoot = 50.
     // menuWidth=320 => referenceOvershoot=80.
     // normalized=50/80=0.625
-    // resistance exponent=2 and sqrt damping => effective damping=0.625
+    // elasticResistance=50 => exponent=3
+    // damped=1-(1-0.625)^3=0.9473
     // maxStretchPercent=8 => maxScale=1.08
-    // scaleX=1 + 0.625*(0.08)=1.05
+    // scaleX=1 + 0.9473*(0.08)=1.076
     const args = (mockConfig.onUpdateTranslate as jasmine.Spy).calls.mostRecent().args;
     expect(args[0]).toBe(0);
-    expect(args[2]).toBeCloseTo(1.05, 2);
+    expect(args[2]).toBeCloseTo(1.076, 2);
     expect(args[3]).toBe('left');
   });
 
@@ -115,10 +117,10 @@ describe('MobileMenuElastic', () => {
 
     // diffX = 250 - 300 = -50. In RTL, min = 0.
     // Overshoot = 0 - (-50) = 50.
-    // scaleX = 1.05 (same damping with overshoot=50)
+    // scaleX = 1.076 (same damping with overshoot=50)
     const args = (mockConfig.onUpdateTranslate as jasmine.Spy).calls.mostRecent().args;
     expect(args[0]).toBe(0);
-    expect(args[2]).toBeCloseTo(1.05, 2);
+    expect(args[2]).toBeCloseTo(1.076, 2);
     expect(args[3]).toBe('right');
   });
 
