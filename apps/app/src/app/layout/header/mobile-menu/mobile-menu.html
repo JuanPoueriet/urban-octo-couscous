@@ -10,7 +10,8 @@
 <div
   class="header__nav-links-mobile"
   [class.open]="isMobileMenuOpen"
-  [style.transform]="'translateX(' + menuTranslateX + 'px)'"
+  [style.transform]="'translateX(' + menuTranslateX + 'px) scaleX(' + menuScaleX + ')'"
+  [style.transform-origin]="menuTransformOrigin"
   [style.transition]="menuTransition"
   (touchstart)="onMenuTouchStart($event)"
   (touchmove)="onMenuTouchMove($event)"
