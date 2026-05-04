@@ -181,7 +181,6 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     this.overlayElement.style.opacity = opacity.toFixed(3);
     this.overlayElement.style.backdropFilter = `blur(${blur.toFixed(2)}px)`;
-    this.overlayElement.style.webkitBackdropFilter = `blur(${blur.toFixed(2)}px)`;
   }
 
   private cleanup() {
@@ -236,7 +235,6 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       this.overlayElement.classList.remove('visible');
       this.overlayElement.style.opacity = '';
       this.overlayElement.style.backdropFilter = '';
-      this.overlayElement.style.webkitBackdropFilter = '';
     }
 
     this.cdRef.markForCheck();
