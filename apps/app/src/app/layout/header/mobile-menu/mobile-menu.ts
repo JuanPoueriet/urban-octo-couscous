@@ -64,6 +64,8 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   // Drawer state
   public menuTranslateX = -320;
+  public menuScaleX = 1;
+  public menuTransformOrigin = 'left';
   public menuTransition = 'transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)';
   private menuWidth = 320;
   private isAnimating = false;
@@ -144,8 +146,10 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       isRtl: () => this.directionService.isRtl(),
       isOpen: () => this.isMobileMenuOpen,
       isAnimating: () => this.isAnimating,
-      onUpdateTranslate: (translateX, progress) => {
+      onUpdateTranslate: (translateX, progress, scaleX, transformOrigin) => {
         this.menuTranslateX = translateX;
+        this.menuScaleX = scaleX ?? 1;
+        this.menuTransformOrigin = transformOrigin ?? (this.directionService.isRtl() ? 'right' : 'left');
         this.menuTransition = 'none';
         if (progress !== null) {
           this.updateOverlayVisual(progress);
@@ -204,6 +208,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.isAnimating = true;
     this.menuTransition = 'transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)';
     this.menuTranslateX = 0;
+    this.menuScaleX = 1;
 
     if (this.isBrowser) {
       document.body.classList.add('no-scroll');
@@ -230,6 +235,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.isAnimating = true;
     this.menuTransition = 'transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)';
     this.menuTranslateX = this.directionService.isRtl() ? this.menuWidth : -this.menuWidth;
+    this.menuScaleX = 1;
 
     if (this.isBrowser) {
       document.body.classList.remove('no-scroll');
