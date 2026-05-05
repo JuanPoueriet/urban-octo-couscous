@@ -107,6 +107,8 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   // ── Search / debounce ────────────────────────────────────────────────────────
   private searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;  // P11 — typed
+  // R3 — captured so it can be cancelled in cleanup() if the component is destroyed
+  private a11yRefreshTimer:    ReturnType<typeof setTimeout> | null = null;
 
   // ── Gesture handler ─────────────────────────────────────────────────────────
   private gestureHandler: MobileMenuGestures | null = null;
@@ -251,7 +253,8 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
           if (this.menuElement) this.renderer.addClass(this.menuElement, 'dragging');
         } else {
           // Drag released: re-enable transition for the snap animation
-          this.menuTransition = DRAWER_TRANSITION;
+          // R5 — respect prefers-reduced-motion when snapping after gesture
+          this.menuTransition = this.getDrawerTransition();
           if (this.menuElement) this.renderer.removeClass(this.menuElement, 'dragging');
         }
         this.cdRef.markForCheck();
@@ -278,7 +281,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     this.isAnimating  = true;
     this.drawerState  = 'opening';
-    this.menuTransition = DRAWER_TRANSITION;
+    this.menuTransition = this.getDrawerTransition(); // R5 — respects prefers-reduced-motion
     this.menuTranslateX = 0;
     this.menuScaleX     = 1;
 
@@ -315,7 +318,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     this.isAnimating  = true;
     this.drawerState  = 'closing';
-    this.menuTransition = DRAWER_TRANSITION;
+    this.menuTransition = this.getDrawerTransition(); // R5 — respects prefers-reduced-motion
     this.menuTranslateX = this.directionService.isRtl() ? this.menuWidth : -this.menuWidth;
     this.menuScaleX     = 1;
 
@@ -365,18 +368,26 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    const unlisten = this.renderer.listen(
-      this.menuElement,
-      'transitionend',
-      (event: TransitionEvent) => {
-        if (event.propertyName !== 'transform') return;
-        this.clearTransitionListeners();
-        this.ngZone.run(() => callback());
-      }
-    );
-    this.transitionEndUnlisten = unlisten;
+    // R5 — when reduced motion is preferred, the CSS transition is suppressed
+    // by the @media rule and transitionend will never fire. Skip the listener
+    // and collapse the fallback to 0 ms so the state machine resolves immediately.
+    const reducedMotion = this.prefersReducedMotion();
 
-    // Fallback: if transitionend never fires (e.g. prefers-reduced-motion suppresses it)
+    if (!reducedMotion) {
+      const unlisten = this.renderer.listen(
+        this.menuElement,
+        'transitionend',
+        (event: TransitionEvent) => {
+          if (event.propertyName !== 'transform') return;
+          this.clearTransitionListeners();
+          this.ngZone.run(() => callback());
+        }
+      );
+      this.transitionEndUnlisten = unlisten;
+    }
+
+    // Fallback: resolves in 0 ms for reduced motion (drawer snaps instantly),
+    // or after the full transition duration as a safety net for normal motion.
     this.transitionFallbackTimer = setTimeout(() => {
       this.transitionFallbackTimer = null;
       if (this.transitionEndUnlisten) {
@@ -386,7 +397,17 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       this.ngZone.run(() => {
         if (this.isAnimating) callback();
       });
-    }, DRAWER_TRANSITION_DURATION_MS + 100);
+    }, reducedMotion ? 0 : DRAWER_TRANSITION_DURATION_MS + 100);
+  }
+
+  // R5 — single query so callers do not embed matchMedia strings directly
+  private prefersReducedMotion(): boolean {
+    return this.isBrowser && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  // R5 — returns 'none' for prefers-reduced-motion users; DRAWER_TRANSITION otherwise
+  private getDrawerTransition(): string {
+    return this.prefersReducedMotion() ? 'none' : DRAWER_TRANSITION;
   }
 
   // ── Overlay helpers ─────────────────────────────────────────────────────────
@@ -448,6 +469,10 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private stopTransition(): void {
+    // R1 — cancel the pending transitionend listener + fallback timer before
+    // freezing the animation, so the stale callback cannot fire after a gesture
+    // interrupts the animation mid-flight.
+    this.clearTransitionListeners();
     this.isAnimating    = false;
     this.menuTransition = 'none';
     if (this.menuElement) void this.menuElement.offsetHeight; // force reflow
@@ -512,7 +537,13 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.searchQuery = query;
     this.updateSearchResultsCount();
 
-    setTimeout(() => this.a11y.refreshFocusableElements(), 100);
+    // R3 — captured timer so it can be cancelled if the component is destroyed
+    //      before the 150 ms elapse, preventing access to a destroyed DOM.
+    if (this.a11yRefreshTimer !== null) clearTimeout(this.a11yRefreshTimer);
+    this.a11yRefreshTimer = setTimeout(() => {
+      this.a11yRefreshTimer = null;
+      this.a11y.refreshFocusableElements();
+    }, 150);
 
     if (this.searchQuery) {
       if (!hadQuery) {
@@ -577,6 +608,9 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   // ── Navigation ───────────────────────────────────────────────────────────────
 
   onMenuRouteNavigate(route: string[], source: string): void {
+    // R6 — close first so the drawer starts its exit animation before the router
+    // resolves; prevents a visible flicker when navigating to a cached route.
+    this.closeMobileMenu();
     this.router.navigate(route).then((ok) => {
       if (!ok) {
         this.analyticsService.trackEvent('mobile_menu_navigation_failed', { source, route: route.join('/') });
@@ -584,7 +618,6 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     }).catch(() => {
       this.analyticsService.trackEvent('mobile_menu_navigation_failed', { source, route: route.join('/') });
     });
-    this.closeMobileMenu();
   }
 
   // ── Haptic feedback ─────────────────────────────────────────────────────────
@@ -607,6 +640,12 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     if (this.searchDebounceTimer !== null) {
       clearTimeout(this.searchDebounceTimer);
       this.searchDebounceTimer = null;
+    }
+
+    // R3 — cancel the a11y refresh timer to avoid accessing a destroyed component
+    if (this.a11yRefreshTimer !== null) {
+      clearTimeout(this.a11yRefreshTimer);
+      this.a11yRefreshTimer = null;
     }
 
     if (this.isMobileMenuOpen) {

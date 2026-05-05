@@ -330,9 +330,11 @@ export class MobileMenuGestures {
     this.lastDragPosition  = this.initialTranslateX;
 
     this.ngZone.runOutsideAngular(() => {
-      document.addEventListener('pointermove', this.handleEdgeSwipeMove);
-      document.addEventListener('pointerup',   this.handleEdgeSwipeEnd);
-      document.addEventListener('pointercancel', this.handleEdgeSwipeEnd);
+      document.addEventListener('pointermove',   this.handleEdgeSwipeMove);
+      document.addEventListener('pointerup',     this.handleEdgeSwipeEnd);
+      // R2 — use a dedicated cancel handler that always reverts to closed instead
+      // of applying velocity/progress logic (mirrors P12 fix for drawer drag).
+      document.addEventListener('pointercancel', this.handleEdgeSwipeCancel);
     });
   };
 
@@ -393,7 +395,7 @@ export class MobileMenuGestures {
     this.ngZone.runOutsideAngular(() => {
       document.removeEventListener('pointermove',   this.handleEdgeSwipeMove);
       document.removeEventListener('pointerup',     this.handleEdgeSwipeEnd);
-      document.removeEventListener('pointercancel', this.handleEdgeSwipeEnd);
+      document.removeEventListener('pointercancel', this.handleEdgeSwipeCancel);
     });
 
     if (!this.isDragging || !this.isHorizontalGesture) {
@@ -432,7 +434,7 @@ export class MobileMenuGestures {
     this.ngZone.runOutsideAngular(() => {
       document.removeEventListener('pointermove',   this.handleEdgeSwipeMove);
       document.removeEventListener('pointerup',     this.handleEdgeSwipeEnd);
-      document.removeEventListener('pointercancel', this.handleEdgeSwipeEnd);
+      document.removeEventListener('pointercancel', this.handleEdgeSwipeCancel);
     });
 
     const menuWidth = this.config.menuWidth;
@@ -441,6 +443,26 @@ export class MobileMenuGestures {
     this.config.onUpdateTranslate(closedPos, null);
     this.trackMetric('gesture_cancel', { source: 'edge_lock' });
   }
+
+  // R2 — on system cancel (incoming call, app switch, lost pointer) during an
+  // edge swipe, always revert to the stable closed position. Never apply
+  // velocity/progress logic on an involuntary interruption.
+  private handleEdgeSwipeCancel = (event: PointerEvent): void => {
+    if (event.pointerId !== this.activePointerId) return;
+
+    this.ngZone.runOutsideAngular(() => {
+      document.removeEventListener('pointermove',   this.handleEdgeSwipeMove);
+      document.removeEventListener('pointerup',     this.handleEdgeSwipeEnd);
+      document.removeEventListener('pointercancel', this.handleEdgeSwipeCancel);
+    });
+
+    const menuWidth = this.config.menuWidth;
+    const closedPos = this.config.isRtl() ? menuWidth : -menuWidth;
+    this.resetDragState();
+    this.config.onUpdateTranslate(closedPos, null);
+    this.config.onClose();
+    this.trackMetric('gesture_cancel', { source: 'edge_system_interrupt' });
+  };
 
   // ── Internal drag listener management ───────────────────────────────────────
 
@@ -477,7 +499,8 @@ export class MobileMenuGestures {
       document.removeEventListener('pointerdown',   this.handleWindowPointerDown);
       document.removeEventListener('pointermove',   this.handleEdgeSwipeMove);
       document.removeEventListener('pointerup',     this.handleEdgeSwipeEnd);
-      document.removeEventListener('pointercancel', this.handleEdgeSwipeEnd);
+      // R2 — cancel and system-interrupt handlers are separate references
+      document.removeEventListener('pointercancel', this.handleEdgeSwipeCancel);
     });
   }
 }

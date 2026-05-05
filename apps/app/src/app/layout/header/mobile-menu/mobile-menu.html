@@ -1,8 +1,11 @@
 <div class="mobile-menu-container">
   <!-- Overlay para menú móvil -->
+  <!-- R4 — .visible is managed exclusively via imperative classList calls in
+            openDrawer()/closeDrawer(), which run with precise timing relative to
+            the animation. The Angular binding [class.visible]="isMobileMenuOpen"
+            was removed to eliminate the dual source of truth. -->
   <div
     class="mobile-menu-overlay"
-    [class.visible]="isMobileMenuOpen"
     (click)="closeMobileMenu()"
     (touchstart)="onOverlayTouch($event)"
   ></div>
