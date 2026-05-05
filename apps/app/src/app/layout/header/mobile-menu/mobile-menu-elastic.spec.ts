@@ -13,6 +13,7 @@ describe('MobileMenuElastic', () => {
       isRtl: () => false,
       isOpen: () => true,
       isAnimating: () => false,
+      getCurrentTranslateX: () => 0,
       onUpdateTranslate: jasmine.createSpy('onUpdateTranslate'),
       onOpen: jasmine.createSpy('onOpen'),
       onClose: jasmine.createSpy('onClose'),
@@ -140,6 +141,7 @@ describe('MobileMenuElastic', () => {
 
   it('should open with edge swipe in LTR', () => {
     mockConfig.isOpen = () => false;
+    gestures.setEdgeSwipeEnabled(true);
     const pointerId = 1;
     gestures.handleWindowPointerDown({ pointerId, clientX: 5, clientY: 20 } as any);
 
@@ -167,6 +169,7 @@ describe('MobileMenuElastic', () => {
 
   it('should cancel edge swipe on vertical gesture', () => {
     mockConfig.isOpen = () => false;
+    gestures.setEdgeSwipeEnabled(true);
     const pointerId = 1;
     gestures.handleWindowPointerDown({ pointerId, clientX: 5, clientY: 20 } as any);
     (gestures as any).handleEdgeSwipeMove({
@@ -187,6 +190,7 @@ describe('MobileMenuElastic', () => {
   it('should open with edge swipe in RTL', () => {
     mockConfig.isRtl = () => true;
     mockConfig.isOpen = () => false;
+    gestures.setEdgeSwipeEnabled(true);
     spyOnProperty(window, 'innerWidth', 'get').and.returnValue(400);
 
     const pointerId = 1;
