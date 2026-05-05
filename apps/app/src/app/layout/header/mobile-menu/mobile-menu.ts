@@ -29,6 +29,7 @@ import { MenuService, MenuCloseReason } from '@core/services/menu.service';
 import { ScrollLockService } from '@core/services/scroll-lock.service';
 import { OverlayManagerService } from '@core/services/overlay-manager.service';
 import { AnalyticsService } from '@core/services/analytics.service';
+import { GestureBusService } from '@core/services/gesture-bus.service';
 import { MobileMenuGestures, MobileMenuGestureConfig } from './mobile-menu-gestures';
 import { MobileMenuQuickAccess } from './mobile-menu-quick-access';
 import { MobileMenuSearch } from './mobile-menu-search';
@@ -80,6 +81,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private overlayManagerService = inject(OverlayManagerService);
   private breakpointService = inject(BreakpointService);
   private analyticsService = inject(AnalyticsService);
+  private gestureBus       = inject(GestureBusService);
   private translate        = inject(TranslateService);
   private el               = inject(ElementRef);
   private renderer         = inject(Renderer2);
@@ -316,11 +318,12 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
         // Defensive path: if state is desynced and signal is already closed, still restore visual close.
         this.closeDrawer();
       },
+      onStopTransition: () => this.stopTransition(),
       onToggleHaptic: () => this.triggerThrottledHaptic(),
       onTrackMetric:  (metric, data) => this.analyticsService.trackEvent(`mobile_menu_${metric}`, data),
     };
 
-    this.gestureHandler = new MobileMenuGestures(this.gestureConfig, this.ngZone);
+    this.gestureHandler = new MobileMenuGestures(this.gestureConfig, this.ngZone, this.gestureBus);
 
     // Edge-swipe is enabled only when appropriate (mobile + menu closed)
     this.gestureHandler.setEdgeSwipeEnabled(
@@ -502,25 +505,6 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   // ── Pointer event delegation ────────────────────────────────────────────────
 
-  onMenuPointerDown(event: PointerEvent): void {
-    if (this.drawerState === DrawerState.OPENING || this.drawerState === DrawerState.CLOSING) {
-      this.stopTransition();
-    }
-    this.gestureHandler?.onMenuPointerDown(event);
-  }
-
-  onMenuPointerMove(event: PointerEvent): void {
-    this.gestureHandler?.onMenuPointerMove(event);
-  }
-
-  onMenuPointerEnd(event: PointerEvent): void {
-    this.gestureHandler?.onMenuPointerEnd(event);
-  }
-
-  onMenuPointerCancel(event: PointerEvent): void {
-    this.gestureHandler?.onMenuPointerCancel(event);
-  }
-
   private stopTransition(): void {
     // R1 — cancel the pending transitionend listener + fallback timer before
     // freezing the animation, so the stale callback cannot fire after a gesture
@@ -530,35 +514,6 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.cdRef.markForCheck();
   }
 
-  // ── Overlay pointer handler ──────────────────────────────────────────────────
-  private overlayDownX = 0;
-  private overlayDownY = 0;
-
-  /**
-   * Consolidates overlay interactions into a single PointerEvent flow (Problem 3).
-   * Prevents dual triggering between touch and mouse, and ensures robust closure.
-   */
-  onOverlayPointerDown(event: PointerEvent): void {
-    if (this.drawerState === DrawerState.OPENING || this.drawerState === DrawerState.CLOSING) {
-      this.stopTransition();
-    }
-    this.overlayDownX = event.clientX;
-    this.overlayDownY = event.clientY;
-  }
-
-  onOverlayPointerUp(event: PointerEvent): void {
-    if (this.drawerState !== DrawerState.OPEN) return;
-
-    const diffX = Math.abs(event.clientX - this.overlayDownX);
-    const diffY = Math.abs(event.clientY - this.overlayDownY);
-
-    // S5 — Overlay closure threshold
-    if (diffX < 10 && diffY < 10) {
-      event.preventDefault();
-      event.stopPropagation();
-      this.closeMobileMenu('overlay');
-    }
-  }
 
   // ── Keyboard events ─────────────────────────────────────────────────────────
 
@@ -638,15 +593,34 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   // ── Haptic feedback ─────────────────────────────────────────────────────────
 
   private triggerThrottledHaptic(): void {
-    if (!this.isBrowser || !navigator.vibrate) return;
+    if (!this.isBrowser) return;
 
     const now = Date.now();
     if (now - this.lastHapticTime < this.HAPTIC_COOLDOWN_MS) return;
-
-    if (navigator.userActivation && !navigator.userActivation.isActive) return;
-
-    navigator.vibrate(5);
     this.lastHapticTime = now;
+
+    // S6 — Multimodal feedback: Try haptic first, fallback to visual feedback
+    let hapticSuccess = false;
+    if (navigator.vibrate && (!navigator.userActivation || navigator.userActivation.isActive)) {
+      hapticSuccess = navigator.vibrate(5);
+    }
+
+    if (!hapticSuccess) {
+      this.triggerVisualFeedback();
+    }
+  }
+
+  private triggerVisualFeedback(): void {
+    if (!this.menuElement) return;
+
+    // S6 — Add a subtle pulse/bounce to the handle/drawer as feedback
+    this.renderer.setStyle(this.menuElement, '--mm-feedback-translate', `${this.menuTranslateX}px`);
+    this.renderer.addClass(this.menuElement, 'feedback-pulse');
+    setTimeout(() => {
+      if (this.menuElement) {
+        this.renderer.removeClass(this.menuElement, 'feedback-pulse');
+      }
+    }, 300);
   }
 
   // ── Cleanup ─────────────────────────────────────────────────────────────────

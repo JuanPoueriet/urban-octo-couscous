@@ -4,6 +4,7 @@ export class MobileMenuAccessibility {
   private lastFocusedElement: HTMLElement | null = null;
   private focusableElements: HTMLElement[] = [];
   private observer: MutationObserver | null = null;
+  private refreshTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     private el: ElementRef,
@@ -56,9 +57,22 @@ export class MobileMenuAccessibility {
     }
   }
 
-  public refreshFocusableElements() {
+  public refreshFocusableElements(immediate = false) {
     if (!this.isBrowser) return;
 
+    if (!immediate) {
+      if (this.refreshTimer) clearTimeout(this.refreshTimer);
+      this.refreshTimer = setTimeout(() => {
+        this.executeRefresh();
+        this.refreshTimer = null;
+      }, 32); // ~2 frames
+      return;
+    }
+
+    this.executeRefresh();
+  }
+
+  private executeRefresh() {
     const focusableSelectors =
       'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
 
@@ -129,19 +143,36 @@ export class MobileMenuAccessibility {
   public startObserving() {
     if (!this.isBrowser || this.observer) return;
 
-    this.observer = new MutationObserver(() => {
-      this.refreshFocusableElements();
+    this.observer = new MutationObserver((mutations) => {
+      // S4 — Optimization: Only refresh if mutations are likely to affect focusability.
+      // This is a second layer of filtering beyond attributeFilter.
+      const hasRelevantMutation = mutations.some(m =>
+        m.type === 'childList' ||
+        (m.type === 'attributes' && ['disabled', 'hidden', 'inert'].includes(m.attributeName!)) ||
+        (m.type === 'attributes' && (m.attributeName === 'class' || m.attributeName === 'style'))
+      );
+
+      if (hasRelevantMutation) {
+        this.refreshFocusableElements();
+      }
     });
 
-    this.observer.observe(this.el.nativeElement, {
+    // S4 — Limiting observation to the main content area if possible, or being very specific with filters.
+    const container = this.el.nativeElement.querySelector('.mobile-menu-content') || this.el.nativeElement;
+
+    this.observer.observe(container, {
       childList: true,
       subtree: true,
       attributes: true,
-      attributeFilter: ['style', 'class', 'disabled', 'hidden', 'inert']
+      attributeFilter: ['disabled', 'hidden', 'inert', 'class', 'style']
     });
   }
 
   public stopObserving() {
+    if (this.refreshTimer) {
+      clearTimeout(this.refreshTimer);
+      this.refreshTimer = null;
+    }
     if (this.observer) {
       this.observer.disconnect();
       this.observer = null;
