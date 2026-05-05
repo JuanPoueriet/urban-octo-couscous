@@ -14,12 +14,11 @@
 // --- CAMBIO: Eliminado @use '../tech-stack/tech-stack.scss'; ---
 
 @mixin slide-peek-effect {
-  transition:
-    transform 0.4s ease,
-    opacity 0.4s ease;
+  // Use CSS transitions only for simple effects,
+  // Creative effects in JS handle their own transitions.
+  transition: opacity 0.4s ease;
 
   &:not(.swiper-slide-active) {
-    transform: scale(0.9);
     opacity: 0.6;
   }
 }
@@ -1498,7 +1497,7 @@ swiper-container {
   .project-slide,
   .insight-slide {
     transition: filter 220ms ease, opacity 220ms ease;
-    will-change: transform, opacity;
+    will-change: opacity;
     opacity: 1;
     filter: saturate(0.88);
   }

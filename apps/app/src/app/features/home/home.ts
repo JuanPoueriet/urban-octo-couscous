@@ -111,14 +111,14 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       limitProgress: 2,
       perspective: true,
       prev: {
-        translate: ['-68%', 0, -120],
-        scale: 0.82,
-        opacity: 0.42,
+        translate: ['-95%', '25%', -400],
+        scale: 0.85,
+        opacity: 0.4,
       },
       next: {
-        translate: ['70%', 0, -120],
-        scale: 0.82,
-        opacity: 0.42,
+        translate: ['95%', '25%', -400],
+        scale: 0.85,
+        opacity: 0.4,
       },
     },
     slidesPerView: 1.25,
@@ -126,14 +126,16 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     spaceBetween: 14,
     grabCursor: true,
     loop: false,
-    speed: 600,
+    speed: 900,
+    touchRatio: 0.85,
+    resistanceRatio: 0.7,
+    threshold: 10,
     freeMode: {
       enabled: true,
       momentum: true,
       sticky: true,
-      momentumRatio: 1.2,
-      momentumVelocityRatio: 1.0,
-      momentumBounce: true,
+      momentumRatio: 0.45,
+      momentumVelocityRatio: 0.4,
     },
     pagination: {
       clickable: true,
@@ -230,14 +232,14 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       limitProgress: 2,
       perspective: true,
       prev: {
-        translate: ['-64%', 0, -110],
-        scale: 0.84,
-        opacity: 0.45,
+        translate: ['-95%', '25%', -400],
+        scale: 0.85,
+        opacity: 0.4,
       },
       next: {
-        translate: ['66%', 0, -110],
-        scale: 0.84,
-        opacity: 0.45,
+        translate: ['95%', '25%', -400],
+        scale: 0.85,
+        opacity: 0.4,
       },
     },
     slidesPerView: 1.25,
@@ -245,13 +247,16 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     spaceBetween: 20,
     grabCursor: true,
     loop: false,
-    speed: 600,
+    speed: 900,
+    touchRatio: 0.85,
+    resistanceRatio: 0.7,
+    threshold: 10,
     freeMode: {
       enabled: true,
       momentum: true,
       sticky: true,
-      momentumRatio: 1.2,
-      momentumVelocityRatio: 1.0,
+      momentumRatio: 0.45,
+      momentumVelocityRatio: 0.4,
     },
     pagination: {
       clickable: true,
@@ -293,14 +298,14 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       limitProgress: 2,
       perspective: true,
       prev: {
-        translate: ['-64%', 0, -110],
-        scale: 0.84,
-        opacity: 0.45,
+        translate: ['-95%', '25%', -400],
+        scale: 0.85,
+        opacity: 0.4,
       },
       next: {
-        translate: ['66%', 0, -110],
-        scale: 0.84,
-        opacity: 0.45,
+        translate: ['95%', '25%', -400],
+        scale: 0.85,
+        opacity: 0.4,
       },
     },
     slidesPerView: 1.25,
@@ -308,13 +313,16 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     spaceBetween: 20,
     grabCursor: true,
     loop: false,
-    speed: 600,
+    speed: 900,
+    touchRatio: 0.85,
+    resistanceRatio: 0.7,
+    threshold: 10,
     freeMode: {
       enabled: true,
       momentum: true,
       sticky: true,
-      momentumRatio: 1.2,
-      momentumVelocityRatio: 1.0,
+      momentumRatio: 0.45,
+      momentumVelocityRatio: 0.4,
     },
     pagination: {
       clickable: true,
@@ -596,9 +604,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     const update = () => this.refreshSliderBoundaryState(swiperEl, canPrev, canNext);
     swiperEl.swiper?.on('slideChange', () => {
       update();
-      if (window.innerWidth < 768) {
-        triggerTick();
-      }
+      triggerTick();
     });
     swiperEl.swiper?.on('reachBeginning', update);
     swiperEl.swiper?.on('reachEnd', update);
