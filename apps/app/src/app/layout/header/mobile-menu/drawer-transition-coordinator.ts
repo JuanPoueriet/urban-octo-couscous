@@ -33,6 +33,8 @@ export class DrawerTransitionCoordinator {
   public transitionTo(newState: DrawerState, options: { immediate?: boolean; targetTranslateX?: number } = {}): void {
     if (this.currentState === newState && !options.immediate) return;
 
+    // Capture previousState BEFORE the assignment so switch cases can branch on it.
+    const previousState = this.currentState;
     this.currentState = newState;
     this.config.onStateChange(newState);
 
@@ -68,16 +70,31 @@ export class DrawerTransitionCoordinator {
         const overlayClose = this.config.getOverlayElement();
         if (overlayClose) {
           overlayClose.classList.remove('visible');
-          this.renderer.removeStyle(overlayClose, 'opacity');
-          this.renderer.removeStyle(overlayClose, 'backdrop-filter');
+          this.renderer.removeStyle(overlayClose, '--mm-overlay-progress');
         }
         this.handleTransitionEnd(DrawerState.CLOSED);
         break;
       }
 
-      case DrawerState.DRAGGING:
+      case DrawerState.DRAGGING: {
         this.clearTransitionListeners();
+
+        // When an opening gesture starts (CLOSED → DRAGGING via edge-swipe) or a
+        // close animation is interrupted (CLOSING → DRAGGING), reveal the overlay so
+        // the drag progress is visible in real time. The opacity is driven by the
+        // --mm-overlay-progress CSS variable updated on each pointermove.
+        const needsOverlay =
+          previousState === DrawerState.CLOSED ||
+          previousState === DrawerState.CLOSING;
+
+        if (needsOverlay) {
+          const overlayDrag = this.config.getOverlayElement();
+          if (overlayDrag) {
+            overlayDrag.classList.add('visible');
+          }
+        }
         break;
+      }
 
       case DrawerState.OPEN:
       case DrawerState.CLOSED:

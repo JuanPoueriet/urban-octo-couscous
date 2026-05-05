@@ -1458,7 +1458,7 @@ swiper-container {
   }
 }
 
-/* Slider UX refinements: offerings, projects, insights */
+/* ── Slider UX refinements: offerings, projects, insights ─────────────────── */
 .offerings-swiper,
 .projects-swiper,
 .insights-swiper {
@@ -1467,15 +1467,21 @@ swiper-container {
   --swiper-pagination-bullet-inactive-opacity: 0.45;
 }
 
+/*
+ * cubic-bezier(0.22, 1, 0.36, 1) — curva "spring-out":
+ * arranque rápido que desacelera con sobre-shoot suave al final.
+ * Coincide con la desaceleración del momentum freeMode (momentumRatio: 3.0)
+ * para que el snap visual y la física del slider sean coherentes.
+ */
 .offerings-swiper {
-  --swiper-wrapper-transition-timing-function: cubic-bezier(0.12, 0.84, 0.24, 1);
+  --swiper-wrapper-transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .offerings-swiper .swiper-wrapper,
 .projects-swiper .swiper-wrapper,
 .insights-swiper .swiper-wrapper {
   align-items: stretch;
-  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @media (min-width: 768px) {
@@ -1487,9 +1493,20 @@ swiper-container {
 }
 
 @media (max-width: 767px) {
-  .offerings-swiper {
+  /*
+   * overflow: visible — slides adyacentes asoman a los lados.
+   * perspective — habilita la profundidad real de los translate3d
+   * que applyCardStackTransforms aplica vía inline style.
+   */
+  .offerings-swiper,
+  .projects-swiper,
+  .insights-swiper {
     overflow: visible;
-    padding-block: 0.75rem 1.25rem;
+    perspective: 1200px;
+  }
+
+  .offerings-swiper {
+    padding-block: 0.75rem 1.75rem;
   }
 
   .offerings-swiper .swiper-wrapper,
@@ -1498,33 +1515,39 @@ swiper-container {
     align-items: stretch;
   }
 
+  /*
+   * EffectCreative maneja transform y opacity de cada slide vía inline styles.
+   * CSS solo controla filter (saturación) y box-shadow, que EffectCreative
+   * no sobreescribe, aportando la capa de profundidad cromática complementaria.
+   */
   .offering-slide,
   .project-slide,
   .insight-slide {
-    transition: filter 220ms ease, opacity 220ms ease;
-    will-change: opacity;
-    opacity: 1;
-    filter: saturate(0.88);
+    transition: filter 280ms ease;
+    will-change: filter;
+    filter: saturate(0.75);
   }
 
+  /* Card activa: saturación completa. */
   .offering-slide.swiper-slide-active,
   .project-slide.swiper-slide-active,
   .insight-slide.swiper-slide-active {
     filter: saturate(1);
   }
 
+  /* Sombra diferenciada: activa con mayor elevación para efecto float. */
   .offering-slide .card,
   .project-slide .card,
   .insight-slide .card {
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.10);
     border-radius: 20px;
-    transition: box-shadow 220ms ease;
+    transition: box-shadow 280ms ease;
   }
 
   .offering-slide.swiper-slide-active .card,
   .project-slide.swiper-slide-active .card,
   .insight-slide.swiper-slide-active .card {
-    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 20px 42px rgba(0, 0, 0, 0.24);
   }
 }
 

@@ -30,6 +30,7 @@ import { MobileMenuLink } from './mobile-menu.constants';
         class="accordion-content"
         role="region"
         [attr.aria-labelledby]="'accordion-' + sectionId + '-header'"
+        [attr.inert]="!isExpanded ? '' : null"
       >
         <ul class="mobile-links-list">
           @for (link of links; track link.key) {

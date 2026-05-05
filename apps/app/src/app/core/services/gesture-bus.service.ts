@@ -1,4 +1,4 @@
-import { Injectable, NgZone, inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, NgZone, OnDestroy, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { AnalyticsService } from './analytics.service';
 
@@ -14,24 +14,34 @@ export interface GestureHandler {
 @Injectable({
   providedIn: 'root',
 })
-export class GestureBusService {
+export class GestureBusService implements OnDestroy {
   private platformId = inject(PLATFORM_ID);
   private ngZone = inject(NgZone);
   private isBrowser = isPlatformBrowser(this.platformId);
-
   private analytics = inject(AnalyticsService);
+
   private handlers: GestureHandler[] = [];
   private activeHandler: GestureHandler | null = null;
 
   constructor() {
     if (this.isBrowser) {
       this.ngZone.runOutsideAngular(() => {
-        document.addEventListener('pointerdown', this.handlePointerDown, { capture: true });
-        document.addEventListener('pointermove', this.handlePointerMove, { capture: true });
-        document.addEventListener('pointerup', this.handlePointerUp, { capture: true });
+        document.addEventListener('pointerdown',   this.handlePointerDown,   { capture: true });
+        document.addEventListener('pointermove',   this.handlePointerMove,   { capture: true });
+        document.addEventListener('pointerup',     this.handlePointerUp,     { capture: true });
         document.addEventListener('pointercancel', this.handlePointerCancel, { capture: true });
       });
     }
+  }
+
+  ngOnDestroy(): void {
+    if (!this.isBrowser) return;
+    document.removeEventListener('pointerdown',   this.handlePointerDown,   { capture: true });
+    document.removeEventListener('pointermove',   this.handlePointerMove,   { capture: true });
+    document.removeEventListener('pointerup',     this.handlePointerUp,     { capture: true });
+    document.removeEventListener('pointercancel', this.handlePointerCancel, { capture: true });
+    this.handlers = [];
+    this.activeHandler = null;
   }
 
   registerHandler(handler: GestureHandler): () => void {
@@ -47,30 +57,13 @@ export class GestureBusService {
   }
 
   private handlePointerDown = (event: PointerEvent): void => {
-    // S2 — Priority-based gesture arbitration.
-    // The first handler (highest priority) that returns true from onPointerDown
-    // "captures" the gesture.
-    const previousHandler = this.activeHandler;
+    // Defensive: discard any stale activeHandler from a previously lost pointerup/cancel
+    this.activeHandler = null;
 
     for (const handler of this.handlers) {
       if (handler.onPointerDown) {
-        const captured = handler.onPointerDown(event);
-        if (captured) {
+        if (handler.onPointerDown(event)) {
           this.activeHandler = handler;
-
-          // P6 — Telemetry for gesture "theft" or ownership change
-          if (previousHandler && previousHandler !== handler) {
-            this.analytics.trackEvent('gesture_ownership_change', {
-              from: previousHandler.name,
-              to: handler.name,
-              priority_diff: handler.priority - previousHandler.priority,
-            });
-
-            // If a gesture was stolen, send a cancel to the previous handler
-            if (previousHandler.onPointerCancel) {
-              previousHandler.onPointerCancel(event);
-            }
-          }
           break;
         }
       }
@@ -78,22 +71,16 @@ export class GestureBusService {
   };
 
   private handlePointerMove = (event: PointerEvent): void => {
-    if (this.activeHandler?.onPointerMove) {
-      this.activeHandler.onPointerMove(event);
-    }
+    this.activeHandler?.onPointerMove?.(event);
   };
 
   private handlePointerUp = (event: PointerEvent): void => {
-    if (this.activeHandler?.onPointerUp) {
-      this.activeHandler.onPointerUp(event);
-    }
+    this.activeHandler?.onPointerUp?.(event);
     this.activeHandler = null;
   };
 
   private handlePointerCancel = (event: PointerEvent): void => {
-    if (this.activeHandler?.onPointerCancel) {
-      this.activeHandler.onPointerCancel(event);
-    }
+    this.activeHandler?.onPointerCancel?.(event);
     this.activeHandler = null;
   };
 }

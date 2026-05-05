@@ -41,7 +41,7 @@ import { PictureComponent } from '@shared/components/picture/picture';
 import { computed } from '@angular/core';
 
 // Swiper Web Components
-import { Pagination, Autoplay, EffectCoverflow, EffectFade, Navigation, EffectCreative, FreeMode } from 'swiper/modules';
+import { Pagination, Autoplay, EffectCoverflow, EffectFade, Navigation, FreeMode } from 'swiper/modules';
 import { register } from 'swiper/element/bundle';
 import { triggerTick } from '@shared/utils/haptic-feedback';
 
@@ -104,75 +104,51 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   };
 
   public offeringsSwiperConfig: SwiperOptions = {
-    modules: [Navigation, Pagination, EffectCreative, FreeMode],
-    effect: 'creative',
+    modules: [Navigation, Pagination, FreeMode],
     watchSlidesProgress: true,
-    creativeEffect: {
-      limitProgress: 2,
-      perspective: true,
-      prev: {
-        translate: ['-88%', '16%', -280],
-        scale: 0.9,
-        opacity: 0.55,
-      },
-      next: {
-        translate: ['88%', '16%', -280],
-        scale: 0.9,
-        opacity: 0.55,
-      },
-    },
-    slidesPerView: 1.25,
+    slidesPerView: 1,
     centeredSlides: true,
-    spaceBetween: 14,
+    spaceBetween: 0,
     grabCursor: true,
     loop: false,
-    speed: 940,
-    touchRatio: 1.2,
-    resistanceRatio: 0.72,
-    threshold: 2,
+    speed: 360,
+    touchRatio: 1,
+    resistanceRatio: 0.6,
+    threshold: 8,
     shortSwipes: true,
     longSwipes: true,
-    longSwipesRatio: 0.04,
-    longSwipesMs: 140,
-    touchReleaseOnEdges: true,
+    longSwipesRatio: 0.03,
+    longSwipesMs: 100,
     followFinger: true,
+    touchReleaseOnEdges: false,
     freeMode: {
       enabled: true,
       sticky: true,
       momentum: true,
-      minimumVelocity: 0.01,
-      momentumRatio: 1.22,
-      momentumVelocityRatio: 1.34,
-      momentumBounce: true,
-      momentumBounceRatio: 0.36,
+      minimumVelocity: 0.04,
+      momentumRatio: 2.0,
+      momentumVelocityRatio: 1.2,
+      momentumBounce: false,
     },
-    pagination: {
-      clickable: true,
-      dynamicBullets: false,
-    },
+    pagination: { clickable: true, dynamicBullets: true },
     navigation: {
       nextEl: '.offerings-swiper-button-next',
       prevEl: '.offerings-swiper-button-prev',
     },
     breakpoints: {
-      640: {
-        slidesPerView: 1.35,
-        spaceBetween: 12,
-        centeredSlides: true,
-      },
       768: {
-        effect: 'slide',
         slidesPerView: 4,
         spaceBetween: 24,
         centeredSlides: false,
         freeMode: { enabled: false },
+        speed: 480,
       },
       1024: {
-        effect: 'slide',
         slidesPerView: 4,
-        spaceBetween: 24,
+        spaceBetween: 28,
         centeredSlides: false,
         freeMode: { enabled: false },
+        speed: 480,
       },
     },
   };
@@ -234,64 +210,44 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   };
 
   public insightsSwiperConfig: SwiperOptions = {
-    modules: [Navigation, Pagination, EffectCreative, FreeMode],
-    effect: 'creative',
+    modules: [Navigation, Pagination, FreeMode],
     watchSlidesProgress: true,
-    creativeEffect: {
-      limitProgress: 2,
-      perspective: true,
-      prev: {
-        translate: ['-95%', '25%', -400],
-        scale: 0.85,
-        opacity: 0.4,
-      },
-      next: {
-        translate: ['95%', '25%', -400],
-        scale: 0.85,
-        opacity: 0.4,
-      },
-    },
-    slidesPerView: 1.25,
+    slidesPerView: 1,
     centeredSlides: true,
-    spaceBetween: 20,
+    spaceBetween: 0,
     grabCursor: true,
     loop: false,
-    speed: 900,
-    touchRatio: 0.85,
-    resistanceRatio: 0.7,
+    speed: 360,
+    touchRatio: 1.1,
+    resistanceRatio: 0.85,
     threshold: 10,
     freeMode: {
       enabled: true,
       momentum: true,
       sticky: true,
-      momentumRatio: 0.45,
-      momentumVelocityRatio: 0.4,
+      momentumRatio: 1.8,
+      momentumVelocityRatio: 1.5,
+      momentumBounce: false,
     },
-    pagination: {
-      clickable: true,
-      dynamicBullets: false,
-    },
+    pagination: { clickable: true, dynamicBullets: false },
     navigation: {
       nextEl: '.insights-swiper-button-next',
       prevEl: '.insights-swiper-button-prev',
     },
     breakpoints: {
       768: {
-        effect: 'slide',
         slidesPerView: 4,
         spaceBetween: 24,
         centeredSlides: false,
         freeMode: { enabled: false },
       },
       1024: {
-        effect: 'slide',
         slidesPerView: 4,
         spaceBetween: 24,
         centeredSlides: false,
         freeMode: { enabled: false },
       },
       1440: {
-        effect: 'slide',
         slidesPerView: 4,
         spaceBetween: 24,
         centeredSlides: false,
@@ -300,68 +256,47 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   };
 
   public projectsSwiperConfig: SwiperOptions = {
-    modules: [Navigation, Pagination, EffectCreative, FreeMode],
-    effect: 'creative',
+    modules: [Navigation, Pagination, FreeMode],
     watchSlidesProgress: true,
-    creativeEffect: {
-      limitProgress: 2,
-      perspective: true,
-      prev: {
-        translate: ['-95%', '25%', -400],
-        scale: 0.85,
-        opacity: 0.4,
-      },
-      next: {
-        translate: ['95%', '25%', -400],
-        scale: 0.85,
-        opacity: 0.4,
-      },
-    },
-    slidesPerView: 1.25,
+    slidesPerView: 1,
     centeredSlides: true,
-    spaceBetween: 20,
+    spaceBetween: 0,
     grabCursor: true,
     loop: false,
-    speed: 900,
-    touchRatio: 0.85,
-    resistanceRatio: 0.7,
+    speed: 360,
+    touchRatio: 1.1,
+    resistanceRatio: 0.85,
     threshold: 10,
     freeMode: {
       enabled: true,
       momentum: true,
       sticky: true,
-      momentumRatio: 0.45,
-      momentumVelocityRatio: 0.4,
+      momentumRatio: 1.8,
+      momentumVelocityRatio: 1.5,
+      momentumBounce: false,
     },
-    pagination: {
-      clickable: true,
-      dynamicBullets: false,
-    },
+    pagination: { clickable: true, dynamicBullets: false },
     navigation: {
       nextEl: '.projects-swiper-button-next',
       prevEl: '.projects-swiper-button-prev',
     },
     breakpoints: {
       768: {
-        effect: 'slide',
         slidesPerView: 4,
         spaceBetween: 24,
         centeredSlides: false,
         freeMode: { enabled: false },
       },
       1024: {
-        effect: 'slide',
         slidesPerView: 4,
         spaceBetween: 24,
         centeredSlides: false,
         freeMode: { enabled: false },
       },
       1440: {
-        effect: 'slide',
         slidesPerView: 4,
         spaceBetween: 24,
         centeredSlides: false,
-        freeMode: { enabled: false },
       },
     },
   };
@@ -589,6 +524,11 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
     if (!offeringsSwiperEl.swiper) {
       offeringsSwiperEl.initialize();
+      const offeringsTransforms = { tx: 82, ty: 10, tz: 240, scale: 0.86, opacity: 0.55 };
+      const applyOfferings = () => this.applyCardStackTransforms(offeringsSwiperEl.swiper, offeringsTransforms);
+      offeringsSwiperEl.swiper.on('progress', applyOfferings);
+      offeringsSwiperEl.swiper.on('breakpoint', applyOfferings);
+      applyOfferings();
       this.setupOfferingsNavigationVisibility();
       this.bindSliderBoundaryState(
         offeringsSwiperEl,
@@ -603,6 +543,29 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         this.canOfferingsNext
       );
     }
+  }
+
+  private applyCardStackTransforms(
+    swiper: any,
+    cfg: { tx: number; ty: number; tz: number; scale: number; opacity: number }
+  ): void {
+    if (!swiper?.slides?.length) return;
+    const isMobile = swiper.params?.slidesPerView === 1;
+    swiper.slides.forEach((slide: HTMLElement) => {
+      if (!isMobile) {
+        slide.style.transform = '';
+        slide.style.opacity = '';
+        slide.style.zIndex = '';
+        return;
+      }
+      const rawP = (slide as any).progress ?? 0;
+      const p    = Math.max(Math.min(rawP, 3), -3);
+      const absP = Math.min(Math.abs(p), 1);
+      const sign = p < 0 ? -1 : 1;
+      slide.style.transform = `translate3d(${sign * absP * cfg.tx}%, ${absP * cfg.ty}%, ${-absP * cfg.tz}px) scale(${1 - absP * (1 - cfg.scale)})`;
+      slide.style.opacity   = String(Math.max(1 - absP * (1 - cfg.opacity), 0.05));
+      slide.style.zIndex    = String(Math.max(Math.round(100 - Math.abs(p) * 10), 1));
+    });
   }
 
   private bindSliderBoundaryState(
@@ -871,8 +834,12 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
       if (insightsSwiperEl) {
         Object.assign(insightsSwiperEl, this.insightsSwiperConfig);
-
         insightsSwiperEl.initialize();
+        const insightsTransforms = { tx: 95, ty: 25, tz: 400, scale: 0.85, opacity: 0.4 };
+        const applyInsights = () => this.applyCardStackTransforms(insightsSwiperEl.swiper, insightsTransforms);
+        insightsSwiperEl.swiper.on('progress', applyInsights);
+        insightsSwiperEl.swiper.on('breakpoint', applyInsights);
+        applyInsights();
         this.setupInsightsNavigationVisibility();
         this.bindSliderBoundaryState(insightsSwiperEl, this.canInsightsPrev, this.canInsightsNext);
       }
@@ -882,8 +849,12 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
       if (projectsSwiperEl) {
         Object.assign(projectsSwiperEl, this.projectsSwiperConfig);
-
         projectsSwiperEl.initialize();
+        const projectsTransforms = { tx: 95, ty: 25, tz: 400, scale: 0.85, opacity: 0.4 };
+        const applyProjects = () => this.applyCardStackTransforms(projectsSwiperEl.swiper, projectsTransforms);
+        projectsSwiperEl.swiper.on('progress', applyProjects);
+        projectsSwiperEl.swiper.on('breakpoint', applyProjects);
+        applyProjects();
         this.setupProjectsNavigationVisibility();
         this.bindSliderBoundaryState(projectsSwiperEl, this.canProjectsPrev, this.canProjectsNext);
       }

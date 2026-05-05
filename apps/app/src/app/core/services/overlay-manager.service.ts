@@ -1,20 +1,31 @@
-import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID, InjectionToken } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+
+/**
+ * CSS selector targeting the page regions that should become inert when any overlay
+ * is active. Override at root level to adapt to different app layouts:
+ *
+ *   providers: [{ provide: OVERLAY_INERT_SELECTOR, useValue: 'main, app-footer' }]
+ *
+ * For fine-grained per-component control, use OverlayManagerService.registerInertTarget().
+ */
+export const OVERLAY_INERT_SELECTOR = new InjectionToken<string>(
+  'OVERLAY_INERT_SELECTOR',
+  { factory: () => 'main, jsl-footer, jsl-top-bar, .header__nav' }
+);
 
 @Injectable({
   providedIn: 'root',
 })
 export class OverlayManagerService {
   private platformId = inject(PLATFORM_ID);
+  private readonly rootContentSelector = inject(OVERLAY_INERT_SELECTOR);
 
-  /** LIFO stack of active overlays */
+  /** LIFO stack of active overlays. */
   private overlayStack: string[] = [];
 
-  /**
-   * Selector for the main application content that should be isolated
-   * when any overlay is active.
-   */
-  private readonly rootContentSelector = 'main, jsl-footer, jsl-top-bar, .header__nav';
+  /** Elements registered at runtime via registerInertTarget(). */
+  private readonly dynamicTargets = new Set<Element>();
 
   /**
    * Registers an active overlay and pushes it to the stack.
@@ -22,11 +33,8 @@ export class OverlayManagerService {
    */
   register(id: string): void {
     if (!isPlatformBrowser(this.platformId)) return;
-
-    // Avoid duplicates in the stack
     this.unregister(id);
     this.overlayStack.push(id);
-
     this.updateInertState();
   }
 
@@ -36,7 +44,6 @@ export class OverlayManagerService {
    */
   unregister(id: string): void {
     if (!isPlatformBrowser(this.platformId)) return;
-
     this.overlayStack = this.overlayStack.filter(item => item !== id);
     this.updateInertState();
   }
@@ -49,23 +56,44 @@ export class OverlayManagerService {
   }
 
   /**
-   * Updates the 'inert' attribute on background elements based on overlay stack.
+   * Dynamically registers a DOM element to be made inert while any overlay is open.
+   * Returns an unregister function — call it from ngOnDestroy to avoid leaks.
+   *
+   * @example
+   *   private readonly unregister = this.overlayManager.registerInertTarget(this.el.nativeElement);
+   *   ngOnDestroy() { this.unregister(); }
+   */
+  registerInertTarget(el: Element): () => void {
+    if (!isPlatformBrowser(this.platformId)) return () => {};
+
+    this.dynamicTargets.add(el);
+    if (this.overlayStack.length > 0) {
+      el.setAttribute('inert', '');
+    }
+
+    return () => {
+      this.dynamicTargets.delete(el);
+      el.removeAttribute('inert');
+    };
+  }
+
+  /**
+   * Updates the 'inert' attribute on background elements based on the overlay stack.
+   * Applies to both selector-matched elements and dynamically registered targets.
    */
   private updateInertState(): void {
-    const hasActiveOverlays = this.overlayStack.length > 0;
-    const targets = document.querySelectorAll(this.rootContentSelector);
+    if (!isPlatformBrowser(this.platformId)) return;
 
-    targets.forEach((target) => {
-      if (hasActiveOverlays) {
-        target.setAttribute('inert', '');
-      } else {
-        target.removeAttribute('inert');
-      }
+    const hasActiveOverlays = this.overlayStack.length > 0;
+
+    document.querySelectorAll(this.rootContentSelector).forEach((target) => {
+      if (hasActiveOverlays) target.setAttribute('inert', '');
+      else target.removeAttribute('inert');
     });
 
-    // Optional: Handle interaction between overlays in the stack
-    // e.g., if there are multiple overlays, the ones below the top should also be inert.
-    // This would require overlays to be in the DOM and identifiable.
-    // For now, isolating the main content is the primary requirement.
+    this.dynamicTargets.forEach((target) => {
+      if (hasActiveOverlays) target.setAttribute('inert', '');
+      else target.removeAttribute('inert');
+    });
   }
 }

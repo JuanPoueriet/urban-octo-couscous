@@ -217,7 +217,7 @@ export class MobileMenuGestures implements GestureHandler {
     // 0. Check for Overlay Interaction (if open)
     if (this.config.isOpen()) {
       const target = event.target as HTMLElement;
-      if (target?.classList.contains('mobile-menu-overlay')) {
+      if (target?.classList.contains('jsl-mm-overlay')) {
         this.startOverlayInteraction(event);
         return true;
       }
@@ -273,8 +273,12 @@ export class MobileMenuGestures implements GestureHandler {
     this.currentY = this.startY;
     this.isDragging = false;
     this.isHorizontalGesture = false;
+    this.wasOvershooting = false;
     this.isOverlaySwipeActive = true;
     this.resetVelocityBuffer();
+    // Capture current visual position so the drawer follows the finger on overlay swipe
+    this.initialTranslateX = this.config.getCurrentTranslateX();
+    this.lastDragPosition = this.initialTranslateX;
   }
 
   private isOverlaySwipeActive = false;
@@ -350,12 +354,35 @@ export class MobileMenuGestures implements GestureHandler {
 
     if (this.isDragging && this.isHorizontalGesture) {
       this.pushVelocitySample(event.clientX);
-      // We could also update the drawer position here for a "parallax" feel
-      // For now, just tracking the gesture for the end decision.
+
+      // Move the drawer in real time (parallax-to-close) so the gesture has
+      // immediate physical feedback instead of waiting for pointerup.
+      const menuWidth = this.config.menuWidth;
+      const isRtl = this.config.isRtl();
+      const closedPos = this.getClosedPosition(menuWidth);
+      const openPos = 0;
+
+      // Clamp to valid range: can only move toward closed, not past open
+      const rawTranslate = this.initialTranslateX + diffX;
+      const targetTranslate = isRtl
+        ? Math.min(closedPos, Math.max(openPos, rawTranslate))
+        : Math.max(closedPos, Math.min(openPos, rawTranslate));
+
+      const isOvershooting = false; // clamped above; no elastic on overlay drag
+      if (!isOvershooting && this.wasOvershooting) this.wasOvershooting = false;
+
+      const progress = this.getProgress(targetTranslate, menuWidth);
+      this.lastDragPosition = targetTranslate;
+      this.config.onUpdateTranslate(
+        targetTranslate,
+        progress,
+        1,
+        isRtl ? 'right' : 'left'
+      );
     }
   }
 
-  public onMenuPointerMove(event: PointerEvent): void {
+  private handleMenuDragMove(event: PointerEvent): void {
     if (event.pointerId !== this.activePointerId) return;
     // Allow movement when open OR animating (P3 — supports interrupting close)
     if (!this.config.isOpen() && !this.config.isAnimating()) return;
@@ -455,7 +482,7 @@ export class MobileMenuGestures implements GestureHandler {
     this.isOverlaySwipeActive = false;
   }
 
-  public onMenuPointerEnd(event: PointerEvent): void {
+  private handleMenuDragEnd(event: PointerEvent): void {
     if (event.pointerId !== this.activePointerId) return;
 
     if (!this.isDragging || !this.isHorizontalGesture) {
@@ -510,7 +537,7 @@ export class MobileMenuGestures implements GestureHandler {
     }
   }
 
-  public onMenuPointerCancel(event: PointerEvent): void {
+  private handleMenuDragCancel(event: PointerEvent): void {
     if (event.pointerId !== this.activePointerId) return;
 
     const wasOpen = this.config.isOpen();
@@ -640,12 +667,6 @@ export class MobileMenuGestures implements GestureHandler {
     this.config.onClose();
     this.trackMetric('gesture_cancel', { source: 'edge_system_interrupt' });
   };
-
-  // ── Internal drag listener management ───────────────────────────────────────
-
-  private handleMenuDragMove   = (e: PointerEvent) => this.onMenuPointerMove(e);
-  private handleMenuDragEnd    = (e: PointerEvent) => this.onMenuPointerEnd(e);
-  private handleMenuDragCancel = (e: PointerEvent) => this.onMenuPointerCancel(e);
 
   private resetDragState(): void {
     this.isDragging = false;

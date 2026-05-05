@@ -130,7 +130,11 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   // Non-passive touchmove handler bound once and removed in cleanup (Problem 2 fix)
   private readonly boundTouchMove = (event: TouchEvent): void => {
-    if (this.gestureHandler?.getIsDragging() && this.gestureHandler.getIsHorizontalGesture()) {
+    if (
+      event.cancelable &&
+      this.gestureHandler?.getIsDragging() &&
+      this.gestureHandler.getIsHorizontalGesture()
+    ) {
       event.preventDefault();
     }
   };
@@ -534,28 +538,9 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     if (now - this.lastHapticTime < this.HAPTIC_COOLDOWN_MS) return;
     this.lastHapticTime = now;
 
-    // S6 — Multimodal feedback: Try haptic first, fallback to visual feedback
-    let hapticSuccess = false;
     if (navigator.vibrate && (!navigator.userActivation || navigator.userActivation.isActive)) {
-      hapticSuccess = navigator.vibrate(5);
+      navigator.vibrate(5);
     }
-
-    if (!hapticSuccess) {
-      this.triggerVisualFeedback();
-    }
-  }
-
-  private triggerVisualFeedback(): void {
-    if (!this.menuElement) return;
-
-    // S6 — Add a subtle pulse/bounce to the handle/drawer as feedback
-    this.renderer.setStyle(this.menuElement, '--mm-feedback-translate', `${this.menuTranslateX}px`);
-    this.renderer.addClass(this.menuElement, 'feedback-pulse');
-    setTimeout(() => {
-      if (this.menuElement) {
-        this.renderer.removeClass(this.menuElement, 'feedback-pulse');
-      }
-    }, 300);
   }
 
   // ── Cleanup ─────────────────────────────────────────────────────────────────

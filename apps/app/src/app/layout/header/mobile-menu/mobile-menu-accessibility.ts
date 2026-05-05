@@ -80,15 +80,18 @@ export class MobileMenuAccessibility {
       this.el.nativeElement.querySelectorAll(focusableSelectors)
     ) as HTMLElement[];
 
+    // Use computedStyle instead of getBoundingClientRect to avoid forced reflows
+    // on every element. computedStyle reads are batched by the browser without
+    // triggering layout, keeping this filter jank-free on large menus.
     this.focusableElements = allPotential.filter(el => {
       const style = window.getComputedStyle(el);
-      const rect = el.getBoundingClientRect();
-      const isVisible = style.display !== 'none' &&
-                        style.visibility !== 'hidden' &&
-                        style.opacity !== '0' &&
-                        rect.width > 0 &&
-                        rect.height > 0;
-      return isVisible;
+      return (
+        style.display !== 'none' &&
+        style.visibility !== 'hidden' &&
+        parseFloat(style.opacity) > 0 &&
+        !el.hasAttribute('inert') &&
+        el.closest('[inert]') === null
+      );
     });
   }
 

@@ -93,16 +93,6 @@ $mm-overlay-duration:   0.3s;
         pointer-events: none;
       }
     }
-
-    &.feedback-pulse {
-      animation: mm-feedback-pulse 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-  }
-
-  @keyframes mm-feedback-pulse {
-    0% { transform: translateX(var(--mm-feedback-translate, 0)) scale(1); }
-    50% { transform: translateX(var(--mm-feedback-translate, 0)) scale(1.01); filter: brightness(1.1); }
-    100% { transform: translateX(var(--mm-feedback-translate, 0)) scale(1); }
   }
 
   .mobile-menu-top {
@@ -678,32 +668,30 @@ $mm-overlay-duration:   0.3s;
   }
 }
 
-// P1 / P4 — The overlay is always in the DOM (never display:none).
-// - opacity: 0 + pointer-events: none → invisible and non-interactive when closed.
-// - .visible adds pointer-events: auto for click-to-close.
-// - Opacity is always controlled via JS inline style (updateOverlayVisual), so
-//   the CSS transition from current inline value → 0 fires correctly on close.
-// - This approach also makes the overlay visible during edge-swipe gestures (P1),
-//   since JS can set inline opacity at any time regardless of DOM visibility.
-.mobile-menu-overlay {
+// Overlay backdrop:
+// - Always in the DOM (never display:none) so JS can drive opacity at any time,
+//   including during gesture drags before the drawer is fully open.
+// - `visibility: hidden` (base) + `.visible` (pointer-active) separate
+//   interactivity from rendering: the overlay IS rendered when .visible,
+//   with opacity driven by --mm-overlay-progress via CSS calc.
+// - The transition on the base rule applies in BOTH open and close directions.
+.jsl-mm-overlay {
   position: fixed;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.6);
   z-index: 1200;
-  opacity: 0;
   pointer-events: none;
   cursor: pointer;
   touch-action: none;
 
-  // P6 — Derived visual properties using CSS variables and clamp/calc.
-  //      The --mm-overlay-progress variable is updated from TS (0 to 1).
+  // Eased progress: quadratic ease-in so opacity accelerates as drawer opens.
   --mm-overlay-eased: calc(1 - (1 - var(--mm-overlay-progress, 0)) * (1 - var(--mm-overlay-progress, 0)));
 
   opacity: calc(0.08 + var(--mm-overlay-eased) * 0.62);
   backdrop-filter: blur(calc(var(--mm-overlay-eased) * 8px));
   -webkit-backdrop-filter: blur(calc(var(--mm-overlay-eased) * 8px));
 
-  // Transition is on the base state so it applies in BOTH directions (P4)
+  // Transition on base state so it fires in BOTH directions (open and close)
   transition:
     opacity $mm-overlay-duration ease,
     backdrop-filter $mm-overlay-duration ease,
@@ -714,10 +702,6 @@ $mm-overlay-duration:   0.3s;
   &.visible {
     pointer-events: auto;
     visibility: visible;
-    // If --mm-overlay-progress is not set via inline style (e.g. initial opening),
-    // it defaults to 0 in the calc above. When .visible is added without manual drag,
-    // we might want a default full opacity if not dragging.
-    // However, the TS code calls updateOverlayVisual(1) on open, so it should be fine.
   }
 
   @media (prefers-reduced-motion: reduce), (update: slow) {

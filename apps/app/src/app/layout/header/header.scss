@@ -337,11 +337,11 @@ li.dropdown {
   }
 }
 
-// Scroll prevention
+// Scroll prevention — position:fixed is required on iOS Safari to prevent
+// scroll-bounce of the background while an overlay is open.
 body.no-scroll {
   overflow: hidden !important;
   position: fixed;
   width: 100%;
   height: 100%;
-  position: relative;
 }
