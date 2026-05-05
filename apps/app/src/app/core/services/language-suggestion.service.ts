@@ -54,7 +54,7 @@ export class LanguageSuggestionService {
       return;
     }
 
-    const preferredLang = this.getPreferredLanguage();
+    const preferredLang = this.getPreferredLanguage(supportedLangs, currentUrlLang);
 
     if (
       preferredLang &&
@@ -71,14 +71,24 @@ export class LanguageSuggestionService {
     }
   }
 
-  private getPreferredLanguage(): string | null {
-    // 1. Check explicit cookie
-    const cookieLang = this.cookieService.get(this.PREFERRED_LANG_COOKIE);
-    if (cookieLang) return cookieLang;
+  private getPreferredLanguage(supportedLangs: string[], currentUrlLang: string): string | null {
+    // 1. Prioritize browser/device languages for contextual UX suggestions.
+    const browserLanguages = navigator.languages?.length ? navigator.languages : [navigator.language];
 
-    // 2. Check browser language
-    const browserLang = navigator.language.split('-')[0];
-    return browserLang;
+    for (const lang of browserLanguages) {
+      const normalized = lang.toLowerCase().split('-')[0];
+      if (supportedLangs.includes(normalized) && normalized !== currentUrlLang) {
+        return normalized;
+      }
+    }
+
+    // 2. Fallback to explicit preference only if it differs from current URL language.
+    const cookieLang = this.cookieService.get(this.PREFERRED_LANG_COOKIE)?.toLowerCase();
+    if (cookieLang && supportedLangs.includes(cookieLang) && cookieLang !== currentUrlLang) {
+      return cookieLang;
+    }
+
+    return null;
   }
 
   private getLanguageName(code: string): string {
