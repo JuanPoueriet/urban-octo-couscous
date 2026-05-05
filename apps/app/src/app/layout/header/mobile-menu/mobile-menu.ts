@@ -33,6 +33,7 @@ import { MobileMenuGestures, MobileMenuGestureConfig } from './mobile-menu-gestu
 import { MobileMenuQuickAccess } from './mobile-menu-quick-access';
 import { MobileMenuSearch } from './mobile-menu-search';
 import { MobileMenuSection } from './mobile-menu-section';
+import { MobileMenuSearchController } from './mobile-menu-search.controller';
 import {
   getMobileMenuSections,
   MobileMenuSectionData,
@@ -45,6 +46,7 @@ import {
   GESTURE_EDGE_THRESHOLD,
   GESTURE_VELOCITY_THRESHOLD,
   GESTURE_ELASTIC_RESISTANCE,
+  DrawerState,
 } from './mobile-menu.constants';
 import { MobileMenuAccessibility } from './mobile-menu-accessibility';
 import { BreakpointService } from '@core/services/breakpoint.service';
@@ -62,6 +64,9 @@ import { BreakpointService } from '@core/services/breakpoint.service';
     MobileMenuQuickAccess,
     MobileMenuSearch,
     MobileMenuSection,
+  ],
+  providers: [
+    MobileMenuSearchController
   ],
   templateUrl: './mobile-menu.html',
   styleUrl: './mobile-menu.scss',
@@ -83,6 +88,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private destroyRef       = inject(DestroyRef);
   private router           = inject(Router);
   private injector         = inject(Injector);
+  public searchController  = inject(MobileMenuSearchController);
   // P10 — functional inject(); @Inject() decorator was redundant and removed
   private platformId       = inject(PLATFORM_ID);
 
@@ -97,8 +103,11 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   public menuTransformOrigin = 'left';
   public menuTransition  = DRAWER_TRANSITION;  // P5 — single constant, not repeated strings
   private menuWidth      = MOBILE_MENU_MAX_WIDTH;
-  private isAnimating    = false;
-  private drawerState: 'closed' | 'opening' | 'open' | 'closing' = 'closed';
+  public drawerState: DrawerState = DrawerState.CLOSED;
+
+  // ── Throttled Haptic ────────────────────────────────────────────────────────
+  private lastHapticTime = 0;
+  private readonly HAPTIC_COOLDOWN_MS = 200;
 
   // ── DOM references ──────────────────────────────────────────────────────────
   private menuElement:    HTMLElement | null = null;
@@ -126,12 +135,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   // ── View data ────────────────────────────────────────────────────────────────
   public currentYear = new Date().getFullYear();
-  public searchQuery = '';
-  public searchResultsCount = 0;
   public menuSections: MobileMenuSectionData[] = [];
-  public expandedSections = new Set<string>();
-  private expandedSectionsBeforeSearch: Set<string> | null = null;
-  private translationCache = new Map<string, string>();
   public readonly menuTitleId = `mobile-menu-title-${Math.random().toString(36).slice(2, 10)}`;
 
   // ── Computed state accessors ─────────────────────────────────────────────────
@@ -142,7 +146,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   /** P7 — used in template to hide the closed drawer from the accessibility tree. */
   get isDrawerClosed(): boolean {
-    return this.drawerState === 'closed';
+    return this.drawerState === DrawerState.CLOSED;
   }
 
   constructor() {
@@ -165,6 +169,12 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
         this.gestureHandler.setEdgeSwipeEnabled(isMobile && !isOpen);
       }
 
+      // S1 — Breakpoint closing policy
+      if (isOpen && !isMobile) {
+        this.ngZone.run(() => this.closeMobileMenu('system'));
+        return;
+      }
+
       if (isOpen) {
         this.openDrawer();
       } else {
@@ -177,7 +187,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   private initMenuSections(): void {
     this.menuSections = getMobileMenuSections(this.currentLang);
-    this.translationCache.clear();
+    this.searchController.setMenuSections(this.menuSections);
   }
 
   ngOnInit(): void { /* reserved */ }
@@ -252,7 +262,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       this.gestureConfig.menuWidth = this.menuWidth;
     }
 
-    if (this.drawerState === 'closed') {
+    if (this.drawerState === DrawerState.CLOSED) {
       this.menuTranslateX = this.directionService.isRtl() ? this.menuWidth : -this.menuWidth;
     }
 
@@ -267,7 +277,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       velocityThreshold:  GESTURE_VELOCITY_THRESHOLD,
       isRtl:        () => this.directionService.isRtl(),
       isOpen:       () => this.isMobileMenuOpen,
-      isAnimating:  () => this.isAnimating,
+      isAnimating:  () => this.drawerState === DrawerState.OPENING || this.drawerState === DrawerState.CLOSING,
       // P3 — exposes current visual position so mid-animation gestures start correctly
       getCurrentTranslateX: () => this.menuTranslateX,
 
@@ -277,8 +287,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
         this.menuTransformOrigin = transformOrigin ?? (this.directionService.isRtl() ? 'right' : 'left');
 
         if (progress !== null) {
-          // During active drag: disable CSS transition so motion tracks the finger
-          this.menuTransition = 'none';
+          this.transitionTo(DrawerState.DRAGGING);
           this.updateOverlayVisual(progress); // P1 — overlay opacity tracks drag
           if (this.menuElement) this.renderer.addClass(this.menuElement, 'dragging');
         } else {
@@ -292,7 +301,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
       onOpen:  () => this.menuService.open(),
       onClose: () => this.menuService.close('gesture'),
-      onToggleHaptic: () => this.triggerHapticFeedback(),
+      onToggleHaptic: () => this.triggerThrottledHaptic(),
       onTrackMetric:  (metric, data) => this.analyticsService.trackEvent(`mobile_menu_${metric}`, data),
     };
 
@@ -304,76 +313,78 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
+  // ── FSM State Transitions ───────────────────────────────────────────────────
+
+  private transitionTo(newState: DrawerState, options: { immediate?: boolean } = {}): void {
+    if (this.drawerState === newState && !options.immediate) return;
+
+    this.drawerState = newState;
+
+    switch (newState) {
+      case DrawerState.OPENING:
+        this.menuTransition = this.getDrawerTransition();
+        this.menuTranslateX = 0;
+        this.menuScaleX     = 1;
+        if (this.isBrowser) {
+          this.scrollLockService.lock('mobile-menu');
+          this.a11y.saveFocus();
+          this.overlayManagerService.register('mobile-menu');
+          this.triggerThrottledHaptic();
+          this.a11y.startObserving();
+        }
+        if (this.overlayElement) {
+          this.overlayElement.classList.add('visible');
+          this.updateOverlayVisual(1);
+        }
+        this.handleTransitionEnd(DrawerState.OPEN, () => {
+          this.a11y.refreshFocusableElements();
+          this.a11y.setInitialFocus();
+        });
+        break;
+
+      case DrawerState.CLOSING:
+        this.menuTransition = this.getDrawerTransition();
+        this.menuTranslateX = this.directionService.isRtl() ? this.menuWidth : -this.menuWidth;
+        this.menuScaleX     = 1;
+        if (this.isBrowser) {
+          this.scrollLockService.unlock('mobile-menu');
+          this.overlayManagerService.unregister('mobile-menu');
+          this.triggerThrottledHaptic();
+          this.a11y.restoreFocus();
+          this.a11y.stopObserving();
+        }
+        if (this.overlayElement) {
+          this.overlayElement.classList.remove('visible');
+          this.overlayElement.style.opacity = '';
+          this.overlayElement.style.backdropFilter = '';
+        }
+        this.handleTransitionEnd(DrawerState.CLOSED);
+        break;
+
+      case DrawerState.DRAGGING:
+        this.clearTransitionListeners();
+        this.menuTransition = 'none';
+        break;
+
+      case DrawerState.OPEN:
+      case DrawerState.CLOSED:
+        this.clearTransitionListeners();
+        break;
+    }
+
+    this.cdRef.markForCheck();
+  }
+
   // ── Open / close drawer ─────────────────────────────────────────────────────
 
   private openDrawer(): void {
-    if (this.drawerState === 'open' || this.drawerState === 'opening') return;
-    if (this.isAnimating && this.drawerState === 'closing') return;
-
-    this.isAnimating  = true;
-    this.drawerState  = 'opening';
-    this.menuTransition = this.getDrawerTransition(); // R5 — respects prefers-reduced-motion
-    this.menuTranslateX = 0;
-    this.menuScaleX     = 1;
-
-    if (this.isBrowser) {
-      this.scrollLockService.lock('mobile-menu');
-      // saveFocus() must run BEFORE toggleBackgroundInert so the reference to the
-      // focused trigger element (e.g. hamburger button) is captured before inert
-      // causes the browser to auto-blur it.
-      this.a11y.saveFocus();
-      this.overlayManagerService.register('mobile-menu');
-      this.triggerHapticFeedback();
-    }
-
-    // P1 / P4 — overlay is always in DOM (no display:none); just enable pointer-events
-    if (this.overlayElement) {
-      this.overlayElement.classList.add('visible');
-      this.updateOverlayVisual(1);
-    }
-
-    this.cdRef.markForCheck();
-
-    this.handleTransitionEnd(() => {
-      this.isAnimating = false;
-      this.drawerState = 'open';
-      this.a11y.refreshFocusableElements();
-      this.a11y.setInitialFocus();
-      this.cdRef.markForCheck();
-    });
+    if (this.drawerState === DrawerState.OPEN || this.drawerState === DrawerState.OPENING) return;
+    this.transitionTo(DrawerState.OPENING);
   }
 
   private closeDrawer(): void {
-    if (this.drawerState === 'closed' || this.drawerState === 'closing') return;
-    if (this.isAnimating && this.drawerState === 'opening') return;
-
-    this.isAnimating  = true;
-    this.drawerState  = 'closing';
-    this.menuTransition = this.getDrawerTransition(); // R5 — respects prefers-reduced-motion
-    this.menuTranslateX = this.directionService.isRtl() ? this.menuWidth : -this.menuWidth;
-    this.menuScaleX     = 1;
-
-    if (this.isBrowser) {
-      this.scrollLockService.unlock('mobile-menu');
-      this.overlayManagerService.unregister('mobile-menu');
-      this.triggerHapticFeedback();
-      this.a11y.restoreFocus();
-    }
-
-    // P4 — clear inline styles so CSS transition fades opacity from current value → 0
-    if (this.overlayElement) {
-      this.overlayElement.classList.remove('visible');
-      this.overlayElement.style.opacity = '';
-      this.overlayElement.style.backdropFilter = '';
-    }
-
-    this.cdRef.markForCheck();
-
-    this.handleTransitionEnd(() => {
-      this.isAnimating = false;
-      this.drawerState = 'closed';
-      this.cdRef.markForCheck();
-    });
+    if (this.drawerState === DrawerState.CLOSED || this.drawerState === DrawerState.CLOSING) return;
+    this.transitionTo(DrawerState.CLOSING);
   }
 
   // ── Transition lifecycle (P2) ────────────────────────────────────────────────
@@ -389,13 +400,14 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private handleTransitionEnd(callback: () => void): void {
+  private handleTransitionEnd(targetState: DrawerState, callback?: () => void): void {
     // P2 — cancel any stale listener/timer before registering a new one,
     // so interrupted animations never fire old callbacks on the next transition.
     this.clearTransitionListeners();
 
     if (!this.isBrowser || !this.menuElement) {
-      callback();
+      this.drawerState = targetState;
+      callback?.();
       return;
     }
 
@@ -411,7 +423,14 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
         (event: TransitionEvent) => {
           if (event.propertyName !== 'transform') return;
           this.clearTransitionListeners();
-          this.ngZone.run(() => callback());
+          this.ngZone.run(() => {
+            // S2 — deterministic resolution: only complete if we are still in an animating state
+            if (this.drawerState === DrawerState.OPENING || this.drawerState === DrawerState.CLOSING) {
+              this.drawerState = targetState;
+              callback?.();
+              this.cdRef.markForCheck();
+            }
+          });
         }
       );
       this.transitionEndUnlisten = unlisten;
@@ -426,7 +445,11 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
         this.transitionEndUnlisten = null;
       }
       this.ngZone.run(() => {
-        if (this.isAnimating) callback();
+        if (this.drawerState === DrawerState.OPENING || this.drawerState === DrawerState.CLOSING) {
+          this.drawerState = targetState;
+          callback?.();
+          this.cdRef.markForCheck();
+        }
       });
     }, reducedMotion ? 0 : DRAWER_TRANSITION_DURATION_MS + 100);
   }
@@ -465,7 +488,9 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   // ── Pointer event delegation ────────────────────────────────────────────────
 
   onMenuPointerDown(event: PointerEvent): void {
-    if (this.isAnimating) this.stopTransition();
+    if (this.drawerState === DrawerState.OPENING || this.drawerState === DrawerState.CLOSING) {
+      this.stopTransition();
+    }
     this.gestureHandler?.onMenuPointerDown(event);
   }
 
@@ -485,21 +510,35 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     // R1 — cancel the pending transitionend listener + fallback timer before
     // freezing the animation, so the stale callback cannot fire after a gesture
     // interrupts the animation mid-flight.
-    this.clearTransitionListeners();
-    this.isAnimating    = false;
-    this.menuTransition = 'none';
+    this.transitionTo(DrawerState.DRAGGING);
     if (this.menuElement) void this.menuElement.offsetHeight; // force reflow
     this.cdRef.markForCheck();
   }
 
   // ── Overlay pointer handler ──────────────────────────────────────────────────
+  private overlayDownX = 0;
+  private overlayDownY = 0;
+
   /**
    * Consolidates overlay interactions into a single PointerEvent flow (Problem 3).
    * Prevents dual triggering between touch and mouse, and ensures robust closure.
    */
   onOverlayPointerDown(event: PointerEvent): void {
-    if (this.isAnimating) this.stopTransition();
-    if (this.isMobileMenuOpen && !this.gestureHandler?.getIsDragging()) {
+    if (this.drawerState === DrawerState.OPENING || this.drawerState === DrawerState.CLOSING) {
+      this.stopTransition();
+    }
+    this.overlayDownX = event.clientX;
+    this.overlayDownY = event.clientY;
+  }
+
+  onOverlayPointerUp(event: PointerEvent): void {
+    if (this.drawerState !== DrawerState.OPEN) return;
+
+    const diffX = Math.abs(event.clientX - this.overlayDownX);
+    const diffY = Math.abs(event.clientY - this.overlayDownY);
+
+    // S5 — Overlay closure threshold
+    if (diffX < 10 && diffY < 10) {
       event.preventDefault();
       event.stopPropagation();
       this.closeMobileMenu('overlay');
@@ -529,29 +568,8 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   // ── Search ─────────────────────────────────────────────────────────────────
 
-  private getTranslatedLowercase(key: string): string {
-    const cached = this.translationCache.get(key);
-    if (cached !== undefined) return cached;
-    const translated = this.translate.instant(key).toLowerCase();
-    this.translationCache.set(key, translated);
-    return translated;
-  }
-
-  shouldShowLink = (linkTextKey: string): boolean => {
-    if (!this.searchQuery) return true;
-    return this.getTranslatedLowercase(linkTextKey).includes(this.searchQuery.toLowerCase());
-  };
-
-  shouldShowSection(sectionKey: string, links: MobileMenuLink[]): boolean {
-    if (!this.searchQuery) return true;
-    if (this.getTranslatedLowercase(sectionKey).includes(this.searchQuery.toLowerCase())) return true;
-    return links.some(link => this.shouldShowLink(link.key));
-  }
-
   onSearchChange(query: string): void {
-    const hadQuery = !!this.searchQuery;
-    this.searchQuery = query;
-    this.updateSearchResultsCount();
+    this.searchController.onSearchChange(query);
 
     // S4 — Strategy: Refresh focusables reactively after the next render cycle (P4).
     //      This avoids stale element lists and non-deterministic keyboard behavior.
@@ -559,64 +577,26 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       this.a11y.refreshFocusableElements();
     }, { injector: this.injector });
 
-    if (this.searchQuery) {
-      if (!hadQuery) {
-        this.expandedSectionsBeforeSearch = new Set(this.expandedSections);
-        this.expandedSections.clear();
-      }
+    if (this.searchDebounceTimer !== null) clearTimeout(this.searchDebounceTimer);
 
-      if (this.searchDebounceTimer !== null) clearTimeout(this.searchDebounceTimer);
-
-      this.searchDebounceTimer = setTimeout(() => {
-        this.analyticsService.trackEvent('mobile_menu_search', {
-          search_term:   this.searchQuery,
-          results_count: this.searchResultsCount,
-        });
-      }, 300);
-
-      let expandedCount = 0;
-      for (const section of this.menuSections) {
-        if (this.shouldShowSection(section.titleKey, section.links) && expandedCount < 2) {
-          this.expandedSections.add(section.id);
-          expandedCount++;
-        }
-      }
-    } else if (hadQuery) {
-      this.expandedSections = this.expandedSectionsBeforeSearch ?? new Set<string>();
-      this.expandedSectionsBeforeSearch = null;
-    }
+    this.searchDebounceTimer = setTimeout(() => {
+      this.analyticsService.trackEvent('mobile_menu_search', {
+        search_term:   query,
+        results_count: this.searchController.searchResultsCount(),
+      });
+    }, 300);
 
     this.cdRef.markForCheck();
-  }
-
-  private updateSearchResultsCount(): void {
-    if (!this.searchQuery) {
-      this.searchResultsCount = 0;
-      return;
-    }
-
-    let count = 0;
-    for (const section of this.menuSections) {
-      section.links.forEach(link => { if (this.shouldShowLink(link.key)) count++; });
-    }
-    if (this.shouldShowLink('HEADER.CONTACT')) count++;
-    this.searchResultsCount = count;
   }
 
   // ── Sections ────────────────────────────────────────────────────────────────
 
   toggleSection(section: string): void {
-    if (this.expandedSections.has(section)) {
-      this.expandedSections.delete(section);
-    } else {
-      this.expandedSections.add(section);
+    this.searchController.toggleSection(section);
+    if (this.searchController.isSectionExpanded(section)) {
       this.analyticsService.trackEvent('mobile_menu_expand_section', { section_id: section });
     }
     this.cdRef.markForCheck();
-  }
-
-  isSectionExpanded(section: string): boolean {
-    return this.expandedSections.has(section);
   }
 
   // ── Accessibility / Focus management ─────────────────────────────────────────
@@ -642,10 +622,16 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   // ── Haptic feedback ─────────────────────────────────────────────────────────
 
-  private triggerHapticFeedback(): void {
+  private triggerThrottledHaptic(): void {
     if (!this.isBrowser || !navigator.vibrate) return;
+
+    const now = Date.now();
+    if (now - this.lastHapticTime < this.HAPTIC_COOLDOWN_MS) return;
+
     if (navigator.userActivation && !navigator.userActivation.isActive) return;
+
     navigator.vibrate(5);
+    this.lastHapticTime = now;
   }
 
   // ── Cleanup ─────────────────────────────────────────────────────────────────
@@ -658,6 +644,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.resizeObserver?.disconnect();
     this.resizeObserver = null;
     this.clearTransitionListeners();
+    this.a11y.stopObserving();
 
     if (this.searchDebounceTimer !== null) {
       clearTimeout(this.searchDebounceTimer);

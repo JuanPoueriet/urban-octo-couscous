@@ -108,7 +108,7 @@ describe('MobileMenu', () => {
     component.onSearchChange('Services');
     fixture.detectChanges();
 
-    expect(component.searchResultsCount).toBeGreaterThan(0);
+    expect(component.searchController.searchResultsCount()).toBeGreaterThan(0);
   });
 
   it('should show "No results found" when search query matches nothing', () => {
@@ -122,10 +122,10 @@ describe('MobileMenu', () => {
   it('should toggle sections', () => {
     const sectionId = 'services';
     component.toggleSection(sectionId);
-    expect(component.expandedSections.has(sectionId)).toBeTrue();
+    expect(component.searchController.expandedSections().has(sectionId)).toBeTrue();
 
     component.toggleSection(sectionId);
-    expect(component.expandedSections.has(sectionId)).toBeFalse();
+    expect(component.searchController.expandedSections().has(sectionId)).toBeFalse();
   });
 
   it('should trap focus when open', () => {
@@ -196,12 +196,12 @@ describe('MobileMenu', () => {
 
   it('should restore expanded sections after clearing search query', () => {
     component.toggleSection('services');
-    expect(component.expandedSections.has('services')).toBeTrue();
+    expect(component.searchController.expandedSections().has('services')).toBeTrue();
 
     component.onSearchChange('serv');
     component.onSearchChange('');
 
-    expect(component.expandedSections.has('services')).toBeTrue();
+    expect(component.searchController.expandedSections().has('services')).toBeTrue();
   });
 
   it('should generate an instance-safe aria title id', () => {

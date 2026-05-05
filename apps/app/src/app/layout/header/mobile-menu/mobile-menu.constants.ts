@@ -19,6 +19,14 @@ export const GESTURE_VELOCITY_WINDOW_MS = 100; // ms window for instantaneous ve
 export const GESTURE_ELASTIC_RESISTANCE = 100; // 0-100
 export const GESTURE_MAX_STRETCH_PERCENT = 4; // %
 
+export enum DrawerState {
+  CLOSED  = 'closed',
+  OPENING = 'opening',
+  OPEN    = 'open',
+  CLOSING = 'closing',
+  DRAGGING = 'dragging',
+}
+
 export interface MobileMenuLink {
   key: string;
   route?: any[];
