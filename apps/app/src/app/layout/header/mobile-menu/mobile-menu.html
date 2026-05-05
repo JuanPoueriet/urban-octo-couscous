@@ -6,8 +6,6 @@
             was removed to eliminate the dual source of truth. -->
   <div
     class="mobile-menu-overlay"
-    (pointerdown)="onOverlayPointerDown($event)"
-    (pointerup)="onOverlayPointerUp($event)"
   ></div>
 
   <!-- Menú móvil tipo Drawer Navigation -->
@@ -17,10 +15,6 @@
     [style.transform]="'translateX(' + menuTranslateX + 'px) scaleX(' + menuScaleX + ')'"
     [style.transform-origin]="menuTransformOrigin"
     [style.transition]="menuTransition"
-    (pointerdown)="onMenuPointerDown($event)"
-    (pointermove)="onMenuPointerMove($event)"
-    (pointerup)="onMenuPointerEnd($event)"
-    (pointercancel)="onMenuPointerCancel($event)"
     role="dialog"
     aria-modal="true"
     [attr.aria-labelledby]="menuTitleId"
