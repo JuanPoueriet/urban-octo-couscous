@@ -1,7 +1,9 @@
 import { Injectable, NgZone, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { AnalyticsService } from './analytics.service';
 
 export interface GestureHandler {
+  name: string;
   priority: number;
   onPointerDown?: (event: PointerEvent) => boolean | void;
   onPointerMove?: (event: PointerEvent) => void;
@@ -17,6 +19,7 @@ export class GestureBusService {
   private ngZone = inject(NgZone);
   private isBrowser = isPlatformBrowser(this.platformId);
 
+  private analytics = inject(AnalyticsService);
   private handlers: GestureHandler[] = [];
   private activeHandler: GestureHandler | null = null;
 
@@ -47,11 +50,27 @@ export class GestureBusService {
     // S2 — Priority-based gesture arbitration.
     // The first handler (highest priority) that returns true from onPointerDown
     // "captures" the gesture.
+    const previousHandler = this.activeHandler;
+
     for (const handler of this.handlers) {
       if (handler.onPointerDown) {
         const captured = handler.onPointerDown(event);
         if (captured) {
           this.activeHandler = handler;
+
+          // P6 — Telemetry for gesture "theft" or ownership change
+          if (previousHandler && previousHandler !== handler) {
+            this.analytics.trackEvent('gesture_ownership_change', {
+              from: previousHandler.name,
+              to: handler.name,
+              priority_diff: handler.priority - previousHandler.priority,
+            });
+
+            // If a gesture was stolen, send a cancel to the previous handler
+            if (previousHandler.onPointerCancel) {
+              previousHandler.onPointerCancel(event);
+            }
+          }
           break;
         }
       }

@@ -17,6 +17,7 @@ import {
   DestroyRef,
   afterNextRender,
   Injector,
+  ViewChild,
 } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Router } from '@angular/router';
@@ -31,6 +32,7 @@ import { OverlayManagerService } from '@core/services/overlay-manager.service';
 import { AnalyticsService } from '@core/services/analytics.service';
 import { GestureBusService } from '@core/services/gesture-bus.service';
 import { MobileMenuGestures, MobileMenuGestureConfig } from './mobile-menu-gestures';
+import { DrawerTransitionCoordinator } from './drawer-transition-coordinator';
 import { MobileMenuQuickAccess } from './mobile-menu-quick-access';
 import { MobileMenuSearch } from './mobile-menu-search';
 import { MobileMenuSection } from './mobile-menu-section';
@@ -38,7 +40,6 @@ import { MobileMenuSearchController } from './mobile-menu-search.controller';
 import {
   getMobileMenuSections,
   MobileMenuSectionData,
-  MobileMenuLink,
   MOBILE_MENU_MAX_WIDTH,
   DRAWER_TRANSITION,
   DRAWER_TRANSITION_DURATION_MS,
@@ -111,14 +112,21 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private lastHapticTime = 0;
   private readonly HAPTIC_COOLDOWN_MS = 200;
 
-  // ── DOM references ──────────────────────────────────────────────────────────
-  private menuElement:    HTMLElement | null = null;
-  private overlayElement: HTMLElement | null = null;
-  private resizeObserver: ResizeObserver | null = null;
+  private transitionCoordinator!: DrawerTransitionCoordinator;
 
-  // ── P2 — single, cancellable transitionend listener + fallback timer ─────────
-  private transitionEndUnlisten: (() => void) | null = null;
-  private transitionFallbackTimer: ReturnType<typeof setTimeout> | null = null;
+  // ── DOM references ──────────────────────────────────────────────────────────
+  @ViewChild('menuElement') private menuElementRef!: ElementRef<HTMLElement>;
+  @ViewChild('overlayElement') private overlayElementRef!: ElementRef<HTMLElement>;
+
+  private get menuElement(): HTMLElement | null {
+    return this.menuElementRef?.nativeElement || null;
+  }
+
+  private get overlayElement(): HTMLElement | null {
+    return this.overlayElementRef?.nativeElement || null;
+  }
+
+  private resizeObserver: ResizeObserver | null = null;
 
   // Non-passive touchmove handler bound once and removed in cleanup (Problem 2 fix)
   private readonly boundTouchMove = (event: TouchEvent): void => {
@@ -138,7 +146,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   // ── View data ────────────────────────────────────────────────────────────────
   public currentYear = new Date().getFullYear();
   public menuSections: MobileMenuSectionData[] = [];
-  public readonly menuTitleId = `mobile-menu-title-${Math.random().toString(36).slice(2, 10)}`;
+  public readonly menuTitleId = 'mobile-menu-title';
 
   // ── Computed state accessors ─────────────────────────────────────────────────
 
@@ -196,6 +204,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     if (this.isBrowser) {
+      this.initializeCoordinator();
       this.initializeMenu();
       this.setupGestures();
       this.setupResizeObserver();
@@ -215,10 +224,51 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   // ── Initialisation ──────────────────────────────────────────────────────────
 
-  private initializeMenu(): void {
-    this.menuElement    = this.el.nativeElement.querySelector('.header__nav-links-mobile');
-    this.overlayElement = this.el.nativeElement.querySelector('.mobile-menu-overlay');
+  private initializeCoordinator(): void {
+    this.transitionCoordinator = new DrawerTransitionCoordinator(
+      {
+        getMenuElement: () => this.menuElement,
+        getOverlayElement: () => this.overlayElement,
+        prefersReducedMotion: () => this.prefersReducedMotion(),
+        getDrawerTransition: () => this.getDrawerTransition(),
+        onStateChange: (state) => {
+          this.drawerState = state;
+          if (state === DrawerState.OPENING || state === DrawerState.CLOSING) {
+            this.menuTransition = this.getDrawerTransition();
+          } else if (state === DrawerState.DRAGGING) {
+            this.menuTransition = 'none';
+          }
+        },
+        onUpdateTranslate: (translateX) => {
+          this.menuTranslateX = translateX;
+          this.menuScaleX = 1;
+        },
+        onLockScroll: () => this.scrollLockService.lock('mobile-menu'),
+        onUnlockScroll: () => this.scrollLockService.unlock('mobile-menu'),
+        onRegisterOverlay: () => this.overlayManagerService.register('mobile-menu'),
+        onUnregisterOverlay: () => this.overlayManagerService.unregister('mobile-menu'),
+        onTriggerHaptic: () => this.triggerThrottledHaptic(),
+        onA11yOpen: () => {
+          this.a11y.saveFocus();
+          this.a11y.startObserving();
+        },
+        onA11yClose: () => {
+          this.a11y.restoreFocus();
+          this.a11y.stopObserving();
+        },
+        onA11yInitialFocus: () => {
+          this.a11y.refreshFocusableElements();
+          this.a11y.setInitialFocus();
+        },
+      },
+      this.renderer,
+      this.ngZone,
+      this.cdRef
+    );
+  }
 
+  private initializeMenu(): void {
+    // P4 — used template refs instead of querySelector to decouple logic from CSS classes
     this.setSharedTokens();
 
     if (this.menuElement) {
@@ -334,63 +384,14 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   // ── FSM State Transitions ───────────────────────────────────────────────────
 
   private transitionTo(newState: DrawerState, options: { immediate?: boolean } = {}): void {
-    if (this.drawerState === newState && !options.immediate) return;
+    const targetTranslateX = newState === DrawerState.CLOSING
+      ? (this.directionService.isRtl() ? this.menuWidth : -this.menuWidth)
+      : undefined;
 
-    this.drawerState = newState;
-
-    switch (newState) {
-      case DrawerState.OPENING:
-        this.menuTransition = this.getDrawerTransition();
-        this.menuTranslateX = 0;
-        this.menuScaleX     = 1;
-        if (this.isBrowser) {
-          this.scrollLockService.lock('mobile-menu');
-          this.a11y.saveFocus();
-          this.overlayManagerService.register('mobile-menu');
-          this.triggerThrottledHaptic();
-          this.a11y.startObserving();
-        }
-        if (this.overlayElement) {
-          this.overlayElement.classList.add('visible');
-          this.updateOverlayVisual(1);
-        }
-        this.handleTransitionEnd(DrawerState.OPEN, () => {
-          this.a11y.refreshFocusableElements();
-          this.a11y.setInitialFocus();
-        });
-        break;
-
-      case DrawerState.CLOSING:
-        this.menuTransition = this.getDrawerTransition();
-        this.menuTranslateX = this.directionService.isRtl() ? this.menuWidth : -this.menuWidth;
-        this.menuScaleX     = 1;
-        if (this.isBrowser) {
-          this.scrollLockService.unlock('mobile-menu');
-          this.overlayManagerService.unregister('mobile-menu');
-          this.triggerThrottledHaptic();
-          this.a11y.restoreFocus();
-          this.a11y.stopObserving();
-        }
-        if (this.overlayElement) {
-          this.overlayElement.classList.remove('visible');
-          this.overlayElement.style.opacity = '';
-          this.overlayElement.style.backdropFilter = '';
-        }
-        this.handleTransitionEnd(DrawerState.CLOSED);
-        break;
-
-      case DrawerState.DRAGGING:
-        this.clearTransitionListeners();
-        this.menuTransition = 'none';
-        break;
-
-      case DrawerState.OPEN:
-      case DrawerState.CLOSED:
-        this.clearTransitionListeners();
-        break;
-    }
-
-    this.cdRef.markForCheck();
+    this.transitionCoordinator.transitionTo(newState, {
+      ...options,
+      targetTranslateX,
+    });
   }
 
   // ── Open / close drawer ─────────────────────────────────────────────────────
@@ -405,72 +406,6 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.transitionTo(DrawerState.CLOSING);
   }
 
-  // ── Transition lifecycle (P2) ────────────────────────────────────────────────
-
-  private clearTransitionListeners(): void {
-    if (this.transitionEndUnlisten) {
-      this.transitionEndUnlisten();
-      this.transitionEndUnlisten = null;
-    }
-    if (this.transitionFallbackTimer !== null) {
-      clearTimeout(this.transitionFallbackTimer);
-      this.transitionFallbackTimer = null;
-    }
-  }
-
-  private handleTransitionEnd(targetState: DrawerState, callback?: () => void): void {
-    // P2 — cancel any stale listener/timer before registering a new one,
-    // so interrupted animations never fire old callbacks on the next transition.
-    this.clearTransitionListeners();
-
-    if (!this.isBrowser || !this.menuElement) {
-      this.drawerState = targetState;
-      callback?.();
-      return;
-    }
-
-    // R5 — when reduced motion is preferred, the CSS transition is suppressed
-    // by the @media rule and transitionend will never fire. Skip the listener
-    // and collapse the fallback to 0 ms so the state machine resolves immediately.
-    const reducedMotion = this.prefersReducedMotion();
-
-    if (!reducedMotion) {
-      const unlisten = this.renderer.listen(
-        this.menuElement,
-        'transitionend',
-        (event: TransitionEvent) => {
-          if (event.propertyName !== 'transform') return;
-          this.clearTransitionListeners();
-          this.ngZone.run(() => {
-            // S2 — deterministic resolution: only complete if we are still in an animating state
-            if (this.drawerState === DrawerState.OPENING || this.drawerState === DrawerState.CLOSING) {
-              this.drawerState = targetState;
-              callback?.();
-              this.cdRef.markForCheck();
-            }
-          });
-        }
-      );
-      this.transitionEndUnlisten = unlisten;
-    }
-
-    // Fallback: resolves in 0 ms for reduced motion (drawer snaps instantly),
-    // or after the full transition duration as a safety net for normal motion.
-    this.transitionFallbackTimer = setTimeout(() => {
-      this.transitionFallbackTimer = null;
-      if (this.transitionEndUnlisten) {
-        this.transitionEndUnlisten();
-        this.transitionEndUnlisten = null;
-      }
-      this.ngZone.run(() => {
-        if (this.drawerState === DrawerState.OPENING || this.drawerState === DrawerState.CLOSING) {
-          this.drawerState = targetState;
-          callback?.();
-          this.cdRef.markForCheck();
-        }
-      });
-    }, reducedMotion ? 0 : DRAWER_TRANSITION_DURATION_MS + 100);
-  }
 
   // R5 — single query so callers do not embed matchMedia strings directly
   private prefersReducedMotion(): boolean {
@@ -541,7 +476,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   onSearchChange(query: string): void {
     this.searchController.onSearchChange(query);
 
-    // S4 — Strategy: Refresh focusables reactively after the next render cycle (P4).
+    // S4 — Strategy: Refresh focusables reactively after the next render cycle (S4).
     //      This avoids stale element lists and non-deterministic keyboard behavior.
     afterNextRender(() => {
       this.a11y.refreshFocusableElements();
@@ -632,7 +567,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     }
     this.resizeObserver?.disconnect();
     this.resizeObserver = null;
-    this.clearTransitionListeners();
+    this.transitionCoordinator?.destroy();
     this.a11y.stopObserving();
 
     if (this.searchDebounceTimer !== null) {
