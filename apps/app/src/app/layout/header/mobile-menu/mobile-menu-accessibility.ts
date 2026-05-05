@@ -4,13 +4,19 @@ export class MobileMenuAccessibility {
   private lastFocusedElement: HTMLElement | null = null;
   private focusableElements: HTMLElement[] = [];
 
-  constructor(private el: ElementRef) {}
+  constructor(
+    private el: ElementRef,
+    private isBrowser: boolean
+  ) {}
 
   public saveFocus() {
+    if (!this.isBrowser) return;
     this.lastFocusedElement = document.activeElement as HTMLElement;
   }
 
   public restoreFocus(fallbackSelector = '.header__mobile-toggle') {
+    if (!this.isBrowser) return;
+
     if (this.lastFocusedElement && this.isValidForFocus(this.lastFocusedElement)) {
       try {
         this.lastFocusedElement.focus({ preventScroll: true });
@@ -28,7 +34,7 @@ export class MobileMenuAccessibility {
   }
 
   private isValidForFocus(el: HTMLElement): boolean {
-    if (!el || !el.isConnected) return false;
+    if (!this.isBrowser || !el || !el.isConnected) return false;
 
     const style = window.getComputedStyle(el);
     const isVisible = style.display !== 'none' &&
@@ -42,6 +48,7 @@ export class MobileMenuAccessibility {
   }
 
   public setInitialFocus() {
+    if (!this.isBrowser) return;
     const closeBtn = this.el.nativeElement.querySelector('.mobile-close-btn');
     if (closeBtn) {
       (closeBtn as HTMLElement).focus();
@@ -49,6 +56,8 @@ export class MobileMenuAccessibility {
   }
 
   public refreshFocusableElements() {
+    if (!this.isBrowser) return;
+
     const focusableSelectors =
       'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
 
@@ -69,6 +78,8 @@ export class MobileMenuAccessibility {
   }
 
   public trapFocus(event: KeyboardEvent) {
+    if (!this.isBrowser) return;
+
     if (this.focusableElements.length === 0) {
       this.refreshFocusableElements();
     }
@@ -88,6 +99,29 @@ export class MobileMenuAccessibility {
         firstElement.focus();
         event.preventDefault();
       }
+    }
+  }
+
+  /**
+   * Handles focus events on sentinel elements to cycle focus deterministically (Problem 6).
+   */
+  public handleSentinelFocus(event: FocusEvent, type: 'start' | 'end') {
+    if (!this.isBrowser) return;
+
+    this.refreshFocusableElements();
+    if (this.focusableElements.length === 0) return;
+
+    // Filter out the sentinels themselves from the focusable list to find real targets
+    const realFocusables = this.focusableElements.filter(
+      el => !el.classList.contains('focus-sentinel')
+    );
+
+    if (realFocusables.length === 0) return;
+
+    if (type === 'start') {
+      realFocusables[realFocusables.length - 1].focus();
+    } else {
+      realFocusables[0].focus();
     }
   }
 }

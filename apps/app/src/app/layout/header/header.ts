@@ -124,7 +124,7 @@ export class Header implements OnInit, OnDestroy, AfterViewInit {
   }
 
   closeMobileMenu() {
-    this.menuService.close();
+    this.menuService.close('button');
     this.closeDropdowns();
   }
 
