@@ -116,8 +116,6 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   // ── Search / debounce ────────────────────────────────────────────────────────
   private searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;  // P11 — typed
-  // R3 — captured so it can be cancelled in cleanup() if the component is destroyed
-  private a11yRefreshTimer:    ReturnType<typeof setTimeout> | null = null;
 
   // ── Gesture handler ─────────────────────────────────────────────────────────
   private gestureHandler: MobileMenuGestures | null = null;
@@ -639,12 +637,6 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     if (this.searchDebounceTimer !== null) {
       clearTimeout(this.searchDebounceTimer);
       this.searchDebounceTimer = null;
-    }
-
-    // R3 — cancel the a11y refresh timer to avoid accessing a destroyed component
-    if (this.a11yRefreshTimer !== null) {
-      clearTimeout(this.a11yRefreshTimer);
-      this.a11yRefreshTimer = null;
     }
 
     if (!this.isBrowser) return;
