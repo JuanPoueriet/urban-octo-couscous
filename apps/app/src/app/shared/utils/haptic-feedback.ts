@@ -1,10 +1,11 @@
 /**
  * Utility for triggering haptic feedback on mobile devices.
+ * @param duration Optional duration in milliseconds (default: 20)
  */
-export function triggerTick(): void {
+export function triggerTick(duration: number = 20): void {
   if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
-    // A single 10ms vibration is a subtle "tick" for mobile devices.
+    // A single 20ms vibration is a clear "tick" for mobile devices.
     // Use it for slide changes or scroll milestones.
-    navigator.vibrate(10);
+    navigator.vibrate(duration);
   }
 }
