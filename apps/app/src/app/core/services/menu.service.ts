@@ -41,8 +41,15 @@ export class MenuService {
 
   /**
    * Toggles the mobile menu state.
+   * @param reasonOnClose The reason for closing the menu if it was open.
    */
-  toggle() {
-    this.isMobileMenuOpen.update((prev) => !prev);
+  toggle(reasonOnClose: MenuCloseReason = 'button') {
+    const nextState = !this.isMobileMenuOpen();
+    if (!nextState) {
+      this.closeReason.set(reasonOnClose);
+    } else {
+      this.closeReason.set(null);
+    }
+    this.isMobileMenuOpen.set(nextState);
   }
 }
