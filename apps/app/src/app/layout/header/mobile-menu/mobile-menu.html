@@ -7,6 +7,7 @@
   <div
     class="mobile-menu-overlay"
     (pointerdown)="onOverlayPointerDown($event)"
+    (pointerup)="onOverlayPointerUp($event)"
   ></div>
 
   <!-- Menú móvil tipo Drawer Navigation -->
@@ -55,16 +56,16 @@
     ></jsl-mobile-menu-quick-access>
 
     <jsl-mobile-menu-search
-      [searchQuery]="searchQuery"
-      [searchResultsCount]="searchResultsCount"
+      [searchQuery]="searchController.searchQuery()"
+      [searchResultsCount]="searchController.searchResultsCount()"
       (onSearchChange)="onSearchChange($event)"
     ></jsl-mobile-menu-search>
 
     <!-- ARIA Live region for search status and results -->
     <div class="sr-only" aria-live="polite" aria-atomic="true">
-      @if (searchQuery) {
-        @if (searchResultsCount > 0) {
-          {{ 'SEARCH.RESULTS_COUNT' | translate: { count: searchResultsCount } }}
+      @if (searchController.searchQuery()) {
+        @if (searchController.searchResultsCount() > 0) {
+          {{ 'SEARCH.RESULTS_COUNT' | translate: { count: searchController.searchResultsCount() } }}
         } @else {
           {{ 'SEARCH.NO_RESULTS_FOUND' | translate }}
         }
@@ -72,7 +73,7 @@
     </div>
 
     <!-- No Results State -->
-    @if (searchQuery && searchResultsCount === 0) {
+    @if (searchController.searchQuery() && searchController.searchResultsCount() === 0) {
       <div class="mobile-menu-no-results">
         <div class="no-results-icon">
           <lucide-icon name="SearchX"></lucide-icon>
@@ -85,14 +86,14 @@
     }
 
     @for (section of menuSections; track section.id) {
-      @if (shouldShowSection(section.titleKey, section.links)) {
+      @if (searchController.shouldShowSection(section.titleKey, section.links)) {
         <jsl-mobile-menu-section
           [sectionId]="section.id"
           [sectionTitleKey]="section.titleKey"
-          [isExpanded]="isSectionExpanded(section.id)"
+          [isExpanded]="searchController.isSectionExpanded(section.id)"
           [links]="section.links"
-          [searchQuery]="searchQuery"
-          [shouldShowLinkFn]="shouldShowLink"
+          [searchQuery]="searchController.searchQuery()"
+          [shouldShowLinkFn]="searchController.shouldShowLink"
           (onToggle)="toggleSection($event)"
           (onClose)="closeMobileMenu()"
           (onRouteNavigate)="onMenuRouteNavigate($event.route, $event.source)"
@@ -101,7 +102,7 @@
     }
 
     <!-- Contact Button -->
-    @if (shouldShowLink('HEADER.CONTACT')) {
+    @if (searchController.shouldShowLink('HEADER.CONTACT')) {
     <div class="mobile-cta-container">
       <a [routerLink]="[currentLang, 'contact']" routerLinkActive="active" class="mobile-cta-btn" (click)="onMenuRouteNavigate([currentLang, 'contact'], 'contact_cta'); $event.preventDefault()">
         <lucide-icon name="Mail"></lucide-icon>

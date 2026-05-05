@@ -3,6 +3,7 @@ import { ElementRef } from '@angular/core';
 export class MobileMenuAccessibility {
   private lastFocusedElement: HTMLElement | null = null;
   private focusableElements: HTMLElement[] = [];
+  private observer: MutationObserver | null = null;
 
   constructor(
     private el: ElementRef,
@@ -122,6 +123,28 @@ export class MobileMenuAccessibility {
       realFocusables[realFocusables.length - 1].focus();
     } else {
       realFocusables[0].focus();
+    }
+  }
+
+  public startObserving() {
+    if (!this.isBrowser || this.observer) return;
+
+    this.observer = new MutationObserver(() => {
+      this.refreshFocusableElements();
+    });
+
+    this.observer.observe(this.el.nativeElement, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['style', 'class', 'disabled', 'hidden', 'inert']
+    });
+  }
+
+  public stopObserving() {
+    if (this.observer) {
+      this.observer.disconnect();
+      this.observer = null;
     }
   }
 }

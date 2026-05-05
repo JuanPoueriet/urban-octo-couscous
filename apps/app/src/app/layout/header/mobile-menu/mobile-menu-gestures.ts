@@ -166,6 +166,7 @@ export class MobileMenuGestures {
     // Allow interaction when open OR animating (supports interrupting a closing animation — P3)
     if (!this.config.isOpen() && !this.config.isAnimating()) return;
 
+    // S8: stop propagation for gestures
     event.stopPropagation();
     this.activePointerId = event.pointerId;
     this.startX = event.clientX;
