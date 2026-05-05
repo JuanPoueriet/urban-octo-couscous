@@ -5,11 +5,13 @@
             the animation. The Angular binding [class.visible]="isMobileMenuOpen"
             was removed to eliminate the dual source of truth. -->
   <div
+    #overlayElement
     class="mobile-menu-overlay"
   ></div>
 
   <!-- Menú móvil tipo Drawer Navigation -->
   <div
+    #menuElement
     class="header__nav-links-mobile"
     [class.open]="isMobileMenuOpen"
     [style.transform]="'translateX(' + menuTranslateX + 'px) scaleX(' + menuScaleX + ')'"

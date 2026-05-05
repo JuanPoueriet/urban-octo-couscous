@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { DirectionService } from './direction.service';
 import { TranslateService } from '@ngx-translate/core';
-import { EventEmitter, provideZonelessChangeDetection } from '@angular/core';
+import { EventEmitter, provideZonelessChangeDetection, PLATFORM_ID } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -15,7 +15,10 @@ function buildMocks() {
   };
   const documentMock = {
     documentElement: { setAttribute: jasmine.createSpy('setAttribute') },
-    body: { setAttribute: jasmine.createSpy('setAttribute') },
+    body: {
+      setAttribute: jasmine.createSpy('setAttribute'),
+      style: { setProperty: jasmine.createSpy('setProperty') },
+    },
   };
   return { onLangChangeEmitter, translateServiceMock, documentMock };
 }
@@ -49,6 +52,7 @@ describe('DirectionService', () => {
         DirectionService,
         { provide: TranslateService, useValue: translateServiceMock },
         { provide: DOCUMENT, useValue: documentMock },
+        { provide: PLATFORM_ID, useValue: 'browser' },
       ],
     });
     service = TestBed.inject(DirectionService);

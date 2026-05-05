@@ -44,6 +44,7 @@ export interface MobileMenuGestureConfig {
 }
 
 export class MobileMenuGestures implements GestureHandler {
+  public name = 'MobileMenu';
   public priority = 100; // High priority for mobile menu
   // ── Adaptive thresholds (Problem 3) ──────────────────────────────────────────
 
@@ -84,6 +85,11 @@ export class MobileMenuGestures implements GestureHandler {
 
   private get verticalLockThreshold(): number {
     return this.config.verticalLockThreshold ?? GESTURE_VERTICAL_LOCK_THRESHOLD;
+  }
+
+  private get tapThreshold(): number {
+    // S3 — Adaptive tap threshold: slightly larger on high-DPI screens to reduce false negatives
+    return 10 * (this.dpr > 1.5 ? 1.5 : 1.0);
   }
 
   // ── Gesture state ────────────────────────────────────────────────────────────
@@ -424,18 +430,23 @@ export class MobileMenuGestures implements GestureHandler {
     const velocity = this.getInstantaneousVelocity();
     const isRtl = this.config.isRtl();
 
-    // S5 — Swipe to close on overlay
+    // P2 — Swipe to close on overlay: require directionality for both velocity and distance
+    const isValidDirection = isRtl ? diffX > 0 : diffX < 0;
     const isSwipeToClose =
       this.isDragging &&
       this.isHorizontalGesture &&
-      ((velocity > this.velocityThreshold && (isRtl ? diffX > 0 : diffX < 0)) ||
-        absDiffX > this.minSwipeDistance);
+      isValidDirection &&
+      (velocity > this.velocityThreshold || absDiffX > this.minSwipeDistance);
 
     if (isSwipeToClose) {
       this.config.onClose();
       this.trackMetric('gesture_complete', { action: 'close', source: 'overlay_swipe' });
-    } else if (absDiffX < 10 && absDiffY < 10) {
-      // Classic tap to close
+    } else if (
+      !this.isHorizontalGesture &&
+      absDiffX < this.tapThreshold &&
+      absDiffY < this.tapThreshold
+    ) {
+      // P3 — Adaptive tap to close; ignore if it was a horizontal gesture attempt
       this.config.onClose();
       this.trackMetric('gesture_complete', { action: 'close', source: 'overlay_tap' });
     }
