@@ -204,7 +204,7 @@ describe('MobileMenu', () => {
     expect(component.searchController.expandedSections().has('services')).toBeTrue();
   });
 
-  it('should generate an instance-safe aria title id', () => {
-    expect(component.menuTitleId).toMatch(/^mobile-menu-title-/);
+  it('should generate a deterministic aria title id', () => {
+    expect(component.menuTitleId).toBe('mobile-menu-title');
   });
 });
