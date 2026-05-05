@@ -107,9 +107,6 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     modules: [Navigation, Pagination, EffectCreative, FreeMode],
     effect: 'creative',
     watchSlidesProgress: true,
-    longSwipesRatio: 0.18,
-    longSwipesMs: 180,
-    followFinger: true,
     creativeEffect: {
       limitProgress: 2,
       perspective: true,
