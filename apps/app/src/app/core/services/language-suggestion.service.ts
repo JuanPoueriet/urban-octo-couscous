@@ -71,7 +71,7 @@ export class LanguageSuggestionService {
     }
   }
 
-  private getPreferredLanguage(supportedLangs: string[], currentUrlLang: string): string | null {
+  private getPreferredLanguage(supportedLangs: readonly string[], currentUrlLang: string): string | null {
     // 1. Prioritize browser/device languages for contextual UX suggestions.
     const browserLanguages = navigator.languages?.length ? navigator.languages : [navigator.language];
 
