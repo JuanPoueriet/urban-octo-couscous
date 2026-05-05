@@ -15,6 +15,8 @@ import {
   effect,
   ChangeDetectionStrategy,
   DestroyRef,
+  afterNextRender,
+  Injector,
 } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Router } from '@angular/router';
@@ -24,6 +26,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { DirectionService } from '@core/services/direction.service';
 import { MenuService } from '@core/services/menu.service';
+import { ScrollLockService } from '@core/services/scroll-lock.service';
+import { OverlayManagerService } from '@core/services/overlay-manager.service';
 import { AnalyticsService } from '@core/services/analytics.service';
 import { MobileMenuGestures, MobileMenuGestureConfig } from './mobile-menu-gestures';
 import { MobileMenuQuickAccess } from './mobile-menu-quick-access';
@@ -41,6 +45,7 @@ import {
   GESTURE_ELASTIC_RESISTANCE,
 } from './mobile-menu.constants';
 import { MobileMenuAccessibility } from './mobile-menu-accessibility';
+import { BreakpointService } from '@core/services/breakpoint.service';
 
 @Component({
   selector: 'jsl-mobile-menu',
@@ -64,6 +69,9 @@ import { MobileMenuAccessibility } from './mobile-menu-accessibility';
 export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private directionService = inject(DirectionService);
   private menuService      = inject(MenuService);
+  private scrollLockService = inject(ScrollLockService);
+  private overlayManagerService = inject(OverlayManagerService);
+  private breakpointService = inject(BreakpointService);
   private analyticsService = inject(AnalyticsService);
   private translate        = inject(TranslateService);
   private el               = inject(ElementRef);
@@ -72,6 +80,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private cdRef            = inject(ChangeDetectorRef);
   private destroyRef       = inject(DestroyRef);
   private router           = inject(Router);
+  private injector         = inject(Injector);
   // P10 — functional inject(); @Inject() decorator was redundant and removed
   private platformId       = inject(PLATFORM_ID);
 
@@ -149,6 +158,13 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     effect(() => {
       const isOpen = this.menuService.isMobileMenuOpen();
+      const isMobile = this.breakpointService.isMobile();
+
+      // Update edge-swipe activation contextually (P3)
+      if (this.gestureHandler) {
+        this.gestureHandler.setEdgeSwipeEnabled(isMobile && !isOpen);
+      }
+
       if (isOpen) {
         this.openDrawer();
       } else {
@@ -268,9 +284,10 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     this.gestureHandler = new MobileMenuGestures(this.gestureConfig, this.ngZone);
 
-    this.ngZone.runOutsideAngular(() => {
-      document.addEventListener('pointerdown', this.gestureHandler!.handleWindowPointerDown);
-    });
+    // Edge-swipe is enabled only when appropriate (mobile + menu closed)
+    this.gestureHandler.setEdgeSwipeEnabled(
+      this.breakpointService.isMobile() && !this.menuService.isMobileMenuOpen()
+    );
   }
 
   // ── Open / close drawer ─────────────────────────────────────────────────────
@@ -286,12 +303,12 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.menuScaleX     = 1;
 
     if (this.isBrowser) {
-      document.body.classList.add('no-scroll');
+      this.scrollLockService.lock('mobile-menu');
       // saveFocus() must run BEFORE toggleBackgroundInert so the reference to the
       // focused trigger element (e.g. hamburger button) is captured before inert
       // causes the browser to auto-blur it.
       this.a11y.saveFocus();
-      this.toggleBackgroundInert(true);
+      this.overlayManagerService.register('mobile-menu');
       this.triggerHapticFeedback();
     }
 
@@ -323,8 +340,8 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.menuScaleX     = 1;
 
     if (this.isBrowser) {
-      document.body.classList.remove('no-scroll');
-      this.toggleBackgroundInert(false);
+      this.scrollLockService.unlock('mobile-menu');
+      this.overlayManagerService.unregister('mobile-menu');
       this.triggerHapticFeedback();
       this.a11y.restoreFocus();
     }
@@ -419,28 +436,10 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private updateOverlayVisual(progress: number): void {
     if (!this.overlayElement) return;
     const normalized = this.clamp01(progress);
-    const eased      = 1 - Math.pow(1 - normalized, 2);
-    // P1 — inline opacity is set directly; the overlay is always in the DOM
-    //      so this is immediately visible during edge-swipe gestures too.
-    this.overlayElement.style.opacity        = (0.08 + eased * 0.62).toFixed(3);
-    this.overlayElement.style.backdropFilter = `blur(${(eased * 8).toFixed(2)}px)`;
-  }
 
-  // ── Background inert management ─────────────────────────────────────────────
-
-  private toggleBackgroundInert(isInert: boolean): void {
-    if (!this.isBrowser) return;
-    const targets = Array.from(document.querySelectorAll('main, jsl-footer, .header__nav, jsl-top-bar'));
-    for (const target of targets) {
-      if (isInert) {
-        // inert alone removes the element from the accessibility tree AND handles
-        // focus automatically — no aria-hidden needed (and avoids the "aria-hidden
-        // on focused ancestor" console error when the trigger element is inside .header__nav).
-        target.setAttribute('inert', '');
-      } else {
-        target.removeAttribute('inert');
-      }
-    }
+    // P6 — visual expression is set via CSS variable.
+    //      Opacity and blur are derived in CSS using clamp/calc for better maintainability.
+    this.renderer.setStyle(this.overlayElement, '--mm-overlay-progress', normalized.toFixed(3));
   }
 
   // ── Public menu actions ─────────────────────────────────────────────────────
@@ -537,13 +536,11 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.searchQuery = query;
     this.updateSearchResultsCount();
 
-    // R3 — captured timer so it can be cancelled if the component is destroyed
-    //      before the 150 ms elapse, preventing access to a destroyed DOM.
-    if (this.a11yRefreshTimer !== null) clearTimeout(this.a11yRefreshTimer);
-    this.a11yRefreshTimer = setTimeout(() => {
-      this.a11yRefreshTimer = null;
+    // S4 — Strategy: Refresh focusables reactively after the next render cycle (P4).
+    //      This avoids stale element lists and non-deterministic keyboard behavior.
+    afterNextRender(() => {
       this.a11y.refreshFocusableElements();
-    }, 150);
+    }, { injector: this.injector });
 
     if (this.searchQuery) {
       if (!hadQuery) {
@@ -631,7 +628,10 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   // ── Cleanup ─────────────────────────────────────────────────────────────────
 
   private cleanup(): void {
-    this.gestureHandler?.destroy();
+    if (this.gestureHandler) {
+      this.gestureHandler.setEdgeSwipeEnabled(false);
+      this.gestureHandler.destroy();
+    }
     this.resizeObserver?.disconnect();
     this.resizeObserver = null;
     this.clearTransitionListeners();
@@ -652,8 +652,8 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     document.removeEventListener('touchmove', this.boundTouchMove);
 
     if (this.isMobileMenuOpen) {
-      document.body.classList.remove('no-scroll');
-      this.toggleBackgroundInert(false);
+      this.scrollLockService.unlock('mobile-menu');
+      this.overlayManagerService.unregister('mobile-menu');
     }
   }
 }
