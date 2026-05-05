@@ -38,7 +38,7 @@ export interface MobileMenuGestureConfig {
   onOpen: () => void;
   onClose: () => void;
   onToggleHaptic: () => void;
-  onTrackMetric?: (metric: string, data: unknown) => void;
+  onTrackMetric?: (metric: string, data: Record<string, unknown>) => void;
 }
 
 export class MobileMenuGestures {
@@ -465,7 +465,7 @@ export class MobileMenuGestures {
 
   // ── Analytics ────────────────────────────────────────────────────────────────
 
-  private trackMetric(metric: string, data: unknown): void {
+  private trackMetric(metric: string, data: Record<string, unknown>): void {
     this.config.onTrackMetric?.(metric, data);
   }
 

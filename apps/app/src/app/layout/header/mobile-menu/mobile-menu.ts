@@ -98,6 +98,13 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private transitionEndUnlisten: (() => void) | null = null;
   private transitionFallbackTimer: ReturnType<typeof setTimeout> | null = null;
 
+  // Non-passive touchmove handler bound once and removed in cleanup (Problem 2 fix)
+  private readonly boundTouchMove = (event: TouchEvent): void => {
+    if (this.gestureHandler?.getIsDragging() && this.gestureHandler.getIsHorizontalGesture()) {
+      event.preventDefault();
+    }
+  };
+
   // ── Search / debounce ────────────────────────────────────────────────────────
   private searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;  // P11 — typed
 
@@ -162,6 +169,13 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       this.initializeMenu();
       this.setupGestures();
       this.setupResizeObserver();
+      // Register touchmove as non-passive so preventDefault() can prevent scroll
+      // while the user performs a horizontal drag gesture. @HostListener registers
+      // document listeners as passive by default in modern browsers, which silently
+      // ignores preventDefault() and prints an intervention warning in the console.
+      this.ngZone.runOutsideAngular(() => {
+        document.addEventListener('touchmove', this.boundTouchMove, { passive: false });
+      });
     }
   }
 
@@ -270,8 +284,11 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
     if (this.isBrowser) {
       document.body.classList.add('no-scroll');
-      this.toggleBackgroundInert(true);
+      // saveFocus() must run BEFORE toggleBackgroundInert so the reference to the
+      // focused trigger element (e.g. hamburger button) is captured before inert
+      // causes the browser to auto-blur it.
       this.a11y.saveFocus();
+      this.toggleBackgroundInert(true);
       this.triggerHapticFeedback();
     }
 
@@ -395,11 +412,12 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     const targets = Array.from(document.querySelectorAll('main, jsl-footer, .header__nav, jsl-top-bar'));
     for (const target of targets) {
       if (isInert) {
+        // inert alone removes the element from the accessibility tree AND handles
+        // focus automatically — no aria-hidden needed (and avoids the "aria-hidden
+        // on focused ancestor" console error when the trigger element is inside .header__nav).
         target.setAttribute('inert', '');
-        target.setAttribute('aria-hidden', 'true');
       } else {
         target.removeAttribute('inert');
-        target.removeAttribute('aria-hidden');
       }
     }
   }
@@ -464,12 +482,9 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  @HostListener('document:touchmove', ['$event'])
-  onDocumentTouchMove(event: TouchEvent): void {
-    if (this.gestureHandler?.getIsDragging() && this.gestureHandler.getIsHorizontalGesture() && this.isBrowser) {
-      event.preventDefault();
-    }
-  }
+  // touchmove is registered manually with { passive: false } in ngAfterViewInit
+  // (see boundTouchMove field). @HostListener is NOT used here because Angular
+  // registers document-level touch events as passive, making preventDefault() a no-op.
 
   // ── Search ─────────────────────────────────────────────────────────────────
 
@@ -587,6 +602,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.resizeObserver?.disconnect();
     this.resizeObserver = null;
     this.clearTransitionListeners();
+    document.removeEventListener('touchmove', this.boundTouchMove);
 
     if (this.searchDebounceTimer !== null) {
       clearTimeout(this.searchDebounceTimer);

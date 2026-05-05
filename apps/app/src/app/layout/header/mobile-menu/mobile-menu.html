@@ -21,7 +21,7 @@
     role="dialog"
     aria-modal="true"
     [attr.aria-labelledby]="menuTitleId"
-    [attr.aria-hidden]="isDrawerClosed ? 'true' : null"
+    [attr.inert]="isDrawerClosed ? '' : null"
   >
   <h2 [id]="menuTitleId" class="sr-only">{{ 'ARIA.MOBILE_MENU_TITLE' | translate }}</h2>
 
