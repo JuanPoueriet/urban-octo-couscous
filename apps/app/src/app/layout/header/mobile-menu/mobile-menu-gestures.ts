@@ -82,7 +82,7 @@ export class MobileMenuGestures {
   // ── Velocity helpers ─────────────────────────────────────────────────────────
 
   private pushVelocitySample(x: number): void {
-    const now = Date.now();
+    const now = performance.now();
     this.velocityBuffer.push({ x, t: now });
     const cutoff = now - GESTURE_VELOCITY_WINDOW_MS;
     this.velocityBuffer = this.velocityBuffer.filter(p => p.t >= cutoff);

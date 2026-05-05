@@ -25,7 +25,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { DirectionService } from '@core/services/direction.service';
-import { MenuService } from '@core/services/menu.service';
+import { MenuService, MenuCloseReason } from '@core/services/menu.service';
 import { ScrollLockService } from '@core/services/scroll-lock.service';
 import { OverlayManagerService } from '@core/services/overlay-manager.service';
 import { AnalyticsService } from '@core/services/analytics.service';
@@ -40,6 +40,8 @@ import {
   MOBILE_MENU_MAX_WIDTH,
   DRAWER_TRANSITION,
   DRAWER_TRANSITION_DURATION_MS,
+  DRAWER_EASING,
+  MOBILE_BREAKPOINT_PX,
   GESTURE_EDGE_THRESHOLD,
   GESTURE_VELOCITY_THRESHOLD,
   GESTURE_ELASTIC_RESISTANCE,
@@ -146,7 +148,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   constructor() {
     this.currentLang = this.translate.getCurrentLang() || this.translate.defaultLang || 'es';
     this.isBrowser   = isPlatformBrowser(this.platformId);
-    this.a11y        = new MobileMenuAccessibility(this.el);
+    this.a11y        = new MobileMenuAccessibility(this.el, this.isBrowser);
 
     this.translate.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
       this.currentLang = event.lang;
@@ -205,9 +207,23 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.menuElement    = this.el.nativeElement.querySelector('.header__nav-links-mobile');
     this.overlayElement = this.el.nativeElement.querySelector('.mobile-menu-overlay');
 
+    this.setSharedTokens();
+
     if (this.menuElement) {
       this.updateMenuWidth();
     }
+  }
+
+  /**
+   * Sets shared design tokens as CSS custom properties on the host element.
+   * This ensures TS and SCSS stay in sync without manual duplication.
+   */
+  private setSharedTokens(): void {
+    const host = this.el.nativeElement;
+    this.renderer.setStyle(host, '--mm-drawer-max-width', `${MOBILE_MENU_MAX_WIDTH}px`);
+    this.renderer.setStyle(host, '--mm-mobile-breakpoint', `${MOBILE_BREAKPOINT_PX}px`);
+    this.renderer.setStyle(host, '--mm-drawer-duration', `${DRAWER_TRANSITION_DURATION_MS}ms`);
+    this.renderer.setStyle(host, '--mm-drawer-easing', DRAWER_EASING);
   }
 
   private setupResizeObserver(): void {
@@ -275,7 +291,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       },
 
       onOpen:  () => this.menuService.open(),
-      onClose: () => this.menuService.close(),
+      onClose: () => this.menuService.close('gesture'),
       onToggleHaptic: () => this.triggerHapticFeedback(),
       onTrackMetric:  (metric, data) => this.analyticsService.trackEvent(`mobile_menu_${metric}`, data),
     };
@@ -442,8 +458,8 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   // ── Public menu actions ─────────────────────────────────────────────────────
 
-  closeMobileMenu(): void {
-    this.menuService.close();
+  closeMobileMenu(reason: MenuCloseReason = 'button'): void {
+    this.menuService.close(reason);
   }
 
   // ── Pointer event delegation ────────────────────────────────────────────────
@@ -476,14 +492,17 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.cdRef.markForCheck();
   }
 
-  // ── Overlay touch handler ───────────────────────────────────────────────────
-
-  onOverlayTouch(event: TouchEvent): void {
+  // ── Overlay pointer handler ──────────────────────────────────────────────────
+  /**
+   * Consolidates overlay interactions into a single PointerEvent flow (Problem 3).
+   * Prevents dual triggering between touch and mouse, and ensures robust closure.
+   */
+  onOverlayPointerDown(event: PointerEvent): void {
     if (this.isAnimating) this.stopTransition();
     if (this.isMobileMenuOpen && !this.gestureHandler?.getIsDragging()) {
       event.preventDefault();
       event.stopPropagation();
-      this.closeMobileMenu();
+      this.closeMobileMenu('overlay');
     }
   }
 
@@ -494,7 +513,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     if (!this.isBrowser || !this.isMobileMenuOpen) return;
 
     if (event.key === 'Escape') {
-      this.closeMobileMenu();
+      this.closeMobileMenu('escape');
       event.preventDefault();
       return;
     }
@@ -600,12 +619,18 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     return this.expandedSections.has(section);
   }
 
+  // ── Accessibility / Focus management ─────────────────────────────────────────
+
+  onSentinelFocus(event: FocusEvent, type: 'start' | 'end'): void {
+    this.a11y.handleSentinelFocus(event, type);
+  }
+
   // ── Navigation ───────────────────────────────────────────────────────────────
 
   onMenuRouteNavigate(route: string[], source: string): void {
     // R6 — close first so the drawer starts its exit animation before the router
     // resolves; prevents a visible flicker when navigating to a cached route.
-    this.closeMobileMenu();
+    this.closeMobileMenu('navigation');
     this.router.navigate(route).then((ok) => {
       if (!ok) {
         this.analyticsService.trackEvent('mobile_menu_navigation_failed', { source, route: route.join('/') });

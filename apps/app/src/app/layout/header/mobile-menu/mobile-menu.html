@@ -6,8 +6,7 @@
             was removed to eliminate the dual source of truth. -->
   <div
     class="mobile-menu-overlay"
-    (click)="closeMobileMenu()"
-    (touchstart)="onOverlayTouch($event)"
+    (pointerdown)="onOverlayPointerDown($event)"
   ></div>
 
   <!-- Menú móvil tipo Drawer Navigation -->
@@ -26,6 +25,14 @@
     [attr.aria-labelledby]="menuTitleId"
     [attr.inert]="isDrawerClosed ? '' : null"
   >
+  <!-- Focus sentinel (start) -->
+  <button
+    class="sr-only focus-sentinel"
+    (focus)="onSentinelFocus($event, 'start')"
+    aria-hidden="true"
+    tabindex="0"
+  ></button>
+
   <h2 [id]="menuTitleId" class="sr-only">{{ 'ARIA.MOBILE_MENU_TITLE' | translate }}</h2>
 
   <!-- Mobile Menu Header -->
@@ -125,5 +132,13 @@
         © {{ currentYear }} {{ 'COMMON.BRAND_NAME' | translate }}.
       </div>
     </div>
+
+    <!-- Focus sentinel (end) -->
+    <button
+      class="sr-only focus-sentinel"
+      (focus)="onSentinelFocus($event, 'end')"
+      aria-hidden="true"
+      tabindex="0"
+    ></button>
   </div>
 </div>

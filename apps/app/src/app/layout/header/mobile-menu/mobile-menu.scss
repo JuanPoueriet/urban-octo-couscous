@@ -1,9 +1,11 @@
 // ─── Layout & animation variables ─────────────────────────────────────────────
-// Keep in sync with the constants exported from mobile-menu.constants.ts
-$mm-drawer-max-width:   380px;
-$mm-mobile-breakpoint:  992px;
-$mm-drawer-duration:    400ms;
-$mm-drawer-easing:      cubic-bezier(0.16, 1, 0.3, 1);
+// These variables are now primarily driven by CSS Custom Properties set in mobile-menu.ts
+// to ensure a single source of truth. The SCSS variables below are used for media queries
+// and as fallbacks.
+$mm-drawer-max-width:   var(--mm-drawer-max-width, 380px);
+$mm-mobile-breakpoint:  992px; // Keep as SCSS variable for media queries
+$mm-drawer-duration:    var(--mm-drawer-duration, 400ms);
+$mm-drawer-easing:      var(--mm-drawer-easing, cubic-bezier(0.16, 1, 0.3, 1));
 $mm-overlay-duration:   0.3s;
 
 .mobile-menu-container {
