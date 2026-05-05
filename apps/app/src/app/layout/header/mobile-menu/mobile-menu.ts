@@ -635,7 +635,6 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.resizeObserver?.disconnect();
     this.resizeObserver = null;
     this.clearTransitionListeners();
-    document.removeEventListener('touchmove', this.boundTouchMove);
 
     if (this.searchDebounceTimer !== null) {
       clearTimeout(this.searchDebounceTimer);
@@ -647,6 +646,10 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       clearTimeout(this.a11yRefreshTimer);
       this.a11yRefreshTimer = null;
     }
+
+    if (!this.isBrowser) return;
+
+    document.removeEventListener('touchmove', this.boundTouchMove);
 
     if (this.isMobileMenuOpen) {
       document.body.classList.remove('no-scroll');
