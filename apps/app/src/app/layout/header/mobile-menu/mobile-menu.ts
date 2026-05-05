@@ -299,8 +299,23 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
         this.cdRef.markForCheck();
       },
 
-      onOpen:  () => this.menuService.open(),
-      onClose: () => this.menuService.close('gesture'),
+      onOpen:  () => {
+        // If the menu signal is already open (common when dragging an already-open drawer),
+        // force the drawer to snap back to fully open instead of leaving it at an arbitrary translateX.
+        if (this.menuService.isMobileMenuOpen()) {
+          this.openDrawer();
+          return;
+        }
+        this.menuService.open();
+      },
+      onClose: () => {
+        if (this.menuService.isMobileMenuOpen()) {
+          this.menuService.close('gesture');
+          return;
+        }
+        // Defensive path: if state is desynced and signal is already closed, still restore visual close.
+        this.closeDrawer();
+      },
       onToggleHaptic: () => this.triggerThrottledHaptic(),
       onTrackMetric:  (metric, data) => this.analyticsService.trackEvent(`mobile_menu_${metric}`, data),
     };
