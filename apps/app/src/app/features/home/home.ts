@@ -41,8 +41,9 @@ import { PictureComponent } from '@shared/components/picture/picture';
 import { computed } from '@angular/core';
 
 // Swiper Web Components
-import { Pagination, Autoplay, EffectCoverflow, EffectFade, Navigation, EffectCreative } from 'swiper/modules';
+import { Pagination, Autoplay, EffectCoverflow, EffectFade, Navigation, EffectCreative, FreeMode } from 'swiper/modules';
 import { register } from 'swiper/element/bundle';
+import { triggerTick } from '@shared/utils/haptic-feedback';
 
 register();
 
@@ -103,7 +104,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   };
 
   public offeringsSwiperConfig: SwiperOptions = {
-    modules: [Navigation, Pagination, EffectCreative],
+    modules: [Navigation, Pagination, EffectCreative, FreeMode],
     effect: 'creative',
     watchSlidesProgress: true,
     creativeEffect: {
@@ -126,6 +127,14 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     grabCursor: true,
     loop: false,
     speed: 600,
+    freeMode: {
+      enabled: true,
+      momentum: true,
+      sticky: true,
+      momentumRatio: 1.2,
+      momentumVelocityRatio: 1.0,
+      momentumBounce: true,
+    },
     pagination: {
       clickable: true,
       dynamicBullets: false,
@@ -145,12 +154,14 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         slidesPerView: 4,
         spaceBetween: 24,
         centeredSlides: false,
+        freeMode: { enabled: false },
       },
       1024: {
         effect: 'slide',
         slidesPerView: 4,
         spaceBetween: 24,
         centeredSlides: false,
+        freeMode: { enabled: false },
       },
     },
   };
@@ -212,7 +223,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   };
 
   public insightsSwiperConfig: SwiperOptions = {
-    modules: [Navigation, Pagination, EffectCreative],
+    modules: [Navigation, Pagination, EffectCreative, FreeMode],
     effect: 'creative',
     watchSlidesProgress: true,
     creativeEffect: {
@@ -235,6 +246,13 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     grabCursor: true,
     loop: false,
     speed: 600,
+    freeMode: {
+      enabled: true,
+      momentum: true,
+      sticky: true,
+      momentumRatio: 1.2,
+      momentumVelocityRatio: 1.0,
+    },
     pagination: {
       clickable: true,
       dynamicBullets: false,
@@ -249,12 +267,14 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         slidesPerView: 4,
         spaceBetween: 24,
         centeredSlides: false,
+        freeMode: { enabled: false },
       },
       1024: {
         effect: 'slide',
         slidesPerView: 4,
         spaceBetween: 24,
         centeredSlides: false,
+        freeMode: { enabled: false },
       },
       1440: {
         effect: 'slide',
@@ -266,7 +286,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   };
 
   public projectsSwiperConfig: SwiperOptions = {
-    modules: [Navigation, Pagination, EffectCreative],
+    modules: [Navigation, Pagination, EffectCreative, FreeMode],
     effect: 'creative',
     watchSlidesProgress: true,
     creativeEffect: {
@@ -289,6 +309,13 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     grabCursor: true,
     loop: false,
     speed: 600,
+    freeMode: {
+      enabled: true,
+      momentum: true,
+      sticky: true,
+      momentumRatio: 1.2,
+      momentumVelocityRatio: 1.0,
+    },
     pagination: {
       clickable: true,
       dynamicBullets: false,
@@ -303,18 +330,21 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         slidesPerView: 4,
         spaceBetween: 24,
         centeredSlides: false,
+        freeMode: { enabled: false },
       },
       1024: {
         effect: 'slide',
         slidesPerView: 4,
         spaceBetween: 24,
         centeredSlides: false,
+        freeMode: { enabled: false },
       },
       1440: {
         effect: 'slide',
         slidesPerView: 4,
         spaceBetween: 24,
         centeredSlides: false,
+        freeMode: { enabled: false },
       },
     },
   };
@@ -564,7 +594,12 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     canNext: { set: (v: boolean) => void }
   ) {
     const update = () => this.refreshSliderBoundaryState(swiperEl, canPrev, canNext);
-    swiperEl.swiper?.on('slideChange', update);
+    swiperEl.swiper?.on('slideChange', () => {
+      update();
+      if (window.innerWidth < 768) {
+        triggerTick();
+      }
+    });
     swiperEl.swiper?.on('reachBeginning', update);
     swiperEl.swiper?.on('reachEnd', update);
     swiperEl.swiper?.on('fromEdge', update);
