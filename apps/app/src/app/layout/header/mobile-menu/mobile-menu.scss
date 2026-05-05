@@ -58,6 +58,14 @@ $mm-overlay-duration:   0.3s;
     touch-action: pan-y;
     -webkit-overflow-scrolling: touch;
 
+    // Ensure the drawer is hidden from the rendering tree when fully closed (P7)
+    // This also helps Playwright's to_be_visible assertion.
+    visibility: visible;
+    &[inert] {
+      visibility: hidden;
+      transition: visibility $mm-drawer-duration;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       // R5 — suppress the slide-in/out transform animation for users who prefer
       // reduced motion. The TS layer (prefersReducedMotion()) also sets
@@ -669,21 +677,35 @@ $mm-overlay-duration:   0.3s;
   position: fixed;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
   z-index: 1200;
   opacity: 0;
   pointer-events: none;
   cursor: pointer;
   touch-action: none;
+
+  // P6 — Derived visual properties using CSS variables and clamp/calc.
+  //      The --mm-overlay-progress variable is updated from TS (0 to 1).
+  --mm-overlay-eased: calc(1 - (1 - var(--mm-overlay-progress, 0)) * (1 - var(--mm-overlay-progress, 0)));
+
+  opacity: calc(0.08 + var(--mm-overlay-eased) * 0.62);
+  backdrop-filter: blur(calc(var(--mm-overlay-eased) * 8px));
+  -webkit-backdrop-filter: blur(calc(var(--mm-overlay-eased) * 8px));
+
   // Transition is on the base state so it applies in BOTH directions (P4)
-  transition: opacity $mm-overlay-duration ease, backdrop-filter $mm-overlay-duration ease;
+  transition:
+    opacity $mm-overlay-duration ease,
+    backdrop-filter $mm-overlay-duration ease,
+    visibility $mm-overlay-duration ease;
+
+  visibility: hidden;
 
   &.visible {
     pointer-events: auto;
-    // opacity is set via inline style in updateOverlayVisual(); the CSS value
-    // acts only as a semantic marker and is overridden by the inline style.
-    opacity: 1;
+    visibility: visible;
+    // If --mm-overlay-progress is not set via inline style (e.g. initial opening),
+    // it defaults to 0 in the calc above. When .visible is added without manual drag,
+    // we might want a default full opacity if not dragging.
+    // However, the TS code calls updateOverlayVisual(1) on open, so it should be fine.
   }
 
   @media (prefers-reduced-motion: reduce), (update: slow) {

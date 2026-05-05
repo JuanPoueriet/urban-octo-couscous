@@ -303,7 +303,23 @@ export class MobileMenuGestures {
 
   // ── Edge swipe (menu is fully closed) ────────────────────────────────────────
 
+  private isEdgeSwipeEnabled = false;
+
+  public setEdgeSwipeEnabled(enabled: boolean): void {
+    if (this.isEdgeSwipeEnabled === enabled) return;
+    this.isEdgeSwipeEnabled = enabled;
+
+    this.ngZone.runOutsideAngular(() => {
+      if (enabled) {
+        document.addEventListener('pointerdown', this.handleWindowPointerDown);
+      } else {
+        document.removeEventListener('pointerdown', this.handleWindowPointerDown);
+      }
+    });
+  }
+
   public handleWindowPointerDown = (event: PointerEvent): void => {
+    if (!this.isEdgeSwipeEnabled) return;
     if (this.config.isOpen() || this.isDragging || this.config.isAnimating() || this.activePointerId !== null) return;
 
     const startX = event.clientX;
