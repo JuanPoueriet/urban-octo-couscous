@@ -1,0 +1,69 @@
+================================================================================
+  INFORME DE ANÁLISIS EN PROFUNDIDAD — MENÚ MÓVIL
+  JSL Technology — Arquitectura y Mecánica de Interacción
+  Fecha: 2025-05-24
+================================================================================
+
+1. REVISIÓN DEL CÓDIGO FUENTE
+─────────────────────────────────
+La implementación del menú móvil se basa en una arquitectura desacoplada que separa la lógica de estado, los gestos físicos y la accesibilidad en módulos especializados:
+
+  • Orquestación (mobile-menu.ts):
+    Gestiona una Máquina de Estados Finita (FSM) con los estados: CLOSED, OPENING, OPEN, CLOSING y DRAGGING. Utiliza Angular Signals y effects para reaccionar a cambios de estado global y breakpoints. Implementa un sistema de 'afterNextRender' para mantener la sincronía del DOM con el motor de búsqueda.
+
+  • Motor de Gestos (mobile-menu-gestures.ts):
+    Utiliza PointerEvents para soporte unificado. Implementa dos mecánicas críticas:
+    - Edge-Swipe: Zona de activación de 30px desde el borde.
+    - Drag Directo: Permite la interrupción de animaciones en curso capturando el translateX visual actual mediante la lectura del estilo computado (matriz de transformación).
+    - Física: Incluye cálculo de velocidad instantánea (ventana de 100ms) y overshoot elástico (rubber-banding) con amortiguación configurable.
+
+  • Accesibilidad (mobile-menu-accessibility.ts):
+    Gestiona el Focus Trap reactivo y el aislamiento del fondo mediante el atributo 'inert'. Utiliza MutationObserver para detectar cambios dinámicos en los resultados de búsqueda y actualizar el mapa de elementos enfocables.
+
+  • Presentación y Animación (mobile-menu.scss / .html):
+    - Transiciones: Basadas en hardware (transform: translateX) con fallback de seguridad en TypeScript (DRAWER_TRANSITION_DURATION_MS).
+    - Accordion: Uso de CSS Grid (grid-template-rows: 0fr -> 1fr) para animaciones de altura real, evitando los problemas de rendimiento de 'max-height'.
+    - Overlay: Controlado mediante variables CSS (--mm-overlay-progress) sincronizadas con el progreso del gesto.
+
+
+2. DETECCIÓN DE PROBLEMAS
+──────────────────────────
+A pesar de la alta calidad técnica, se han identificado puntos de mejora para garantizar la robustez absoluta:
+
+  P1 — Inconsistencia en la Interrupción por Overlay:
+    Al tocar el overlay mientras el menú se está abriendo/cerrando, 'stopTransition()' cambia el estado a 'DRAGGING'. Sin embargo, 'onOverlayPointerUp' solo ejecuta el cierre si el estado es exactamente 'OPEN'. Esto puede dejar el menú "congelado" en una posición intermedia (DRAGGING) si el usuario simplemente pulsa el fondo durante la animación.
+
+  P2 — Redundancia Háptica:
+    El callback 'onToggleHaptic' se invoca tanto en el inicio del puntero como al cruzar el umbral horizontal. En dispositivos con alta sensibilidad, esto genera una doble vibración casi simultánea que degrada la percepción táctil.
+
+  P3 — Gestión de Z-Index Descentralizada:
+    Aunque los niveles actuales (1200/1300) son correctos, no están vinculados a un sistema global de capas, lo que podría causar colisiones visuales con otros componentes flotantes (como popups de sugerencia de idioma o botones de chat) si se añaden sin supervisión manual.
+
+
+3. CALIFICACIÓN OBJETIVA: 9.5 / 10
+───────────────────────────────────
+  • Gestos y Fluidez: 10/10 — La respuesta táctil, el soporte RTL y la capacidad de interrumpir animaciones son de nivel superior.
+  • Robustez de Estado: 9/10 — La FSM es sólida, pero la gestión de interrupciones en el overlay es un punto de fallo potencial (P1).
+  • Accesibilidad: 10/10 — Cumple con WCAG 2.1 AA mediante focus management dinámico y soporte de teclado completo.
+  • Rendimiento: 10/10 — Uso impecable de 'outsideAngular' y 'will-change' para evitar jank en dispositivos de gama baja.
+
+
+4. PROPUESTAS DE SOLUCIÓN
+──────────────────────────
+  S1 — Lógica de "Snap" en el Overlay (Corrección P1):
+    Modificar 'onOverlayPointerUp' para que, si el estado es 'DRAGGING' (indicando una interrupción), evalúe la posición actual (menuTranslateX). Si el progreso es > 50%, debe completar la apertura; de lo contrario, debe forzar el cierre. Esto garantiza que el componente siempre alcance un estado estable (OPEN o CLOSED).
+
+  S2 — Consolidación de Feedback Táctil (Corrección P2):
+    Refinar el motor de gestos para disparar 'onToggleHaptic' únicamente una vez que el gesto ha sido validado como horizontal y el flag 'isDragging' se ha activado definitivamente.
+
+  S3 — Tokenización de Capas (Mejora P3):
+    Centralizar los valores de z-index en variables globales de SCSS compartidas con el resto de la aplicación para prevenir regresiones visuales.
+
+
+5. CONCLUSIÓN
+──────────────
+El menú móvil actual es una pieza de ingeniería excepcional, muy por encima de la media en aplicaciones Angular comerciales. Los problemas detectados son de carácter "edge-case" y su resolución elevaría el componente a una robustez total. La implementación de gestos manuales y el manejo de la accesibilidad son sus mayores fortalezas.
+
+================================================================================
+  FIN DEL INFORME
+================================================================================
