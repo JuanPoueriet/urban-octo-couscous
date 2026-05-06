@@ -49,7 +49,7 @@ export class MobileMenuGestures implements GestureHandler {
   // ── Adaptive thresholds (Problem 3) ──────────────────────────────────────────
 
   private get viewportWidth(): number {
-    return typeof window !== 'undefined' ? window.innerWidth : 1024;
+    return this.sessionViewportWidth || (typeof window !== 'undefined' ? window.innerWidth : 1024);
   }
 
   private get dpr(): number {
@@ -70,17 +70,27 @@ export class MobileMenuGestures implements GestureHandler {
   private get minSwipeDistance(): number {
     // S3 — Distance scales with DPI to maintain feel across resolutions
     const base = this.config.minSwipeDistance ?? GESTURE_MIN_SWIPE_DISTANCE;
-    return base * (this.dpr > 1.5 ? 0.8 : 1.0);
+
+    // Adjust for pointer type (D)
+    const typeFactor = this.sessionPointerType === 'mouse' ? 1.5 : 1.0;
+
+    return base * (this.dpr > 1.5 ? 0.8 : 1.0) * typeFactor;
   }
 
   private get velocityThreshold(): number {
     // S3 — Higher velocity threshold on higher DPI screens to reduce accidental triggers
     const base = this.config.velocityThreshold ?? GESTURE_VELOCITY_THRESHOLD;
-    return base * (this.dpr > 1.5 ? 1.15 : 1.0);
+
+    // Mouse requires higher velocity threshold (D)
+    const typeFactor = this.sessionPointerType === 'mouse' ? 1.2 : 1.0;
+
+    return base * (this.dpr > 1.5 ? 1.15 : 1.0) * typeFactor;
   }
 
   private get horizontalThreshold(): number {
-    return this.config.horizontalThreshold ?? GESTURE_HORIZONTAL_THRESHOLD;
+    // Add hysteresis (E)
+    const base = this.config.horizontalThreshold ?? GESTURE_HORIZONTAL_THRESHOLD;
+    return this.isDragging ? base - 4 : base;
   }
 
   private get verticalLockThreshold(): number {
@@ -89,11 +99,18 @@ export class MobileMenuGestures implements GestureHandler {
 
   private get tapThreshold(): number {
     // S3 — Adaptive tap threshold: slightly larger on high-DPI screens to reduce false negatives
-    return 10 * (this.dpr > 1.5 ? 1.5 : 1.0);
+    const base = 10 * (this.dpr > 1.5 ? 1.5 : 1.0);
+    // Mouse is more precise
+    return this.sessionPointerType === 'mouse' ? base * 0.7 : base;
   }
 
   // ── Gesture state ────────────────────────────────────────────────────────────
   private isDragging = false;
+  private sessionViewportWidth = 0;
+  private sessionMenuWidth = 0;
+  private sessionIsRtl = false;
+  private sessionPointerType = 'touch';
+
   private startX = 0;
   private startY = 0;
   private currentX = 0;
@@ -150,12 +167,12 @@ export class MobileMenuGestures implements GestureHandler {
   // ── Position / progress helpers ──────────────────────────────────────────────
 
   private getClosedPosition(menuWidth: number): number {
-    return this.config.isRtl() ? menuWidth : -menuWidth;
+    return this.sessionIsRtl ? menuWidth : -menuWidth;
   }
 
   private getProgress(translateX: number, menuWidth: number): number {
     const closed = this.getClosedPosition(menuWidth);
-    return this.config.isRtl()
+    return this.sessionIsRtl
       ? (closed - translateX) / menuWidth
       : (translateX - closed) / menuWidth;
   }
@@ -214,6 +231,18 @@ export class MobileMenuGestures implements GestureHandler {
   public onPointerDown(event: PointerEvent): boolean {
     if (this.activePointerId !== null) return false;
 
+    // Pointer guards (B)
+    if (!event.isPrimary) return false;
+    if (event.pointerType === 'mouse' && event.button !== 0) return false;
+
+    // Freeze gesture context (C)
+    this.sessionViewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1024;
+    this.sessionMenuWidth = this.config.menuWidth;
+    this.sessionIsRtl = this.config.isRtl();
+    this.sessionPointerType = event.pointerType;
+
+    const isRtl = this.sessionIsRtl;
+
     // 0. Check for Overlay Interaction (if open)
     if (this.config.isOpen()) {
       const target = event.target as HTMLElement;
@@ -224,12 +253,11 @@ export class MobileMenuGestures implements GestureHandler {
     }
 
     // 1. Check for Edge Swipe (if enabled and closed)
-    const isRtl = this.config.isRtl();
     const isClosed = !this.config.isOpen() && !this.config.isAnimating();
 
     if (this.isEdgeSwipeEnabled && isClosed) {
       const isEdge = isRtl
-        ? event.clientX > window.innerWidth - this.edgeThreshold
+        ? event.clientX > this.sessionViewportWidth - this.edgeThreshold
         : event.clientX < this.edgeThreshold;
 
       if (isEdge) {
@@ -241,19 +269,13 @@ export class MobileMenuGestures implements GestureHandler {
     // 2. Check for Drawer Drag (if open or animating)
     const isOpenOrAnimating = this.config.isOpen() || this.config.isAnimating();
     if (isOpenOrAnimating) {
-      // Check if click is within the drawer or on the overlay (if we want to allow dragging from overlay)
-      // For now, let's assume it only captures if it's within the menu width or we are already open.
-      // Actually, if it's open, we want it to capture if it's on the drawer.
-      // But the GestureBus will call this for EVERY pointerdown.
-
-      // Let's use a simpler heuristic: if it's open, and it's a horizontal start, we capture.
-      // Or we can check if the target is inside the menu.
-      const menuWidth = this.config.menuWidth;
+      // Restrict capture when open (A)
+      // Inicia drag solo si el pointerdown ocurrió dentro del drawer.
       const isInsideMenu = isRtl
-        ? event.clientX > window.innerWidth - menuWidth
-        : event.clientX < menuWidth;
+        ? event.clientX > this.sessionViewportWidth - this.sessionMenuWidth
+        : event.clientX < this.sessionMenuWidth;
 
-      if (isInsideMenu || this.config.isOpen()) {
+      if (isInsideMenu) {
         this.startMenuDrag(event);
         return true;
       }
@@ -343,6 +365,7 @@ export class MobileMenuGestures implements GestureHandler {
 
     if (!this.isDragging && !this.isHorizontalGesture) {
       if (absDiffY > this.verticalLockThreshold && absDiffY > absDiffX) {
+        this.trackMetric('gesture_cancel', { source: 'overlay_lock', reason: 'vertical_lock' });
         return;
       }
       if (absDiffX > this.horizontalThreshold && absDiffX > absDiffY) {
@@ -357,8 +380,8 @@ export class MobileMenuGestures implements GestureHandler {
 
       // Move the drawer in real time (parallax-to-close) so the gesture has
       // immediate physical feedback instead of waiting for pointerup.
-      const menuWidth = this.config.menuWidth;
-      const isRtl = this.config.isRtl();
+      const menuWidth = this.sessionMenuWidth;
+      const isRtl = this.sessionIsRtl;
       const closedPos = this.getClosedPosition(menuWidth);
       const openPos = 0;
 
@@ -398,6 +421,7 @@ export class MobileMenuGestures implements GestureHandler {
     if (!this.isDragging && !this.isHorizontalGesture) {
       if (absDiffY > this.verticalLockThreshold && absDiffY > absDiffX) {
         this.isHorizontalGesture = false;
+        this.trackMetric('gesture_cancel', { source: 'drawer_lock', reason: 'vertical_lock' });
         return;
       }
       if (absDiffX > this.horizontalThreshold && absDiffX > absDiffY) {
@@ -413,8 +437,8 @@ export class MobileMenuGestures implements GestureHandler {
 
     this.pushVelocitySample(event.clientX);
 
-    const menuWidth = this.config.menuWidth;
-    const isRtl = this.config.isRtl();
+    const menuWidth = this.sessionMenuWidth;
+    const isRtl = this.sessionIsRtl;
     const min = isRtl ? 0 : -menuWidth;
     const max = isRtl ? menuWidth : 0;
 
@@ -455,7 +479,7 @@ export class MobileMenuGestures implements GestureHandler {
     const absDiffY = Math.abs(diffY);
 
     const velocity = this.getInstantaneousVelocity();
-    const isRtl = this.config.isRtl();
+    const isRtl = this.sessionIsRtl;
 
     // P2 — Swipe to close on overlay: require directionality for both velocity and distance
     const isValidDirection = isRtl ? diffX > 0 : diffX < 0;
@@ -476,6 +500,13 @@ export class MobileMenuGestures implements GestureHandler {
       // P3 — Adaptive tap to close; ignore if it was a horizontal gesture attempt
       this.config.onClose();
       this.trackMetric('gesture_complete', { action: 'close', source: 'overlay_tap' });
+    } else {
+      this.trackMetric('gesture_cancel', {
+        source: 'overlay_end',
+        reason: this.isHorizontalGesture ? 'invalid_swipe' : 'failed_tap',
+        absDiffX,
+        absDiffY
+      });
     }
 
     this.resetDragState();
@@ -494,9 +525,9 @@ export class MobileMenuGestures implements GestureHandler {
 
     const diffX      = this.currentX - this.startX;
     const velocity   = this.getInstantaneousVelocity(); // instantaneous (P9)
-    const menuWidth  = this.config.menuWidth;
+    const menuWidth  = this.sessionMenuWidth;
     const progress   = this.getProgress(this.lastDragPosition, menuWidth);
-    const isRtl      = this.config.isRtl();
+    const isRtl      = this.sessionIsRtl;
 
     let shouldStayOpen: boolean;
 
@@ -573,7 +604,7 @@ export class MobileMenuGestures implements GestureHandler {
 
     if (!this.isHorizontalGesture) {
       if (absDiffY > this.verticalLockThreshold && absDiffY > absDiffX) {
-        this.cancelEdgeSwipe();
+        this.cancelEdgeSwipe('vertical_lock');
         return;
       }
       if (absDiffX > this.horizontalThreshold && absDiffX > absDiffY) {
@@ -584,13 +615,13 @@ export class MobileMenuGestures implements GestureHandler {
       }
     }
 
-    const isRtl           = this.config.isRtl();
+    const isRtl           = this.sessionIsRtl;
     const isValidDirection = isRtl ? diffX < 0 : diffX > 0;
     if (!this.isHorizontalGesture || !isValidDirection) return;
 
     this.pushVelocitySample(event.clientX);
 
-    const menuWidth = this.config.menuWidth;
+    const menuWidth = this.sessionMenuWidth;
     const baseTranslate = this.initialTranslateX + diffX;
     const min = isRtl ? 0 : -menuWidth;
     const max = isRtl ? menuWidth : 0;
@@ -615,8 +646,8 @@ export class MobileMenuGestures implements GestureHandler {
     if (event.pointerId !== this.activePointerId) return;
 
     if (!this.isDragging || !this.isHorizontalGesture) {
-      const menuWidth = this.config.menuWidth;
-      const closedPos = this.config.isRtl() ? menuWidth : -menuWidth;
+      const menuWidth = this.sessionMenuWidth;
+      const closedPos = this.sessionIsRtl ? menuWidth : -menuWidth;
       this.resetDragState();
       this.config.onUpdateTranslate(closedPos, null);
       this.trackMetric('gesture_cancel', { source: 'edge' });
@@ -625,7 +656,7 @@ export class MobileMenuGestures implements GestureHandler {
 
     const diffX    = this.currentX - this.startX;
     const velocity = this.getInstantaneousVelocity(); // instantaneous (P9)
-    const menuWidth  = this.config.menuWidth;
+    const menuWidth  = this.sessionMenuWidth;
     const progress   = this.getProgress(this.lastDragPosition, menuWidth);
 
     const shouldOpen =
@@ -646,12 +677,12 @@ export class MobileMenuGestures implements GestureHandler {
     }
   };
 
-  private cancelEdgeSwipe(): void {
-    const menuWidth = this.config.menuWidth;
-    const closedPos = this.config.isRtl() ? menuWidth : -menuWidth;
+  private cancelEdgeSwipe(reason = 'edge_lock'): void {
+    const menuWidth = this.sessionMenuWidth;
+    const closedPos = this.sessionIsRtl ? menuWidth : -menuWidth;
     this.resetDragState();
     this.config.onUpdateTranslate(closedPos, null);
-    this.trackMetric('gesture_cancel', { source: 'edge_lock' });
+    this.trackMetric('gesture_cancel', { source: 'edge_lock', reason });
   }
 
   // R2 — on system cancel (incoming call, app switch, lost pointer) during an
@@ -660,8 +691,8 @@ export class MobileMenuGestures implements GestureHandler {
   private handleEdgeSwipeCancel = (event: PointerEvent): void => {
     if (event.pointerId !== this.activePointerId) return;
 
-    const menuWidth = this.config.menuWidth;
-    const closedPos = this.config.isRtl() ? menuWidth : -menuWidth;
+    const menuWidth = this.sessionMenuWidth;
+    const closedPos = this.sessionIsRtl ? menuWidth : -menuWidth;
     this.resetDragState();
     this.config.onUpdateTranslate(closedPos, null);
     this.config.onClose();
