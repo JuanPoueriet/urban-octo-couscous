@@ -16,6 +16,7 @@ import { SUPPORTED_LANGUAGES } from '@core/constants/languages';
 import { ToastComponent } from './shared/components/toast/toast';
 import { CookieBannerComponent } from './shared/components/cookie-banner/cookie-banner';
 import { ScrollEngineService } from './core/services/scroll-engine.service';
+import { MenuService } from './core/services/menu.service';
 import Lenis from 'lenis';
 
 @Component({
@@ -45,12 +46,19 @@ export class App implements OnInit, OnDestroy {
 
   // Swipe blocker variables
   private edgeThreshold = 24;
-  private minHorizontalMove = 10;
+  private minHorizontalMove = 20;
+  private intentThreshold = 12;
   private startX = 0;
   private startY = 0;
   private maybeEdge = false;
   private touchId: number | null = null;
   private supportsPassive = false;
+  private gestureIntent: 'unknown' | 'horizontal' | 'vertical' = 'unknown';
+
+  // Listener handlers to allow proper removal
+  private onTouchStartHandler = this.onTouchStart.bind(this);
+  private onTouchMoveHandler = this.onTouchMove.bind(this);
+  private onTouchEndHandler = this.onTouchEnd.bind(this);
 
   constructor(
     private translate: TranslateService,
@@ -58,6 +66,7 @@ export class App implements OnInit, OnDestroy {
     private analytics: AnalyticsService,
     private directionService: DirectionService, // Inject to initialize
     private scrollEngine: ScrollEngineService,
+    private menuService: MenuService,
     @Inject(PLATFORM_ID) private platformId: object,
     private cookieService: CookieService,
   ) {
@@ -88,6 +97,9 @@ export class App implements OnInit, OnDestroy {
     }
     if (this.rafId) {
       cancelAnimationFrame(this.rafId);
+    }
+    if (this.isBrowser) {
+      this.removeSwipeBlocker();
     }
   }
 
@@ -125,10 +137,19 @@ export class App implements OnInit, OnDestroy {
   private initSwipeBlocker() {
     const addOpts = this.supportsPassive ? { passive: false } : false;
 
-    document.addEventListener('touchstart', this.onTouchStart.bind(this), addOpts as any);
-    document.addEventListener('touchmove', this.onTouchMove.bind(this), addOpts as any);
-    document.addEventListener('touchend', this.onTouchEnd.bind(this), addOpts as any);
-    document.addEventListener('touchcancel', this.onTouchEnd.bind(this), addOpts as any);
+    document.addEventListener('touchstart', this.onTouchStartHandler, addOpts as any);
+    document.addEventListener('touchmove', this.onTouchMoveHandler, addOpts as any);
+    document.addEventListener('touchend', this.onTouchEndHandler, addOpts as any);
+    document.addEventListener('touchcancel', this.onTouchEndHandler, addOpts as any);
+  }
+
+  private removeSwipeBlocker() {
+    const addOpts = this.supportsPassive ? { passive: false } : false;
+
+    document.removeEventListener('touchstart', this.onTouchStartHandler, addOpts as any);
+    document.removeEventListener('touchmove', this.onTouchMoveHandler, addOpts as any);
+    document.removeEventListener('touchend', this.onTouchEndHandler, addOpts as any);
+    document.removeEventListener('touchcancel', this.onTouchEndHandler, addOpts as any);
   }
 
   /**
@@ -144,10 +165,11 @@ export class App implements OnInit, OnDestroy {
   /**
    * Returns true when the touch delta describes the gesture that should be blocked.
    * LTR: rightward horizontal swipe. RTL: leftward horizontal swipe.
-   * Requires horizontal movement to dominate over vertical.
+   * Requires horizontal movement to strongly dominate over vertical (angular criteria).
    */
   static shouldBlockGesture(dx: number, dy: number, minHorizontalMove: number, isRtl: boolean): boolean {
-    const horizontalDominates = Math.abs(dx) > Math.abs(dy);
+    // Reemplazar |dx| > |dy| por relación angular: |dx| > |dy| * 1.5
+    const horizontalDominates = Math.abs(dx) > Math.abs(dy) * 1.5;
     const towardsCenter = isRtl ? dx < -minHorizontalMove : dx > minHorizontalMove;
     return towardsCenter && horizontalDominates;
   }
@@ -164,15 +186,20 @@ export class App implements OnInit, OnDestroy {
       this.directionService.isRtl()
     );
     this.touchId = t.identifier;
+    this.gestureIntent = 'unknown';
   }
 
   private onTouchMove(e: TouchEvent) {
-    if (!this.maybeEdge) return;
+    if (!this.maybeEdge || this.menuService.isMobileMenuOpen()) return;
+
 
     let t: Touch | null = null;
     if (e.touches && e.touches.length) {
       for (let i = 0; i < e.touches.length; i++) {
-        if (e.touches[i].identifier === this.touchId) { t = e.touches[i]; break; }
+        if (e.touches[i].identifier === this.touchId) {
+          t = e.touches[i];
+          break;
+        }
       }
       if (!t) t = e.touches[0];
     } else {
@@ -181,14 +208,22 @@ export class App implements OnInit, OnDestroy {
 
     const dx = t.clientX - this.startX;
     const dy = t.clientY - this.startY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
 
-    if (App.shouldBlockGesture(dx, dy, this.minHorizontalMove, this.directionService.isRtl())) {
-      try {
-        if (e.cancelable) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-      } catch (err) {
+    // Gesture intent lock: decide intent after a small threshold
+    if (this.gestureIntent === 'unknown' && distance > this.intentThreshold) {
+      this.gestureIntent = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical';
+    }
+
+    // Only block if intent is horizontal (or still evaluating but already meets block criteria)
+    if (this.gestureIntent !== 'vertical') {
+      if (App.shouldBlockGesture(dx, dy, this.minHorizontalMove, this.directionService.isRtl())) {
+        try {
+          if (e.cancelable) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        } catch (err) {}
       }
     }
   }
@@ -196,6 +231,7 @@ export class App implements OnInit, OnDestroy {
   private onTouchEnd(e: TouchEvent) {
     this.maybeEdge = false;
     this.touchId = null;
+    this.gestureIntent = 'unknown';
   }
 
   private initializeLanguage(): void {

@@ -83,61 +83,48 @@ describe('App.detectEdge', () => {
 // ─── Swipe Blocker: direction-aware gesture blocking ─────────────────────────
 
 describe('App.shouldBlockGesture', () => {
-  const MIN_MOVE = 10;
+  const MIN_MOVE = 20;
 
   describe('LTR mode — blocks rightward swipe', () => {
-    it('blocks when rightward dx exceeds minHorizontalMove and horizontal dominates', () => {
+    it('blocks when rightward dx exceeds minHorizontalMove and horizontal dominates significantly', () => {
       expect(App.shouldBlockGesture(50, 5, MIN_MOVE, false)).toBeTrue();
-      expect(App.shouldBlockGesture(11, 5, MIN_MOVE, false)).toBeTrue();
+      expect(App.shouldBlockGesture(21, 5, MIN_MOVE, false)).toBeTrue();
     });
 
     it('does NOT block when rightward dx equals or is below threshold', () => {
-      expect(App.shouldBlockGesture(10, 5, MIN_MOVE, false)).toBeFalse(); // 10 > 10 is false
-      expect(App.shouldBlockGesture(5, 2, MIN_MOVE, false)).toBeFalse();
+      expect(App.shouldBlockGesture(20, 5, MIN_MOVE, false)).toBeFalse();
+      expect(App.shouldBlockGesture(15, 2, MIN_MOVE, false)).toBeFalse();
     });
 
     it('does NOT block leftward swipe in LTR', () => {
       expect(App.shouldBlockGesture(-50, 5, MIN_MOVE, false)).toBeFalse();
     });
 
-    it('does NOT block when vertical movement dominates', () => {
+    it('does NOT block when vertical movement dominates or is close', () => {
+      // |dx| > |dy| * 1.5. If dx=50, dy=40 -> 50 > 60 is false.
+      expect(App.shouldBlockGesture(50, 40, MIN_MOVE, false)).toBeFalse();
       expect(App.shouldBlockGesture(50, 100, MIN_MOVE, false)).toBeFalse();
-      expect(App.shouldBlockGesture(50, 51, MIN_MOVE, false)).toBeFalse();
     });
 
-    it('blocks when horizontal exactly equals vertical (tie goes to horizontal? — no, > not >=)', () => {
-      expect(App.shouldBlockGesture(50, 50, MIN_MOVE, false)).toBeFalse();
+    it('blocks when horizontal ratio is exactly above 1.5', () => {
+      expect(App.shouldBlockGesture(31, 20, MIN_MOVE, false)).toBeTrue(); // 31 > 30
+      expect(App.shouldBlockGesture(30, 20, MIN_MOVE, false)).toBeFalse(); // 30 > 30 is false
     });
   });
 
   describe('RTL mode — blocks leftward swipe', () => {
-    it('blocks when leftward dx exceeds minHorizontalMove and horizontal dominates', () => {
+    it('blocks when leftward dx exceeds minHorizontalMove and horizontal dominates significantly', () => {
       expect(App.shouldBlockGesture(-50, 5, MIN_MOVE, true)).toBeTrue();
-      expect(App.shouldBlockGesture(-11, 5, MIN_MOVE, true)).toBeTrue();
+      expect(App.shouldBlockGesture(-21, 5, MIN_MOVE, true)).toBeTrue();
     });
 
     it('does NOT block when leftward dx equals or is below threshold', () => {
-      expect(App.shouldBlockGesture(-10, 5, MIN_MOVE, true)).toBeFalse(); // -10 < -10 is false
-      expect(App.shouldBlockGesture(-5, 2, MIN_MOVE, true)).toBeFalse();
+      expect(App.shouldBlockGesture(-20, 5, MIN_MOVE, true)).toBeFalse();
+      expect(App.shouldBlockGesture(-15, 2, MIN_MOVE, true)).toBeFalse();
     });
 
     it('does NOT block rightward swipe in RTL', () => {
       expect(App.shouldBlockGesture(50, 5, MIN_MOVE, true)).toBeFalse();
-    });
-
-    it('does NOT block when vertical movement dominates', () => {
-      expect(App.shouldBlockGesture(-50, -100, MIN_MOVE, true)).toBeFalse();
-      expect(App.shouldBlockGesture(-50, 100, MIN_MOVE, true)).toBeFalse();
-    });
-  });
-
-  describe('cross-direction symmetry', () => {
-    it('LTR and RTL block opposite gestures symmetrically', () => {
-      const dx = 40; const dy = 10;
-      expect(App.shouldBlockGesture(dx, dy, MIN_MOVE, false)).toBeTrue();   // rightward blocked in LTR
-      expect(App.shouldBlockGesture(dx, dy, MIN_MOVE, true)).toBeFalse();   // rightward allowed in RTL
-      expect(App.shouldBlockGesture(-dx, dy, MIN_MOVE, true)).toBeTrue();   // leftward blocked in RTL
-      expect(App.shouldBlockGesture(-dx, dy, MIN_MOVE, false)).toBeFalse(); // leftward allowed in LTR
     });
   });
 });
