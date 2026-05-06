@@ -167,6 +167,9 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.currentLang = this.translate.getCurrentLang() || this.translate.defaultLang || 'es';
     this.isBrowser   = isPlatformBrowser(this.platformId);
     this.a11y        = new MobileMenuAccessibility(this.el, this.isBrowser);
+    // Initialize coordinator early so constructor effects can safely trigger transitions
+    // before ngAfterViewInit runs (e.g., when menu signal is restored as open).
+    this.initializeCoordinator();
 
     this.translate.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
       this.currentLang = event.lang;
@@ -208,7 +211,6 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     if (this.isBrowser) {
-      this.initializeCoordinator();
       this.initializeMenu();
       this.setupGestures();
       this.setupResizeObserver();
