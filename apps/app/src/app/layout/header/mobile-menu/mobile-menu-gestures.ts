@@ -7,7 +7,10 @@ import {
   GESTURE_VELOCITY_THRESHOLD,
   GESTURE_HORIZONTAL_THRESHOLD,
   GESTURE_VERTICAL_LOCK_THRESHOLD,
+  GESTURE_ANGULAR_RATIO,
   GESTURE_VELOCITY_WINDOW_MS,
+  GESTURE_TAP_TIMEOUT_MS,
+  GESTURE_COOLDOWN_MS,
   GESTURE_ELASTIC_RESISTANCE,
   GESTURE_MAX_STRETCH_PERCENT,
 } from './mobile-menu.constants';
@@ -40,6 +43,7 @@ export interface MobileMenuGestureConfig {
   onClose: () => void;
   onStopTransition: () => void;
   onToggleHaptic: () => void;
+  onTransitionComplete?: () => void;
   onTrackMetric?: (metric: string, data: Record<string, unknown>) => void;
 }
 
@@ -120,6 +124,7 @@ export class MobileMenuGestures implements GestureHandler {
   private lastDragPosition = 0;
   private wasOvershooting = false;
   private activePointerId: number | null = null;
+  private lastTransitionTime = -Infinity;
 
   // ── Instantaneous velocity buffer (P9) ───────────────────────────────────────
   private velocityBuffer: Array<{ x: number; t: number }> = [];
@@ -142,6 +147,11 @@ export class MobileMenuGestures implements GestureHandler {
   // ── Public state accessors ───────────────────────────────────────────────────
   public getIsDragging(): boolean        { return this.isDragging; }
   public getIsHorizontalGesture(): boolean { return this.isHorizontalGesture; }
+
+  /** Starts the gesture cooldown to prevent accidental re-triggers. */
+  public startCooldown(): void {
+    this.lastTransitionTime = performance.now();
+  }
 
   // ── Velocity helpers ─────────────────────────────────────────────────────────
 
@@ -227,9 +237,15 @@ export class MobileMenuGestures implements GestureHandler {
 
   private overlayDownX = 0;
   private overlayDownY = 0;
+  private overlayStartTime = 0;
 
   public onPointerDown(event: PointerEvent): boolean {
     if (this.activePointerId !== null) return false;
+
+    // P6 — Cooldown check to prevent accidental re-triggers
+    if (performance.now() - this.lastTransitionTime < GESTURE_COOLDOWN_MS) {
+      return false;
+    }
 
     // Pointer guards (B)
     if (!event.isPrimary) return false;
@@ -289,6 +305,7 @@ export class MobileMenuGestures implements GestureHandler {
     this.activePointerId = event.pointerId;
     this.overlayDownX = event.clientX;
     this.overlayDownY = event.clientY;
+    this.overlayStartTime = performance.now();
     this.startX = event.clientX;
     this.startY = event.clientY;
     this.currentX = this.startX;
@@ -336,8 +353,8 @@ export class MobileMenuGestures implements GestureHandler {
     this.wasOvershooting = false;
     this.resetVelocityBuffer();
 
-    const menuWidth = this.config.menuWidth;
-    this.initialTranslateX = this.config.isRtl() ? menuWidth : -menuWidth;
+    const menuWidth = this.sessionMenuWidth;
+    this.initialTranslateX = this.sessionIsRtl ? menuWidth : -menuWidth;
     this.lastDragPosition = this.initialTranslateX;
     this.isEdgeSwipeActive = true;
   }
@@ -364,11 +381,12 @@ export class MobileMenuGestures implements GestureHandler {
     const absDiffY = Math.abs(diffY);
 
     if (!this.isDragging && !this.isHorizontalGesture) {
-      if (absDiffY > this.verticalLockThreshold && absDiffY > absDiffX) {
+      // Improved precision with angular ratio
+      if (absDiffY > this.verticalLockThreshold && absDiffY > absDiffX * GESTURE_ANGULAR_RATIO) {
         this.trackMetric('gesture_cancel', { source: 'overlay_lock', reason: 'vertical_lock' });
         return;
       }
-      if (absDiffX > this.horizontalThreshold && absDiffX > absDiffY) {
+      if (absDiffX > this.horizontalThreshold && absDiffX > absDiffY * GESTURE_ANGULAR_RATIO) {
         this.isHorizontalGesture = true;
         this.isDragging = true;
         this.config.onToggleHaptic();
@@ -419,12 +437,13 @@ export class MobileMenuGestures implements GestureHandler {
     const absDiffY = Math.abs(diffY);
 
     if (!this.isDragging && !this.isHorizontalGesture) {
-      if (absDiffY > this.verticalLockThreshold && absDiffY > absDiffX) {
+      // Improved precision with angular ratio
+      if (absDiffY > this.verticalLockThreshold && absDiffY > absDiffX * GESTURE_ANGULAR_RATIO) {
         this.isHorizontalGesture = false;
         this.trackMetric('gesture_cancel', { source: 'drawer_lock', reason: 'vertical_lock' });
         return;
       }
-      if (absDiffX > this.horizontalThreshold && absDiffX > absDiffY) {
+      if (absDiffX > this.horizontalThreshold && absDiffX > absDiffY * GESTURE_ANGULAR_RATIO) {
         this.isHorizontalGesture = true;
         this.isDragging = true;
         this.config.onToggleHaptic();
@@ -477,6 +496,7 @@ export class MobileMenuGestures implements GestureHandler {
     const diffY = event.clientY - this.overlayDownY;
     const absDiffX = Math.abs(diffX);
     const absDiffY = Math.abs(diffY);
+    const duration = performance.now() - this.overlayStartTime;
 
     const velocity = this.getInstantaneousVelocity();
     const isRtl = this.sessionIsRtl;
@@ -491,14 +511,17 @@ export class MobileMenuGestures implements GestureHandler {
 
     if (isSwipeToClose) {
       this.config.onClose();
+      this.startCooldown();
       this.trackMetric('gesture_complete', { action: 'close', source: 'overlay_swipe' });
     } else if (
       !this.isHorizontalGesture &&
       absDiffX < this.tapThreshold &&
-      absDiffY < this.tapThreshold
+      absDiffY < this.tapThreshold &&
+      duration < GESTURE_TAP_TIMEOUT_MS
     ) {
-      // P3 — Adaptive tap to close; ignore if it was a horizontal gesture attempt
+      // P3 — Adaptive tap to close; ignore if it was a horizontal gesture attempt or too slow
       this.config.onClose();
+      this.startCooldown();
       this.trackMetric('gesture_complete', { action: 'close', source: 'overlay_tap' });
     } else {
       this.trackMetric('gesture_cancel', {
@@ -517,9 +540,9 @@ export class MobileMenuGestures implements GestureHandler {
     if (event.pointerId !== this.activePointerId) return;
 
     if (!this.isDragging || !this.isHorizontalGesture) {
-      this.resetDragState();
       this.config.onUpdateTranslate(this.lastDragPosition, null);
       this.trackMetric('gesture_cancel', { source: 'drawer' });
+      this.resetDragState();
       return;
     }
 
@@ -547,9 +570,11 @@ export class MobileMenuGestures implements GestureHandler {
 
     if (shouldStayOpen) {
       this.config.onOpen();
+      this.startCooldown();
       this.trackMetric('gesture_complete', { action: 'stay_open', source: 'drawer' });
     } else {
       this.config.onClose();
+      this.startCooldown();
       this.trackMetric('gesture_complete', { action: 'close', source: 'drawer' });
     }
   }
@@ -603,11 +628,12 @@ export class MobileMenuGestures implements GestureHandler {
     const absDiffY = Math.abs(diffY);
 
     if (!this.isHorizontalGesture) {
-      if (absDiffY > this.verticalLockThreshold && absDiffY > absDiffX) {
+      // Improved precision with angular ratio
+      if (absDiffY > this.verticalLockThreshold && absDiffY > absDiffX * GESTURE_ANGULAR_RATIO) {
         this.cancelEdgeSwipe('vertical_lock');
         return;
       }
-      if (absDiffX > this.horizontalThreshold && absDiffX > absDiffY) {
+      if (absDiffX > this.horizontalThreshold && absDiffX > absDiffY * GESTURE_ANGULAR_RATIO) {
         this.isHorizontalGesture = true;
         this.config.onToggleHaptic();
       } else {
@@ -659,10 +685,14 @@ export class MobileMenuGestures implements GestureHandler {
     const menuWidth  = this.sessionMenuWidth;
     const progress   = this.getProgress(this.lastDragPosition, menuWidth);
 
+    // Improvement 4: Re-validate direction for velocity and distance branches
+    const isRtl = this.sessionIsRtl;
+    const isValidDirection = isRtl ? diffX < 0 : diffX > 0;
+
     const shouldOpen =
-      velocity > this.velocityThreshold ||
+      (velocity > this.velocityThreshold && isValidDirection) ||
       progress > this.openThreshold ||
-      Math.abs(diffX) > this.minSwipeDistance;
+      (Math.abs(diffX) > this.minSwipeDistance && isValidDirection);
 
     const lastPos = this.lastDragPosition;
     this.resetDragState();
@@ -670,9 +700,11 @@ export class MobileMenuGestures implements GestureHandler {
 
     if (shouldOpen) {
       this.config.onOpen();
+      this.startCooldown();
       this.trackMetric('gesture_complete', { action: 'open', source: 'edge' });
     } else {
       this.config.onClose();
+      this.startCooldown();
       this.trackMetric('gesture_complete', { action: 'close_abort', source: 'edge' });
     }
   };

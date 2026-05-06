@@ -264,6 +264,9 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
           this.a11y.refreshFocusableElements();
           this.a11y.setInitialFocus();
         },
+        onTransitionComplete: () => {
+          this.gestureHandler?.startCooldown();
+        },
       },
       this.renderer,
       this.ngZone,
@@ -374,6 +377,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       },
       onStopTransition: () => this.stopTransition(),
       onToggleHaptic: () => this.triggerThrottledHaptic(),
+      onTransitionComplete: () => this.gestureHandler?.startCooldown(),
       onTrackMetric:  (metric, data) => this.analyticsService.trackEvent(`mobile_menu_${metric}`, data),
     };
 
