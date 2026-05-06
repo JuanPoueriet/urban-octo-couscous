@@ -15,7 +15,10 @@ export const GESTURE_MIN_SWIPE_DISTANCE = 30; // px
 export const GESTURE_VELOCITY_THRESHOLD = 0.25; // px/ms
 export const GESTURE_HORIZONTAL_THRESHOLD = 10; // px before locking to horizontal
 export const GESTURE_VERTICAL_LOCK_THRESHOLD = 10; // px vertical movement that cancels gesture
+export const GESTURE_ANGULAR_RATIO = 1.2; // |dx| > GESTURE_ANGULAR_RATIO * |dy| to confirm horizontal
 export const GESTURE_VELOCITY_WINDOW_MS = 100; // ms window for instantaneous velocity
+export const GESTURE_TAP_TIMEOUT_MS = 220; // ms window for tap detection
+export const GESTURE_COOLDOWN_MS = 100; // ms cooldown after state transition
 export const GESTURE_ELASTIC_RESISTANCE = 100; // 0-100
 export const GESTURE_MAX_STRETCH_PERCENT = 4; // %
 

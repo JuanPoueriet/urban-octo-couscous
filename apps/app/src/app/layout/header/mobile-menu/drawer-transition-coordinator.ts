@@ -16,6 +16,7 @@ export interface TransitionConfig {
   onA11yOpen: () => void;
   onA11yClose: () => void;
   onA11yInitialFocus: () => void;
+  onTransitionComplete?: () => void;
 }
 
 export class DrawerTransitionCoordinator {
@@ -141,6 +142,7 @@ export class DrawerTransitionCoordinator {
               this.currentState = targetState;
               this.config.onStateChange(targetState);
               callback?.();
+              this.config.onTransitionComplete?.();
               this.cdRef.markForCheck();
             }
           });
@@ -159,6 +161,7 @@ export class DrawerTransitionCoordinator {
           this.currentState = targetState;
           this.config.onStateChange(targetState);
           callback?.();
+          this.config.onTransitionComplete?.();
           this.cdRef.markForCheck();
         }
       });
