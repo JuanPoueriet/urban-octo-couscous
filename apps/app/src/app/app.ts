@@ -82,6 +82,8 @@ export class App implements OnInit, OnDestroy {
     private menuService: MenuService,
     @Inject(PLATFORM_ID) private platformId: object,
     private cookieService: CookieService,
+    private toastService: ToastService,
+    private languageSuggestionService: LanguageSuggestionService,
   ) {
     this.seo.init();
     this.analytics.init();
