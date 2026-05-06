@@ -1,4 +1,4 @@
-import { Component, HostListener, Inject, PLATFORM_ID, OnInit, OnDestroy } from '@angular/core';
+import { Component, HostListener, Inject, PLATFORM_ID, OnInit, OnDestroy, inject } from '@angular/core';
 import { map } from 'rxjs';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
@@ -62,6 +62,9 @@ export class App implements OnInit, OnDestroy {
   private onTouchStartHandler = this.onTouchStart.bind(this);
   private onTouchMoveHandler = this.onTouchMove.bind(this);
   private onTouchEndHandler = this.onTouchEnd.bind(this);
+
+  private readonly toastService = inject(ToastService);
+  private readonly languageSuggestionService = inject(LanguageSuggestionService);
 
   readonly hasToasts$ = this.toastService.toasts$.pipe(map((toasts) => toasts.length > 0));
   readonly hasLanguageSuggestion$ = this.languageSuggestionService.suggestion$.pipe(map((suggestion) => !!suggestion));
