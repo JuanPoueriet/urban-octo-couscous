@@ -27,7 +27,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { DirectionService } from '@core/services/direction.service';
 import { MenuService, MenuCloseReason } from '@core/services/menu.service';
-import { ScrollLockService } from '@core/services/scroll-lock.service';
 import { OverlayManagerService } from '@core/services/overlay-manager.service';
 import { AnalyticsService } from '@core/services/analytics.service';
 import { GestureBusService } from '@core/services/gesture-bus.service';
@@ -78,7 +77,6 @@ import { BreakpointService } from '@core/services/breakpoint.service';
 export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private directionService = inject(DirectionService);
   private menuService      = inject(MenuService);
-  private scrollLockService = inject(ScrollLockService);
   private overlayManagerService = inject(OverlayManagerService);
   private breakpointService = inject(BreakpointService);
   private analyticsService = inject(AnalyticsService);
@@ -249,8 +247,6 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
           this.menuTranslateX = translateX;
           this.menuScaleX = 1;
         },
-        onLockScroll: () => this.scrollLockService.lock('mobile-menu'),
-        onUnlockScroll: () => this.scrollLockService.unlock('mobile-menu'),
         onRegisterOverlay: () => this.overlayManagerService.register('mobile-menu'),
         onUnregisterOverlay: () => this.overlayManagerService.unregister('mobile-menu'),
         onTriggerHaptic: () => this.triggerThrottledHaptic(),
@@ -571,7 +567,6 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     document.removeEventListener('touchmove', this.boundTouchMove);
 
     if (this.isMobileMenuOpen) {
-      this.scrollLockService.unlock('mobile-menu');
       this.overlayManagerService.unregister('mobile-menu');
     }
   }
