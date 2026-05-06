@@ -39,16 +39,19 @@ describe('MobileMenuElastic', () => {
       pointerId: 1,
       clientX: 100,
       clientY: 100,
+      isPrimary: true,
+      pointerType: 'touch',
       stopPropagation: () => {},
       target: { classList: { contains: () => false } }
     } as any;
 
     gestures.onPointerDown(pointerDownEvent);
-    gestures.onPointerDown(pointerDownEvent);
 
     const pointerMoveEvent = {
       pointerId: 1,
       clientX: 150, // Move 50px right
+      isPrimary: true,
+      pointerType: 'touch',
       clientY: 100,
       preventDefault: () => {},
       stopPropagation: () => {},
@@ -76,6 +79,8 @@ describe('MobileMenuElastic', () => {
       pointerId: 1,
       clientX: 100,
       clientY: 100,
+      isPrimary: true,
+      pointerType: 'touch',
       stopPropagation: () => {},
       target: { classList: { contains: () => false } }
     } as any;
@@ -85,6 +90,8 @@ describe('MobileMenuElastic', () => {
     const pointerMoveEvent = {
       pointerId: 1,
       clientX: 20, // Move 80px left
+      isPrimary: true,
+      pointerType: 'touch',
       clientY: 100,
       preventDefault: () => {},
       stopPropagation: () => {},
@@ -102,6 +109,8 @@ describe('MobileMenuElastic', () => {
       pointerId: 1,
       clientX: -300, // Move 400px left
       clientY: 100,
+      isPrimary: true,
+      pointerType: 'touch',
       preventDefault: () => {},
       stopPropagation: () => {},
     } as any;
@@ -120,19 +129,27 @@ describe('MobileMenuElastic', () => {
     mockConfig.isRtl = () => true;
 
     // RTL: opening more is translateX < 0 (menu comes from right, 0 is fully open)
+    // Width is 320, so menu starts at 320 (closed) and moves to 0 (open).
     const pointerDownEvent = {
       pointerId: 1,
-      clientX: 300,
+      clientX: 320, // Inside menu if width is 320 and we are at the right edge
       clientY: 100,
+      isPrimary: true,
+      pointerType: 'touch',
       stopPropagation: () => {},
       target: { classList: { contains: () => false } }
     } as any;
+
+    // We need to mock window.innerWidth for the isInsideMenu check in RTL
+    spyOnProperty(window, 'innerWidth', 'get').and.returnValue(320);
 
     gestures.onPointerDown(pointerDownEvent);
 
     const pointerMoveEvent = {
       pointerId: 1,
-      clientX: 250, // Move 50px left
+      clientX: 270, // Move 50px left
+      isPrimary: true,
+      pointerType: 'touch',
       clientY: 100,
       preventDefault: () => {},
       stopPropagation: () => {},
@@ -140,7 +157,7 @@ describe('MobileMenuElastic', () => {
 
     gestures.onPointerMove(pointerMoveEvent);
 
-    // diffX = 250 - 300 = -50. In RTL, min = 0.
+    // diffX = 270 - 320 = -50. In RTL, min = 0.
     // Overshoot = 0 - (-50) = 50.
     // scaleX = 1.038 (same damping with overshoot=50)
     const args = (mockConfig.onUpdateTranslate as jasmine.Spy).calls.mostRecent().args;
@@ -153,13 +170,22 @@ describe('MobileMenuElastic', () => {
     mockConfig.isOpen = () => false;
     gestures.setEdgeSwipeEnabled(true);
     const pointerId = 1;
-    gestures.onPointerDown({ pointerId, clientX: 5, clientY: 20, target: {} } as any);
+    gestures.onPointerDown({
+      pointerId,
+      clientX: 5,
+      clientY: 20,
+      isPrimary: true,
+      pointerType: 'touch',
+      target: {}
+    } as any);
 
     // Initial move to trigger horizontal gesture
     gestures.onPointerMove({
       pointerId,
       clientX: 20,
       clientY: 20,
+      isPrimary: true,
+      pointerType: 'touch',
       preventDefault: () => {},
       stopPropagation: () => {}
     } as any);
@@ -168,10 +194,18 @@ describe('MobileMenuElastic', () => {
       pointerId,
       clientX: 120,
       clientY: 25,
+      isPrimary: true,
+      pointerType: 'touch',
       preventDefault: () => {},
       stopPropagation: () => {}
     } as any);
-    gestures.onPointerUp({ pointerId, clientX: 120, clientY: 25 } as any);
+    gestures.onPointerUp({
+      pointerId,
+      clientX: 120,
+      clientY: 25,
+      isPrimary: true,
+      pointerType: 'touch'
+    } as any);
 
     expect(mockConfig.onOpen).toHaveBeenCalled();
     expect(mockConfig.onUpdateTranslate).toHaveBeenCalled();
@@ -181,11 +215,20 @@ describe('MobileMenuElastic', () => {
     mockConfig.isOpen = () => false;
     gestures.setEdgeSwipeEnabled(true);
     const pointerId = 1;
-    gestures.onPointerDown({ pointerId, clientX: 5, clientY: 20, target: {} } as any);
+    gestures.onPointerDown({
+      pointerId,
+      clientX: 5,
+      clientY: 20,
+      isPrimary: true,
+      pointerType: 'touch',
+      target: {}
+    } as any);
     gestures.onPointerMove({
       pointerId,
       clientX: 8,
       clientY: 80,
+      isPrimary: true,
+      pointerType: 'touch',
       preventDefault: () => {},
       stopPropagation: () => {}
     } as any);
@@ -204,13 +247,22 @@ describe('MobileMenuElastic', () => {
     spyOnProperty(window, 'innerWidth', 'get').and.returnValue(400);
 
     const pointerId = 1;
-    gestures.onPointerDown({ pointerId, clientX: 395, clientY: 40, target: {} } as any);
+    gestures.onPointerDown({
+      pointerId,
+      clientX: 395,
+      clientY: 40,
+      isPrimary: true,
+      pointerType: 'touch',
+      target: {}
+    } as any);
 
     // Initial move to trigger horizontal gesture
     gestures.onPointerMove({
       pointerId,
       clientX: 380,
       clientY: 40,
+      isPrimary: true,
+      pointerType: 'touch',
       preventDefault: () => {},
       stopPropagation: () => {}
     } as any);
@@ -219,10 +271,18 @@ describe('MobileMenuElastic', () => {
       pointerId,
       clientX: 260,
       clientY: 44,
+      isPrimary: true,
+      pointerType: 'touch',
       preventDefault: () => {},
       stopPropagation: () => {}
     } as any);
-    gestures.onPointerUp({ pointerId, clientX: 260, clientY: 44 } as any);
+    gestures.onPointerUp({
+      pointerId,
+      clientX: 260,
+      clientY: 44,
+      isPrimary: true,
+      pointerType: 'touch'
+    } as any);
 
     expect(mockConfig.onOpen).toHaveBeenCalled();
   });
