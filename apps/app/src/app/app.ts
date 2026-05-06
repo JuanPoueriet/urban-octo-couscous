@@ -1,4 +1,5 @@
-import { Component, HostListener, Inject, PLATFORM_ID, OnInit, OnDestroy } from '@angular/core';
+import { Component, HostListener, Inject, PLATFORM_ID, OnInit, OnDestroy, inject } from '@angular/core';
+import { map } from 'rxjs';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -14,6 +15,8 @@ import { WhatsAppButtonComponent } from './shared/components/whatsapp-button/wha
 import { LanguageSuggestionComponent } from './shared/components/language-suggestion/language-suggestion';
 import { SUPPORTED_LANGUAGES } from '@core/constants/languages';
 import { ToastComponent } from './shared/components/toast/toast';
+import { ToastService } from './core/services/toast.service';
+import { LanguageSuggestionService } from './core/services/language-suggestion.service';
 import { CookieBannerComponent } from './shared/components/cookie-banner/cookie-banner';
 import { ScrollEngineService } from './core/services/scroll-engine.service';
 import { MenuService } from './core/services/menu.service';
@@ -59,6 +62,16 @@ export class App implements OnInit, OnDestroy {
   private onTouchStartHandler = this.onTouchStart.bind(this);
   private onTouchMoveHandler = this.onTouchMove.bind(this);
   private onTouchEndHandler = this.onTouchEnd.bind(this);
+
+  private readonly toastService = inject(ToastService);
+  private readonly languageSuggestionService = inject(LanguageSuggestionService);
+
+  readonly hasToasts$ = this.toastService.toasts$.pipe(map((toasts) => toasts.length > 0));
+  readonly hasLanguageSuggestion$ = this.languageSuggestionService.suggestion$.pipe(map((suggestion) => !!suggestion));
+
+  get shouldRenderCookieBanner(): boolean {
+    return this.isBrowser && !this.cookieService.get('cookie-consent');
+  }
 
   constructor(
     private translate: TranslateService,
