@@ -8,8 +8,6 @@ export interface TransitionConfig {
   getDrawerTransition: () => string;
   onStateChange: (state: DrawerState) => void;
   onUpdateTranslate: (translateX: number) => void;
-  onLockScroll: () => void;
-  onUnlockScroll: () => void;
   onRegisterOverlay: () => void;
   onUnregisterOverlay: () => void;
   onTriggerHaptic: () => void;
@@ -42,7 +40,6 @@ export class DrawerTransitionCoordinator {
     switch (newState) {
       case DrawerState.OPENING: {
         this.config.onUpdateTranslate(0);
-        this.config.onLockScroll();
         this.config.onRegisterOverlay();
         this.config.onTriggerHaptic();
         this.config.onA11yOpen();
@@ -63,7 +60,6 @@ export class DrawerTransitionCoordinator {
         if (options.targetTranslateX !== undefined) {
           this.config.onUpdateTranslate(options.targetTranslateX);
         }
-        this.config.onUnlockScroll();
         this.config.onUnregisterOverlay();
         this.config.onTriggerHaptic();
         this.config.onA11yClose();

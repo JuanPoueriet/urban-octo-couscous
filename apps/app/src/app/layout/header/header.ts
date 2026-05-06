@@ -13,7 +13,6 @@ import {
   HostListener,
 } from '@angular/core';
 import { SearchUiService } from '@core/services/search-ui.service';
-import { ScrollLockService } from '@core/services/scroll-lock.service';
 import { OverlayManagerService } from '@core/services/overlay-manager.service';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -46,7 +45,6 @@ export class Header implements OnInit, OnDestroy, AfterViewInit {
   public breakpointService = inject(BreakpointService);
   private menuService = inject(MenuService);
   private searchUiService = inject(SearchUiService);
-  private scrollLockService = inject(ScrollLockService);
   private overlayManagerService = inject(OverlayManagerService);
   private translate = inject(TranslateService);
   private el = inject(ElementRef);
@@ -77,10 +75,8 @@ export class Header implements OnInit, OnDestroy, AfterViewInit {
     effect(() => {
       if (this.isBrowser) {
         if (this.searchUiService.isOpen()) {
-          this.scrollLockService.lock('search-overlay');
           this.overlayManagerService.register('search-overlay');
         } else {
-          this.scrollLockService.unlock('search-overlay');
           this.overlayManagerService.unregister('search-overlay');
         }
       }
