@@ -144,6 +144,19 @@ export class MobileMenuGestures implements GestureHandler {
     this.gestureBusUnregister = this.gestureBus.registerHandler(this);
   }
 
+  private debugGesture(event: string, details: Record<string, unknown> = {}): void {
+    console.log('[MobileMenuGestures]', event, {
+      ...details,
+      state: {
+        activePointerId: this.activePointerId,
+        isDragging: this.isDragging,
+        isHorizontalGesture: this.isHorizontalGesture,
+        isEdgeSwipeActive: this.isEdgeSwipeActive,
+        isOverlaySwipeActive: this.isOverlaySwipeActive,
+      },
+    });
+  }
+
   // ── Public state accessors ───────────────────────────────────────────────────
   public getIsDragging(): boolean        { return this.isDragging; }
   public getIsHorizontalGesture(): boolean { return this.isHorizontalGesture; }
@@ -240,16 +253,26 @@ export class MobileMenuGestures implements GestureHandler {
   private overlayStartTime = 0;
 
   public onPointerDown(event: PointerEvent): boolean {
-    if (this.activePointerId !== null) return false;
+    if (this.activePointerId !== null) {
+      this.debugGesture('pointer_down_ignored', { reason: 'active_pointer_exists', pointerId: event.pointerId });
+      return false;
+    }
 
     // P6 — Cooldown check to prevent accidental re-triggers
     if (performance.now() - this.lastTransitionTime < GESTURE_COOLDOWN_MS) {
+      this.debugGesture('pointer_down_ignored', { reason: 'cooldown', pointerId: event.pointerId });
       return false;
     }
 
     // Pointer guards (B)
-    if (!event.isPrimary) return false;
-    if (event.pointerType === 'mouse' && event.button !== 0) return false;
+    if (!event.isPrimary) {
+      this.debugGesture('pointer_down_ignored', { reason: 'not_primary', pointerId: event.pointerId });
+      return false;
+    }
+    if (event.pointerType === 'mouse' && event.button !== 0) {
+      this.debugGesture('pointer_down_ignored', { reason: 'non_left_click', pointerId: event.pointerId, button: event.button });
+      return false;
+    }
 
     // Freeze gesture context (C)
     this.sessionViewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1024;
@@ -264,6 +287,7 @@ export class MobileMenuGestures implements GestureHandler {
       const target = event.target as HTMLElement;
       if (target?.classList.contains('jsl-mm-overlay')) {
         this.startOverlayInteraction(event);
+        this.debugGesture('overlay_interaction_detected', { pointerId: event.pointerId, x: event.clientX, y: event.clientY });
         return true;
       }
     }
@@ -278,6 +302,7 @@ export class MobileMenuGestures implements GestureHandler {
 
       if (isEdge) {
         this.startEdgeSwipe(event);
+        this.debugGesture('edge_swipe_detected', { pointerId: event.pointerId, x: event.clientX, y: event.clientY });
         return true;
       }
     }
@@ -293,10 +318,12 @@ export class MobileMenuGestures implements GestureHandler {
 
       if (isInsideMenu) {
         this.startMenuDrag(event);
+        this.debugGesture('drawer_drag_detected', { pointerId: event.pointerId, x: event.clientX, y: event.clientY });
         return true;
       }
     }
 
+    this.debugGesture('pointer_down_ignored', { reason: 'no_gesture_match', pointerId: event.pointerId, x: event.clientX, y: event.clientY });
     return false;
   }
 
@@ -361,6 +388,7 @@ export class MobileMenuGestures implements GestureHandler {
 
   public onPointerMove(event: PointerEvent): void {
     if (event.pointerId !== this.activePointerId) return;
+    this.debugGesture('pointer_move', { pointerId: event.pointerId, x: event.clientX, y: event.clientY });
 
     if (this.isEdgeSwipeActive) {
       this.handleEdgeSwipeMove(event);
@@ -383,10 +411,12 @@ export class MobileMenuGestures implements GestureHandler {
     if (!this.isDragging && !this.isHorizontalGesture) {
       // Improved precision with angular ratio
       if (absDiffY > this.verticalLockThreshold && absDiffY > absDiffX * GESTURE_ANGULAR_RATIO) {
+        this.debugGesture('overlay_gesture_cancel', { reason: 'vertical_lock', diffX, diffY });
         this.trackMetric('gesture_cancel', { source: 'overlay_lock', reason: 'vertical_lock' });
         return;
       }
       if (absDiffX > this.horizontalThreshold && absDiffX > absDiffY * GESTURE_ANGULAR_RATIO) {
+        this.debugGesture('overlay_horizontal_detected', { diffX, diffY });
         this.isHorizontalGesture = true;
         this.isDragging = true;
         this.config.onToggleHaptic();
@@ -440,10 +470,12 @@ export class MobileMenuGestures implements GestureHandler {
       // Improved precision with angular ratio
       if (absDiffY > this.verticalLockThreshold && absDiffY > absDiffX * GESTURE_ANGULAR_RATIO) {
         this.isHorizontalGesture = false;
+        this.debugGesture('drawer_gesture_cancel', { reason: 'vertical_lock', diffX, diffY });
         this.trackMetric('gesture_cancel', { source: 'drawer_lock', reason: 'vertical_lock' });
         return;
       }
       if (absDiffX > this.horizontalThreshold && absDiffX > absDiffY * GESTURE_ANGULAR_RATIO) {
+        this.debugGesture('drawer_horizontal_detected', { diffX, diffY });
         this.isHorizontalGesture = true;
         this.isDragging = true;
         this.config.onToggleHaptic();
@@ -481,6 +513,7 @@ export class MobileMenuGestures implements GestureHandler {
 
   public onPointerUp(event: PointerEvent): void {
     if (event.pointerId !== this.activePointerId) return;
+    this.debugGesture('pointer_up', { pointerId: event.pointerId, x: event.clientX, y: event.clientY });
 
     if (this.isEdgeSwipeActive) {
       this.handleEdgeSwipeEnd(event);
@@ -510,6 +543,7 @@ export class MobileMenuGestures implements GestureHandler {
       (velocity > this.velocityThreshold || absDiffX > this.minSwipeDistance);
 
     if (isSwipeToClose) {
+      this.debugGesture('overlay_gesture_complete', { action: 'close_swipe', velocity, absDiffX, absDiffY, duration });
       this.config.onClose();
       this.startCooldown();
       this.trackMetric('gesture_complete', { action: 'close', source: 'overlay_swipe' });
@@ -519,11 +553,19 @@ export class MobileMenuGestures implements GestureHandler {
       absDiffY < this.tapThreshold &&
       duration < GESTURE_TAP_TIMEOUT_MS
     ) {
+      this.debugGesture('overlay_gesture_complete', { action: 'close_tap', velocity, absDiffX, absDiffY, duration });
       // P3 — Adaptive tap to close; ignore if it was a horizontal gesture attempt or too slow
       this.config.onClose();
       this.startCooldown();
       this.trackMetric('gesture_complete', { action: 'close', source: 'overlay_tap' });
     } else {
+      this.debugGesture('overlay_gesture_cancel', {
+        reason: this.isHorizontalGesture ? 'invalid_swipe' : 'failed_tap',
+        absDiffX,
+        absDiffY,
+        duration,
+        velocity
+      });
       this.trackMetric('gesture_cancel', {
         source: 'overlay_end',
         reason: this.isHorizontalGesture ? 'invalid_swipe' : 'failed_tap',
@@ -540,6 +582,7 @@ export class MobileMenuGestures implements GestureHandler {
     if (event.pointerId !== this.activePointerId) return;
 
     if (!this.isDragging || !this.isHorizontalGesture) {
+      this.debugGesture('drawer_gesture_cancel', { reason: 'not_horizontal_or_not_dragging' });
       this.config.onUpdateTranslate(this.lastDragPosition, null);
       this.trackMetric('gesture_cancel', { source: 'drawer' });
       this.resetDragState();
@@ -568,6 +611,7 @@ export class MobileMenuGestures implements GestureHandler {
     this.resetDragState();
     this.config.onUpdateTranslate(this.lastDragPosition, null);
 
+    this.debugGesture('drawer_gesture_end_decision', { shouldStayOpen, diffX, velocity, progress });
     if (shouldStayOpen) {
       this.config.onOpen();
       this.startCooldown();
@@ -582,6 +626,7 @@ export class MobileMenuGestures implements GestureHandler {
   // P12 — on system cancel, revert to last stable state instead of applying gesture logic
   public onPointerCancel(event: PointerEvent): void {
     if (event.pointerId !== this.activePointerId) return;
+    this.debugGesture('pointer_cancel', { pointerId: event.pointerId });
 
     if (this.isEdgeSwipeActive) {
       this.handleEdgeSwipeCancel(event);
@@ -630,10 +675,12 @@ export class MobileMenuGestures implements GestureHandler {
     if (!this.isHorizontalGesture) {
       // Improved precision with angular ratio
       if (absDiffY > this.verticalLockThreshold && absDiffY > absDiffX * GESTURE_ANGULAR_RATIO) {
+        this.debugGesture('edge_gesture_cancel', { reason: 'vertical_lock', diffX, diffY });
         this.cancelEdgeSwipe('vertical_lock');
         return;
       }
       if (absDiffX > this.horizontalThreshold && absDiffX > absDiffY * GESTURE_ANGULAR_RATIO) {
+        this.debugGesture('edge_horizontal_detected', { diffX, diffY });
         this.isHorizontalGesture = true;
         this.config.onToggleHaptic();
       } else {
@@ -643,7 +690,14 @@ export class MobileMenuGestures implements GestureHandler {
 
     const isRtl           = this.sessionIsRtl;
     const isValidDirection = isRtl ? diffX < 0 : diffX > 0;
-    if (!this.isHorizontalGesture || !isValidDirection) return;
+    if (!this.isHorizontalGesture || !isValidDirection) {
+      this.debugGesture('edge_move_ignored', {
+        reason: !this.isHorizontalGesture ? 'not_horizontal' : 'invalid_direction',
+        diffX,
+        diffY
+      });
+      return;
+    }
 
     this.pushVelocitySample(event.clientX);
 
@@ -698,6 +752,7 @@ export class MobileMenuGestures implements GestureHandler {
     this.resetDragState();
     this.config.onUpdateTranslate(lastPos, null);
 
+    this.debugGesture('edge_gesture_end_decision', { shouldOpen, diffX, velocity, progress });
     if (shouldOpen) {
       this.config.onOpen();
       this.startCooldown();
@@ -714,6 +769,7 @@ export class MobileMenuGestures implements GestureHandler {
     const closedPos = this.sessionIsRtl ? menuWidth : -menuWidth;
     this.resetDragState();
     this.config.onUpdateTranslate(closedPos, null);
+    this.debugGesture('edge_gesture_cancel', { reason });
     this.trackMetric('gesture_cancel', { source: 'edge_lock', reason });
   }
 
@@ -728,6 +784,7 @@ export class MobileMenuGestures implements GestureHandler {
     this.resetDragState();
     this.config.onUpdateTranslate(closedPos, null);
     this.config.onClose();
+    this.debugGesture('edge_gesture_cancel', { reason: 'system_interrupt' });
     this.trackMetric('gesture_cancel', { source: 'edge_system_interrupt' });
   };
 
@@ -741,6 +798,7 @@ export class MobileMenuGestures implements GestureHandler {
   // ── Analytics ────────────────────────────────────────────────────────────────
 
   private trackMetric(metric: string, data: Record<string, unknown>): void {
+    this.debugGesture('metric', { metric, ...data });
     this.config.onTrackMetric?.(metric, data);
   }
 
