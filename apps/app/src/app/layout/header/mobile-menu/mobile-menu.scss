@@ -280,6 +280,7 @@ $mm-overlay-duration:   0.3s;
     }
 
     .quick-tile {
+      touch-action: pan-y;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -385,6 +386,9 @@ $mm-overlay-duration:   0.3s;
         padding: 12px 0;
         font-size: 0.95rem;
         outline: none;
+        // P2 — Explicitly allow vertical scrolling/panning but favor horizontal gestures
+        // for the drawer. 'pan-y' prevents the browser from taking over horizontal swipes.
+        touch-action: pan-y;
 
         &::placeholder {
           color: #d0d0d0;
@@ -442,6 +446,7 @@ $mm-overlay-duration:   0.3s;
     }
 
     .accordion-header {
+      touch-action: pan-y;
       width: 100%;
       display: flex;
       align-items: center;

@@ -22,14 +22,17 @@ export class GestureBusService implements OnDestroy {
 
   private handlers: GestureHandler[] = [];
   private activeHandler: GestureHandler | null = null;
+  private activePointerId: number | null = null;
 
   constructor() {
     if (this.isBrowser) {
       this.ngZone.runOutsideAngular(() => {
-        document.addEventListener('pointerdown',   this.handlePointerDown,   { capture: true });
-        document.addEventListener('pointermove',   this.handlePointerMove,   { capture: true });
-        document.addEventListener('pointerup',     this.handlePointerUp,     { capture: true });
-        document.addEventListener('pointercancel', this.handlePointerCancel, { capture: true });
+        // Use non-passive listeners for pointer events to ensure we can prevent
+        // default browser actions if needed.
+        document.addEventListener('pointerdown',   this.handlePointerDown,   { capture: true, passive: false });
+        document.addEventListener('pointermove',   this.handlePointerMove,   { capture: true, passive: false });
+        document.addEventListener('pointerup',     this.handlePointerUp,     { capture: true, passive: false });
+        document.addEventListener('pointercancel', this.handlePointerCancel, { capture: true, passive: false });
       });
     }
   }
@@ -42,6 +45,7 @@ export class GestureBusService implements OnDestroy {
     document.removeEventListener('pointercancel', this.handlePointerCancel, { capture: true });
     this.handlers = [];
     this.activeHandler = null;
+    this.activePointerId = null;
   }
 
   registerHandler(handler: GestureHandler): () => void {
@@ -52,18 +56,32 @@ export class GestureBusService implements OnDestroy {
       this.handlers = this.handlers.filter((h) => h !== handler);
       if (this.activeHandler === handler) {
         this.activeHandler = null;
+        this.activePointerId = null;
       }
     };
   }
 
   private handlePointerDown = (event: PointerEvent): void => {
-    // Defensive: discard any stale activeHandler from a previously lost pointerup/cancel
-    this.activeHandler = null;
+    // If we already have an active handler and a different pointer starts,
+    // we ignore it to prevent multi-touch from killing an active gesture.
+    if (this.activeHandler !== null && this.activePointerId !== null) {
+      return;
+    }
 
     for (const handler of this.handlers) {
       if (handler.onPointerDown) {
         if (handler.onPointerDown(event)) {
           this.activeHandler = handler;
+          this.activePointerId = event.pointerId;
+
+          // Pointer capture ensures the element continues to receive pointer events
+          // even if the pointer moves outside its boundaries, which is critical
+          // for smooth drawer gestures on mobile.
+          try {
+            (event.target as HTMLElement)?.setPointerCapture(event.pointerId);
+          } catch (e) {
+            /* capture might fail on some elements/conditions */
+          }
           break;
         }
       }
@@ -71,16 +89,24 @@ export class GestureBusService implements OnDestroy {
   };
 
   private handlePointerMove = (event: PointerEvent): void => {
-    this.activeHandler?.onPointerMove?.(event);
+    if (this.activeHandler && event.pointerId === this.activePointerId) {
+      this.activeHandler.onPointerMove?.(event);
+    }
   };
 
   private handlePointerUp = (event: PointerEvent): void => {
-    this.activeHandler?.onPointerUp?.(event);
-    this.activeHandler = null;
+    if (this.activeHandler && event.pointerId === this.activePointerId) {
+      this.activeHandler.onPointerUp?.(event);
+      this.activeHandler = null;
+      this.activePointerId = null;
+    }
   };
 
   private handlePointerCancel = (event: PointerEvent): void => {
-    this.activeHandler?.onPointerCancel?.(event);
-    this.activeHandler = null;
+    if (this.activeHandler && event.pointerId === this.activePointerId) {
+      this.activeHandler.onPointerCancel?.(event);
+      this.activeHandler = null;
+      this.activePointerId = null;
+    }
   };
 }
