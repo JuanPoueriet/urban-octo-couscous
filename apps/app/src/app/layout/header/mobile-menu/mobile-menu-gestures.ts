@@ -30,6 +30,8 @@ export interface MobileMenuGestureConfig {
   isRtl: () => boolean;
   isOpen: () => boolean;
   isAnimating: () => boolean;
+  /** Returns true if the pointer target is inside the drawer element. */
+  isTargetInsideMenu?: (target: HTMLElement) => boolean;
   /** Returns the current visual translateX of the drawer (needed to resume gestures mid-animation). */
   getCurrentTranslateX: () => number;
 
@@ -335,10 +337,9 @@ export class MobileMenuGestures implements GestureHandler {
     const isOpenOrAnimating = this.config.isOpen() || this.config.isAnimating();
     if (isOpenOrAnimating) {
       // Restrict capture when open (A)
-      // Inicia drag solo si el pointerdown ocurrió dentro del drawer.
-      const isInsideMenu = isRtl
-        ? event.clientX > this.sessionViewportWidth - this.sessionMenuWidth
-        : event.clientX < this.sessionMenuWidth;
+      // Start drag only if the pointerdown occurred inside the drawer element.
+      const target = event.target as HTMLElement;
+      const isInsideMenu = this.config.isTargetInsideMenu?.(target);
 
       if (isInsideMenu) {
         this.startMenuDrag(event);
@@ -623,6 +624,8 @@ export class MobileMenuGestures implements GestureHandler {
 
     if (!this.isDragging || !this.isHorizontalGesture) {
       this.debugGesture('drawer_gesture_cancel', { reason: 'not_horizontal_or_not_dragging' });
+      // Ensure the coordinator resets transition state and clears dragging flags
+      // even if the user just tapped or performed a vertical swipe.
       this.config.onUpdateTranslate(this.lastDragPosition, null);
       this.trackMetric('gesture_cancel', { source: 'drawer' });
       this.resetDragState();
