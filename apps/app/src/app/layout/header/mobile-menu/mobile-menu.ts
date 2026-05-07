@@ -440,7 +440,9 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   // ── Public menu actions ─────────────────────────────────────────────────────
 
-  closeMobileMenu(reason: MenuCloseReason = 'button'): void {
+  closeMobileMenu(reason: MenuCloseReason = 'button', event?: Event): void {
+    event?.preventDefault();
+    event?.stopPropagation();
     this.menuService.close(reason);
   }
 
