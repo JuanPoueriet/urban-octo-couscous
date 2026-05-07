@@ -335,6 +335,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       isRtl:        () => this.directionService.isRtl(),
       isOpen:       () => this.isMobileMenuOpen,
       isAnimating:  () => this.drawerState === DrawerState.OPENING || this.drawerState === DrawerState.CLOSING,
+      isTargetInsideMenu: (target: HTMLElement) => !!this.menuElement?.contains(target),
       // P3 — exposes current visual position so mid-animation gestures start correctly
       getCurrentTranslateX: () => this.menuTranslateX,
 
