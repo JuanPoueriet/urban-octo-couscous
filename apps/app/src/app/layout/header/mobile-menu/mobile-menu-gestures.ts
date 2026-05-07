@@ -339,7 +339,9 @@ export class MobileMenuGestures implements GestureHandler {
       // Restrict capture when open (A)
       // Start drag only if the pointerdown occurred inside the drawer element.
       const target = event.target as HTMLElement;
-      const isInsideMenu = this.config.isTargetInsideMenu?.(target);
+      const isInsideMenu = this.config.isTargetInsideMenu
+        ? this.config.isTargetInsideMenu(target)
+        : this.isPointerWithinMenuBounds(event.clientX);
 
       if (isInsideMenu) {
         this.startMenuDrag(event);
@@ -373,6 +375,14 @@ export class MobileMenuGestures implements GestureHandler {
   }
 
   private isOverlaySwipeActive = false;
+
+  private isPointerWithinMenuBounds(pointerX: number): boolean {
+    if (this.sessionIsRtl) {
+      return pointerX >= this.sessionViewportWidth - this.sessionMenuWidth;
+    }
+
+    return pointerX <= this.sessionMenuWidth;
+  }
 
   private startMenuDrag(event: PointerEvent): void {
     this.config.onStopTransition();
