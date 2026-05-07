@@ -14,11 +14,11 @@ import { LucideAngularModule } from 'lucide-angular';
   animations: [
     trigger('slideInOut', [
       transition(':enter', [
-        style({ transform: 'translateY(100%)', opacity: 0 }),
-        animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({ transform: 'translateY(0)', opacity: 1 }))
+        style({ transform: 'translateY(-10px)', opacity: 0 }),
+        animate('400ms cubic-bezier(0.16, 1, 0.3, 1)', style({ transform: 'translateY(0)', opacity: 1 }))
       ]),
       transition(':leave', [
-        animate('300ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({ transform: 'translateY(100%)', opacity: 0 }))
+        animate('300ms cubic-bezier(0.16, 1, 0.3, 1)', style({ transform: 'translateY(-10px)', opacity: 0 }))
       ])
     ])
   ]

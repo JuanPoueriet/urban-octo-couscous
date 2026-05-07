@@ -1,30 +1,27 @@
+import { provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LanguageSwitcher } from './language-switcher';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { provideRouter } from '@angular/router';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { provideZonelessChangeDetection } from '@angular/core';
+import { LucideAngularModule, Globe, ChevronDown, Check, Languages, X } from 'lucide-angular';
+import { of } from 'rxjs';
 
 describe('LanguageSwitcher', () => {
   let component: LanguageSwitcher;
   let fixture: ComponentFixture<LanguageSwitcher>;
   let translateService: TranslateService;
 
-  const mockTranslateService = {
-    use: jasmine.createSpy('use'),
-    addLangs: jasmine.createSpy('addLangs'),
-    setDefaultLang: jasmine.createSpy('setDefaultLang'),
-    getLangs: () => ['en', 'es'],
-    get: (key: string) => ({ subscribe: (cb: any) => cb(`${key}_translated`) }),
-    currentLang: 'es',
-  };
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LanguageSwitcher, TranslateModule.forRoot(), NoopAnimationsModule],
+      imports: [
+        LanguageSwitcher,
+        TranslateModule.forRoot(),
+        NoopAnimationsModule,
+        LucideAngularModule.pick({ Globe, ChevronDown, Check, Languages, X })
+      ],
       providers: [
         provideZonelessChangeDetection(),
-        { provide: TranslateService, useValue: mockTranslateService },
         provideRouter([]),
       ],
     }).compileComponents();
@@ -32,6 +29,11 @@ describe('LanguageSwitcher', () => {
     fixture = TestBed.createComponent(LanguageSwitcher);
     component = fixture.componentInstance;
     translateService = TestBed.inject(TranslateService);
+
+    // Setup essential TranslateService state
+    translateService.addLangs(['en', 'es']);
+    translateService.use('es');
+
     fixture.detectChanges();
   });
 

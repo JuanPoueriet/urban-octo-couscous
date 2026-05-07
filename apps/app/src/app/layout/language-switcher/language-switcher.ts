@@ -1,6 +1,6 @@
 // src/app/layout/language-switcher/language-switcher.ts
 
-import { Component, Inject, OnInit, OnDestroy, ElementRef } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy, ElementRef, Input } from '@angular/core';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, NavigationEnd } from '@angular/router';
@@ -8,6 +8,7 @@ import { LucideAngularModule } from 'lucide-angular';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { ClickOutsideDirective } from '@shared/directives/click-outside';
+import { LanguageSuggestionComponent } from '../../shared/components/language-suggestion/language-suggestion';
 
 @Component({
   selector: 'jsl-language-switcher',
@@ -18,11 +19,14 @@ import { ClickOutsideDirective } from '@shared/directives/click-outside';
     RouterLink,
     LucideAngularModule,
     ClickOutsideDirective,
+    LanguageSuggestionComponent
   ],
   templateUrl: './language-switcher.html',
   styleUrl: './language-switcher.scss',
 })
 export class LanguageSwitcher implements OnInit, OnDestroy {
+  @Input() allowSuggestion = false;
+
   public currentLang = 'es';
   public isDropdownOpen = false;
   public languages: { code: string; name: string }[] = [];

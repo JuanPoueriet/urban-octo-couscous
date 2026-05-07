@@ -13,10 +13,6 @@
 
   <jsl-whatsapp-button></jsl-whatsapp-button>
 
-  @if (hasLanguageSuggestion$ | async) {
-    <jsl-language-suggestion></jsl-language-suggestion>
-  }
-
   @if (hasToasts$ | async) {
     <app-toast></app-toast>
   }
