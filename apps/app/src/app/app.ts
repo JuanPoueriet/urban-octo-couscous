@@ -12,11 +12,9 @@ import { DirectionService } from './core/services/direction.service';
 import { ChatBubbleComponent } from './shared/components/chat-bubble/chat-bubble';
 import { BreadcrumbsComponent } from './shared/components/breadcrumbs/breadcrumbs';
 import { WhatsAppButtonComponent } from './shared/components/whatsapp-button/whatsapp-button';
-import { LanguageSuggestionComponent } from './shared/components/language-suggestion/language-suggestion';
 import { SUPPORTED_LANGUAGES } from '@core/constants/languages';
 import { ToastComponent } from './shared/components/toast/toast';
 import { ToastService } from './core/services/toast.service';
-import { LanguageSuggestionService } from './core/services/language-suggestion.service';
 import { CookieBannerComponent } from './shared/components/cookie-banner/cookie-banner';
 import { ScrollEngineService } from './core/services/scroll-engine.service';
 import { MenuService } from './core/services/menu.service';
@@ -33,7 +31,6 @@ import Lenis from 'lenis';
     BreadcrumbsComponent,
     // ChatBubbleComponent,
     WhatsAppButtonComponent,
-    LanguageSuggestionComponent,
     ToastComponent,
     CookieBannerComponent,
   ],
@@ -64,10 +61,8 @@ export class App implements OnInit, OnDestroy {
   private onTouchEndHandler = this.onTouchEnd.bind(this);
 
   private readonly toastService = inject(ToastService);
-  private readonly languageSuggestionService = inject(LanguageSuggestionService);
 
   readonly hasToasts$ = this.toastService.toasts$.pipe(map((toasts) => toasts.length > 0));
-  readonly hasLanguageSuggestion$ = this.languageSuggestionService.suggestion$.pipe(map((suggestion) => !!suggestion));
 
   get shouldRenderCookieBanner(): boolean {
     return this.isBrowser && !this.cookieService.get('cookie-consent');

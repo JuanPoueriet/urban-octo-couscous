@@ -24,4 +24,6 @@
       <lucide-icon *ngIf="currentLang === lang.code" name="Check"></lucide-icon>
     </a>
   </div>
+
+  <jsl-language-suggestion *ngIf="allowSuggestion && !isDropdownOpen"></jsl-language-suggestion>
 </div>

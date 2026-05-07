@@ -20,6 +20,7 @@ export class LanguageSuggestionService {
 
   private readonly PREFERRED_LANG_COOKIE = 'jsl_user_preferred_lang';
   private readonly DISMISSED_SESSION_KEY = 'jsl_lang_suggestion_dismissed';
+  private autoDismissTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -28,6 +29,18 @@ export class LanguageSuggestionService {
     private router: Router
   ) {
     if (isPlatformBrowser(this.platformId)) {
+      // 1. Initial check after full page load
+      const onWindowLoad = () => {
+        setTimeout(() => this.checkSuggestion(), 500);
+      };
+
+      if (document.readyState === 'complete') {
+        onWindowLoad();
+      } else {
+        window.addEventListener('load', onWindowLoad, { once: true });
+      }
+
+      // 2. Check on subsequent navigations
       this.router.events.pipe(
         filter(event => event instanceof NavigationEnd)
       ).subscribe(() => {
@@ -66,8 +79,23 @@ export class LanguageSuggestionService {
         name: this.getLanguageName(preferredLang),
         currentName: this.getLanguageName(currentUrlLang),
       });
+      this.startAutoDismissTimer();
     } else {
       this.suggestionSubject.next(null);
+    }
+  }
+
+  private startAutoDismissTimer() {
+    this.clearAutoDismissTimer();
+    this.autoDismissTimer = setTimeout(() => {
+      this.suggestionSubject.next(null);
+    }, 5000);
+  }
+
+  private clearAutoDismissTimer() {
+    if (this.autoDismissTimer) {
+      clearTimeout(this.autoDismissTimer);
+      this.autoDismissTimer = null;
     }
   }
 
@@ -109,11 +137,13 @@ export class LanguageSuggestionService {
   }
 
   dismiss() {
+    this.clearAutoDismissTimer();
     sessionStorage.setItem(this.DISMISSED_SESSION_KEY, 'true');
     this.suggestionSubject.next(null);
   }
 
   switchToPreferred(code: string) {
+    this.clearAutoDismissTimer();
     this.cookieService.set('lang', code, { expires: 365, path: '/' });
     this.cookieService.set(this.PREFERRED_LANG_COOKIE, code, { expires: 365, path: '/' });
 
