@@ -39,7 +39,7 @@
         {{ 'COMMON.BRAND_NAME' | translate }}
       </a>
     </div>
-    <button class="mobile-close-btn" (click)="closeMobileMenu()" [attr.aria-label]="'ARIA.CLOSE_MENU' | translate">
+    <button class="mobile-close-btn" (pointerdown)="$event.stopPropagation()" (click)="closeMobileMenu('button', $event)" [attr.aria-label]="'ARIA.CLOSE_MENU' | translate">
       <lucide-icon name="X"></lucide-icon>
     </button>
   </div>
