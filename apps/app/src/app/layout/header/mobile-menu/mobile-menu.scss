@@ -248,6 +248,7 @@ $mm-overlay-duration:   0.3s;
     display: flex;
     flex-direction: column;
     gap: 12px;
+    touch-action: pan-y;
 
     &::-webkit-scrollbar {
       width: 4px;
