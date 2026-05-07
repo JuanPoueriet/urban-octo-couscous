@@ -187,6 +187,30 @@ export class MobileMenuGestures implements GestureHandler {
     this.velocityBuffer = [];
   }
 
+  private detectHorizontalGesture(
+    absDiffX: number,
+    absDiffY: number,
+    instantaneousVelocity: number
+  ): boolean {
+    // 1. Lock check: If vertical movement is too high early on, never confirm horizontal
+    if (absDiffY > this.verticalLockThreshold && absDiffY > absDiffX * GESTURE_ANGULAR_RATIO) {
+      return false;
+    }
+
+    // 2. Velocity-based Early Detection (Ultra-precision improvement)
+    // If we have high horizontal velocity relative to vertical velocity,
+    // we confirm the gesture even before the distance threshold is met.
+    const isFastHorizontal = instantaneousVelocity > this.velocityThreshold * 0.8;
+    const hasClearDirectionalIntent = absDiffX > absDiffY * (GESTURE_ANGULAR_RATIO * 1.5);
+
+    if (isFastHorizontal && hasClearDirectionalIntent && absDiffX > 3) {
+      return true;
+    }
+
+    // 3. Distance-based Detection (Classic)
+    return absDiffX > this.horizontalThreshold && absDiffX > absDiffY * GESTURE_ANGULAR_RATIO;
+  }
+
   // ── Position / progress helpers ──────────────────────────────────────────────
 
   private getClosedPosition(menuWidth: number): number {
@@ -403,23 +427,32 @@ export class MobileMenuGestures implements GestureHandler {
     this.currentX = event.clientX;
     this.currentY = event.clientY;
 
+    this.pushVelocitySample(event.clientX);
+
     const diffX = this.currentX - this.startX;
     const diffY = this.currentY - this.startY;
     const absDiffX = Math.abs(diffX);
     const absDiffY = Math.abs(diffY);
 
     if (!this.isDragging && !this.isHorizontalGesture) {
-      // Improved precision with angular ratio
-      if (absDiffY > this.verticalLockThreshold && absDiffY > absDiffX * GESTURE_ANGULAR_RATIO) {
-        this.debugGesture('overlay_gesture_cancel', { reason: 'vertical_lock', diffX, diffY });
-        this.trackMetric('gesture_cancel', { source: 'overlay_lock', reason: 'vertical_lock' });
-        return;
-      }
-      if (absDiffX > this.horizontalThreshold && absDiffX > absDiffY * GESTURE_ANGULAR_RATIO) {
+      const isHorizontal = this.detectHorizontalGesture(
+        absDiffX,
+        absDiffY,
+        this.getInstantaneousVelocity()
+      );
+
+      if (isHorizontal) {
         this.debugGesture('overlay_horizontal_detected', { diffX, diffY });
         this.isHorizontalGesture = true;
         this.isDragging = true;
         this.config.onToggleHaptic();
+      } else if (
+        absDiffY > this.verticalLockThreshold &&
+        absDiffY > absDiffX * GESTURE_ANGULAR_RATIO
+      ) {
+        this.debugGesture('overlay_gesture_cancel', { reason: 'vertical_lock', diffX, diffY });
+        this.trackMetric('gesture_cancel', { source: 'overlay_lock', reason: 'vertical_lock' });
+        return;
       }
     }
 
@@ -461,32 +494,39 @@ export class MobileMenuGestures implements GestureHandler {
     this.currentX = event.clientX;
     this.currentY = event.clientY;
 
+    this.pushVelocitySample(event.clientX);
+
     const diffX = this.currentX - this.startX;
     const diffY = this.currentY - this.startY;
     const absDiffX = Math.abs(diffX);
     const absDiffY = Math.abs(diffY);
 
     if (!this.isDragging && !this.isHorizontalGesture) {
-      // Improved precision with angular ratio
-      if (absDiffY > this.verticalLockThreshold && absDiffY > absDiffX * GESTURE_ANGULAR_RATIO) {
-        this.isHorizontalGesture = false;
-        this.debugGesture('drawer_gesture_cancel', { reason: 'vertical_lock', diffX, diffY });
-        this.trackMetric('gesture_cancel', { source: 'drawer_lock', reason: 'vertical_lock' });
-        return;
-      }
-      if (absDiffX > this.horizontalThreshold && absDiffX > absDiffY * GESTURE_ANGULAR_RATIO) {
+      const isHorizontal = this.detectHorizontalGesture(
+        absDiffX,
+        absDiffY,
+        this.getInstantaneousVelocity()
+      );
+
+      if (isHorizontal) {
         this.debugGesture('drawer_horizontal_detected', { diffX, diffY });
         this.isHorizontalGesture = true;
         this.isDragging = true;
         this.config.onToggleHaptic();
+      } else if (
+        absDiffY > this.verticalLockThreshold &&
+        absDiffY > absDiffX * GESTURE_ANGULAR_RATIO
+      ) {
+        this.isHorizontalGesture = false;
+        this.debugGesture('drawer_gesture_cancel', { reason: 'vertical_lock', diffX, diffY });
+        this.trackMetric('gesture_cancel', { source: 'drawer_lock', reason: 'vertical_lock' });
+        return;
       } else {
         return;
       }
     }
 
     if (!this.isHorizontalGesture || !this.isDragging) return;
-
-    this.pushVelocitySample(event.clientX);
 
     const menuWidth = this.sessionMenuWidth;
     const isRtl = this.sessionIsRtl;
@@ -667,22 +707,31 @@ export class MobileMenuGestures implements GestureHandler {
     this.currentX = event.clientX;
     this.currentY = event.clientY;
 
+    this.pushVelocitySample(event.clientX);
+
     const diffX    = this.currentX - this.startX;
     const diffY    = this.currentY - this.startY;
     const absDiffX = Math.abs(diffX);
     const absDiffY = Math.abs(diffY);
 
     if (!this.isHorizontalGesture) {
-      // Improved precision with angular ratio
-      if (absDiffY > this.verticalLockThreshold && absDiffY > absDiffX * GESTURE_ANGULAR_RATIO) {
-        this.debugGesture('edge_gesture_cancel', { reason: 'vertical_lock', diffX, diffY });
-        this.cancelEdgeSwipe('vertical_lock');
-        return;
-      }
-      if (absDiffX > this.horizontalThreshold && absDiffX > absDiffY * GESTURE_ANGULAR_RATIO) {
+      const isHorizontal = this.detectHorizontalGesture(
+        absDiffX,
+        absDiffY,
+        this.getInstantaneousVelocity()
+      );
+
+      if (isHorizontal) {
         this.debugGesture('edge_horizontal_detected', { diffX, diffY });
         this.isHorizontalGesture = true;
         this.config.onToggleHaptic();
+      } else if (
+        absDiffY > this.verticalLockThreshold &&
+        absDiffY > absDiffX * GESTURE_ANGULAR_RATIO
+      ) {
+        this.debugGesture('edge_gesture_cancel', { reason: 'vertical_lock', diffX, diffY });
+        this.cancelEdgeSwipe('vertical_lock');
+        return;
       } else {
         return;
       }
