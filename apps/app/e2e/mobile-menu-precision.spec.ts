@@ -95,29 +95,29 @@ test.describe('Mobile Menu Gesture Precision', () => {
     await toggle.click();
 
     const menu = page.locator('.header__nav-links-mobile');
-    // Wait for opening animation to complete so cooldown starts
-    await page.waitForTimeout(600);
+    // Wait a bit but stay within MenuService cooldown (400ms)
+    await page.waitForTimeout(100);
     await expect(menu).toHaveClass(/open/);
 
-    // Try to swipe back closed immediately (within GESTURE_COOLDOWN_MS cooldown)
+    // Try to swipe back closed immediately (within MenuService cooldown 400ms)
     await page.evaluate(() => {
       const overlay = document.querySelector('.jsl-mm-overlay');
       if (overlay) {
         // Use a high pointerId to avoid conflicts
         const common = { bubbles: true, cancelable: true, isPrimary: true, pointerId: 999, pointerType: 'touch' };
         overlay.dispatchEvent(new PointerEvent('pointerdown', { ...common, clientX: 300, clientY: 200 }));
-        // Small move to try to trigger drag
-        overlay.dispatchEvent(new PointerEvent('pointermove', { ...common, clientX: 250, clientY: 200 }));
-        overlay.dispatchEvent(new PointerEvent('pointerup',   { ...common, clientX: 250, clientY: 200 }));
+        // Move enough to exceed thresholds
+        overlay.dispatchEvent(new PointerEvent('pointermove', { ...common, clientX: 100, clientY: 200 }));
+        overlay.dispatchEvent(new PointerEvent('pointerup',   { ...common, clientX: 100, clientY: 200 }));
       }
     });
 
-    // Should still be open because the immediate gesture was ignored by cooldown.
+    // Should still be open because the immediate gesture was ignored by MenuService cooldown.
     await expect(menu).toHaveClass(/open/);
     await expect(menu).not.toHaveClass(/dragging/);
 
-    // Wait for cooldown to expire (100ms)
-    await page.waitForTimeout(200);
+    // Wait for cooldown to expire (400ms)
+    await page.waitForTimeout(500);
 
     // Now it should work (close via tap on overlay)
     await page.evaluate(() => {

@@ -178,7 +178,7 @@ describe('MobileMenu', () => {
     expect(() => fixture.destroy()).not.toThrow();
   });
 
-  it('should set background elements inert when menu opens and remove when closes', fakeAsync(() => {
+  it('should set background elements inert when menu opens and remove when closes', async () => {
     const main   = document.createElement('main');
     const footer = document.createElement('jsl-footer');
     document.body.appendChild(main);
@@ -190,7 +190,7 @@ describe('MobileMenu', () => {
     fixture.detectChanges();
 
     // Allow transition coordinator fallback timer (DRAWER_TRANSITION_DURATION_MS + 100 = 500ms)
-    tick(600);
+    await new Promise(resolve => setTimeout(resolve, 600));
     fixture.detectChanges();
 
     expect(main.hasAttribute('inert')).toBeTrue();
@@ -198,7 +198,7 @@ describe('MobileMenu', () => {
 
     menuServiceMock.isMobileMenuOpen.set(false);
     fixture.detectChanges();
-    tick(600);
+    await new Promise(resolve => setTimeout(resolve, 600));
     fixture.detectChanges();
 
     expect(main.hasAttribute('inert')).toBeFalse();
@@ -206,7 +206,7 @@ describe('MobileMenu', () => {
 
     main.remove();
     footer.remove();
-  }));
+  });
 
   it('should have routerLinkActive on contact CTA', () => {
     menuServiceMock.isMobileMenuOpen.set(true);
