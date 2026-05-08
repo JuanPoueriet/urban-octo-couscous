@@ -3,7 +3,9 @@
 // Keep the SCSS counterparts ($mm-*) in mobile-menu.scss in sync with these.
 export const MOBILE_MENU_MAX_WIDTH = 380; // px — matches CSS max-width
 export const MOBILE_BREAKPOINT_PX = 992; // px — matches header/breakpoint.service
-export const DRAWER_TRANSITION_DURATION_MS = 400;
+export const MIN_DRAWER_DURATION_MS = 150;
+export const MAX_DRAWER_DURATION_MS = 400;
+export const DRAWER_TRANSITION_DURATION_MS = MAX_DRAWER_DURATION_MS;
 export const DRAWER_EASING = 'cubic-bezier(0.16, 1, 0.3, 1)';
 export const DRAWER_TRANSITION = `transform ${DRAWER_TRANSITION_DURATION_MS}ms ${DRAWER_EASING}`;
 

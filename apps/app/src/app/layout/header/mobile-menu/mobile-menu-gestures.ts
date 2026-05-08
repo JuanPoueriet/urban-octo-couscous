@@ -43,8 +43,8 @@ export interface MobileMenuGestureConfig {
     scaleX?: number,
     transformOrigin?: string
   ) => void;
-  onOpen: () => void;
-  onClose: () => void;
+  onOpen: (velocity?: number) => void;
+  onClose: (velocity?: number) => void;
   onStopTransition: () => void;
   onToggleHaptic: () => void;
   onTransitionComplete?: () => void;
@@ -583,7 +583,7 @@ export class MobileMenuGestures implements GestureHandler {
 
     if (isSwipeToClose) {
       this.debugGesture('overlay_gesture_complete', { action: 'close_swipe', velocity, absDiffX, absDiffY, duration });
-      this.config.onClose();
+      this.config.onClose(velocity);
       this.startCooldown();
       this.trackMetric('gesture_complete', { action: 'close', source: 'overlay_swipe' });
     } else if (
@@ -672,11 +672,11 @@ export class MobileMenuGestures implements GestureHandler {
 
     this.debugGesture('drawer_gesture_end_decision', { shouldStayOpen, diffX, velocity, progress });
     if (shouldStayOpen) {
-      this.config.onOpen();
+      this.config.onOpen(velocity);
       this.startCooldown();
       this.trackMetric('gesture_complete', { action: 'stay_open', source: 'drawer' });
     } else {
-      this.config.onClose();
+      this.config.onClose(velocity);
       this.startCooldown();
       this.trackMetric('gesture_complete', { action: 'close', source: 'drawer' });
     }
@@ -819,11 +819,11 @@ export class MobileMenuGestures implements GestureHandler {
 
     this.debugGesture('edge_gesture_end_decision', { shouldOpen, diffX, velocity, progress });
     if (shouldOpen) {
-      this.config.onOpen();
+      this.config.onOpen(velocity);
       this.startCooldown();
       this.trackMetric('gesture_complete', { action: 'open', source: 'edge' });
     } else {
-      this.config.onClose();
+      this.config.onClose(velocity);
       this.startCooldown();
       this.trackMetric('gesture_complete', { action: 'close_abort', source: 'edge' });
     }
