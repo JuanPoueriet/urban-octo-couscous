@@ -341,7 +341,7 @@
       <jsl-language-switcher class="header__mobile-lang-switcher" [allowSuggestion]="true"></jsl-language-switcher>
       <button
         class="header__mobile-toggle"
-        (click)="toggleMobileMenu()"
+        (click)="toggleMobileMenu($event)"
         [attr.aria-label]="'ARIA.TOGGLE_MENU' | translate"
         [attr.aria-expanded]="isMobileMenuOpen"
         [class.open]="isMobileMenuOpen"
