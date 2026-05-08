@@ -114,18 +114,9 @@ export class Header implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // TOGGLE MANUAL DEL MENÚ
-  private lastToggleTime = 0;
-  private readonly MOBILE_TOGGLE_GUARD_MS = 350;
-
   toggleMobileMenu(event?: Event) {
     event?.preventDefault();
     event?.stopPropagation();
-
-    const now = performance.now();
-    if (now - this.lastToggleTime < this.MOBILE_TOGGLE_GUARD_MS) {
-      return;
-    }
-    this.lastToggleTime = now;
 
     this.menuService.toggle('button');
     this.closeDropdowns();

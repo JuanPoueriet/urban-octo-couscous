@@ -40,19 +40,25 @@ describe('Header', () => {
     expect(component.isMobileMenuOpen).toBe(false);
   });
 
-  it('should toggle mobile menu on toggleMobileMenu()', () => {
+  it('should toggle mobile menu on toggleMobileMenu()', async () => {
     expect(menuService.isMobileMenuOpen()).toBe(false);
 
     component.toggleMobileMenu();
     expect(menuService.isMobileMenuOpen()).toBe(true);
+
+    // Wait for MenuService cooldown (400ms)
+    await new Promise(resolve => setTimeout(resolve, 450));
 
     component.toggleMobileMenu();
     expect(menuService.isMobileMenuOpen()).toBe(false);
   });
 
-  it('should close mobile menu on closeMobileMenu()', () => {
+  it('should close mobile menu on closeMobileMenu()', async () => {
     menuService.open();
     expect(menuService.isMobileMenuOpen()).toBe(true);
+
+    // Wait for MenuService cooldown (400ms)
+    await new Promise(resolve => setTimeout(resolve, 450));
 
     component.closeMobileMenu();
     expect(menuService.isMobileMenuOpen()).toBe(false);
