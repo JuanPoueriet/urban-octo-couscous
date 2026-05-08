@@ -99,7 +99,7 @@ export class MobileMenuAccessibility {
     if (!this.isBrowser) return;
 
     if (this.focusableElements.length === 0) {
-      this.refreshFocusableElements();
+      this.refreshFocusableElements(true);
     }
 
     if (this.focusableElements.length === 0) return;
