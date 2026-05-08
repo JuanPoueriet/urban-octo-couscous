@@ -48,6 +48,12 @@ export class DrawerTransitionCoordinator {
 
     const previousState = this._currentState;
     this._currentState = newState;
+
+    // Incrementar la generación en cada cambio de estado, incluso si no es animado.
+    // Esto asegura que cualquier callback pendiente (timer o listener) de una
+    // transición anterior sea invalidado inmediatamente (BUG-03).
+    this.transitionGeneration++;
+
     this.config.onStateChange(newState);
 
     switch (newState) {
@@ -189,5 +195,8 @@ export class DrawerTransitionCoordinator {
     // Nulificar config para liberar las referencias a callbacks del componente
     // padre y evitar memory leaks en SSR o en entornos de testing.
     (this as unknown as { config: TransitionConfig | null }).config = null;
+    (this as unknown as { renderer: Renderer2 | null }).renderer = null;
+    (this as unknown as { ngZone: NgZone | null }).ngZone = null;
+    (this as unknown as { cdRef: ChangeDetectorRef | null }).cdRef = null;
   }
 }
