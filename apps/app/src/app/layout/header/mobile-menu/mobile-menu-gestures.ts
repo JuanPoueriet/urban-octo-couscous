@@ -367,6 +367,7 @@ export class MobileMenuGestures implements GestureHandler {
     this.isDragging = false;
     this.isHorizontalGesture = false;
     this.wasOvershooting = false;
+    this.isEdgeSwipeActive = false;
     this.isOverlaySwipeActive = true;
     this.resetVelocityBuffer();
     // Capture current visual position so the drawer follows the finger on overlay swipe
@@ -394,12 +395,13 @@ export class MobileMenuGestures implements GestureHandler {
     this.isDragging = false;
     this.isHorizontalGesture = false;
     this.wasOvershooting = false;
+    this.isEdgeSwipeActive = false;
+    this.isOverlaySwipeActive = false;
     this.resetVelocityBuffer();
 
     // Capture current visual position so gesture resumes from mid-animation offset (P3)
     this.initialTranslateX = this.config.getCurrentTranslateX();
     this.lastDragPosition = this.initialTranslateX;
-    this.isEdgeSwipeActive = false;
   }
 
   private isEdgeSwipeActive = false;
@@ -413,12 +415,13 @@ export class MobileMenuGestures implements GestureHandler {
     this.isDragging = true;
     this.isHorizontalGesture = false;
     this.wasOvershooting = false;
+    this.isEdgeSwipeActive = true;
+    this.isOverlaySwipeActive = false;
     this.resetVelocityBuffer();
 
     const menuWidth = this.sessionMenuWidth;
     this.initialTranslateX = this.sessionIsRtl ? menuWidth : -menuWidth;
     this.lastDragPosition = this.initialTranslateX;
-    this.isEdgeSwipeActive = true;
   }
 
   public onPointerMove(event: PointerEvent): void {
@@ -592,6 +595,9 @@ export class MobileMenuGestures implements GestureHandler {
       this.isHorizontalGesture &&
       isValidDirection &&
       (velocity > this.velocityThreshold || absDiffX > this.minSwipeDistance);
+
+    // Notify coordinator that drag has ended to remove 'dragging' class
+    this.config.onUpdateTranslate(this.lastDragPosition, null);
 
     if (isSwipeToClose) {
       this.debugGesture('overlay_gesture_complete', { action: 'close_swipe', velocity, absDiffX, absDiffY, duration });
@@ -853,6 +859,8 @@ export class MobileMenuGestures implements GestureHandler {
   private resetDragState(): void {
     this.isDragging = false;
     this.isHorizontalGesture = false;
+    this.isEdgeSwipeActive = false;
+    this.isOverlaySwipeActive = false;
     this.activePointerId = null;
     this.resetVelocityBuffer();
   }

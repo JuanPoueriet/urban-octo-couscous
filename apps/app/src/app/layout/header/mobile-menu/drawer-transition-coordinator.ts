@@ -131,7 +131,7 @@ export class DrawerTransitionCoordinator {
         menuElement,
         'transitionend',
         (event: TransitionEvent) => {
-          if (event.propertyName !== 'transform') return;
+          if (event.propertyName !== 'transform' || event.target !== menuElement) return;
           this.clearTransitionListeners();
           this.ngZone.run(() => {
             if (this.currentState === DrawerState.OPENING || this.currentState === DrawerState.CLOSING) {
