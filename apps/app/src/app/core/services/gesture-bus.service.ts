@@ -1,4 +1,4 @@
-import { Injectable, NgZone, OnDestroy, inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, NgZone, OnDestroy, inject, PLATFORM_ID, isDevMode } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { AnalyticsService } from './analytics.service';
 
@@ -80,7 +80,12 @@ export class GestureBusService implements OnDestroy {
           try {
             (event.target as HTMLElement)?.setPointerCapture(event.pointerId);
           } catch (e) {
-            /* capture might fail on some elements/conditions */
+            // setPointerCapture puede fallar en algunos elementos o condiciones.
+            // En dev mode lo logueamos; en producción el gesto continúa sin captura
+            // (puede perder tracking si el puntero sale del viewport).
+            if (isDevMode()) {
+              console.warn('[GestureBus] setPointerCapture failed:', e);
+            }
           }
           break;
         }

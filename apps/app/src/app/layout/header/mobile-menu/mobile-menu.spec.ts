@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { MobileMenu } from './mobile-menu';
 import { MenuService } from '../../../core/services/menu.service';
 import { DirectionService } from '../../../core/services/direction.service';
@@ -9,10 +9,14 @@ import {
   LucideAngularModule, Search, X, SearchX, ChevronDown,
   Mail, CircleDollarSign, HelpCircle, Headphones, LayoutGrid,
   Monitor, Smartphone, Laptop, CloudCog, Building2, Package,
-  ExternalLink, Layers, Users, Workflow, Cpu, Briefcase,
+  ExternalLink, Layers, Workflow, Cpu, Briefcase,
   Heart, TrendingUp, Rocket, ShieldCheck, Lightbulb, Newspaper,
   CalendarDays, Radio, BookOpen, Map, Code, Linkedin, Github,
-  Twitter, Instagram
+  Twitter, Instagram,
+  // Info reemplaza a Users para HEADER.ABOUT (INCONS-02)
+  Info,
+  // Network reemplaza a Users para HEADER.PARTNERS (INCONS-02)
+  Network,
 } from 'lucide-angular';
 import { NO_ERRORS_SCHEMA, WritableSignal, provideZonelessChangeDetection, signal } from '@angular/core';
 import { By } from '@angular/platform-browser';
@@ -74,7 +78,7 @@ describe('MobileMenu', () => {
           Search, X, SearchX, ChevronDown, Mail, CircleDollarSign,
           HelpCircle, Headphones, LayoutGrid, Monitor, Smartphone,
           Laptop, CloudCog, Building2, Package, ExternalLink,
-          Layers, Users, Workflow, Cpu, Briefcase, Heart,
+          Layers, Info, Network, Workflow, Cpu, Briefcase, Heart,
           TrendingUp, Rocket, ShieldCheck, Lightbulb, Newspaper,
           CalendarDays, Radio, BookOpen, Map, Code, Linkedin,
           Github, Twitter, Instagram,
@@ -244,5 +248,27 @@ describe('MobileMenu', () => {
   it('closeMobileMenu should default reason to "button"', () => {
     component.closeMobileMenu();
     expect(menuServiceMock.close).toHaveBeenCalledWith('button');
+  });
+
+  it('ariaAnnouncement starts empty', () => {
+    expect(component.ariaAnnouncement()).toBe('');
+  });
+
+  it('focus sentinels should not have aria-hidden attribute', () => {
+    const sentinels = fixture.nativeElement.querySelectorAll('.focus-sentinel');
+    sentinels.forEach((sentinel: HTMLElement) => {
+      expect(sentinel.hasAttribute('aria-hidden')).toBeFalse();
+    });
+  });
+
+  it('close button should have type="button"', () => {
+    const closeBtn = fixture.nativeElement.querySelector('.mobile-close-btn');
+    expect(closeBtn?.getAttribute('type')).toBe('button');
+  });
+
+  it('onMenuRouteNavigate should call router.navigate with all segments as strings', () => {
+    const routerSpy = spyOn(TestBed.inject(Router), 'navigate').and.returnValue(Promise.resolve(true));
+    component.onMenuRouteNavigate(['es', 'solutions', 42], 'test');
+    expect(routerSpy).toHaveBeenCalledWith(['es', 'solutions', '42']);
   });
 });

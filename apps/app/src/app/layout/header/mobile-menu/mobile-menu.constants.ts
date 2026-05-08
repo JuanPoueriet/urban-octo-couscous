@@ -21,6 +21,10 @@ export const GESTURE_COOLDOWN_MS = 100; // ms cooldown after state transition
 export const GESTURE_ELASTIC_RESISTANCE = 100; // 0-100
 export const GESTURE_MAX_STRETCH_PERCENT = 4; // %
 
+// ─── Search Constants ─────────────────────────────────────────────────────────
+// Maximum number of sections auto-expanded when a search query is active.
+export const SEARCH_MAX_AUTO_EXPANDED_SECTIONS = 2;
+
 export enum DrawerState {
   CLOSED   = 'closed',
   OPENING  = 'opening',
@@ -35,6 +39,25 @@ export const SOCIAL_LINKS = {
   github:    'https://github.com/jsl-technology',
   twitter:   'https://twitter.com/jsl_tech',
   instagram: 'https://instagram.com/jsl_tech',
+} as const;
+
+// ─── External URLs ───────────────────────────────────────────────────────────
+// All external hrefs in one place so domain changes only require editing here.
+//
+// NOTA DE MARCA: El producto se llama "Virteex" (doble 'e') internamente,
+// pero el dominio registrado es "virtex.com" (una 'e'). Las rutas internas
+// Angular usan "virteex" (doble 'e') para coincidir con las claves i18n.
+export const EXTERNAL_URLS = {
+  // Productos
+  erp:           'https://virtex.com',
+  pos:           'https://pos.jsl.technology',
+  mobileApp:     'https://apps.jsl.technology',
+  // Login / portales
+  loginVirteex:  'https://app.virtex.com',
+  loginClient:   'https://portal.jsl.technology',
+  loginSupport:  'https://support.jsl.technology',
+  // Acceso rápido
+  quickSupport:  'https://support.jsl.technology',
 } as const;
 
 // ─── Menu Link Types ──────────────────────────────────────────────────────────
@@ -86,9 +109,9 @@ export function getMobileMenuSections(currentLang: string): MobileMenuSectionDat
       titleKey: 'HEADER.PRODUCTS',
       links: [
         { key: 'HEADER.VIEW_ALL_PRODUCTS', route: [currentLang, 'products'], icon: 'Package' },
-        { key: 'PRODUCTS_LIST.ERP', href: 'https://virtex.com', icon: 'ExternalLink' },
-        { key: 'PRODUCTS_LIST.POS', href: 'https://pos.jsl.technology', icon: 'ExternalLink' },
-        { key: 'PRODUCTS_LIST.MOBILE', href: 'https://apps.jsl.technology', icon: 'ExternalLink' },
+        { key: 'PRODUCTS_LIST.ERP',    href: EXTERNAL_URLS.erp,       icon: 'ExternalLink' },
+        { key: 'PRODUCTS_LIST.POS',    href: EXTERNAL_URLS.pos,       icon: 'ExternalLink' },
+        { key: 'PRODUCTS_LIST.MOBILE', href: EXTERNAL_URLS.mobileApp, icon: 'ExternalLink' },
         { key: 'HEADER.VIRTEEX_ECOSYSTEM', route: [currentLang, 'virteex-ecosystem'], icon: 'Layers' },
         { key: 'HEADER.PRICING', route: [currentLang, 'pricing'], icon: 'CircleDollarSign' },
       ],
@@ -97,28 +120,28 @@ export function getMobileMenuSections(currentLang: string): MobileMenuSectionDat
       id: 'company',
       titleKey: 'FOOTER.COMPANY',
       links: [
-        { key: 'HEADER.ABOUT', route: [currentLang, 'about-us'], icon: 'Users' },
-        { key: 'HEADER.PROCESS', route: [currentLang, 'process'], icon: 'Workflow' },
-        { key: 'HEADER.TECH_STACK', route: [currentLang, 'tech-stack'], icon: 'Cpu' },
-        { key: 'HEADER.CAREERS', route: [currentLang, 'careers'], icon: 'Briefcase' },
-        { key: 'HEADER.PARTNERS', route: [currentLang, 'partners'], icon: 'Users' },
+        { key: 'HEADER.ABOUT',      route: [currentLang, 'about-us'],   icon: 'Info' },       // era 'Users'
+        { key: 'HEADER.PROCESS',    route: [currentLang, 'process'],     icon: 'Workflow' },
+        { key: 'HEADER.TECH_STACK', route: [currentLang, 'tech-stack'],  icon: 'Cpu' },
+        { key: 'HEADER.CAREERS',    route: [currentLang, 'careers'],     icon: 'Briefcase' },
+        { key: 'HEADER.PARTNERS',   route: [currentLang, 'partners'],    icon: 'Network' },   // era 'Users'
         { key: 'HEADER.LIFE_AT_JSL', route: [currentLang, 'life-at-jsl'], icon: 'Heart' },
-        { key: 'HEADER.INVESTORS', route: [currentLang, 'investors'], icon: 'TrendingUp' },
-        { key: 'HEADER.VENTURES', route: [currentLang, 'ventures'], icon: 'Rocket' },
-        { key: 'HEADER.SECURITY', route: [currentLang, 'security'], icon: 'ShieldCheck' },
+        { key: 'HEADER.INVESTORS',  route: [currentLang, 'investors'],   icon: 'TrendingUp' },
+        { key: 'HEADER.VENTURES',   route: [currentLang, 'ventures'],    icon: 'Rocket' },
+        { key: 'HEADER.SECURITY',   route: [currentLang, 'security'],    icon: 'ShieldCheck' },
       ],
     },
     {
       id: 'resources',
       titleKey: 'FOOTER.RESOURCES',
       links: [
-        { key: 'HEADER.PROJECTS', route: [currentLang, 'projects'], icon: 'Lightbulb' },
-        { key: 'HEADER.BLOG', route: [currentLang, 'blog'], icon: 'Newspaper' },
-        { key: 'HEADER.EVENTS', route: [currentLang, 'events'], icon: 'CalendarDays' },
-        { key: 'HEADER.NEWS', route: [currentLang, 'news'], icon: 'Radio' },
-        { key: 'HEADER.PRESS', route: [currentLang, 'press'], icon: 'BookOpen' },
-        { key: 'HEADER.ROADMAP', route: [currentLang, 'roadmap'], icon: 'Map' },
-        { key: 'HEADER.FAQ', route: [currentLang, 'faq'], icon: 'HelpCircle' },
+        { key: 'HEADER.PROJECTS',   route: [currentLang, 'projects'], icon: 'Lightbulb' },
+        { key: 'HEADER.BLOG',       route: [currentLang, 'blog'],     icon: 'Newspaper' },
+        { key: 'HEADER.EVENTS',     route: [currentLang, 'events'],   icon: 'CalendarDays' },
+        { key: 'HEADER.NEWS',       route: [currentLang, 'news'],     icon: 'Radio' },
+        { key: 'HEADER.PRESS',      route: [currentLang, 'press'],    icon: 'BookOpen' },
+        { key: 'HEADER.ROADMAP',    route: [currentLang, 'roadmap'],  icon: 'Map' },
+        { key: 'HEADER.FAQ',        route: [currentLang, 'faq'],      icon: 'HelpCircle' },
         { key: 'HEADER.DEVELOPERS', route: [currentLang, 'developers'], icon: 'Code' },
       ],
     },
@@ -126,9 +149,9 @@ export function getMobileMenuSections(currentLang: string): MobileMenuSectionDat
       id: 'login',
       titleKey: 'HEADER.LOGIN',
       links: [
-        { key: 'HEADER.LOGIN_VIRTEEX', href: 'https://app.virtex.com', icon: 'ExternalLink' },
-        { key: 'HEADER.LOGIN_CLIENT', href: 'https://portal.jsl.technology', icon: 'ExternalLink' },
-        { key: 'HEADER.LOGIN_SUPPORT', href: 'https://support.jsl.technology', icon: 'ExternalLink' },
+        { key: 'HEADER.LOGIN_VIRTEEX', href: EXTERNAL_URLS.loginVirteex, icon: 'ExternalLink' },
+        { key: 'HEADER.LOGIN_CLIENT',  href: EXTERNAL_URLS.loginClient,  icon: 'ExternalLink' },
+        { key: 'HEADER.LOGIN_SUPPORT', href: EXTERNAL_URLS.loginSupport, icon: 'ExternalLink' },
       ],
     },
   ];

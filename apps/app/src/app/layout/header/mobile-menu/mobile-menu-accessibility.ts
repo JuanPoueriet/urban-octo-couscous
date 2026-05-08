@@ -28,7 +28,6 @@ export class MobileMenuAccessibility {
       }
     }
 
-    // Fallback if the original element is gone or hidden
     const fallback = document.querySelector(fallbackSelector) as HTMLElement;
     if (fallback && this.isValidForFocus(fallback)) {
       fallback.focus();
@@ -39,12 +38,14 @@ export class MobileMenuAccessibility {
     if (!this.isBrowser || !el || !el.isConnected) return false;
 
     const style = window.getComputedStyle(el);
-    const isVisible = style.display !== 'none' &&
-                      style.visibility !== 'hidden' &&
-                      style.opacity !== '0';
+    const isVisible =
+      style.display !== 'none' &&
+      style.visibility !== 'hidden' &&
+      style.opacity !== '0';
 
-    const isInert = el.hasAttribute('inert') || el.closest('[inert]') !== null;
-    const isDisabled = (el as any).disabled === true;
+    const isInert    = el.hasAttribute('inert') || el.closest('[inert]') !== null;
+    // Avoid `as any`: check for the `disabled` property using the standard HTMLElement API.
+    const isDisabled = ('disabled' in el) && (el as HTMLButtonElement | HTMLInputElement).disabled === true;
 
     return isVisible && !isInert && !isDisabled;
   }
@@ -105,31 +106,33 @@ export class MobileMenuAccessibility {
     if (this.focusableElements.length === 0) return;
 
     const firstElement = this.focusableElements[0];
-    const lastElement = this.focusableElements[this.focusableElements.length - 1];
+    const lastElement  = this.focusableElements[this.focusableElements.length - 1];
 
     if (event.shiftKey) {
-      if (document.activeElement === firstElement || !this.el.nativeElement.contains(document.activeElement)) {
+      if (
+        document.activeElement === firstElement ||
+        !this.el.nativeElement.contains(document.activeElement)
+      ) {
         lastElement.focus();
         event.preventDefault();
       }
     } else {
-      if (document.activeElement === lastElement || !this.el.nativeElement.contains(document.activeElement)) {
+      if (
+        document.activeElement === lastElement ||
+        !this.el.nativeElement.contains(document.activeElement)
+      ) {
         firstElement.focus();
         event.preventDefault();
       }
     }
   }
 
-  /**
-   * Handles focus events on sentinel elements to cycle focus deterministically (Problem 6).
-   */
   public handleSentinelFocus(event: FocusEvent, type: 'start' | 'end') {
     if (!this.isBrowser) return;
 
     this.refreshFocusableElements();
     if (this.focusableElements.length === 0) return;
 
-    // Filter out the sentinels themselves from the focusable list to find real targets
     const realFocusables = this.focusableElements.filter(
       el => !el.classList.contains('focus-sentinel')
     );
@@ -147,8 +150,6 @@ export class MobileMenuAccessibility {
     if (!this.isBrowser || this.observer) return;
 
     this.observer = new MutationObserver((mutations) => {
-      // S4 — Optimization: Only refresh if mutations are likely to affect focusability.
-      // This is a second layer of filtering beyond attributeFilter.
       const hasRelevantMutation = mutations.some(m =>
         m.type === 'childList' ||
         (m.type === 'attributes' && ['disabled', 'hidden', 'inert'].includes(m.attributeName!)) ||
@@ -160,14 +161,14 @@ export class MobileMenuAccessibility {
       }
     });
 
-    // S4 — Limiting observation to the main content area if possible, or being very specific with filters.
-    const container = this.el.nativeElement.querySelector('.mobile-menu-content') || this.el.nativeElement;
+    const container =
+      this.el.nativeElement.querySelector('.mobile-menu-content') || this.el.nativeElement;
 
     this.observer.observe(container, {
       childList: true,
       subtree: true,
       attributes: true,
-      attributeFilter: ['disabled', 'hidden', 'inert', 'class', 'style']
+      attributeFilter: ['disabled', 'hidden', 'inert', 'class', 'style'],
     });
   }
 
@@ -180,5 +181,8 @@ export class MobileMenuAccessibility {
       this.observer.disconnect();
       this.observer = null;
     }
+    // Limpiar referencias a elementos del DOM para evitar memory leaks.
+    this.focusableElements = [];
+    this.lastFocusedElement = null;
   }
 }

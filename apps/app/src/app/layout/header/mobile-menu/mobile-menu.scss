@@ -24,17 +24,9 @@ $mm-overlay-duration:   0.3s;
     z-index: 1200;
   }
 
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-  }
+  // Nota: .sr-only se define en styles.scss (global). Esta definición se eliminó
+  // del scope del componente para que la clase sea disponible en cualquier contexto
+  // sin depender de que jsl-mobile-menu esté en el DOM (MEJORA-05).
 
   .header__nav-links-mobile {
     position: fixed;
@@ -126,7 +118,13 @@ $mm-overlay-duration:   0.3s;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      // Animar solo las propiedades que cambian; evitar `transition: all`
+      // que anima también propiedades de layout y genera repaints costosos.
+      transition:
+        background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       backdrop-filter: blur(4px);
 
       &:hover,
@@ -217,7 +215,7 @@ $mm-overlay-duration:   0.3s;
       text-decoration: underline;
       padding: 8px 16px;
       border-radius: 8px;
-      transition: background 0.2s ease;
+      transition: background-color 0.2s ease;
 
       &:hover,
       &:active {
@@ -281,7 +279,11 @@ $mm-overlay-duration:   0.3s;
       border: 1px solid rgba(255, 255, 255, 0.06);
       border-radius: 20px;
       text-decoration: none;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      // Animar solo las propiedades visuales que cambian en hover/active
+      transition:
+        background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       overflow: hidden;
 
@@ -301,7 +303,11 @@ $mm-overlay-duration:   0.3s;
         background: rgba(255, 255, 255, 0.05);
         border-radius: 14px;
         color: #d0d0d0;
-        transition: all 0.3s ease;
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease,
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 
         lucide-icon {
@@ -348,7 +354,11 @@ $mm-overlay-duration:   0.3s;
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 14px;
       padding: 0 16px;
-      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      transition:
+        background-color 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+        border-color 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+        box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+        transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 
       &:focus-within {
         background: rgba(255, 255, 255, 0.08);
@@ -407,7 +417,10 @@ $mm-overlay-duration:   0.3s;
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.04);
     overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     margin-bottom: 4px;
 
     &.expanded {
@@ -445,7 +458,9 @@ $mm-overlay-duration:   0.3s;
       color: #d0d0d0;
       cursor: pointer;
       text-align: start;
-      transition: all 0.3s ease;
+      transition:
+        color 0.3s ease,
+        background-color 0.3s ease;
 
       &:hover {
         color: var(--text-main);
@@ -503,7 +518,10 @@ $mm-overlay-duration:   0.3s;
         font-size: 0.9rem;
         font-weight: 500;
         text-decoration: none;
-        transition: all 0.3s ease;
+        transition:
+          color 0.3s ease,
+          background-color 0.3s ease,
+          padding-inline-start 0.3s ease;
         border-inline-start: 4px solid transparent;
         text-overflow: ellipsis;
         overflow: hidden;
@@ -513,7 +531,7 @@ $mm-overlay-duration:   0.3s;
           width: 18px;
           height: 18px;
           opacity: 0.6;
-          transition: all 0.3s ease;
+          transition: opacity 0.3s ease, color 0.3s ease, transform 0.3s ease;
           flex-shrink: 0;
         }
 
@@ -566,7 +584,10 @@ $mm-overlay-duration:   0.3s;
       border-radius: 16px;
       text-decoration: none;
       box-shadow: 0 8px 25px rgba(var(--primary-rgb), 0.25);
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition:
+        transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        box-shadow 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        filter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       position: relative;
       overflow: hidden;
 
@@ -578,7 +599,7 @@ $mm-overlay-duration:   0.3s;
         width: 100%;
         height: 100%;
         background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: 0.5s;
+        transition: inset-inline-start 0.5s ease;
       }
 
       &:hover::before {
@@ -623,7 +644,12 @@ $mm-overlay-duration:   0.3s;
 
       a {
         color: #999;
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transition:
+          color 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+          background-color 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+          border-color 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+          transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+          box-shadow 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         display: flex;
         align-items: center;
         justify-content: center;

@@ -22,6 +22,13 @@ export class DrawerTransitionCoordinator {
   private transitionFallbackTimer: ReturnType<typeof setTimeout> | null = null;
   private _currentState: DrawerState = DrawerState.CLOSED;
 
+  // Contador de generación: incrementa en cada nueva transición animada.
+  // Los callbacks del timer/listener capturan el valor en su creación y lo
+  // comparan al ejecutarse; si difiere, el callback es obsoleto y se descarta.
+  // Esto previene la race condition donde un timer antiguo completa una
+  // transición nueva incorrectamente (BUG-03).
+  private transitionGeneration = 0;
+
   get currentState(): DrawerState {
     return this._currentState;
   }
@@ -33,7 +40,10 @@ export class DrawerTransitionCoordinator {
     private cdRef: ChangeDetectorRef
   ) {}
 
-  public transitionTo(newState: DrawerState, options: { immediate?: boolean; targetTranslateX?: number } = {}): void {
+  public transitionTo(
+    newState: DrawerState,
+    options: { immediate?: boolean; targetTranslateX?: number } = {}
+  ): void {
     if (this._currentState === newState && !options.immediate) return;
 
     const previousState = this._currentState;
@@ -79,8 +89,9 @@ export class DrawerTransitionCoordinator {
       case DrawerState.DRAGGING: {
         this.clearTransitionListeners();
 
-        // When an opening gesture starts (CLOSED → DRAGGING via edge-swipe) or a
-        // close animation is interrupted (CLOSING → DRAGGING), reveal the overlay.
+        // Cuando un gesto de apertura arranca (CLOSED → DRAGGING via edge-swipe)
+        // o una animación de cierre es interrumpida (CLOSING → DRAGGING),
+        // revelar el overlay para que el usuario vea el progreso.
         const needsOverlay =
           previousState === DrawerState.CLOSED ||
           previousState === DrawerState.CLOSING;
@@ -103,7 +114,7 @@ export class DrawerTransitionCoordinator {
     this.cdRef.markForCheck();
   }
 
-  public clearTransitionListeners(): void {
+  private clearTransitionListeners(): void {
     if (this.transitionEndUnlisten) {
       this.transitionEndUnlisten();
       this.transitionEndUnlisten = null;
@@ -125,12 +136,18 @@ export class DrawerTransitionCoordinator {
 
     const reducedMotion = this.config.prefersReducedMotion();
 
+    // Capturar la generación actual: si cambia antes de que este callback
+    // se ejecute, significa que una nueva transición arrancó y este callback
+    // es obsoleto — debe ignorarse.
+    const generation = ++this.transitionGeneration;
+
     if (!reducedMotion) {
       this.transitionEndUnlisten = this.renderer.listen(
         menuElement,
         'transitionend',
         (event: TransitionEvent) => {
           if (event.propertyName !== 'transform' || event.target !== menuElement) return;
+          if (this.transitionGeneration !== generation) return;
           this.clearTransitionListeners();
           this.ngZone.run(() => {
             this.completeTransition(targetState, callback);
@@ -145,6 +162,8 @@ export class DrawerTransitionCoordinator {
         this.transitionEndUnlisten();
         this.transitionEndUnlisten = null;
       }
+      // Descartar si una transición más reciente ya tomó el control.
+      if (this.transitionGeneration !== generation) return;
       this.ngZone.run(() => {
         this.completeTransition(targetState, callback);
       });
@@ -152,7 +171,12 @@ export class DrawerTransitionCoordinator {
   }
 
   private completeTransition(targetState: DrawerState, callback?: () => void): void {
-    if (this._currentState !== DrawerState.OPENING && this._currentState !== DrawerState.CLOSING) return;
+    if (
+      this._currentState !== DrawerState.OPENING &&
+      this._currentState !== DrawerState.CLOSING
+    ) {
+      return;
+    }
     this._currentState = targetState;
     this.config.onStateChange(targetState);
     callback?.();
@@ -162,5 +186,8 @@ export class DrawerTransitionCoordinator {
 
   public destroy(): void {
     this.clearTransitionListeners();
+    // Nulificar config para liberar las referencias a callbacks del componente
+    // padre y evitar memory leaks en SSR o en entornos de testing.
+    (this as unknown as { config: TransitionConfig | null }).config = null;
   }
 }

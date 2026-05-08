@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
+import { EXTERNAL_URLS } from './mobile-menu.constants';
 
 @Component({
   selector: 'jsl-mobile-menu-quick-access',
@@ -34,7 +35,7 @@ import { LucideAngularModule } from 'lucide-angular';
           <span>{{ 'HEADER.QUICK_FAQ' | translate }}</span>
         </a>
         <a
-          href="https://support.jsl.technology"
+          [href]="supportUrl"
           target="_blank"
           rel="noopener noreferrer"
           class="quick-tile"
@@ -52,4 +53,6 @@ import { LucideAngularModule } from 'lucide-angular';
 export class MobileMenuQuickAccess {
   @Input() currentLang = 'en';
   @Output() close = new EventEmitter<void>();
+
+  readonly supportUrl = EXTERNAL_URLS.quickSupport;
 }

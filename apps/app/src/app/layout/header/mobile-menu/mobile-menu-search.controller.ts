@@ -1,11 +1,20 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { MobileMenuSectionData, MobileMenuLink } from './mobile-menu.constants';
+import {
+  MobileMenuSectionData,
+  MobileMenuLink,
+  SEARCH_MAX_AUTO_EXPANDED_SECTIONS,
+} from './mobile-menu.constants';
+
+// Tamaño máximo del caché de traducciones. Con 11 idiomas × ~45 claves = ~495
+// entradas máximas posibles; 200 evita que el Map crezca sin límite mientras
+// mantiene una cobertura de caché razonable.
+const TRANSLATION_CACHE_MAX_SIZE = 200;
 
 @Injectable()
 export class MobileMenuSearchController {
-  public searchQuery = signal('');
-  public expandedSections = signal<Set<string>>(new Set());
+  public searchQuery       = signal('');
+  public expandedSections  = signal<Set<string>>(new Set());
   private expandedSectionsBeforeSearch: Set<string> | null = null;
   private translationCache = new Map<string, string>();
   private menuSections: MobileMenuSectionData[] = [];
@@ -41,10 +50,13 @@ export class MobileMenuSearchController {
         this.expandedSections.set(new Set());
       }
 
-      const newExpanded = new Set<string>();
-      let expandedCount = 0;
+      const newExpanded   = new Set<string>();
+      let expandedCount   = 0;
       for (const section of this.menuSections) {
-        if (this.shouldShowSection(section.titleKey, section.links) && expandedCount < 2) {
+        if (
+          this.shouldShowSection(section.titleKey, section.links) &&
+          expandedCount < SEARCH_MAX_AUTO_EXPANDED_SECTIONS
+        ) {
           newExpanded.add(section.id);
           expandedCount++;
         }
@@ -71,11 +83,21 @@ export class MobileMenuSearchController {
   }
 
   private getTranslatedLowercase(key: string): string {
-    const lang = this.translate.currentLang ?? this.translate.defaultLang ?? 'es';
+    const lang     = this.translate.currentLang ?? this.translate.defaultLang ?? 'es';
     const cacheKey = `${lang}:${key}`;
-    const cached = this.translationCache.get(cacheKey);
+    const cached   = this.translationCache.get(cacheKey);
     if (cached !== undefined) return cached;
+
     const translated = this.translate.instant(key).toLowerCase();
+
+    // Evicción FIFO cuando se supera el tamaño máximo: el Map mantiene orden de
+    // inserción, así que el primer elemento es el más antiguo.
+    if (this.translationCache.size >= TRANSLATION_CACHE_MAX_SIZE) {
+      const firstKey = this.translationCache.keys().next().value;
+      if (firstKey !== undefined) {
+        this.translationCache.delete(firstKey);
+      }
+    }
     this.translationCache.set(cacheKey, translated);
     return translated;
   }

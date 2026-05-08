@@ -10,7 +10,8 @@
       "Bash(grep -E \"\\\\.ts$|\\\\.html$|\\\\.scss$\")",
       "Bash(xargs grep -l \"drawer\\\\|sidebar\\\\|lateral\\\\|side-menu\\\\|sidenav\")",
       "Bash(xargs grep -l \"mobile-menu\\\\|drawer\\\\|sidebar\\\\|lateral\")",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(xargs grep -l \"menu\\\\|drawer\")"
     ]
   }
 }

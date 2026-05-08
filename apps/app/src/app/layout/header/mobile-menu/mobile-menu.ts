@@ -12,9 +12,11 @@ import {
   inject,
   HostListener,
   effect,
+  EffectRef,
   ChangeDetectionStrategy,
   DestroyRef,
   ViewChild,
+  signal,
 } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -49,6 +51,10 @@ import {
 import { MobileMenuAccessibility } from './mobile-menu-accessibility';
 import { BreakpointService } from '@core/services/breakpoint.service';
 
+// Debounce en ms para el anuncio de resultados en la región ARIA live.
+// Evita anuncios intermedios mientras el usuario escribe la búsqueda (A11Y-03).
+const ARIA_ANNOUNCE_DEBOUNCE_MS = 400;
+
 @Component({
   selector: 'jsl-mobile-menu',
   standalone: true,
@@ -67,6 +73,10 @@ import { BreakpointService } from '@core/services/breakpoint.service';
   templateUrl: './mobile-menu.html',
   styleUrl: './mobile-menu.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  // ViewEncapsulation.None es intencional: el SCSS del menú está organizado bajo
+  // .mobile-menu-container para evitar colisiones de nombres, y los sub-componentes
+  // del menú comparten esos estilos. Cambiar a Emulated requeriría refactorizar
+  // el SCSS completo del sistema del menú.
   encapsulation: ViewEncapsulation.None,
 })
 export class MobileMenu implements OnDestroy, AfterViewInit {
@@ -101,14 +111,23 @@ export class MobileMenu implements OnDestroy, AfterViewInit {
   private menuWidth          = MOBILE_MENU_MAX_WIDTH;
   public drawerState: DrawerState = DrawerState.CLOSED;
 
+  // ── ARIA live region ────────────────────────────────────────────────────────
+  // Texto anunciado por screen readers al cambiar resultados de búsqueda.
+  // Se actualiza con debounce para no interrumpir al usuario mientras escribe.
+  public ariaAnnouncement = signal('');
+  private ariaAnnounceTimer: ReturnType<typeof setTimeout> | null = null;
+
   // ── Throttled Haptic ────────────────────────────────────────────────────────
   private lastHapticTime = 0;
   private readonly HAPTIC_COOLDOWN_MS = 200;
 
   private transitionCoordinator!: DrawerTransitionCoordinator;
 
+  // ── Referencia al effect reactivo (para posible cancelación manual) ──────────
+  private menuStateEffect: EffectRef | null = null;
+
   // ── DOM references ──────────────────────────────────────────────────────────
-  @ViewChild('menuElement')   private menuElementRef!: ElementRef<HTMLElement>;
+  @ViewChild('menuElement')    private menuElementRef!: ElementRef<HTMLElement>;
   @ViewChild('overlayElement') private overlayElementRef!: ElementRef<HTMLElement>;
 
   private get menuElement(): HTMLElement | null {
@@ -145,8 +164,8 @@ export class MobileMenu implements OnDestroy, AfterViewInit {
   // ── View data ────────────────────────────────────────────────────────────────
   public currentYear = new Date().getFullYear();
   public menuSections: MobileMenuSectionData[] = [];
-  public readonly menuTitleId = 'mobile-menu-title';
-  public readonly socialLinks = SOCIAL_LINKS;
+  public readonly menuTitleId  = 'mobile-menu-title';
+  public readonly socialLinks  = SOCIAL_LINKS;
 
   // ── Computed state accessors ─────────────────────────────────────────────────
 
@@ -175,7 +194,9 @@ export class MobileMenu implements OnDestroy, AfterViewInit {
       this.cdRef.markForCheck();
     });
 
-    effect(() => {
+    // Guardar la referencia del effect para que pueda ser cancelado
+    // manualmente si fuera necesario en el futuro (p.ej., en tests).
+    this.menuStateEffect = effect(() => {
       const isOpen   = this.menuService.isMobileMenuOpen();
       const isMobile = this.breakpointService.isMobile();
 
@@ -215,6 +236,7 @@ export class MobileMenu implements OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy(): void {
+    this.menuStateEffect?.destroy();
     this.cleanup();
   }
 
@@ -237,7 +259,7 @@ export class MobileMenu implements OnDestroy, AfterViewInit {
         },
         onUpdateTranslate: (translateX) => {
           this.menuTranslateX = translateX;
-          this.menuScaleX = 1;
+          this.menuScaleX     = 1;
         },
         onRegisterOverlay:   () => this.overlayManagerService.register('mobile-menu'),
         onUnregisterOverlay: () => this.overlayManagerService.unregister('mobile-menu'),
@@ -279,15 +301,19 @@ export class MobileMenu implements OnDestroy, AfterViewInit {
   private setupResizeObserver(): void {
     if (!this.menuElement || !this.isBrowser) return;
 
-    this.resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.target === this.menuElement) {
-          this.ngZone.run(() => this.updateMenuWidth());
+    // Crear el ResizeObserver fuera de la Angular zone para evitar que cada
+    // evento de resize triggeree change detection. Solo entramos a la zone
+    // cuando hay un cambio real de ancho que requiere actualizar la vista.
+    this.ngZone.runOutsideAngular(() => {
+      this.resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.target === this.menuElement) {
+            this.ngZone.run(() => this.updateMenuWidth());
+          }
         }
-      }
+      });
+      this.resizeObserver!.observe(this.menuElement!);
     });
-
-    this.resizeObserver.observe(this.menuElement);
   }
 
   private updateMenuWidth(): void {
@@ -317,7 +343,8 @@ export class MobileMenu implements OnDestroy, AfterViewInit {
       velocityThreshold: GESTURE_VELOCITY_THRESHOLD,
       isRtl:       () => this.directionService.isRtl(),
       isOpen:      () => this.isMobileMenuOpen,
-      isAnimating: () => this.drawerState === DrawerState.OPENING || this.drawerState === DrawerState.CLOSING,
+      isAnimating: () =>
+        this.drawerState === DrawerState.OPENING || this.drawerState === DrawerState.CLOSING,
       isTargetInsideMenu: (target: HTMLElement) => !!this.menuElement?.contains(target),
       getCurrentTranslateX: () => this.menuTranslateX,
 
@@ -353,7 +380,8 @@ export class MobileMenu implements OnDestroy, AfterViewInit {
       },
       onStopTransition: () => this.stopTransition(),
       onToggleHaptic:   () => this.triggerThrottledHaptic(),
-      onTrackMetric: (metric, data) => this.analyticsService.trackEvent(`mobile_menu_${metric}`, data),
+      onTrackMetric: (metric, data) =>
+        this.analyticsService.trackEvent(`mobile_menu_${metric}`, data),
     };
 
     this.gestureHandler = new MobileMenuGestures(this.gestureConfig, this.ngZone, this.gestureBus);
@@ -417,7 +445,7 @@ export class MobileMenu implements OnDestroy, AfterViewInit {
 
   private stopTransition(): void {
     this.transitionTo(DrawerState.DRAGGING);
-    if (this.menuElement) void this.menuElement.offsetHeight; // force reflow
+    if (this.menuElement) void this.menuElement.offsetHeight; // force reflow para limpiar la transición CSS activa
     this.cdRef.markForCheck();
   }
 
@@ -447,8 +475,23 @@ export class MobileMenu implements OnDestroy, AfterViewInit {
     // it here is safe and avoids the complexity of afterNextRender in event handlers.
     this.a11y.refreshFocusableElements();
 
-    if (this.searchDebounceTimer !== null) clearTimeout(this.searchDebounceTimer);
+    // Actualizar la región ARIA live con debounce para evitar anuncios
+    // intermedios mientras el usuario escribe (A11Y-03).
+    if (this.ariaAnnounceTimer !== null) clearTimeout(this.ariaAnnounceTimer);
+    this.ariaAnnounceTimer = setTimeout(() => {
+      this.ariaAnnounceTimer = null;
+      const count = this.searchController.searchResultsCount();
+      if (query) {
+        const text = count > 0
+          ? this.translate.instant('SEARCH.RESULTS_COUNT', { count })
+          : this.translate.instant('SEARCH.NO_RESULTS_FOUND');
+        this.ariaAnnouncement.set(text);
+      } else {
+        this.ariaAnnouncement.set('');
+      }
+    }, ARIA_ANNOUNCE_DEBOUNCE_MS);
 
+    if (this.searchDebounceTimer !== null) clearTimeout(this.searchDebounceTimer);
     this.searchDebounceTimer = setTimeout(() => {
       this.analyticsService.trackEvent('mobile_menu_search', {
         search_term:   query,
@@ -479,12 +522,21 @@ export class MobileMenu implements OnDestroy, AfterViewInit {
 
   onMenuRouteNavigate(route: (string | number)[], source: string): void {
     this.closeMobileMenu('navigation');
-    this.router.navigate(route as string[]).then((ok) => {
+    // Convertir todos los segmentos a string antes de navegar.
+    // La interfaz InternalMenuLink permite (string | number)[] pero Angular
+    // Router espera string[]; el cast directo ocultaría errores en runtime.
+    this.router.navigate(route.map(String)).then((ok) => {
       if (!ok) {
-        this.analyticsService.trackEvent('mobile_menu_navigation_failed', { source, route: route.join('/') });
+        this.analyticsService.trackEvent('mobile_menu_navigation_failed', {
+          source,
+          route: route.join('/'),
+        });
       }
     }).catch(() => {
-      this.analyticsService.trackEvent('mobile_menu_navigation_failed', { source, route: route.join('/') });
+      this.analyticsService.trackEvent('mobile_menu_navigation_failed', {
+        source,
+        route: route.join('/'),
+      });
     });
   }
 
@@ -497,8 +549,14 @@ export class MobileMenu implements OnDestroy, AfterViewInit {
     if (now - this.lastHapticTime < this.HAPTIC_COOLDOWN_MS) return;
     this.lastHapticTime = now;
 
-    if (navigator.vibrate && (!navigator.userActivation || navigator.userActivation.isActive)) {
-      navigator.vibrate(5);
+    if (navigator.vibrate) {
+      // navigator.userActivation no está disponible en todos los browsers
+      // (ausente en Safari ≤ 16). Si no existe, se permite la vibración
+      // solo si el browser soporta la API; si existe, se verifica la activación.
+      const activation = navigator.userActivation;
+      if (!activation || activation.isActive) {
+        navigator.vibrate(5);
+      }
     }
   }
 
@@ -517,6 +575,11 @@ export class MobileMenu implements OnDestroy, AfterViewInit {
     if (this.searchDebounceTimer !== null) {
       clearTimeout(this.searchDebounceTimer);
       this.searchDebounceTimer = null;
+    }
+
+    if (this.ariaAnnounceTimer !== null) {
+      clearTimeout(this.ariaAnnounceTimer);
+      this.ariaAnnounceTimer = null;
     }
 
     if (!this.isBrowser) return;
