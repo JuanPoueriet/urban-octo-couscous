@@ -36,10 +36,10 @@ $mm-overlay-duration:   0.3s;
     max-width: $mm-drawer-max-width;
     height: 100vh; /* fallback for browsers without svh support */
     height: 100svh; /* small viewport height — never hidden by browser UI */
-    background: rgba(18, 18, 18, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-inline-end: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(18, 18, 18, 0.92);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border-inline-end: 1px solid rgba(255, 255, 255, 0.12);
 
     display: flex;
     flex-direction: column;
@@ -48,7 +48,9 @@ $mm-overlay-duration:   0.3s;
     //      no CSS transform declaration needed (it would be overridden anyway).
     //      The CSS-only fallback for SSR is preserved through the initial inline value set in .ts.
     will-change: transform;
-    box-shadow: 10px 0 40px rgba(0, 0, 0, 0.5);
+    box-shadow:
+      15px 0 50px rgba(0, 0, 0, 0.6),
+      inset -1px 0 0 rgba(255, 255, 255, 0.05);
 
     touch-action: pan-y;
 
@@ -91,11 +93,11 @@ $mm-overlay-duration:   0.3s;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: max(24px, env(safe-area-inset-top)) 24px 16px 24px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(18, 18, 18, 0.4);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    padding: max(24px, env(safe-area-inset-top)) 24px 20px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     flex-shrink: 0;
 
     .mobile-logo-container {
@@ -227,10 +229,10 @@ $mm-overlay-duration:   0.3s;
   .mobile-menu-content {
     flex: 1;
     overflow-y: auto;
-    padding: 20px 16px;
+    padding: 24px 16px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
     touch-action: pan-y;
 
     &::-webkit-scrollbar {
@@ -270,28 +272,31 @@ $mm-overlay-duration:   0.3s;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      padding: 16px 8px;
+      padding: 20px 8px;
       background: linear-gradient(
         135deg,
-        rgba(255, 255, 255, 0.05) 0%,
-        rgba(255, 255, 255, 0.01) 100%
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0.02) 100%
       );
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
+      border-radius: 24px;
       text-decoration: none;
       // Animar solo las propiedades visuales que cambian en hover/active
       transition:
         background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
         border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.3s ease;
       position: relative;
       overflow: hidden;
 
       &:active,
       &.active {
         transform: scale(0.94);
-        background: rgba(var(--primary-rgb), 0.12);
+        background: rgba(var(--primary-rgb), 0.15);
         border-color: rgba(var(--primary-rgb), 0.4);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
       }
 
       .tile-icon {
@@ -344,15 +349,15 @@ $mm-overlay-duration:   0.3s;
   }
 
   .mobile-menu-search {
-    padding: 0 4px 12px 4px;
+    padding: 0 4px 4px 4px;
 
     .search-input-wrapper {
       position: relative;
       display: flex;
       align-items: center;
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 14px;
+      border-radius: 18px;
       padding: 0 16px;
       transition:
         background-color 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
@@ -413,23 +418,24 @@ $mm-overlay-duration:   0.3s;
   }
 
   .mobile-accordion {
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     overflow: hidden;
     transition:
       background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
       border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
       box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    margin-bottom: 4px;
+    margin-bottom: 8px;
 
     &.expanded {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: rgba(255, 255, 255, 0.1);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 
       .accordion-header {
         color: var(--text-main);
+        background: rgba(255, 255, 255, 0.02);
 
         .chevron {
           transform: rotate(180deg);
@@ -452,7 +458,7 @@ $mm-overlay-duration:   0.3s;
       justify-content: space-between;
       background: transparent;
       border: none;
-      padding: 18px 20px;
+      padding: 20px 24px;
       font-size: 0.95rem;
       font-weight: 700;
       color: #d0d0d0;
@@ -464,7 +470,7 @@ $mm-overlay-duration:   0.3s;
 
       &:hover {
         color: var(--text-main);
-        background: rgba(255, 255, 255, 0.02);
+        background: rgba(255, 255, 255, 0.04);
       }
 
       span {
@@ -513,7 +519,7 @@ $mm-overlay-duration:   0.3s;
         display: flex;
         align-items: center;
         gap: 14px;
-        padding: 14px 24px;
+        padding: 16px 24px;
         color: #b0b0b0;
         font-size: 0.9rem;
         font-weight: 500;
@@ -537,7 +543,7 @@ $mm-overlay-duration:   0.3s;
 
         &:hover {
           color: var(--text-main);
-          background: rgba(255, 255, 255, 0.03);
+          background: rgba(255, 255, 255, 0.05);
           padding-inline-start: 28px;
 
           lucide-icon:not(.external-icon-inline) {
@@ -576,14 +582,14 @@ $mm-overlay-duration:   0.3s;
       justify-content: center;
       gap: 12px;
       width: 100%;
-      padding: 16px;
+      padding: 18px;
       background: var(--accent-gradient);
       color: white;
-      font-size: 1rem;
+      font-size: 1.05rem;
       font-weight: 700;
-      border-radius: 16px;
+      border-radius: 20px;
       text-decoration: none;
-      box-shadow: 0 8px 25px rgba(var(--primary-rgb), 0.25);
+      box-shadow: 0 8px 25px rgba(var(--primary-rgb), 0.3);
       transition:
         transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
         box-shadow 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
@@ -629,13 +635,13 @@ $mm-overlay-duration:   0.3s;
     padding-inline: 24px;
     padding-block-start: 32px;
     padding-block-end: max(32px, env(safe-area-inset-bottom));
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-    background: rgba(18, 18, 18, 0.4);
-    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 24px;
     flex-shrink: 0;
 
     .mobile-socials {
