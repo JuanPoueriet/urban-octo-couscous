@@ -5,8 +5,8 @@ export interface TransitionConfig {
   getMenuElement: () => HTMLElement | null;
   getOverlayElement: () => HTMLElement | null;
   prefersReducedMotion: () => boolean;
-  getDrawerTransition: (duration?: number) => string;
-  onStateChange: (state: DrawerState, duration?: number) => void;
+  getDrawerTransition: () => string;
+  onStateChange: (state: DrawerState) => void;
   onUpdateTranslate: (translateX: number) => void;
   onRegisterOverlay: () => void;
   onUnregisterOverlay: () => void;
@@ -42,7 +42,7 @@ export class DrawerTransitionCoordinator {
 
   public transitionTo(
     newState: DrawerState,
-    options: { immediate?: boolean; targetTranslateX?: number; duration?: number } = {}
+    options: { immediate?: boolean; targetTranslateX?: number } = {}
   ): void {
     if (this._currentState === newState && !options.immediate) return;
 
@@ -54,7 +54,7 @@ export class DrawerTransitionCoordinator {
     // transición anterior sea invalidado inmediatamente (BUG-03).
     this.transitionGeneration++;
 
-    this.config.onStateChange(newState, options.duration);
+    this.config.onStateChange(newState);
 
     switch (newState) {
       case DrawerState.OPENING: {
@@ -69,7 +69,7 @@ export class DrawerTransitionCoordinator {
           this.renderer.setStyle(overlay, '--mm-overlay-progress', '1.000');
         }
 
-        this.handleTransitionEnd(DrawerState.OPEN, options.duration, () => {
+        this.handleTransitionEnd(DrawerState.OPEN, () => {
           this.config.onA11yInitialFocus();
         });
         break;
@@ -88,7 +88,7 @@ export class DrawerTransitionCoordinator {
           overlayClose.classList.remove('visible');
           this.renderer.removeStyle(overlayClose, '--mm-overlay-progress');
         }
-        this.handleTransitionEnd(DrawerState.CLOSED, options.duration);
+        this.handleTransitionEnd(DrawerState.CLOSED);
         break;
       }
 
@@ -131,7 +131,7 @@ export class DrawerTransitionCoordinator {
     }
   }
 
-  private handleTransitionEnd(targetState: DrawerState, duration?: number, callback?: () => void): void {
+  private handleTransitionEnd(targetState: DrawerState, callback?: () => void): void {
     this.clearTransitionListeners();
 
     const menuElement = this.config.getMenuElement();
@@ -162,8 +162,6 @@ export class DrawerTransitionCoordinator {
       );
     }
 
-    const timeout = duration ?? DRAWER_TRANSITION_DURATION_MS;
-
     this.transitionFallbackTimer = setTimeout(() => {
       this.transitionFallbackTimer = null;
       if (this.transitionEndUnlisten) {
@@ -175,7 +173,7 @@ export class DrawerTransitionCoordinator {
       this.ngZone.run(() => {
         this.completeTransition(targetState, callback);
       });
-    }, reducedMotion ? 0 : timeout + 100);
+    }, reducedMotion ? 0 : DRAWER_TRANSITION_DURATION_MS + 100);
   }
 
   private completeTransition(targetState: DrawerState, callback?: () => void): void {
