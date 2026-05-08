@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process';
 
-const baseUrl = process.env.SEO_BASE_URL ?? 'http://127.0.0.1:4100';
+const baseUrl = process.env.SEO_BASE_URL ?? 'http://localhost:4100';
 const serverEntry = process.env.SEO_SERVER_ENTRY ?? 'dist/apps/app/server/server.mjs';
 const routes = [
   '/en/home',
