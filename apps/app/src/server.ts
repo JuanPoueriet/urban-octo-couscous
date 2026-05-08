@@ -186,6 +186,7 @@ const NOINDEX_ROUTES = ['/status', '/thank-you', '/server-error', '/not-found'];
 function shouldSkipLanguageRedirect(pathname: string): boolean {
   if (pathname === '/') return true;
   if (pathname.startsWith('/api/') || pathname === '/api') return true;
+  if (pathname.startsWith('/seo/') || pathname === '/seo') return true;
   if (pathname.startsWith('/assets/')) return true;
   if (pathname === '/robots.txt' || pathname === '/sitemap.xml' || pathname === '/favicon.ico')
     return true;
@@ -470,7 +471,15 @@ app.use((req, res, next) => {
         { provide: GA_MEASUREMENT_ID, useValue: ENV_GA_MEASUREMENT_ID },
         { provide: GSC_VERIFICATION_TOKEN, useValue: ENV_GSC_VERIFICATION_TOKEN },
       ],
-      allowedHosts: ['127.0.0.1', 'localhost', '127.0.0.1:4000', 'localhost:4000', requestHost],
+      allowedHosts: [
+        '127.0.0.1',
+        'localhost',
+        '127.0.0.1:4000',
+        'localhost:4000',
+        '127.0.0.1:4100',
+        'localhost:4100',
+        requestHost,
+      ],
     })
     .then((response) => (response ? writeResponseToNodeResponse(response, res) : next()))
     .catch(next);

@@ -45,6 +45,8 @@ import {
   GESTURE_EDGE_THRESHOLD,
   GESTURE_VELOCITY_THRESHOLD,
   GESTURE_ELASTIC_RESISTANCE,
+  MIN_DRAWER_DURATION_MS,
+  MAX_DRAWER_DURATION_MS,
   DrawerState,
   SOCIAL_LINKS,
 } from './mobile-menu.constants';
@@ -122,6 +124,12 @@ export class MobileMenu implements OnDestroy, AfterViewInit {
   private readonly HAPTIC_COOLDOWN_MS = 200;
 
   private transitionCoordinator!: DrawerTransitionCoordinator;
+
+  /**
+   * Temporary storage for velocity during gesture-driven state changes.
+   * Used to propagate velocity from the gesture callback through the reactive effect.
+   */
+  private lastGestureVelocity?: number;
 
   // ── Referencia al effect reactivo (para posible cancelación manual) ──────────
   private menuStateEffect: EffectRef | null = null;
@@ -210,10 +218,13 @@ export class MobileMenu implements OnDestroy, AfterViewInit {
       }
 
       if (isOpen) {
-        this.openDrawer();
+        this.openDrawer(this.lastGestureVelocity);
       } else {
-        this.closeDrawer();
+        this.closeDrawer(this.lastGestureVelocity);
       }
+
+      // Consumed velocity, clear it for the next state change (e.g. manual toggle).
+      this.lastGestureVelocity = undefined;
     });
 
     this.initMenuSections();
@@ -248,11 +259,11 @@ export class MobileMenu implements OnDestroy, AfterViewInit {
         getMenuElement:    () => this.menuElement,
         getOverlayElement: () => this.overlayElement,
         prefersReducedMotion: () => this.prefersReducedMotion(),
-        getDrawerTransition:  () => this.getDrawerTransition(),
-        onStateChange: (state) => {
+        getDrawerTransition:  (duration) => this.getDrawerTransition(duration),
+        onStateChange: (state, duration) => {
           this.drawerState = state;
           if (state === DrawerState.OPENING || state === DrawerState.CLOSING) {
-            this.menuTransition = this.getDrawerTransition();
+            this.menuTransition = this.getDrawerTransition(duration);
           } else if (state === DrawerState.DRAGGING) {
             this.menuTransition = 'none';
           }
@@ -260,6 +271,7 @@ export class MobileMenu implements OnDestroy, AfterViewInit {
         onUpdateTranslate: (translateX) => {
           this.menuTranslateX = translateX;
           this.menuScaleX     = 1;
+          this.applyTransform(translateX, 1);
         },
         onRegisterOverlay:   () => this.overlayManagerService.register('mobile-menu'),
         onUnregisterOverlay: () => this.overlayManagerService.unregister('mobile-menu'),
@@ -350,34 +362,45 @@ export class MobileMenu implements OnDestroy, AfterViewInit {
       getCurrentTranslateX: () => this.menuTranslateX,
 
       onUpdateTranslate: (translateX, progress, scaleX, transformOrigin) => {
+        const origin = transformOrigin ?? (this.directionService.isRtl() ? 'right' : 'left');
         this.menuTranslateX      = translateX;
         this.menuScaleX          = scaleX ?? 1;
-        this.menuTransformOrigin = transformOrigin ?? (this.directionService.isRtl() ? 'right' : 'left');
+        this.menuTransformOrigin = origin;
+
+        this.applyTransform(translateX, this.menuScaleX, origin);
 
         if (progress !== null) {
           this.transitionTo(DrawerState.DRAGGING);
           this.updateOverlayVisual(progress);
-          if (this.menuElement) this.renderer.addClass(this.menuElement, 'dragging');
+          if (this.menuElement) {
+            this.renderer.addClass(this.menuElement, 'dragging');
+            this.renderer.setStyle(this.menuElement, 'transition', 'none');
+          }
         } else {
           this.menuTransition = this.getDrawerTransition();
-          if (this.menuElement) this.renderer.removeClass(this.menuElement, 'dragging');
+          if (this.menuElement) {
+            this.renderer.removeClass(this.menuElement, 'dragging');
+            this.renderer.setStyle(this.menuElement, 'transition', this.menuTransition);
+          }
         }
         this.cdRef.markForCheck();
       },
 
-      onOpen: () => {
+      onOpen: (velocity) => {
         if (this.menuService.isMobileMenuOpen()) {
-          this.openDrawer();
+          this.openDrawer(velocity);
           return;
         }
+        this.lastGestureVelocity = velocity;
         this.menuService.open();
       },
-      onClose: () => {
-        if (this.menuService.isMobileMenuOpen()) {
-          this.menuService.close('gesture');
+      onClose: (velocity) => {
+        if (!this.menuService.isMobileMenuOpen()) {
+          this.closeDrawer(velocity);
           return;
         }
-        this.closeDrawer();
+        this.lastGestureVelocity = velocity;
+        this.menuService.close('gesture');
       },
       onStopTransition: () => this.stopTransition(),
       onToggleHaptic:   () => this.triggerThrottledHaptic(),
@@ -394,32 +417,72 @@ export class MobileMenu implements OnDestroy, AfterViewInit {
 
   // ── FSM State Transitions ───────────────────────────────────────────────────
 
-  private transitionTo(newState: DrawerState, options: { immediate?: boolean } = {}): void {
+  private transitionTo(
+    newState: DrawerState,
+    options: { immediate?: boolean; duration?: number } = {}
+  ): void {
     const targetTranslateX = newState === DrawerState.CLOSING
       ? (this.directionService.isRtl() ? this.menuWidth : -this.menuWidth)
-      : undefined;
+      : (newState === DrawerState.OPENING ? 0 : undefined);
 
     this.transitionCoordinator.transitionTo(newState, { ...options, targetTranslateX });
   }
 
   // ── Open / close drawer ─────────────────────────────────────────────────────
 
-  private openDrawer(): void {
+  private openDrawer(velocity?: number): void {
     if (this.drawerState === DrawerState.OPEN || this.drawerState === DrawerState.OPENING) return;
-    this.transitionTo(DrawerState.OPENING);
+
+    const duration = this.calculateAdaptiveDuration(velocity, 0);
+    this.transitionTo(DrawerState.OPENING, { duration });
   }
 
-  private closeDrawer(): void {
+  private closeDrawer(velocity?: number): void {
     if (this.drawerState === DrawerState.CLOSED || this.drawerState === DrawerState.CLOSING) return;
-    this.transitionTo(DrawerState.CLOSING);
+
+    const target = this.directionService.isRtl() ? this.menuWidth : -this.menuWidth;
+    const duration = this.calculateAdaptiveDuration(velocity, target);
+    this.transitionTo(DrawerState.CLOSING, { duration });
+  }
+
+  /**
+   * Calculates the adaptive duration based on velocity and distance.
+   * If no velocity is provided, it defaults to the MAX_DRAWER_DURATION_MS.
+   */
+  private calculateAdaptiveDuration(velocity?: number, targetTranslateX?: number): number {
+    if (!velocity || !Number.isFinite(velocity) || targetTranslateX === undefined) {
+      return MAX_DRAWER_DURATION_MS;
+    }
+
+    const distance = Math.abs(targetTranslateX - this.menuTranslateX);
+    if (distance <= 0) return MIN_DRAWER_DURATION_MS;
+
+    // v = d / t => t = d / v
+    // We use absolute velocity as we already have the distance.
+    const calculatedTime = distance / Math.abs(velocity);
+
+    // Clamp between MIN and MAX.
+    return Math.max(MIN_DRAWER_DURATION_MS, Math.min(MAX_DRAWER_DURATION_MS, calculatedTime));
   }
 
   private prefersReducedMotion(): boolean {
     return this.isBrowser && (this.reducedMotionMQL?.matches ?? false);
   }
 
-  private getDrawerTransition(): string {
-    return this.prefersReducedMotion() ? 'none' : DRAWER_TRANSITION;
+  private getDrawerTransition(duration?: number): string {
+    if (this.prefersReducedMotion()) return 'none';
+    const d = duration ?? MAX_DRAWER_DURATION_MS;
+    return `transform ${d}ms ${DRAWER_EASING}`;
+  }
+
+  private applyTransform(translateX: number, scaleX: number, origin?: string): void {
+    const menu = this.menuElement;
+    if (!menu) return;
+
+    this.renderer.setStyle(menu, 'transform', `translateX(${translateX}px) scaleX(${scaleX})`);
+    if (origin) {
+      this.renderer.setStyle(menu, 'transform-origin', origin);
+    }
   }
 
   // ── Overlay helpers ─────────────────────────────────────────────────────────
