@@ -171,6 +171,9 @@ export class MobileMenuGestures implements GestureHandler {
 
   public startCooldown(): void {
     this.lastTransitionTime = performance.now();
+    // No necesitamos actualizar MenuService.lastStateChangeAt aquí porque
+    // las llamadas a config.onOpen() / config.onClose() que disparan la
+    // transición ya actualizan el timestamp en el servicio.
   }
 
   // ── Velocity helpers ─────────────────────────────────────────────────────────
