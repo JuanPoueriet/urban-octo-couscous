@@ -2,7 +2,6 @@
 // Single source of truth for all numeric values used by the mobile menu.
 // Keep the SCSS counterparts ($mm-*) in mobile-menu.scss in sync with these.
 export const MOBILE_MENU_MAX_WIDTH = 380; // px — matches CSS max-width
-export const MOBILE_MENU_DEFAULT_WIDTH = 320; // px — fallback before DOM measurement
 export const MOBILE_BREAKPOINT_PX = 992; // px — matches header/breakpoint.service
 export const DRAWER_TRANSITION_DURATION_MS = 400;
 export const DRAWER_EASING = 'cubic-bezier(0.16, 1, 0.3, 1)';
@@ -23,19 +22,43 @@ export const GESTURE_ELASTIC_RESISTANCE = 100; // 0-100
 export const GESTURE_MAX_STRETCH_PERCENT = 4; // %
 
 export enum DrawerState {
-  CLOSED  = 'closed',
-  OPENING = 'opening',
-  OPEN    = 'open',
-  CLOSING = 'closing',
+  CLOSED   = 'closed',
+  OPENING  = 'opening',
+  OPEN     = 'open',
+  CLOSING  = 'closing',
   DRAGGING = 'dragging',
 }
 
-export interface MobileMenuLink {
+// ─── Social Links ─────────────────────────────────────────────────────────────
+export const SOCIAL_LINKS = {
+  linkedin:  'https://linkedin.com/company/jsl-technology',
+  github:    'https://github.com/jsl-technology',
+  twitter:   'https://twitter.com/jsl_tech',
+  instagram: 'https://instagram.com/jsl_tech',
+} as const;
+
+// ─── Menu Link Types ──────────────────────────────────────────────────────────
+
+export interface InternalMenuLink {
   key: string;
-  route?: any[];
-  href?: string;
   icon: string;
-  external?: boolean;
+  route: (string | number)[];
+}
+
+export interface ExternalMenuLink {
+  key: string;
+  icon: string;
+  href: string;
+}
+
+export type MobileMenuLink = InternalMenuLink | ExternalMenuLink;
+
+export function isInternalLink(link: MobileMenuLink): link is InternalMenuLink {
+  return 'route' in link;
+}
+
+export function isExternalLink(link: MobileMenuLink): link is ExternalMenuLink {
+  return 'href' in link;
 }
 
 export interface MobileMenuSectionData {
@@ -56,7 +79,7 @@ export function getMobileMenuSections(currentLang: string): MobileMenuSectionDat
         { key: 'SERVICES_LIST.DESKTOP', route: [currentLang, 'solutions', 'desktop-software'], icon: 'Laptop' },
         { key: 'SERVICES_LIST.CLOUD', route: [currentLang, 'solutions', 'cloud-architecture'], icon: 'CloudCog' },
         { key: 'HEADER.INDUSTRIES', route: [currentLang, 'industries'], icon: 'Building2' },
-      ]
+      ],
     },
     {
       id: 'products',
@@ -68,7 +91,7 @@ export function getMobileMenuSections(currentLang: string): MobileMenuSectionDat
         { key: 'PRODUCTS_LIST.MOBILE', href: 'https://apps.jsl.technology', icon: 'ExternalLink' },
         { key: 'HEADER.VIRTEEX_ECOSYSTEM', route: [currentLang, 'virteex-ecosystem'], icon: 'Layers' },
         { key: 'HEADER.PRICING', route: [currentLang, 'pricing'], icon: 'CircleDollarSign' },
-      ]
+      ],
     },
     {
       id: 'company',
@@ -83,7 +106,7 @@ export function getMobileMenuSections(currentLang: string): MobileMenuSectionDat
         { key: 'HEADER.INVESTORS', route: [currentLang, 'investors'], icon: 'TrendingUp' },
         { key: 'HEADER.VENTURES', route: [currentLang, 'ventures'], icon: 'Rocket' },
         { key: 'HEADER.SECURITY', route: [currentLang, 'security'], icon: 'ShieldCheck' },
-      ]
+      ],
     },
     {
       id: 'resources',
@@ -97,7 +120,7 @@ export function getMobileMenuSections(currentLang: string): MobileMenuSectionDat
         { key: 'HEADER.ROADMAP', route: [currentLang, 'roadmap'], icon: 'Map' },
         { key: 'HEADER.FAQ', route: [currentLang, 'faq'], icon: 'HelpCircle' },
         { key: 'HEADER.DEVELOPERS', route: [currentLang, 'developers'], icon: 'Code' },
-      ]
+      ],
     },
     {
       id: 'login',
@@ -106,7 +129,7 @@ export function getMobileMenuSections(currentLang: string): MobileMenuSectionDat
         { key: 'HEADER.LOGIN_VIRTEEX', href: 'https://app.virtex.com', icon: 'ExternalLink' },
         { key: 'HEADER.LOGIN_CLIENT', href: 'https://portal.jsl.technology', icon: 'ExternalLink' },
         { key: 'HEADER.LOGIN_SUPPORT', href: 'https://support.jsl.technology', icon: 'ExternalLink' },
-      ]
-    }
+      ],
+    },
   ];
 }

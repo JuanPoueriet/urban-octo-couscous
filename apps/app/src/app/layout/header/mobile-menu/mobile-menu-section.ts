@@ -1,21 +1,29 @@
-import { Component, Input, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ViewEncapsulation,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { LucideAngularModule } from 'lucide-angular';
-import { MobileMenuLink } from './mobile-menu.constants';
+import { MobileMenuLink, isInternalLink } from './mobile-menu.constants';
 
 @Component({
   selector: 'jsl-mobile-menu-section',
   standalone: true,
   imports: [CommonModule, RouterLink, RouterLinkActive, TranslateModule, LucideAngularModule],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mobile-accordion" [class.expanded]="isExpanded">
       <button
         [id]="'accordion-' + sectionId + '-header'"
         class="accordion-header"
-        (click)="onToggle.emit(sectionId)"
+        (click)="toggle.emit(sectionId)"
         [attr.aria-expanded]="isExpanded"
         [attr.aria-controls]="'accordion-' + sectionId + '-content'"
       >
@@ -36,17 +44,21 @@ import { MobileMenuLink } from './mobile-menu.constants';
           @for (link of links; track link.key) {
             @if (shouldShowLink(link.key)) {
               <li>
-                @if (link.route) {
-                  <a [routerLink]="link.route" routerLinkActive="active" (click)="handleRouteClick(link.route, link.key, $event)">
+                @if (isInternalLink(link)) {
+                  <a
+                    [routerLink]="link.route"
+                    routerLinkActive="active"
+                    (click)="handleRouteClick(link.route, link.key, $event)"
+                  >
                     <lucide-icon [name]="link.icon"></lucide-icon>
                     {{ link.key | translate }}
                   </a>
-                } @else if (link.href) {
+                } @else {
                   <a
                     [href]="link.href"
                     target="_blank"
                     rel="noopener noreferrer"
-                    (click)="onClose.emit()"
+                    (click)="close.emit()"
                     [attr.aria-label]="(link.key | translate) + ' (' + ('ARIA.EXTERNAL_LINK' | translate) + ')'"
                   >
                     <lucide-icon [name]="link.icon"></lucide-icon>
@@ -68,19 +80,20 @@ export class MobileMenuSection {
   @Input() isExpanded = false;
   @Input() links: MobileMenuLink[] = [];
   @Input() searchQuery = '';
-
-  @Output() onToggle = new EventEmitter<string>();
-  @Output() onClose = new EventEmitter<void>();
-  @Output() onRouteNavigate = new EventEmitter<{ route: string[]; source: string }>();
-
   @Input() shouldShowLinkFn!: (linkKey: string) => boolean;
+
+  @Output() toggle = new EventEmitter<string>();
+  @Output() close = new EventEmitter<void>();
+  @Output() routeNavigate = new EventEmitter<{ route: (string | number)[]; source: string }>();
+
+  protected readonly isInternalLink = isInternalLink;
 
   shouldShowLink(linkKey: string): boolean {
     return this.shouldShowLinkFn ? this.shouldShowLinkFn(linkKey) : true;
   }
 
-  handleRouteClick(route: string[], key: string, event: Event): void {
+  handleRouteClick(route: (string | number)[], key: string, event: Event): void {
     event.preventDefault();
-    this.onRouteNavigate.emit({ route, source: key });
+    this.routeNavigate.emit({ route, source: key });
   }
 }

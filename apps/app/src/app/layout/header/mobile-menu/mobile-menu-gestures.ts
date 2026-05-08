@@ -1,4 +1,4 @@
-import { NgZone } from '@angular/core';
+import { NgZone, isDevMode } from '@angular/core';
 import { GestureBusService, GestureHandler } from '@core/services/gesture-bus.service';
 import {
   GESTURE_EDGE_THRESHOLD,
@@ -51,8 +51,9 @@ export interface MobileMenuGestureConfig {
 
 export class MobileMenuGestures implements GestureHandler {
   public name = 'MobileMenu';
-  public priority = 100; // High priority for mobile menu
-  // ── Adaptive thresholds (Problem 3) ──────────────────────────────────────────
+  public priority = 100;
+
+  // ── Adaptive thresholds ──────────────────────────────────────────────────────
 
   private get viewportWidth(): number {
     return this.sessionViewportWidth || (typeof window !== 'undefined' ? window.innerWidth : 1024);
@@ -63,7 +64,6 @@ export class MobileMenuGestures implements GestureHandler {
   }
 
   private get edgeThreshold(): number {
-    // S3 — Adaptive edge threshold: larger on small screens, adjusted by DPI
     const base = this.config.edgeThreshold ?? GESTURE_EDGE_THRESHOLD;
     const factor = this.viewportWidth < 360 ? 1.2 : 1.0;
     return base * factor;
@@ -74,27 +74,18 @@ export class MobileMenuGestures implements GestureHandler {
   }
 
   private get minSwipeDistance(): number {
-    // S3 — Distance scales with DPI to maintain feel across resolutions
     const base = this.config.minSwipeDistance ?? GESTURE_MIN_SWIPE_DISTANCE;
-
-    // Adjust for pointer type (D)
     const typeFactor = this.sessionPointerType === 'mouse' ? 1.5 : 1.0;
-
     return base * (this.dpr > 1.5 ? 0.8 : 1.0) * typeFactor;
   }
 
   private get velocityThreshold(): number {
-    // S3 — Higher velocity threshold on higher DPI screens to reduce accidental triggers
     const base = this.config.velocityThreshold ?? GESTURE_VELOCITY_THRESHOLD;
-
-    // Mouse requires higher velocity threshold (D)
     const typeFactor = this.sessionPointerType === 'mouse' ? 1.2 : 1.0;
-
     return base * (this.dpr > 1.5 ? 1.15 : 1.0) * typeFactor;
   }
 
   private get horizontalThreshold(): number {
-    // Add hysteresis (E)
     const base = this.config.horizontalThreshold ?? GESTURE_HORIZONTAL_THRESHOLD;
     return this.isDragging ? base - 4 : base;
   }
@@ -104,14 +95,16 @@ export class MobileMenuGestures implements GestureHandler {
   }
 
   private get tapThreshold(): number {
-    // S3 — Adaptive tap threshold: slightly larger on high-DPI screens to reduce false negatives
     const base = 10 * (this.dpr > 1.5 ? 1.5 : 1.0);
-    // Mouse is more precise
     return this.sessionPointerType === 'mouse' ? base * 0.7 : base;
   }
 
   // ── Gesture state ────────────────────────────────────────────────────────────
   private isDragging = false;
+  private isEdgeSwipeActive = false;
+  private isOverlaySwipeActive = false;
+  private isEdgeSwipeEnabled = false;
+
   private sessionViewportWidth = 0;
   private sessionMenuWidth = 0;
   private sessionIsRtl = false;
@@ -128,7 +121,11 @@ export class MobileMenuGestures implements GestureHandler {
   private activePointerId: number | null = null;
   private lastTransitionTime = -Infinity;
 
-  // ── Instantaneous velocity buffer (P9) ───────────────────────────────────────
+  private overlayDownX = 0;
+  private overlayDownY = 0;
+  private overlayStartTime = 0;
+
+  // ── Instantaneous velocity buffer ────────────────────────────────────────────
   private velocityBuffer: Array<{ x: number; t: number }> = [];
 
   // ── Elastic animation constants ──────────────────────────────────────────────
@@ -147,6 +144,7 @@ export class MobileMenuGestures implements GestureHandler {
   }
 
   private debugGesture(event: string, details: Record<string, unknown> = {}): void {
+    if (!isDevMode()) return;
     console.log('[MobileMenuGestures]', event, {
       ...details,
       state: {
@@ -160,10 +158,9 @@ export class MobileMenuGestures implements GestureHandler {
   }
 
   // ── Public state accessors ───────────────────────────────────────────────────
-  public getIsDragging(): boolean        { return this.isDragging; }
+  public getIsDragging(): boolean         { return this.isDragging; }
   public getIsHorizontalGesture(): boolean { return this.isHorizontalGesture; }
 
-  /** Starts the gesture cooldown to prevent accidental re-triggers. */
   public startCooldown(): void {
     this.lastTransitionTime = performance.now();
   }
@@ -194,14 +191,10 @@ export class MobileMenuGestures implements GestureHandler {
     absDiffY: number,
     instantaneousVelocity: number
   ): boolean {
-    // 1. Lock check: If vertical movement is too high early on, never confirm horizontal
     if (absDiffY > this.verticalLockThreshold && absDiffY > absDiffX * GESTURE_ANGULAR_RATIO) {
       return false;
     }
 
-    // 2. Velocity-based Early Detection (Ultra-precision improvement)
-    // If we have high horizontal velocity relative to vertical velocity,
-    // we confirm the gesture even before the distance threshold is met.
     const isFastHorizontal = instantaneousVelocity > this.velocityThreshold * 0.8;
     const hasClearDirectionalIntent = absDiffX > absDiffY * (GESTURE_ANGULAR_RATIO * 1.5);
 
@@ -209,7 +202,6 @@ export class MobileMenuGestures implements GestureHandler {
       return true;
     }
 
-    // 3. Distance-based Detection (Classic)
     return absDiffX > this.horizontalThreshold && absDiffX > absDiffY * GESTURE_ANGULAR_RATIO;
   }
 
@@ -272,11 +264,7 @@ export class MobileMenuGestures implements GestureHandler {
     return { translateX: finalTranslateX, scaleX, transformOrigin };
   }
 
-  // ── Menu drag (drawer is open / mid-animation) ───────────────────────────────
-
-  private overlayDownX = 0;
-  private overlayDownY = 0;
-  private overlayStartTime = 0;
+  // ── Pointer down ─────────────────────────────────────────────────────────────
 
   public onPointerDown(event: PointerEvent): boolean {
     if (this.activePointerId !== null) {
@@ -284,13 +272,11 @@ export class MobileMenuGestures implements GestureHandler {
       return false;
     }
 
-    // P6 — Cooldown check to prevent accidental re-triggers
     if (performance.now() - this.lastTransitionTime < GESTURE_COOLDOWN_MS) {
       this.debugGesture('pointer_down_ignored', { reason: 'cooldown', pointerId: event.pointerId });
       return false;
     }
 
-    // Pointer guards (B)
     if (!event.isPrimary) {
       this.debugGesture('pointer_down_ignored', { reason: 'not_primary', pointerId: event.pointerId });
       return false;
@@ -300,7 +286,6 @@ export class MobileMenuGestures implements GestureHandler {
       return false;
     }
 
-    // Freeze gesture context (C)
     this.sessionViewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1024;
     this.sessionMenuWidth = this.config.menuWidth;
     this.sessionIsRtl = this.config.isRtl();
@@ -308,7 +293,6 @@ export class MobileMenuGestures implements GestureHandler {
 
     const isRtl = this.sessionIsRtl;
 
-    // 0. Check for Overlay Interaction (if open)
     if (this.config.isOpen()) {
       const target = event.target as HTMLElement;
       if (target?.classList.contains('jsl-mm-overlay')) {
@@ -318,7 +302,6 @@ export class MobileMenuGestures implements GestureHandler {
       }
     }
 
-    // 1. Check for Edge Swipe (if enabled and closed)
     const isClosed = !this.config.isOpen() && !this.config.isAnimating();
 
     if (this.isEdgeSwipeEnabled && isClosed) {
@@ -333,11 +316,8 @@ export class MobileMenuGestures implements GestureHandler {
       }
     }
 
-    // 2. Check for Drawer Drag (if open or animating)
     const isOpenOrAnimating = this.config.isOpen() || this.config.isAnimating();
     if (isOpenOrAnimating) {
-      // Restrict capture when open (A)
-      // Start drag only if the pointerdown occurred inside the drawer element.
       const target = event.target as HTMLElement;
       const isInsideMenu = this.config.isTargetInsideMenu
         ? this.config.isTargetInsideMenu(target)
@@ -370,18 +350,14 @@ export class MobileMenuGestures implements GestureHandler {
     this.isEdgeSwipeActive = false;
     this.isOverlaySwipeActive = true;
     this.resetVelocityBuffer();
-    // Capture current visual position so the drawer follows the finger on overlay swipe
     this.initialTranslateX = this.config.getCurrentTranslateX();
     this.lastDragPosition = this.initialTranslateX;
   }
-
-  private isOverlaySwipeActive = false;
 
   private isPointerWithinMenuBounds(pointerX: number): boolean {
     if (this.sessionIsRtl) {
       return pointerX >= this.sessionViewportWidth - this.sessionMenuWidth;
     }
-
     return pointerX <= this.sessionMenuWidth;
   }
 
@@ -398,13 +374,9 @@ export class MobileMenuGestures implements GestureHandler {
     this.isEdgeSwipeActive = false;
     this.isOverlaySwipeActive = false;
     this.resetVelocityBuffer();
-
-    // Capture current visual position so gesture resumes from mid-animation offset (P3)
     this.initialTranslateX = this.config.getCurrentTranslateX();
     this.lastDragPosition = this.initialTranslateX;
   }
-
-  private isEdgeSwipeActive = false;
 
   private startEdgeSwipe(event: PointerEvent): void {
     this.activePointerId = event.pointerId;
@@ -424,6 +396,8 @@ export class MobileMenuGestures implements GestureHandler {
     this.lastDragPosition = this.initialTranslateX;
   }
 
+  // ── Pointer move ─────────────────────────────────────────────────────────────
+
   public onPointerMove(event: PointerEvent): void {
     if (event.pointerId !== this.activePointerId) return;
     this.debugGesture('pointer_move', { pointerId: event.pointerId, x: event.clientX, y: event.clientY });
@@ -441,12 +415,12 @@ export class MobileMenuGestures implements GestureHandler {
     this.currentX = event.clientX;
     this.currentY = event.clientY;
 
-    this.pushVelocitySample(event.clientX);
-
     const diffX = this.currentX - this.startX;
     const diffY = this.currentY - this.startY;
     const absDiffX = Math.abs(diffX);
     const absDiffY = Math.abs(diffY);
+
+    this.pushVelocitySample(event.clientX);
 
     if (!this.isDragging && !this.isHorizontalGesture) {
       const isHorizontal = this.detectHorizontalGesture(
@@ -471,23 +445,15 @@ export class MobileMenuGestures implements GestureHandler {
     }
 
     if (this.isDragging && this.isHorizontalGesture) {
-      this.pushVelocitySample(event.clientX);
-
-      // Move the drawer in real time (parallax-to-close) so the gesture has
-      // immediate physical feedback instead of waiting for pointerup.
       const menuWidth = this.sessionMenuWidth;
       const isRtl = this.sessionIsRtl;
       const closedPos = this.getClosedPosition(menuWidth);
       const openPos = 0;
 
-      // Clamp to valid range: can only move toward closed, not past open
       const rawTranslate = this.initialTranslateX + diffX;
       const targetTranslate = isRtl
         ? Math.min(closedPos, Math.max(openPos, rawTranslate))
         : Math.max(closedPos, Math.min(openPos, rawTranslate));
-
-      const isOvershooting = false; // clamped above; no elastic on overlay drag
-      if (!isOvershooting && this.wasOvershooting) this.wasOvershooting = false;
 
       const progress = this.getProgress(targetTranslate, menuWidth);
       this.lastDragPosition = targetTranslate;
@@ -502,7 +468,6 @@ export class MobileMenuGestures implements GestureHandler {
 
   private handleMenuDragMove(event: PointerEvent): void {
     if (event.pointerId !== this.activePointerId) return;
-    // Allow movement when open OR animating (P3 — supports interrupting close)
     if (!this.config.isOpen() && !this.config.isAnimating()) return;
 
     this.currentX = event.clientX;
@@ -565,6 +530,8 @@ export class MobileMenuGestures implements GestureHandler {
     );
   }
 
+  // ── Pointer up ───────────────────────────────────────────────────────────────
+
   public onPointerUp(event: PointerEvent): void {
     if (event.pointerId !== this.activePointerId) return;
     this.debugGesture('pointer_up', { pointerId: event.pointerId, x: event.clientX, y: event.clientY });
@@ -588,7 +555,6 @@ export class MobileMenuGestures implements GestureHandler {
     const velocity = this.getInstantaneousVelocity();
     const isRtl = this.sessionIsRtl;
 
-    // P2 — Swipe to close on overlay: require directionality for both velocity and distance
     const isValidDirection = isRtl ? diffX > 0 : diffX < 0;
     const isSwipeToClose =
       this.isDragging &&
@@ -596,7 +562,6 @@ export class MobileMenuGestures implements GestureHandler {
       isValidDirection &&
       (velocity > this.velocityThreshold || absDiffX > this.minSwipeDistance);
 
-    // Notify coordinator that drag has ended to remove 'dragging' class
     this.config.onUpdateTranslate(this.lastDragPosition, null);
 
     if (isSwipeToClose) {
@@ -611,7 +576,6 @@ export class MobileMenuGestures implements GestureHandler {
       duration < GESTURE_TAP_TIMEOUT_MS
     ) {
       this.debugGesture('overlay_gesture_complete', { action: 'close_tap', velocity, absDiffX, absDiffY, duration });
-      // P3 — Adaptive tap to close; ignore if it was a horizontal gesture attempt or too slow
       this.config.onClose();
       this.startCooldown();
       this.trackMetric('gesture_complete', { action: 'close', source: 'overlay_tap' });
@@ -621,13 +585,13 @@ export class MobileMenuGestures implements GestureHandler {
         absDiffX,
         absDiffY,
         duration,
-        velocity
+        velocity,
       });
       this.trackMetric('gesture_cancel', {
         source: 'overlay_end',
         reason: this.isHorizontalGesture ? 'invalid_swipe' : 'failed_tap',
         absDiffX,
-        absDiffY
+        absDiffY,
       });
     }
 
@@ -640,8 +604,6 @@ export class MobileMenuGestures implements GestureHandler {
 
     if (!this.isDragging || !this.isHorizontalGesture) {
       this.debugGesture('drawer_gesture_cancel', { reason: 'not_horizontal_or_not_dragging' });
-      // Ensure the coordinator resets transition state and clears dragging flags
-      // even if the user just tapped or performed a vertical swipe.
       this.config.onUpdateTranslate(this.lastDragPosition, null);
       this.trackMetric('gesture_cancel', { source: 'drawer' });
       this.resetDragState();
@@ -649,7 +611,7 @@ export class MobileMenuGestures implements GestureHandler {
     }
 
     const diffX      = this.currentX - this.startX;
-    const velocity   = this.getInstantaneousVelocity(); // instantaneous (P9)
+    const velocity   = this.getInstantaneousVelocity();
     const menuWidth  = this.sessionMenuWidth;
     const progress   = this.getProgress(this.lastDragPosition, menuWidth);
     const isRtl      = this.sessionIsRtl;
@@ -657,7 +619,6 @@ export class MobileMenuGestures implements GestureHandler {
     let shouldStayOpen: boolean;
 
     if (velocity > this.velocityThreshold) {
-      // Fast swipe: direction determines intent
       shouldStayOpen = isRtl ? diffX < 0 : diffX > 0;
     } else if (progress > this.openThreshold) {
       shouldStayOpen = true;
@@ -667,8 +628,9 @@ export class MobileMenuGestures implements GestureHandler {
       shouldStayOpen = progress > 0.5;
     }
 
+    const lastPos = this.lastDragPosition;
     this.resetDragState();
-    this.config.onUpdateTranslate(this.lastDragPosition, null);
+    this.config.onUpdateTranslate(lastPos, null);
 
     this.debugGesture('drawer_gesture_end_decision', { shouldStayOpen, diffX, velocity, progress });
     if (shouldStayOpen) {
@@ -682,7 +644,8 @@ export class MobileMenuGestures implements GestureHandler {
     }
   }
 
-  // P12 — on system cancel, revert to last stable state instead of applying gesture logic
+  // ── Pointer cancel ───────────────────────────────────────────────────────────
+
   public onPointerCancel(event: PointerEvent): void {
     if (event.pointerId !== this.activePointerId) return;
     this.debugGesture('pointer_cancel', { pointerId: event.pointerId });
@@ -701,8 +664,9 @@ export class MobileMenuGestures implements GestureHandler {
     if (event.pointerId !== this.activePointerId) return;
 
     const wasOpen = this.config.isOpen();
+    const lastPos = this.lastDragPosition;
     this.resetDragState();
-    this.config.onUpdateTranslate(this.lastDragPosition, null);
+    this.config.onUpdateTranslate(lastPos, null);
 
     if (wasOpen) {
       this.config.onOpen();
@@ -712,15 +676,13 @@ export class MobileMenuGestures implements GestureHandler {
     this.trackMetric('gesture_cancel', { source: 'system_interrupt' });
   }
 
-  // ── Edge swipe (menu is fully closed) ────────────────────────────────────────
-
-  private isEdgeSwipeEnabled = false;
+  // ── Edge swipe ───────────────────────────────────────────────────────────────
 
   public setEdgeSwipeEnabled(enabled: boolean): void {
     this.isEdgeSwipeEnabled = enabled;
   }
 
-  private handleEdgeSwipeMove = (event: PointerEvent): void => {
+  private handleEdgeSwipeMove(event: PointerEvent): void {
     if (!this.isDragging || this.config.isOpen() || event.pointerId !== this.activePointerId) return;
 
     this.currentX = event.clientX;
@@ -762,12 +724,10 @@ export class MobileMenuGestures implements GestureHandler {
       this.debugGesture('edge_move_ignored', {
         reason: !this.isHorizontalGesture ? 'not_horizontal' : 'invalid_direction',
         diffX,
-        diffY
+        diffY,
       });
       return;
     }
-
-    this.pushVelocitySample(event.clientX);
 
     const menuWidth = this.sessionMenuWidth;
     const baseTranslate = this.initialTranslateX + diffX;
@@ -788,9 +748,9 @@ export class MobileMenuGestures implements GestureHandler {
       transform.scaleX,
       transform.transformOrigin
     );
-  };
+  }
 
-  private handleEdgeSwipeEnd = (event: PointerEvent): void => {
+  private handleEdgeSwipeEnd(event: PointerEvent): void {
     if (event.pointerId !== this.activePointerId) return;
 
     if (!this.isDragging || !this.isHorizontalGesture) {
@@ -803,11 +763,10 @@ export class MobileMenuGestures implements GestureHandler {
     }
 
     const diffX    = this.currentX - this.startX;
-    const velocity = this.getInstantaneousVelocity(); // instantaneous (P9)
+    const velocity = this.getInstantaneousVelocity();
     const menuWidth  = this.sessionMenuWidth;
     const progress   = this.getProgress(this.lastDragPosition, menuWidth);
 
-    // Improvement 4: Re-validate direction for velocity and distance branches
     const isRtl = this.sessionIsRtl;
     const isValidDirection = isRtl ? diffX < 0 : diffX > 0;
 
@@ -830,7 +789,7 @@ export class MobileMenuGestures implements GestureHandler {
       this.startCooldown();
       this.trackMetric('gesture_complete', { action: 'close_abort', source: 'edge' });
     }
-  };
+  }
 
   private cancelEdgeSwipe(reason = 'edge_lock'): void {
     const menuWidth = this.sessionMenuWidth;
@@ -841,10 +800,7 @@ export class MobileMenuGestures implements GestureHandler {
     this.trackMetric('gesture_cancel', { source: 'edge_lock', reason });
   }
 
-  // R2 — on system cancel (incoming call, app switch, lost pointer) during an
-  // edge swipe, always revert to the stable closed position. Never apply
-  // velocity/progress logic on an involuntary interruption.
-  private handleEdgeSwipeCancel = (event: PointerEvent): void => {
+  private handleEdgeSwipeCancel(event: PointerEvent): void {
     if (event.pointerId !== this.activePointerId) return;
 
     const menuWidth = this.sessionMenuWidth;
@@ -854,7 +810,7 @@ export class MobileMenuGestures implements GestureHandler {
     this.config.onClose();
     this.debugGesture('edge_gesture_cancel', { reason: 'system_interrupt' });
     this.trackMetric('gesture_cancel', { source: 'edge_system_interrupt' });
-  };
+  }
 
   private resetDragState(): void {
     this.isDragging = false;
@@ -868,7 +824,9 @@ export class MobileMenuGestures implements GestureHandler {
   // ── Analytics ────────────────────────────────────────────────────────────────
 
   private trackMetric(metric: string, data: Record<string, unknown>): void {
-    this.debugGesture('metric', { metric, ...data });
+    if (isDevMode()) {
+      this.debugGesture('metric', { metric, ...data });
+    }
     this.config.onTrackMetric?.(metric, data);
   }
 

@@ -20,7 +20,11 @@ export interface TransitionConfig {
 export class DrawerTransitionCoordinator {
   private transitionEndUnlisten: (() => void) | null = null;
   private transitionFallbackTimer: ReturnType<typeof setTimeout> | null = null;
-  public currentState: DrawerState = DrawerState.CLOSED;
+  private _currentState: DrawerState = DrawerState.CLOSED;
+
+  get currentState(): DrawerState {
+    return this._currentState;
+  }
 
   constructor(
     private config: TransitionConfig,
@@ -30,11 +34,10 @@ export class DrawerTransitionCoordinator {
   ) {}
 
   public transitionTo(newState: DrawerState, options: { immediate?: boolean; targetTranslateX?: number } = {}): void {
-    if (this.currentState === newState && !options.immediate) return;
+    if (this._currentState === newState && !options.immediate) return;
 
-    // Capture previousState BEFORE the assignment so switch cases can branch on it.
-    const previousState = this.currentState;
-    this.currentState = newState;
+    const previousState = this._currentState;
+    this._currentState = newState;
     this.config.onStateChange(newState);
 
     switch (newState) {
@@ -77,9 +80,7 @@ export class DrawerTransitionCoordinator {
         this.clearTransitionListeners();
 
         // When an opening gesture starts (CLOSED → DRAGGING via edge-swipe) or a
-        // close animation is interrupted (CLOSING → DRAGGING), reveal the overlay so
-        // the drag progress is visible in real time. The opacity is driven by the
-        // --mm-overlay-progress CSS variable updated on each pointermove.
+        // close animation is interrupted (CLOSING → DRAGGING), reveal the overlay.
         const needsOverlay =
           previousState === DrawerState.CLOSED ||
           previousState === DrawerState.CLOSING;
@@ -118,9 +119,7 @@ export class DrawerTransitionCoordinator {
 
     const menuElement = this.config.getMenuElement();
     if (!menuElement) {
-      this.currentState = targetState;
-      this.config.onStateChange(targetState);
-      callback?.();
+      this.completeTransition(targetState, callback);
       return;
     }
 
@@ -134,13 +133,7 @@ export class DrawerTransitionCoordinator {
           if (event.propertyName !== 'transform' || event.target !== menuElement) return;
           this.clearTransitionListeners();
           this.ngZone.run(() => {
-            if (this.currentState === DrawerState.OPENING || this.currentState === DrawerState.CLOSING) {
-              this.currentState = targetState;
-              this.config.onStateChange(targetState);
-              callback?.();
-              this.config.onTransitionComplete?.();
-              this.cdRef.markForCheck();
-            }
+            this.completeTransition(targetState, callback);
           });
         }
       );
@@ -153,15 +146,18 @@ export class DrawerTransitionCoordinator {
         this.transitionEndUnlisten = null;
       }
       this.ngZone.run(() => {
-        if (this.currentState === DrawerState.OPENING || this.currentState === DrawerState.CLOSING) {
-          this.currentState = targetState;
-          this.config.onStateChange(targetState);
-          callback?.();
-          this.config.onTransitionComplete?.();
-          this.cdRef.markForCheck();
-        }
+        this.completeTransition(targetState, callback);
       });
     }, reducedMotion ? 0 : DRAWER_TRANSITION_DURATION_MS + 100);
+  }
+
+  private completeTransition(targetState: DrawerState, callback?: () => void): void {
+    if (this._currentState !== DrawerState.OPENING && this._currentState !== DrawerState.CLOSING) return;
+    this._currentState = targetState;
+    this.config.onStateChange(targetState);
+    callback?.();
+    this.config.onTransitionComplete?.();
+    this.cdRef.markForCheck();
   }
 
   public destroy(): void {

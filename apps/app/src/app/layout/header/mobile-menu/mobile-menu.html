@@ -35,11 +35,21 @@
   <!-- Mobile Menu Header -->
   <div class="mobile-menu-top">
     <div class="mobile-logo-container">
-      <a [routerLink]="[currentLang, 'home']" class="header__logo mobile-logo" (click)="onMenuRouteNavigate([currentLang, 'home'], 'home_logo'); $event.preventDefault()">
+      <!-- routerLink drives routerLinkActive; click closes menu and lets routerLink navigate -->
+      <a
+        [routerLink]="[currentLang, 'home']"
+        class="header__logo mobile-logo"
+        (click)="closeMobileMenu('navigation')"
+      >
         {{ 'COMMON.BRAND_NAME' | translate }}
       </a>
     </div>
-    <button class="mobile-close-btn" (pointerdown)="$event.stopPropagation()" (click)="closeMobileMenu('button', $event)" [attr.aria-label]="'ARIA.CLOSE_MENU' | translate">
+    <button
+      class="mobile-close-btn"
+      (pointerdown)="$event.stopPropagation()"
+      (click)="closeMobileMenu('button', $event)"
+      [attr.aria-label]="'ARIA.CLOSE_MENU' | translate"
+    >
       <lucide-icon name="X"></lucide-icon>
     </button>
   </div>
@@ -48,13 +58,13 @@
   <div class="mobile-menu-content">
     <jsl-mobile-menu-quick-access
       [currentLang]="currentLang"
-      (onClose)="closeMobileMenu()"
+      (close)="closeMobileMenu('navigation')"
     ></jsl-mobile-menu-quick-access>
 
     <jsl-mobile-menu-search
       [searchQuery]="searchController.searchQuery()"
       [searchResultsCount]="searchController.searchResultsCount()"
-      (onSearchChange)="onSearchChange($event)"
+      (searchChange)="onSearchChange($event)"
     ></jsl-mobile-menu-search>
 
     <!-- ARIA Live region for search status and results -->
@@ -90,9 +100,9 @@
           [links]="section.links"
           [searchQuery]="searchController.searchQuery()"
           [shouldShowLinkFn]="searchController.shouldShowLink"
-          (onToggle)="toggleSection($event)"
-          (onClose)="closeMobileMenu()"
-          (onRouteNavigate)="onMenuRouteNavigate($event.route, $event.source)"
+          (toggle)="toggleSection($event)"
+          (close)="closeMobileMenu('navigation')"
+          (routeNavigate)="onMenuRouteNavigate($event.route, $event.source)"
         ></jsl-mobile-menu-section>
       }
     }
@@ -100,7 +110,13 @@
     <!-- Contact Button -->
     @if (searchController.shouldShowLink('HEADER.CONTACT')) {
     <div class="mobile-cta-container">
-      <a [routerLink]="[currentLang, 'contact']" routerLinkActive="active" class="mobile-cta-btn" (click)="onMenuRouteNavigate([currentLang, 'contact'], 'contact_cta'); $event.preventDefault()">
+      <!-- routerLink drives routerLinkActive; click closes menu and lets routerLink navigate -->
+      <a
+        [routerLink]="[currentLang, 'contact']"
+        routerLinkActive="active"
+        class="mobile-cta-btn"
+        (click)="closeMobileMenu('navigation')"
+      >
         <lucide-icon name="Mail"></lucide-icon>
         {{ 'HEADER.CONTACT' | translate }}
       </a>
@@ -112,16 +128,36 @@
     <!-- Mobile Menu Footer -->
     <div class="mobile-menu-footer">
       <div class="mobile-socials">
-        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'SHARE.LINKEDIN' | translate">
+        <a
+          [href]="socialLinks.linkedin"
+          target="_blank"
+          rel="noopener noreferrer"
+          [attr.aria-label]="'SOCIAL.LINKEDIN' | translate"
+        >
           <lucide-icon name="Linkedin"></lucide-icon>
         </a>
-        <a href="https://github.com/jsl-technology" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'SOCIAL.GITHUB' | translate">
+        <a
+          [href]="socialLinks.github"
+          target="_blank"
+          rel="noopener noreferrer"
+          [attr.aria-label]="'SOCIAL.GITHUB' | translate"
+        >
           <lucide-icon name="Github"></lucide-icon>
         </a>
-        <a href="https://twitter.com/jsl_tech" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'SHARE.TWITTER' | translate">
+        <a
+          [href]="socialLinks.twitter"
+          target="_blank"
+          rel="noopener noreferrer"
+          [attr.aria-label]="'SOCIAL.TWITTER' | translate"
+        >
           <lucide-icon name="Twitter"></lucide-icon>
         </a>
-        <a href="https://instagram.com/jsl_tech" target="_blank" rel="noopener noreferrer" [attr.aria-label]="'SOCIAL.INSTAGRAM' | translate">
+        <a
+          [href]="socialLinks.instagram"
+          target="_blank"
+          rel="noopener noreferrer"
+          [attr.aria-label]="'SOCIAL.INSTAGRAM' | translate"
+        >
           <lucide-icon name="Instagram"></lucide-icon>
         </a>
       </div>

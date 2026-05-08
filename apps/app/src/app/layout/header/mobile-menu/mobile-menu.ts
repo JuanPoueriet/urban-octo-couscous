@@ -4,7 +4,6 @@ import {
   ElementRef,
   ViewEncapsulation,
   PLATFORM_ID,
-  OnInit,
   OnDestroy,
   Renderer2,
   NgZone,
@@ -15,12 +14,9 @@ import {
   effect,
   ChangeDetectionStrategy,
   DestroyRef,
-  afterNextRender,
-  Injector,
   ViewChild,
 } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
-import { Router } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -48,6 +44,7 @@ import {
   GESTURE_VELOCITY_THRESHOLD,
   GESTURE_ELASTIC_RESISTANCE,
   DrawerState,
+  SOCIAL_LINKS,
 } from './mobile-menu.constants';
 import { MobileMenuAccessibility } from './mobile-menu-accessibility';
 import { BreakpointService } from '@core/services/breakpoint.service';
@@ -66,44 +63,42 @@ import { BreakpointService } from '@core/services/breakpoint.service';
     MobileMenuSearch,
     MobileMenuSection,
   ],
-  providers: [
-    MobileMenuSearchController
-  ],
+  providers: [MobileMenuSearchController],
   templateUrl: './mobile-menu.html',
   styleUrl: './mobile-menu.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
-  private directionService = inject(DirectionService);
-  private menuService      = inject(MenuService);
+export class MobileMenu implements OnDestroy, AfterViewInit {
+  private directionService      = inject(DirectionService);
+  private menuService           = inject(MenuService);
   private overlayManagerService = inject(OverlayManagerService);
-  private breakpointService = inject(BreakpointService);
-  private analyticsService = inject(AnalyticsService);
-  private gestureBus       = inject(GestureBusService);
-  private translate        = inject(TranslateService);
-  private el               = inject(ElementRef);
-  private renderer         = inject(Renderer2);
-  private ngZone           = inject(NgZone);
-  private cdRef            = inject(ChangeDetectorRef);
-  private destroyRef       = inject(DestroyRef);
-  private router           = inject(Router);
-  private injector         = inject(Injector);
-  public searchController  = inject(MobileMenuSearchController);
-  // P10 — functional inject(); @Inject() decorator was redundant and removed
-  private platformId       = inject(PLATFORM_ID);
+  private breakpointService     = inject(BreakpointService);
+  private analyticsService      = inject(AnalyticsService);
+  private gestureBus            = inject(GestureBusService);
+  private translate             = inject(TranslateService);
+  private el                    = inject(ElementRef);
+  private renderer              = inject(Renderer2);
+  private ngZone                = inject(NgZone);
+  private cdRef                 = inject(ChangeDetectorRef);
+  private destroyRef            = inject(DestroyRef);
+  private router                = inject(Router);
+  private platformId            = inject(PLATFORM_ID);
+
+  protected searchController = inject(MobileMenuSearchController);
 
   public currentLang: string;
   private isBrowser: boolean;
 
+  // Cached MediaQueryList for prefers-reduced-motion (created once, not on every call)
+  private reducedMotionMQL: MediaQueryList | null = null;
+
   // ── Drawer animation state ──────────────────────────────────────────────────
-  // P8 — use MOBILE_MENU_MAX_WIDTH to guarantee the drawer is always fully off-screen
-  //      before ngAfterViewInit measures the real width.
-  public menuTranslateX  = -MOBILE_MENU_MAX_WIDTH;
-  public menuScaleX      = 1;
+  public menuTranslateX      = -MOBILE_MENU_MAX_WIDTH;
+  public menuScaleX          = 1;
   public menuTransformOrigin = 'left';
-  public menuTransition  = DRAWER_TRANSITION;  // P5 — single constant, not repeated strings
-  private menuWidth      = MOBILE_MENU_MAX_WIDTH;
+  public menuTransition      = DRAWER_TRANSITION;
+  private menuWidth          = MOBILE_MENU_MAX_WIDTH;
   public drawerState: DrawerState = DrawerState.CLOSED;
 
   // ── Throttled Haptic ────────────────────────────────────────────────────────
@@ -113,7 +108,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private transitionCoordinator!: DrawerTransitionCoordinator;
 
   // ── DOM references ──────────────────────────────────────────────────────────
-  @ViewChild('menuElement') private menuElementRef!: ElementRef<HTMLElement>;
+  @ViewChild('menuElement')   private menuElementRef!: ElementRef<HTMLElement>;
   @ViewChild('overlayElement') private overlayElementRef!: ElementRef<HTMLElement>;
 
   private get menuElement(): HTMLElement | null {
@@ -126,7 +121,9 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   private resizeObserver: ResizeObserver | null = null;
 
-  // Non-passive touchmove handler bound once and removed in cleanup (Problem 2 fix)
+  // Non-passive touchmove handler — registered with { passive: false } so preventDefault() works.
+  // @HostListener registers document listeners as passive in modern browsers, silently ignoring
+  // preventDefault() and producing intervention warnings in the console.
   private readonly boundTouchMove = (event: TouchEvent): void => {
     if (
       event.cancelable &&
@@ -138,7 +135,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   };
 
   // ── Search / debounce ────────────────────────────────────────────────────────
-  private searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;  // P11 — typed
+  private searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 
   // ── Gesture handler ─────────────────────────────────────────────────────────
   private gestureHandler: MobileMenuGestures | null = null;
@@ -149,6 +146,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   public currentYear = new Date().getFullYear();
   public menuSections: MobileMenuSectionData[] = [];
   public readonly menuTitleId = 'mobile-menu-title';
+  public readonly socialLinks = SOCIAL_LINKS;
 
   // ── Computed state accessors ─────────────────────────────────────────────────
 
@@ -156,7 +154,6 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     return this.menuService.isMobileMenuOpen();
   }
 
-  /** P7 — used in template to hide the closed drawer from the accessibility tree. */
   get isDrawerClosed(): boolean {
     return this.drawerState === DrawerState.CLOSED;
   }
@@ -165,8 +162,11 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.currentLang = this.translate.getCurrentLang() || this.translate.defaultLang || 'es';
     this.isBrowser   = isPlatformBrowser(this.platformId);
     this.a11y        = new MobileMenuAccessibility(this.el, this.isBrowser);
-    // Initialize coordinator early so constructor effects can safely trigger transitions
-    // before ngAfterViewInit runs (e.g., when menu signal is restored as open).
+
+    if (this.isBrowser) {
+      this.reducedMotionMQL = window.matchMedia('(prefers-reduced-motion: reduce)');
+    }
+
     this.initializeCoordinator();
 
     this.translate.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
@@ -176,15 +176,13 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     });
 
     effect(() => {
-      const isOpen = this.menuService.isMobileMenuOpen();
+      const isOpen   = this.menuService.isMobileMenuOpen();
       const isMobile = this.breakpointService.isMobile();
 
-      // Update edge-swipe activation contextually (P3)
       if (this.gestureHandler) {
         this.gestureHandler.setEdgeSwipeEnabled(isMobile && !isOpen);
       }
 
-      // S1 — Breakpoint closing policy
       if (isOpen && !isMobile) {
         this.ngZone.run(() => this.closeMobileMenu('system'));
         return;
@@ -205,17 +203,11 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.searchController.setMenuSections(this.menuSections);
   }
 
-  ngOnInit(): void { /* reserved */ }
-
   ngAfterViewInit(): void {
     if (this.isBrowser) {
       this.initializeMenu();
       this.setupGestures();
       this.setupResizeObserver();
-      // Register touchmove as non-passive so preventDefault() can prevent scroll
-      // while the user performs a horizontal drag gesture. @HostListener registers
-      // document listeners as passive by default in modern browsers, which silently
-      // ignores preventDefault() and prints an intervention warning in the console.
       this.ngZone.runOutsideAngular(() => {
         document.addEventListener('touchmove', this.boundTouchMove, { passive: false });
       });
@@ -231,10 +223,10 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private initializeCoordinator(): void {
     this.transitionCoordinator = new DrawerTransitionCoordinator(
       {
-        getMenuElement: () => this.menuElement,
+        getMenuElement:    () => this.menuElement,
         getOverlayElement: () => this.overlayElement,
         prefersReducedMotion: () => this.prefersReducedMotion(),
-        getDrawerTransition: () => this.getDrawerTransition(),
+        getDrawerTransition:  () => this.getDrawerTransition(),
         onStateChange: (state) => {
           this.drawerState = state;
           if (state === DrawerState.OPENING || state === DrawerState.CLOSING) {
@@ -247,9 +239,9 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
           this.menuTranslateX = translateX;
           this.menuScaleX = 1;
         },
-        onRegisterOverlay: () => this.overlayManagerService.register('mobile-menu'),
+        onRegisterOverlay:   () => this.overlayManagerService.register('mobile-menu'),
         onUnregisterOverlay: () => this.overlayManagerService.unregister('mobile-menu'),
-        onTriggerHaptic: () => this.triggerThrottledHaptic(),
+        onTriggerHaptic:     () => this.triggerThrottledHaptic(),
         onA11yOpen: () => {
           this.a11y.saveFocus();
           this.a11y.startObserving();
@@ -270,18 +262,12 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private initializeMenu(): void {
-    // P4 — used template refs instead of querySelector to decouple logic from CSS classes
     this.setSharedTokens();
-
     if (this.menuElement) {
       this.updateMenuWidth();
     }
   }
 
-  /**
-   * Sets shared design tokens as CSS custom properties on the host element.
-   * This ensures TS and SCSS stay in sync without manual duplication.
-   */
   private setSharedTokens(): void {
     const host = this.el.nativeElement;
     this.renderer.setStyle(host, '--mm-drawer-max-width', `${MOBILE_MENU_MAX_WIDTH}px`);
@@ -325,38 +311,33 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   private setupGestures(): void {
     this.gestureConfig = {
-      menuWidth:          this.menuWidth,
-      elasticResistance:  GESTURE_ELASTIC_RESISTANCE,
-      edgeThreshold:      GESTURE_EDGE_THRESHOLD,
-      velocityThreshold:  GESTURE_VELOCITY_THRESHOLD,
-      isRtl:        () => this.directionService.isRtl(),
-      isOpen:       () => this.isMobileMenuOpen,
-      isAnimating:  () => this.drawerState === DrawerState.OPENING || this.drawerState === DrawerState.CLOSING,
+      menuWidth:         this.menuWidth,
+      elasticResistance: GESTURE_ELASTIC_RESISTANCE,
+      edgeThreshold:     GESTURE_EDGE_THRESHOLD,
+      velocityThreshold: GESTURE_VELOCITY_THRESHOLD,
+      isRtl:       () => this.directionService.isRtl(),
+      isOpen:      () => this.isMobileMenuOpen,
+      isAnimating: () => this.drawerState === DrawerState.OPENING || this.drawerState === DrawerState.CLOSING,
       isTargetInsideMenu: (target: HTMLElement) => !!this.menuElement?.contains(target),
-      // P3 — exposes current visual position so mid-animation gestures start correctly
       getCurrentTranslateX: () => this.menuTranslateX,
 
       onUpdateTranslate: (translateX, progress, scaleX, transformOrigin) => {
-        this.menuTranslateX     = translateX;
-        this.menuScaleX         = scaleX ?? 1;
+        this.menuTranslateX      = translateX;
+        this.menuScaleX          = scaleX ?? 1;
         this.menuTransformOrigin = transformOrigin ?? (this.directionService.isRtl() ? 'right' : 'left');
 
         if (progress !== null) {
           this.transitionTo(DrawerState.DRAGGING);
-          this.updateOverlayVisual(progress); // P1 — overlay opacity tracks drag
+          this.updateOverlayVisual(progress);
           if (this.menuElement) this.renderer.addClass(this.menuElement, 'dragging');
         } else {
-          // Drag released: re-enable transition for the snap animation
-          // R5 — respect prefers-reduced-motion when snapping after gesture
           this.menuTransition = this.getDrawerTransition();
           if (this.menuElement) this.renderer.removeClass(this.menuElement, 'dragging');
         }
         this.cdRef.markForCheck();
       },
 
-      onOpen:  () => {
-        // If the menu signal is already open (common when dragging an already-open drawer),
-        // force the drawer to snap back to fully open instead of leaving it at an arbitrary translateX.
+      onOpen: () => {
         if (this.menuService.isMobileMenuOpen()) {
           this.openDrawer();
           return;
@@ -368,17 +349,15 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
           this.menuService.close('gesture');
           return;
         }
-        // Defensive path: if state is desynced and signal is already closed, still restore visual close.
         this.closeDrawer();
       },
       onStopTransition: () => this.stopTransition(),
-      onToggleHaptic: () => this.triggerThrottledHaptic(),
-      onTrackMetric:  (metric, data) => this.analyticsService.trackEvent(`mobile_menu_${metric}`, data),
+      onToggleHaptic:   () => this.triggerThrottledHaptic(),
+      onTrackMetric: (metric, data) => this.analyticsService.trackEvent(`mobile_menu_${metric}`, data),
     };
 
     this.gestureHandler = new MobileMenuGestures(this.gestureConfig, this.ngZone, this.gestureBus);
 
-    // Edge-swipe is enabled only when appropriate (mobile + menu closed)
     this.gestureHandler.setEdgeSwipeEnabled(
       this.breakpointService.isMobile() && !this.menuService.isMobileMenuOpen()
     );
@@ -391,10 +370,7 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
       ? (this.directionService.isRtl() ? this.menuWidth : -this.menuWidth)
       : undefined;
 
-    this.transitionCoordinator.transitionTo(newState, {
-      ...options,
-      targetTranslateX,
-    });
+    this.transitionCoordinator.transitionTo(newState, { ...options, targetTranslateX });
   }
 
   // ── Open / close drawer ─────────────────────────────────────────────────────
@@ -409,13 +385,10 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     this.transitionTo(DrawerState.CLOSING);
   }
 
-
-  // R5 — single query so callers do not embed matchMedia strings directly
   private prefersReducedMotion(): boolean {
-    return this.isBrowser && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    return this.isBrowser && (this.reducedMotionMQL?.matches ?? false);
   }
 
-  // R5 — returns 'none' for prefers-reduced-motion users; DRAWER_TRANSITION otherwise
   private getDrawerTransition(): string {
     return this.prefersReducedMotion() ? 'none' : DRAWER_TRANSITION;
   }
@@ -429,9 +402,6 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   private updateOverlayVisual(progress: number): void {
     if (!this.overlayElement) return;
     const normalized = this.clamp01(progress);
-
-    // P6 — visual expression is set via CSS variable.
-    //      Opacity and blur are derived in CSS using clamp/calc for better maintainability.
     this.renderer.setStyle(this.overlayElement, '--mm-overlay-progress', normalized.toFixed(3));
   }
 
@@ -446,14 +416,10 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
   // ── Pointer event delegation ────────────────────────────────────────────────
 
   private stopTransition(): void {
-    // R1 — cancel the pending transitionend listener + fallback timer before
-    // freezing the animation, so the stale callback cannot fire after a gesture
-    // interrupts the animation mid-flight.
     this.transitionTo(DrawerState.DRAGGING);
     if (this.menuElement) void this.menuElement.offsetHeight; // force reflow
     this.cdRef.markForCheck();
   }
-
 
   // ── Keyboard events ─────────────────────────────────────────────────────────
 
@@ -472,20 +438,14 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  // touchmove is registered manually with { passive: false } in ngAfterViewInit
-  // (see boundTouchMove field). @HostListener is NOT used here because Angular
-  // registers document-level touch events as passive, making preventDefault() a no-op.
-
   // ── Search ─────────────────────────────────────────────────────────────────
 
   onSearchChange(query: string): void {
     this.searchController.onSearchChange(query);
 
-    // S4 — Strategy: Refresh focusables reactively after the next render cycle (S4).
-    //      This avoids stale element lists and non-deterministic keyboard behavior.
-    afterNextRender(() => {
-      this.a11y.refreshFocusableElements();
-    }, { injector: this.injector });
+    // refreshFocusableElements() is internally debounced (~2 frames) so calling
+    // it here is safe and avoids the complexity of afterNextRender in event handlers.
+    this.a11y.refreshFocusableElements();
 
     if (this.searchDebounceTimer !== null) clearTimeout(this.searchDebounceTimer);
 
@@ -517,11 +477,9 @@ export class MobileMenu implements OnInit, OnDestroy, AfterViewInit {
 
   // ── Navigation ───────────────────────────────────────────────────────────────
 
-  onMenuRouteNavigate(route: string[], source: string): void {
-    // R6 — close first so the drawer starts its exit animation before the router
-    // resolves; prevents a visible flicker when navigating to a cached route.
+  onMenuRouteNavigate(route: (string | number)[], source: string): void {
     this.closeMobileMenu('navigation');
-    this.router.navigate(route).then((ok) => {
+    this.router.navigate(route as string[]).then((ok) => {
       if (!ok) {
         this.analyticsService.trackEvent('mobile_menu_navigation_failed', { source, route: route.join('/') });
       }

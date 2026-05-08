@@ -1,0 +1,562 @@
+================================================================================
+  ANÁLISIS COMPLETO DEL MENÚ LATERAL (MOBILE MENU)
+  JSL Technology — Angular SSR App
+  Fecha: 2026-05-07
+================================================================================
+
+Archivos analizados:
+  - mobile-menu.ts                  (572 líneas)
+  - mobile-menu.html                (141 líneas)
+  - mobile-menu.scss                (718 líneas)
+  - mobile-menu-gestures.ts         (883 líneas)
+  - mobile-menu.constants.ts        (112 líneas)
+  - drawer-transition-coordinator.ts(170 líneas)
+  - mobile-menu-accessibility.ts    (184 líneas)
+  - mobile-menu-section.ts          (86 líneas)
+  - mobile-menu-quick-access.ts     (47 líneas)
+  - mobile-menu-search.ts           (41 líneas)
+  - mobile-menu-search.controller.ts(97 líneas)
+  - mobile-menu.spec.ts             (210 líneas)
+  - menu.service.ts                 (39 líneas)
+
+================================================================================
+  SECCIÓN 1 — BUGS REALES
+================================================================================
+
+[BUG-01] console.log activo en producción — CRÍTICO
+  Archivo: mobile-menu-gestures.ts, línea 150
+  -------------------------------------------------
+  El método debugGesture() llama a console.log('[MobileMenuGestures]', ...)
+  y este método es invocado en prácticamente CADA evento de puntero (pointerdown,
+  pointermove, pointerup, pointercancel) y también desde trackMetric() (línea 871).
+
+  Consecuencia: en producción, cada gesto del usuario (scroll, swipe, tap) genera
+  decenas de entradas en consola. Además, trackMetric() también llama a debugGesture,
+  por lo que cada evento de analytics duplica el log.
+
+  No existe ningún flag (isDevMode, environment.production, etc.) que desactive este
+  log en producción.
+
+  Corrección: envolver en `if (isDevMode())` o eliminar completamente.
+
+[BUG-02] pushVelocitySample llamado dos veces por evento en handleOverlayMove
+  Archivo: mobile-menu-gestures.ts, líneas 444 y 474
+  ---------------------------------------------------
+  En handleOverlayMove(), la función pushVelocitySample(event.clientX) se llama
+  primero en la línea 444 (antes de la detección del gesto horizontal) y luego
+  nuevamente en la línea 474 (dentro del bloque de arrastre confirmado).
+
+  Cuando el gesto horizontal ya está confirmado (isDragging && isHorizontalGesture),
+  la muestra se registra DOS VECES para el mismo PointerEvent. Esto distorsiona
+  el buffer de velocidad, haciendo que el denominador (tiempo) se calcule mal
+  y produciendo velocidades instantáneas incorrectas.
+
+  El mismo problema ocurre en handleEdgeSwipeMove (líneas 729 y 770).
+
+[BUG-03] MobileMenuSearch muta una propiedad @Input — rompe el flujo unidireccional
+  Archivo: mobile-menu-search.ts, líneas 37-39
+  ---------------------------------------------------
+  El método clearSearch() asigna directamente this.searchQuery = ''. Como searchQuery
+  es un @Input() vinculado desde el padre, mutar el Input viola el flujo unidireccional
+  de datos de Angular y puede causar comportamientos inesperados con OnPush (la vista
+  del componente se desincroniza del estado del padre).
+
+  La corrección correcta es emitir el nuevo valor y dejar que el padre actualice el
+  binding:
+    clearSearch() {
+      this.onSearchChange.emit('');   // No tocar this.searchQuery aquí
+    }
+
+  El padre debe actualizar searchQuery a través de la propiedad de entrada cuando
+  recibe el evento onSearchChange.
+
+[BUG-04] [(ngModel)] con @Input genera doble fuente de verdad en MobileMenuSearch
+  Archivo: mobile-menu-search.ts, líneas 18-19
+  ---------------------------------------------------
+  El template usa [(ngModel)]="searchQuery" con searchQuery como @Input(). Esto crea
+  un binding bidireccional sobre una propiedad que el padre también controla. Cuando el
+  usuario escribe, ngModelChange emite al padre, pero si el padre NO actualiza la
+  propiedad de entrada (p.ej. por OnPush + markForCheck), el input queda desincronizado.
+
+  Esto es especialmente problemático cuando la búsqueda se limpia desde fuera
+  (onSearchChange('') en el padre) porque ngModel puede retener el valor previo
+  si el componente no recibe change detection.
+
+[BUG-05] height: 100vh ignora la barra de navegación de iOS Safari
+  Archivo: mobile-menu.scss, línea 44
+  ---------------------------------------------------
+  .header__nav-links-mobile { height: 100vh; }
+
+  En iOS Safari, 100vh incluye el área de la barra de dirección del navegador, lo que
+  hace que el drawer desborde y parte del contenido quede cortado por debajo. La
+  solución moderna es:
+    height: 100dvh; /* dynamic viewport height */
+
+  Añadir fallback para navegadores sin soporte:
+    height: 100vh;
+    height: 100dvh;
+
+[BUG-06] La caché de traducciones en MobileMenuSearchController no distingue idioma
+  Archivo: mobile-menu-search.controller.ts, líneas 10-11 y 73-78
+  ---------------------------------------------------
+  translationCache almacena traducciones por clave de i18n, pero la clave no incluye
+  el idioma activo. Si el usuario cambia de idioma MIENTRAS HAY UNA BÚSQUEDA ACTIVA,
+  la caché seguirá devolviendo las traducciones del idioma anterior hasta la próxima
+  llamada a setMenuSections().
+
+  setMenuSections() limpia la caché (línea 31) y se llama desde el componente padre
+  en onLangChange. Sin embargo, si el evento de cambio de idioma llega antes que
+  setMenuSections() complete, hay una ventana temporal con traducciones obsoletas.
+
+  Corrección: incluir el idioma activo como parte de la clave de caché, o invalidar
+  la caché explícitamente al inicio del onLangChange antes que nada.
+
+[BUG-07] MOBILE_MENU_DEFAULT_WIDTH exportado pero nunca utilizado
+  Archivo: mobile-menu.constants.ts, línea 5
+  ---------------------------------------------------
+  export const MOBILE_MENU_DEFAULT_WIDTH = 320; está definido y exportado pero no
+  se referencia en ningún archivo del proyecto. El componente usa MOBILE_MENU_MAX_WIDTH
+  como fallback en todos los casos (línea 310 de mobile-menu.ts:
+    const newWidth = this.menuElement.offsetWidth || MOBILE_MENU_MAX_WIDTH;
+  ).
+  Esta constante es dead code que puede confundir a futuros desarrolladores.
+
+================================================================================
+  SECCIÓN 2 — INCONSISTENCIAS
+================================================================================
+
+[INC-01] Prefijos de claves i18n mixtos para redes sociales
+  Archivo: mobile-menu.html, líneas 115-127
+  ---------------------------------------------------
+  Los aria-labels de los iconos sociales usan prefijos de namespace inconsistentes:
+    LinkedIn:  'SHARE.LINKEDIN'
+    GitHub:    'SOCIAL.GITHUB'
+    Twitter:   'SHARE.TWITTER'
+    Instagram: 'SOCIAL.INSTAGRAM'
+
+  Dos tienen prefijo SHARE.* y dos tienen SOCIAL.*. Deberían usar un único namespace
+  (preferiblemente SOCIAL.*) para mantener consistencia con las otras claves de redes
+  sociales del proyecto.
+
+[INC-02] Importaciones de @angular/router divididas en dos líneas
+  Archivo: mobile-menu.ts, líneas 22-23
+  ---------------------------------------------------
+  import { RouterLink, RouterLinkActive } from '@angular/router';
+  import { Router } from '@angular/router';
+
+  Son dos imports del mismo módulo. Deberían unificarse:
+  import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+
+[INC-03] Métodos de gestures: funciones flecha vs métodos regulares — inconsistente
+  Archivo: mobile-menu-gestures.ts, líneas 723, 793, 847
+  ---------------------------------------------------
+  handleEdgeSwipeMove, handleEdgeSwipeEnd y handleEdgeSwipeCancel están definidos
+  como propiedades de función flecha (private handleEdgeSwipeMove = (event) => {...})
+  mientras que todos los demás métodos de la clase son métodos regulares.
+
+  Esta inconsistencia no tiene justificación técnica visible (no hay callback binding
+  externo que requiera arrow functions aquí). Todos deberían ser métodos regulares
+  o todos arrow functions, manteniendo un estilo uniforme.
+
+[INC-04] Propiedades de clase declaradas en mitad de la clase, no al inicio
+  Archivo: mobile-menu-gestures.ts, líneas 378, 407, 717
+  ---------------------------------------------------
+  isOverlaySwipeActive = false (línea 378)
+  isEdgeSwipeActive = false (línea 407)
+  isEdgeSwipeEnabled = false (línea 717)
+
+  Estas propiedades de instancia están declaradas EN MEDIO de los métodos de la clase,
+  en vez de estar agrupadas en la sección de propiedades al principio. Esto viola las
+  convenciones de estructura de clases TypeScript y hace el código más difícil de leer.
+
+[INC-05] Razón de cierre del menú siempre 'button' en navegación desde hijos
+  Archivo: mobile-menu.html, líneas 51, 94
+  ---------------------------------------------------
+  Los componentes hijo (MobileMenuQuickAccess, MobileMenuSection) emiten el evento
+  (onClose) que el template del padre mapea a:
+    (onClose)="closeMobileMenu()"
+
+  closeMobileMenu() usa el valor por defecto 'button' como razón de cierre. Cuando
+  el usuario navega tocando un tile de acceso rápido o un enlace de sección, la razón
+  real es 'navigation', pero el MenuService.closeReason quedará registrado como 'button'.
+  Esto hace los datos de analytics inaccurados.
+
+[INC-06] Patrón de navegación contradictorio en logo y botón CTA de contacto
+  Archivo: mobile-menu.html, líneas 38-39 y 103
+  ---------------------------------------------------
+  El logo y el botón de contacto usan simultáneamente:
+    [routerLink]="..."
+    (click)="onMenuRouteNavigate(...); $event.preventDefault()"
+
+  El routerLink registra el href en el DOM (accesible por crawlers/screen readers),
+  pero el preventDefault() cancela la navegación del routerLink, delegando todo al
+  handler. Si JavaScript falla o el handler lanza excepción, el enlace no funciona.
+  Además, routerLinkActive="active" en el CTA de contacto (línea 103) puede activarse
+  antes de que la navegación real ocurra, generando un estado visual incorrecto.
+
+  Solución: usar solo (click) con lógica de navegación, sin [routerLink]. O usar
+  routerLink correctamente sin preventDefault.
+
+[INC-07] ChangeDetectionStrategy.OnPush solo en el componente padre, no en hijos
+  Archivos: mobile-menu-section.ts, mobile-menu-quick-access.ts, mobile-menu-search.ts
+  ---------------------------------------------------
+  MobileMenu (padre) usa ChangeDetectionStrategy.OnPush, pero sus tres componentes
+  hijo NO lo declaran, por lo que usan la estrategia Default. Esto significa que los
+  hijos ejecutan detección de cambios en cada ciclo global, anulando gran parte del
+  beneficio de OnPush en el padre.
+
+  Los tres componentes hijo deberían agregar:
+    changeDetection: ChangeDetectionStrategy.OnPush
+
+[INC-08] La grilla de acceso rápido tiene 4 tiles pero 3 columnas
+  Archivos: mobile-menu-quick-access.ts (4 tiles), mobile-menu.scss línea 279
+  ---------------------------------------------------
+  El CSS define: grid-template-columns: repeat(3, 1fr)
+  Pero hay 4 tiles de acceso rápido (Contacto, Precios, FAQ, Soporte).
+
+  Esto crea una fila con 3 tiles y una segunda fila con solo 1 tile, quedando un
+  layout visualmente desequilibrado. Opciones: cambiar a 2x2 (repeat(2, 1fr)) o
+  añadir un quinto tile para completar la fila de 3.
+
+================================================================================
+  SECCIÓN 3 — MALAS PRÁCTICAS
+================================================================================
+
+[MP-01] ngOnInit vacío con comentario "reserved"
+  Archivo: mobile-menu.ts, línea 208
+  ---------------------------------------------------
+  ngOnInit(): void { /* reserved */ }
+
+  Si la interfaz OnInit está implementada pero el método no hace nada, debe eliminarse
+  junto con la declaración "implements OnInit". Dejar un método vacío con "reserved"
+  introduce ruido en el código y confunde a futuros desarrolladores que podrían asumir
+  que hay lógica pendiente.
+
+[MP-02] Prefijo "on" en EventEmitters de Output — contrario al style guide de Angular
+  Archivos: mobile-menu-section.ts, mobile-menu-quick-access.ts, mobile-menu-search.ts
+  ---------------------------------------------------
+  @Output() onToggle = new EventEmitter<string>();
+  @Output() onClose = new EventEmitter<void>();
+  @Output() onRouteNavigate = new EventEmitter<...>();
+  @Output() onSearchChange = new EventEmitter<string>();
+
+  El Angular Style Guide (guía oficial) indica que los Outputs NO deben tener prefijo
+  "on". El prefijo "on" es para los handlers (métodos que manejan eventos), no para los
+  outputs en sí. Los outputs deben nombrarse como el evento:
+    toggle, close, routeNavigate, searchChange
+
+  Esto también evita el anti-patrón de template (onClose)="onClose($event)".
+
+[MP-03] Tipo any[] en MobileMenuLink.route — pérdida de type safety
+  Archivo: mobile-menu.constants.ts, línea 35
+  ---------------------------------------------------
+  route?: any[];
+
+  Usar any[] elimina la verificación de tipos de TypeScript para las rutas. El tipo
+  correcto sería (string | number)[] ya que los segmentos de ruta son strings o números.
+  Mejor aún: definir un tipo alias como:
+    type RouteSegments = (string | number)[];
+
+  Además, MobileMenuLink mezcla route (interna) y href (externa) sin un discriminated
+  union type, lo que obliga a verificar ambas propiedades manualmente:
+    type InternalLink = { key: string; icon: string; route: RouteSegments };
+    type ExternalLink = { key: string; icon: string; href: string; external: true };
+    type MobileMenuLink = InternalLink | ExternalLink;
+
+[MP-04] currentState público en DrawerTransitionCoordinator
+  Archivo: drawer-transition-coordinator.ts, línea 23
+  ---------------------------------------------------
+  public currentState: DrawerState = DrawerState.CLOSED;
+
+  Una propiedad pública mutable en una clase de coordinación de estado es peligrosa —
+  cualquier código externo puede corromper el estado de la máquina de estados finitos.
+  Debe ser privada con un getter de solo lectura:
+    private _currentState: DrawerState = DrawerState.CLOSED;
+    get currentState(): DrawerState { return this._currentState; }
+
+[MP-05] MobileMenuAccessibility instanciado con new en constructor — no testeable
+  Archivo: mobile-menu.ts, línea 167
+  ---------------------------------------------------
+  this.a11y = new MobileMenuAccessibility(this.el, this.isBrowser);
+
+  Al instanciar la clase directamente, es imposible mockearla en tests sin reemplazar
+  toda la clase. Debería ser un servicio Angular inyectable o al menos recibirse como
+  un parámetro del constructor para facilitar la inyección de dependencias.
+
+[MP-06] searchController es público pero debería ser protegido
+  Archivo: mobile-menu.ts, línea 92
+  ---------------------------------------------------
+  public searchController = inject(MobileMenuSearchController);
+
+  Solo necesita ser público porque el template lo accede. En Angular, los templates
+  acceden a propiedades protected sin problema. Cambiar a protected mejora la
+  encapsulación y previene el uso externo accidental.
+
+[MP-07] afterNextRender llamado dentro de un event handler
+  Archivo: mobile-menu.ts, líneas 486-488
+  ---------------------------------------------------
+  onSearchChange(query: string): void {
+    afterNextRender(() => {
+      this.a11y.refreshFocusableElements();
+    }, { injector: this.injector });
+  }
+
+  afterNextRender() está diseñado para ser llamado durante la fase de inicialización
+  del componente (constructor, ngOnInit, ngAfterViewInit), no dentro de handlers de
+  eventos que se ejecutan repetidamente. Aunque pasar el injector lo hace funcionar
+  técnicamente, crea un nuevo scheduled callback en cada pulsación de tecla de búsqueda,
+  lo que puede generar múltiples callbacks pendientes simultáneos.
+
+  Alternativa: usar un simple setTimeout con 0ms delay, o llamar a
+  refreshFocusableElements() directamente después de cdRef.markForCheck().
+
+[MP-08] handleTransitionEnd duplica lógica de verificación de estado
+  Archivo: drawer-transition-coordinator.ts, líneas 137 y 156
+  ---------------------------------------------------
+  La misma condición:
+    if (this.currentState === DrawerState.OPENING || this.currentState === DrawerState.CLOSING)
+  aparece tanto dentro del listener de transitionend como en el fallback timer.
+  Esto es duplicación de código que debería extraerse a un método privado:
+    private finalizeTransition(targetState: DrawerState, callback?: () => void): void {...}
+
+[MP-09] prefersReducedMotion() crea una nueva instancia de MediaQueryList en cada llamada
+  Archivo: mobile-menu.ts, líneas 414-416
+  ---------------------------------------------------
+  private prefersReducedMotion(): boolean {
+    return this.isBrowser && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  window.matchMedia() es llamado cada vez que se evalúa esta función. Aunque los
+  navegadores moderados cachean MediaQueryList internamente, la práctica correcta es
+  crear la instancia una vez y reutilizarla:
+    private readonly reducedMotionMQL = window.matchMedia('(prefers-reduced-motion: reduce)');
+    private prefersReducedMotion(): boolean {
+      return this.isBrowser && this.reducedMotionMQL.matches;
+    }
+  Esto también permitiría escuchar el evento change para reaccionar dinámicamente.
+
+[MP-10] URLs de redes sociales hardcodeadas en el template
+  Archivo: mobile-menu.html, líneas 115-127
+  ---------------------------------------------------
+  Los URLs de redes sociales están escritos directamente en el template:
+    href="https://linkedin.com"
+    href="https://github.com/jsl-technology"
+    href="https://twitter.com/jsl_tech"
+    href="https://instagram.com/jsl_tech"
+
+  Estos deberían estar en un archivo de configuración o constantes para facilitar
+  el mantenimiento (si la cuenta de Twitter cambia a X, hay que buscar el hardcode).
+
+[MP-11] @keyframes pulse definido dentro de una regla SCSS
+  Archivo: mobile-menu.scss, líneas 203-216
+  ---------------------------------------------------
+  La animación @keyframes pulse está anidada dentro de .mobile-menu-no-results.
+  Aunque la especificación CSS moderna lo permite, muchos compiladores SCSS/PostCSS
+  lo extraen al ámbito global de todas formas. El nombre "pulse" es muy genérico y
+  puede colisionar con otras animaciones del proyecto. Recomendaciones:
+  1. Moverlo al nivel raíz del SCSS
+  2. Renombrarlo a algo específico: mm-no-results-pulse
+
+[MP-12] -webkit-overflow-scrolling: touch es propiedad deprecada
+  Archivo: mobile-menu.scss, línea 61
+  ---------------------------------------------------
+  -webkit-overflow-scrolling: touch fue deprecado por Apple y eliminado en iOS 13+.
+  Es un no-op en todos los navegadores modernos y puede ser eliminado sin efecto.
+
+[MP-13] padding duplicado en mobile-menu-footer
+  Archivo: mobile-menu.scss, líneas 623 y 631
+  ---------------------------------------------------
+  .mobile-menu-footer {
+    padding: 32px 24px;          // línea 623
+    ...
+    padding-bottom: max(32px, env(safe-area-inset-bottom));  // línea 631
+  }
+
+  La propiedad padding-bottom sobreescribe el bottom del shorthand padding anterior.
+  Aunque es correcto en resultado, es confuso. Mejor unificarlo en una sola declaración:
+    padding: 32px 24px max(32px, env(safe-area-inset-bottom));
+  O usar logical properties separadas:
+    padding-inline: 24px;
+    padding-block-start: 32px;
+    padding-block-end: max(32px, env(safe-area-inset-bottom));
+
+[MP-14] MobileMenuLink sin discriminated union para route vs href
+  Archivo: mobile-menu.constants.ts, líneas 33-39
+  ---------------------------------------------------
+  La interfaz actual permite que route y href sean ambas undefined, o que ambas
+  estén definidas simultáneamente, lo que es un estado inválido. En mobile-menu-section.ts
+  líneas 39-56 hay @if (link.route) / @else if (link.href) para manejar esto.
+
+  Un discriminated union type previene el estado inválido en tiempo de compilación:
+    type InternalLink = { key: string; icon: string; route: (string | number)[] };
+    type ExternalLink = { key: string; icon: string; href: string; external: true };
+    export type MobileMenuLink = InternalLink | ExternalLink;
+
+================================================================================
+  SECCIÓN 4 — PROBLEMAS EN TESTS
+================================================================================
+
+[TEST-01] Mocks tipados como any — pierde verificación TypeScript
+  Archivo: mobile-menu.spec.ts, líneas 37-43
+  ---------------------------------------------------
+  let menuServiceMock: any;
+  let directionServiceMock: any;
+  let analyticsServiceMock: any;
+
+  Tipando los mocks como any, TypeScript no verifica que los mocks implementen la
+  interfaz real del servicio. Si el servicio cambia su API, los tests compilarán
+  correctamente pero fallarán en runtime. Usar tipos parciales:
+    let menuServiceMock: Partial<MenuService>;
+
+[TEST-02] RouterTestingModule está deprecado en Angular moderno
+  Archivo: mobile-menu.spec.ts, línea 11
+  ---------------------------------------------------
+  import { RouterTestingModule } from '@angular/router/testing';
+
+  RouterTestingModule está deprecado desde Angular 16+. La alternativa es:
+    import { provideRouter } from '@angular/router';
+    providers: [provideRouter([])]
+
+[TEST-03] Tests usan setTimeout real en lugar de fakeAsync/tick
+  Archivo: mobile-menu.spec.ts, líneas 169 y 178
+  ---------------------------------------------------
+  await new Promise(resolve => setTimeout(resolve, 500));
+
+  Esto hace el test lento (500ms de espera real) y frágil (dependiente de timing de
+  la máquina). La forma correcta con Angular testing:
+    fakeAsync(() => {
+      menuServiceMock.isMobileMenuOpen.set(true);
+      fixture.detectChanges();
+      tick(500);
+      fixture.detectChanges();
+      expect(main.hasAttribute('inert')).toBeTrue();
+    })
+
+[TEST-04] Test "should trap focus when open" no verifica nada útil
+  Archivo: mobile-menu.spec.ts, líneas 131-144
+  ---------------------------------------------------
+  El test dispara un evento Tab sobre el menú y luego verifica:
+    expect(document.activeElement).not.toBeNull();
+
+  document.activeElement NUNCA es null (en el peor caso es document.body), por lo que
+  este assertion siempre pasa independientemente de si el focus trap funciona o no.
+  El test da una falsa sensación de seguridad.
+
+[TEST-05] Cobertura insuficiente de escenarios críticos
+  Archivo: mobile-menu.spec.ts
+  ---------------------------------------------------
+  No hay tests para:
+  - Gestos de swipe (toda la lógica de mobile-menu-gestures.ts)
+  - Comportamiento RTL del drawer
+  - Cleanup correcto en ngOnDestroy (remoción de event listeners)
+  - Estados intermedios del drawer (OPENING, CLOSING, DRAGGING)
+  - DrawerTransitionCoordinator
+  - MobileMenuAccessibility (focus trap real, sentinel navigation)
+  - Búsqueda con cambio de idioma (invalidación de caché)
+
+================================================================================
+  SECCIÓN 5 — MEJORAS SUGERIDAS
+================================================================================
+
+[MEJ-01] Agregar guard de producción al método debugGesture
+  Archivo: mobile-menu-gestures.ts, línea 149
+  ---------------------------------------------------
+  Como mínimo, el debug logging debería estar condicionado:
+    import { isDevMode } from '@angular/core';
+    private debugGesture(event: string, details = {}): void {
+      if (!isDevMode()) return;
+      console.log('[MobileMenuGestures]', event, details);
+    }
+
+[MEJ-02] Consolidar la lógica de finalización de transición en DrawerTransitionCoordinator
+  Archivo: drawer-transition-coordinator.ts, líneas 137-163
+  ---------------------------------------------------
+  Extraer el bloque duplicado a un método:
+    private completeTransition(targetState: DrawerState, callback?: () => void): void {
+      this.clearTransitionListeners();
+      if (this.currentState === DrawerState.OPENING || this.currentState === DrawerState.CLOSING) {
+        this.currentState = targetState;
+        this.config.onStateChange(targetState);
+        callback?.();
+        this.config.onTransitionComplete?.();
+        this.cdRef.markForCheck();
+      }
+    }
+
+[MEJ-03] Tipar correctamente MobileMenuLink con discriminated union
+  Detallado en MP-14.
+
+[MEJ-04] Agregar ChangeDetectionStrategy.OnPush a los componentes hijo
+  Detallado en INC-07.
+
+[MEJ-05] Usar 100dvh en lugar de 100vh para el drawer
+  Detallado en BUG-05.
+
+[MEJ-06] Mover las URLs de redes sociales a una constante
+  Crear en mobile-menu.constants.ts:
+    export const SOCIAL_LINKS = {
+      linkedin:  'https://linkedin.com/company/jsl-technology',
+      github:    'https://github.com/jsl-technology',
+      twitter:   'https://twitter.com/jsl_tech',
+      instagram: 'https://instagram.com/jsl_tech',
+    } as const;
+
+[MEJ-07] Eliminar -webkit-overflow-scrolling: touch
+  Detallado en MP-12. Propiedad deprecada que puede eliminarse.
+
+[MEJ-08] Mejorar la caché de traducciones para ser idioma-aware
+  Archivo: mobile-menu-search.controller.ts
+  ---------------------------------------------------
+  Agregar el idioma a la clave de caché:
+    private getTranslatedLowercase(key: string): string {
+      const lang = this.translate.currentLang;
+      const cacheKey = `${lang}:${key}`;
+      const cached = this.translationCache.get(cacheKey);
+      if (cached !== undefined) return cached;
+      const translated = this.translate.instant(key).toLowerCase();
+      this.translationCache.set(cacheKey, translated);
+      return translated;
+    }
+
+[MEJ-09] Eliminar MOBILE_MENU_DEFAULT_WIDTH o utilizarlo
+  Detallado en BUG-07. Eliminar la constante o usarla como fallback en updateMenuWidth()
+  cuando offsetWidth es 0.
+
+[MEJ-10] Observar MediaQueryList para reduced motion dinámicamente
+  Reemplazar la evaluación en cada llamada (MP-09) con un listener que actualice un
+  campo cuando el usuario cambia la preferencia en el sistema.
+
+[MEJ-11] Considerar height: 100svh como alternativa más conservadora a 100dvh
+  100svh (small viewport height) usa el tamaño mínimo del viewport (con UI visible),
+  garantizando que el contenido nunca quede oculto por la barra del navegador:
+    height: 100vh;         /* fallback */
+    height: 100svh;        /* small viewport — seguro para iOS */
+
+[MEJ-12] Lógica del accordion — considerar aplicar inert durante CLOSING también
+  Archivo: mobile-menu-section.ts, línea 33
+  ---------------------------------------------------
+  Actualmente [attr.inert]="!isExpanded ? '' : null" aplica inert cuando la sección
+  no está expandida. Durante la animación de cierre (cuando expanded pasa a false),
+  el inert se aplica INMEDIATAMENTE, cortando la animación visualmente para usuarios
+  de teclado. Podría considerarse una pequeña demora antes de aplicar inert para
+  permitir que la animación complete.
+
+================================================================================
+  RESUMEN EJECUTIVO
+================================================================================
+
+Bugs críticos:    2  (console.log en producción, mutación de @Input)
+Bugs importantes: 5  (doble muestreo de velocidad, 100vh en iOS, etc.)
+Inconsistencias:  8  (i18n mixto, changeDetection, grilla desbalanceada, etc.)
+Malas prácticas: 14  (tipos any, campos públicos incorrectos, deprecados, etc.)
+Problemas tests:  5  (mocks tipados como any, RouterTestingModule, assertions débiles)
+Mejoras:         12  (consolidaciones, mejoras de rendimiento y accesibilidad)
+
+El código es, en general, sofisticado y bien estructurado para la lógica de gestures
+y la máquina de estados del drawer. Los principales problemas son:
+  1. El console.log de debug que debe desactivarse en producción de inmediato.
+  2. La mutación del @Input en MobileMenuSearch que viola el flujo de datos de Angular.
+  3. La falta de OnPush en los componentes hijo que elimina el beneficio de rendimiento.
+  4. Las inconsistencias de tipado (any[]) que reducen la seguridad del código.
+
+================================================================================

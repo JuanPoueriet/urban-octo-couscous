@@ -71,10 +71,12 @@ export class MobileMenuSearchController {
   }
 
   private getTranslatedLowercase(key: string): string {
-    const cached = this.translationCache.get(key);
+    const lang = this.translate.currentLang ?? this.translate.defaultLang ?? 'es';
+    const cacheKey = `${lang}:${key}`;
+    const cached = this.translationCache.get(cacheKey);
     if (cached !== undefined) return cached;
     const translated = this.translate.instant(key).toLowerCase();
-    this.translationCache.set(key, translated);
+    this.translationCache.set(cacheKey, translated);
     return translated;
   }
 

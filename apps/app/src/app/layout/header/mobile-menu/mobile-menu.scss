@@ -42,7 +42,8 @@ $mm-overlay-duration:   0.3s;
     inset-inline-start: 0;
     width: 85%;
     max-width: $mm-drawer-max-width;
-    height: 100vh;
+    height: 100vh; /* fallback for browsers without svh support */
+    height: 100svh; /* small viewport height — never hidden by browser UI */
     background: rgba(18, 18, 18, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -58,7 +59,6 @@ $mm-overlay-duration:   0.3s;
     box-shadow: 10px 0 40px rgba(0, 0, 0, 0.5);
 
     touch-action: pan-y;
-    -webkit-overflow-scrolling: touch;
 
     // Ensure the drawer is hidden from the rendering tree when fully closed (P7)
     // This also helps Playwright's to_be_visible assertion.
@@ -191,27 +191,12 @@ $mm-overlay-duration:   0.3s;
         inset: -5px;
         border: 1px solid rgba(var(--primary-rgb), 0.2);
         border-radius: 50%;
-        animation: pulse 2s infinite;
+        animation: mm-no-results-pulse 2s infinite;
       }
 
       lucide-icon {
         width: 36px;
         height: 36px;
-      }
-    }
-
-    @keyframes pulse {
-      0% {
-        transform: scale(1);
-        opacity: 0.5;
-      }
-      50% {
-        transform: scale(1.1);
-        opacity: 0.2;
-      }
-      100% {
-        transform: scale(1);
-        opacity: 0.5;
       }
     }
 
@@ -276,7 +261,7 @@ $mm-overlay-duration:   0.3s;
 
     .quick-access-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 10px;
     }
 
@@ -620,7 +605,9 @@ $mm-overlay-duration:   0.3s;
   }
 
   .mobile-menu-footer {
-    padding: 32px 24px;
+    padding-inline: 24px;
+    padding-block-start: 32px;
+    padding-block-end: max(32px, env(safe-area-inset-bottom));
     border-top: 1px solid rgba(255, 255, 255, 0.06);
     background: rgba(18, 18, 18, 0.4);
     backdrop-filter: blur(10px);
@@ -628,7 +615,6 @@ $mm-overlay-duration:   0.3s;
     flex-direction: column;
     align-items: center;
     gap: 20px;
-    padding-bottom: max(32px, env(safe-area-inset-bottom));
     flex-shrink: 0;
 
     .mobile-socials {
@@ -672,6 +658,15 @@ $mm-overlay-duration:   0.3s;
       text-transform: uppercase;
     }
   }
+}
+
+// ─── Animations ───────────────────────────────────────────────────────────────
+// Defined at root level to avoid potential SCSS/PostCSS nesting issues and to
+// prevent name collisions with other "pulse" animations in the project.
+@keyframes mm-no-results-pulse {
+  0%   { transform: scale(1);   opacity: 0.5; }
+  50%  { transform: scale(1.1); opacity: 0.2; }
+  100% { transform: scale(1);   opacity: 0.5; }
 }
 
 // Overlay backdrop:
