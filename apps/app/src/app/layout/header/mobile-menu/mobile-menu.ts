@@ -202,6 +202,9 @@ export class MobileMenu implements OnDestroy, AfterViewInit {
 
       if (this.gestureHandler) {
         this.gestureHandler.setEdgeSwipeEnabled(isMobile && !isOpen);
+        // Sincronizar el cooldown de gestos con cualquier cambio de estado
+        // reactivo (p.ej. manual via Header o programático).
+        this.gestureHandler.startCooldown();
       }
 
       if (isOpen && !isMobile) {

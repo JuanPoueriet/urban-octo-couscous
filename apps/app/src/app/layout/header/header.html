@@ -334,12 +334,18 @@
     
     <!-- Header Controls -->
     <div class="header__controls">
-      <button class="header__search-btn" (click)="toggleSearch()" [attr.aria-label]="'ARIA.SEARCH' | translate">
+      <button
+        type="button"
+        class="header__search-btn"
+        (click)="toggleSearch()"
+        [attr.aria-label]="'ARIA.SEARCH' | translate"
+      >
         <lucide-icon name="Search" [size]="20"></lucide-icon>
       </button>
 
       <jsl-language-switcher class="header__mobile-lang-switcher" [allowSuggestion]="true"></jsl-language-switcher>
       <button
+        type="button"
         class="header__mobile-toggle jsl-mm-toggle"
         (click)="toggleMobileMenu($event)"
         [attr.aria-label]="'ARIA.TOGGLE_MENU' | translate"

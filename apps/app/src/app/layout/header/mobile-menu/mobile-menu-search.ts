@@ -30,6 +30,7 @@ import { LucideAngularModule } from 'lucide-angular';
         />
         @if (searchQuery) {
           <button
+            type="button"
             class="clear-search"
             (click)="clearSearch()"
             [attr.aria-label]="'SEARCH.CLEAR_SEARCH' | translate"
