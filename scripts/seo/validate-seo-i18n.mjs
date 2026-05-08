@@ -4,9 +4,12 @@ import path from 'node:path';
 const ROUTES_FILE = path.resolve('apps/app/src/app/app.routes.ts');
 const I18N_DIR = path.resolve('apps/app/src/assets/i18n');
 const SUPPORTED_LANGS = ['en', 'es', 'fr', 'de', 'it', 'pt', 'ja', 'ko', 'zh', 'ar', 'ht'];
+const ASIAN_LANGS = ['ja', 'ko', 'zh'];
 
 const TITLE_MIN_LENGTH = 15;
+const TITLE_MIN_LENGTH_ASIAN = 5;
 const DESCRIPTION_MIN_LENGTH = 50;
+const DESCRIPTION_MIN_LENGTH_ASIAN = 25;
 const I18N_COVERAGE_GOAL = 0.95;
 const I18N_MIN_COVERAGE_DEFAULT = Number.parseFloat(process.env.I18N_MIN_COVERAGE_DEFAULT ?? '0.55');
 const I18N_MIN_COVERAGE_AR = Number.parseFloat(process.env.I18N_MIN_COVERAGE_AR ?? '0.55');
@@ -91,7 +94,8 @@ async function main() {
         continue;
       }
 
-      if (!validateLength(value, TITLE_MIN_LENGTH)) {
+      const minTitleLen = ASIAN_LANGS.includes(lang) ? TITLE_MIN_LENGTH_ASIAN : TITLE_MIN_LENGTH;
+      if (!validateLength(value, minTitleLen)) {
         warnings.push(`[${lang}] SEO title too short (${value.length} chars) for key "${key}"`);
       }
     }
@@ -105,7 +109,8 @@ async function main() {
         continue;
       }
 
-      if (!validateLength(value, DESCRIPTION_MIN_LENGTH)) {
+      const minDescLen = ASIAN_LANGS.includes(lang) ? DESCRIPTION_MIN_LENGTH_ASIAN : DESCRIPTION_MIN_LENGTH;
+      if (!validateLength(value, minDescLen)) {
         warnings.push(`[${lang}] SEO description too short (${value.length} chars) for key "${key}"`);
       }
     }
