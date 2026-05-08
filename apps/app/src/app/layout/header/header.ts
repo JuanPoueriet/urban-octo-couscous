@@ -127,12 +127,7 @@ export class Header implements OnInit, OnDestroy, AfterViewInit {
     }
     this.lastToggleTime = now;
 
-    if (this.menuService.isMobileMenuOpen()) {
-      this.menuService.close('button');
-    } else {
-      this.menuService.open();
-    }
-
+    this.menuService.toggle('button');
     this.closeDropdowns();
   }
 

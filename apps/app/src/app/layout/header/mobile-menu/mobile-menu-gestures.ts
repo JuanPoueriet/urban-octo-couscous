@@ -32,6 +32,8 @@ export interface MobileMenuGestureConfig {
   isAnimating: () => boolean;
   /** Returns true if the pointer target is inside the drawer element. */
   isTargetInsideMenu?: (target: HTMLElement) => boolean;
+  /** Returns true if the pointer target is the toggle button. */
+  isTargetToggleButton?: (target: HTMLElement) => boolean;
   /** Returns the current visual translateX of the drawer (needed to resume gestures mid-animation). */
   getCurrentTranslateX: () => number;
 
@@ -184,12 +186,16 @@ export class MobileMenuGestures implements GestureHandler {
     }
   }
 
+  /**
+   * Returns the signed velocity (px/ms).
+   * Positive = rightward movement, Negative = leftward movement.
+   */
   private getInstantaneousVelocity(): number {
     if (this.velocityBuffer.length < 2) return 0;
     const first = this.velocityBuffer[0];
     const last  = this.velocityBuffer[this.velocityBuffer.length - 1];
     const dt    = last.t - first.t;
-    return dt > 0 ? Math.abs(last.x - first.x) / dt : 0;
+    return dt > 0 ? (last.x - first.x) / dt : 0;
   }
 
   private resetVelocityBuffer(): void {
@@ -199,13 +205,14 @@ export class MobileMenuGestures implements GestureHandler {
   private detectHorizontalGesture(
     absDiffX: number,
     absDiffY: number,
-    instantaneousVelocity: number
+    signedVelocity: number
   ): boolean {
     if (absDiffY > this.verticalLockThreshold && absDiffY > absDiffX * GESTURE_ANGULAR_RATIO) {
       return false;
     }
 
-    const isFastHorizontal        = instantaneousVelocity > this.velocityThreshold * 0.8;
+    const velocityMagnitude       = Math.abs(signedVelocity);
+    const isFastHorizontal        = velocityMagnitude > this.velocityThreshold * 0.8;
     const hasClearDirectionalIntent = absDiffX > absDiffY * (GESTURE_ANGULAR_RATIO * 1.5);
 
     if (isFastHorizontal && hasClearDirectionalIntent && absDiffX > 3) {
@@ -291,6 +298,12 @@ export class MobileMenuGestures implements GestureHandler {
       this.debugGesture('pointer_down_ignored', { reason: 'not_primary', pointerId: event.pointerId });
       return false;
     }
+
+    const target = event.target as HTMLElement;
+    if (this.config.isTargetToggleButton?.(target)) {
+      this.debugGesture('pointer_down_ignored', { reason: 'toggle_button', pointerId: event.pointerId });
+      return false;
+    }
     if (event.pointerType === 'mouse' && event.button !== 0) {
       this.debugGesture('pointer_down_ignored', { reason: 'non_left_click', pointerId: event.pointerId, button: event.button });
       return false;
@@ -304,7 +317,6 @@ export class MobileMenuGestures implements GestureHandler {
     const isRtl = this.sessionIsRtl;
 
     if (this.config.isOpen()) {
-      const target = event.target as HTMLElement;
       if (target?.classList.contains('jsl-mm-overlay')) {
         this.startOverlayInteraction(event);
         this.debugGesture('overlay_interaction_detected', { pointerId: event.pointerId, x: event.clientX, y: event.clientY });
@@ -328,7 +340,6 @@ export class MobileMenuGestures implements GestureHandler {
 
     const isOpenOrAnimating = this.config.isOpen() || this.config.isAnimating();
     if (isOpenOrAnimating) {
-      const target       = event.target as HTMLElement;
       const isInsideMenu = this.config.isTargetInsideMenu
         ? this.config.isTargetInsideMenu(target)
         : this.isPointerWithinMenuBounds(event.clientX);
@@ -560,11 +571,13 @@ export class MobileMenuGestures implements GestureHandler {
     const isRtl    = this.sessionIsRtl;
 
     const isValidDirection = isRtl ? diffX > 0 : diffX < 0;
+    const absVelocity      = Math.abs(velocity);
     const isSwipeToClose   =
       this.isDragging &&
       this.isHorizontalGesture &&
-      isValidDirection &&
-      (velocity > this.velocityThreshold || absDiffX > this.minSwipeDistance);
+      (absVelocity > this.velocityThreshold
+        ? (isRtl ? velocity > 0 : velocity < 0)
+        : isValidDirection && absDiffX > this.minSwipeDistance);
 
     this.config.onUpdateTranslate(this.lastDragPosition, null);
 
@@ -597,6 +610,12 @@ export class MobileMenuGestures implements GestureHandler {
         absDiffX,
         absDiffY,
       });
+      // Restore state if gesture was cancelled on overlay
+      if (this.config.isOpen()) {
+        this.config.onOpen();
+      } else {
+        this.config.onClose();
+      }
     }
 
     this.resetDragState();
@@ -608,22 +627,37 @@ export class MobileMenuGestures implements GestureHandler {
 
     if (!this.isDragging || !this.isHorizontalGesture) {
       this.debugGesture('drawer_gesture_cancel', { reason: 'not_horizontal_or_not_dragging' });
-      this.config.onUpdateTranslate(this.lastDragPosition, null);
-      this.trackMetric('gesture_cancel', { source: 'drawer' });
+      const lastPos = this.lastDragPosition;
+      const wasOpen = this.config.isOpen();
       this.resetDragState();
+      this.config.onUpdateTranslate(lastPos, null);
+
+      // If we interrupted an animation but didn't actually drag, resume the
+      // previous state to ensure the transition coordinator completes.
+      if (wasOpen) {
+        this.config.onOpen();
+      } else {
+        this.config.onClose();
+      }
+
+      this.trackMetric('gesture_cancel', { source: 'drawer' });
       return;
     }
 
     const diffX     = this.currentX - this.startX;
     const velocity  = this.getInstantaneousVelocity();
+    const absVelocity = Math.abs(velocity);
     const menuWidth = this.sessionMenuWidth;
     const progress  = this.getProgress(this.lastDragPosition, menuWidth);
     const isRtl     = this.sessionIsRtl;
 
     let shouldStayOpen: boolean;
 
-    if (velocity > this.velocityThreshold) {
-      shouldStayOpen = isRtl ? diffX < 0 : diffX > 0;
+    if (absVelocity > this.velocityThreshold) {
+      // Prioritize final flick direction over total displacement.
+      // RTL: negative velocity is left (open), positive is right (close).
+      // LTR: positive velocity is right (open), negative is left (close).
+      shouldStayOpen = isRtl ? velocity < 0 : velocity > 0;
     } else if (progress > this.openThreshold) {
       shouldStayOpen = true;
     } else if (Math.abs(diffX) > this.minSwipeDistance) {
@@ -767,6 +801,7 @@ export class MobileMenuGestures implements GestureHandler {
 
     const diffX     = this.currentX - this.startX;
     const velocity  = this.getInstantaneousVelocity();
+    const absVelocity = Math.abs(velocity);
     const menuWidth = this.sessionMenuWidth;
     const progress  = this.getProgress(this.lastDragPosition, menuWidth);
 
@@ -774,7 +809,7 @@ export class MobileMenuGestures implements GestureHandler {
     const isValidDirection = isRtl ? diffX < 0 : diffX > 0;
 
     const shouldOpen =
-      (velocity > this.velocityThreshold && isValidDirection) ||
+      (absVelocity > this.velocityThreshold ? (isRtl ? velocity < 0 : velocity > 0) : false) ||
       progress > this.openThreshold ||
       (Math.abs(diffX) > this.minSwipeDistance && isValidDirection);
 
