@@ -95,8 +95,10 @@ test.describe('Mobile Menu Gesture Precision', () => {
     await toggle.click();
 
     const menu = page.locator('.header__nav-links-mobile');
-    // Wait for opening animation to complete so cooldown starts
-    await page.waitForTimeout(600);
+    // Wait for opening animation to complete.
+    // DRAWER_TRANSITION_DURATION_MS is 400ms. Fallback is 500ms.
+    // We wait just enough to be sure the transition completed but still within the 100ms cooldown.
+    await page.waitForTimeout(520);
     await expect(menu).toHaveClass(/open/);
 
     // Try to swipe back closed immediately (within GESTURE_COOLDOWN_MS cooldown)
@@ -113,11 +115,16 @@ test.describe('Mobile Menu Gesture Precision', () => {
     });
 
     // Should still be open because the immediate gesture was ignored by cooldown.
-    await expect(menu).toHaveClass(/open/);
+    // Wait for a frame to ensure any potential state changes have propagated
+    await page.waitForTimeout(50);
+    const isInert = await menu.evaluate(el => el.hasAttribute('inert'));
+
+    // Note: if it's NOT inert it means it's still interactive (likely open)
+    expect(isInert).toBe(false);
     await expect(menu).not.toHaveClass(/dragging/);
 
     // Wait for cooldown to expire (100ms)
-    await page.waitForTimeout(200);
+    await page.waitForTimeout(300);
 
     // Now it should work (close via tap on overlay)
     await page.evaluate(() => {

@@ -40,11 +40,15 @@ describe('Header', () => {
     expect(component.isMobileMenuOpen).toBe(false);
   });
 
-  it('should toggle mobile menu on toggleMobileMenu()', () => {
+  it('should toggle mobile menu on toggleMobileMenu()', async () => {
     expect(menuService.isMobileMenuOpen()).toBe(false);
 
     component.toggleMobileMenu();
     expect(menuService.isMobileMenuOpen()).toBe(true);
+
+    // Wait for the guard period (350ms) to pass.
+    // In zoneless, we can use a standard promise-based delay.
+    await new Promise(resolve => setTimeout(resolve, 400));
 
     component.toggleMobileMenu();
     expect(menuService.isMobileMenuOpen()).toBe(false);
