@@ -346,6 +346,7 @@ export class MobileMenu implements OnDestroy, AfterViewInit {
       isAnimating: () =>
         this.drawerState === DrawerState.OPENING || this.drawerState === DrawerState.CLOSING,
       isTargetInsideMenu: (target: HTMLElement) => !!this.menuElement?.contains(target),
+      isTargetToggleButton: (target: HTMLElement) => target.closest('.jsl-mm-toggle') !== null,
       getCurrentTranslateX: () => this.menuTranslateX,
 
       onUpdateTranslate: (translateX, progress, scaleX, transformOrigin) => {
