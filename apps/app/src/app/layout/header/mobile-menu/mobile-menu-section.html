@@ -14,47 +14,43 @@
     <lucide-icon name="ChevronDown" class="chevron"></lucide-icon>
   </button>
 
-  <!-- El atributo [inert] se elimina cuando isExpanded es true.
-       La animación CSS (grid-template-rows: 0fr → 1fr) dura ~400ms, así que
-       durante la expansión el contenido puede ser parcialmente visible mientras
-       ya es interactivo. Esto es intencional: la interactividad inmediata beneficia
-       a los usuarios de teclado y lectores de pantalla. -->
-  <div
-    [id]="'accordion-' + sectionId + '-content'"
-    class="accordion-content"
-    role="region"
-    [attr.aria-labelledby]="'accordion-' + sectionId + '-header'"
-    [attr.inert]="!isExpanded ? '' : null"
-  >
-    <ul class="mobile-links-list">
-      @for (link of links; track link.key) {
-        @if (shouldShowLink(link.key)) {
-          <li>
-            @if (isInternalLink(link)) {
-              <a
-                [routerLink]="link.route"
-                routerLinkActive="active"
-                (click)="handleRouteClick(link.route, link.key, $event)"
-              >
-                <lucide-icon [name]="link.icon"></lucide-icon>
-                {{ link.key | translate }}
-              </a>
-            } @else {
-              <a
-                [href]="link.href"
-                target="_blank"
-                rel="noopener noreferrer"
-                (click)="close.emit()"
-                [attr.aria-label]="(link.key | translate) + ' (' + ('ARIA.EXTERNAL_LINK' | translate) + ')'"
-              >
-                <lucide-icon [name]="link.icon"></lucide-icon>
-                {{ link.key | translate }}
-                <lucide-icon name="ExternalLink" class="external-icon-inline"></lucide-icon>
-              </a>
-            }
-          </li>
+  @if (isExpanded) {
+    <div
+      [id]="'accordion-' + sectionId + '-content'"
+      class="accordion-content"
+      role="region"
+      [attr.aria-labelledby]="'accordion-' + sectionId + '-header'"
+    >
+      <ul class="mobile-links-list">
+        @for (link of links; track link.key) {
+          @if (shouldShowLink(link.key)) {
+            <li>
+              @if (isInternalLink(link)) {
+                <a
+                  [routerLink]="link.route"
+                  routerLinkActive="active"
+                  (click)="handleRouteClick(link.route, link.key, $event)"
+                >
+                  <lucide-icon [name]="link.icon"></lucide-icon>
+                  {{ link.key | translate }}
+                </a>
+              } @else {
+                <a
+                  [href]="link.href"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  (click)="close.emit()"
+                  [attr.aria-label]="(link.key | translate) + ' (' + ('ARIA.EXTERNAL_LINK' | translate) + ')'"
+                >
+                  <lucide-icon [name]="link.icon"></lucide-icon>
+                  {{ link.key | translate }}
+                  <lucide-icon name="ExternalLink" class="external-icon-inline"></lucide-icon>
+                </a>
+              }
+            </li>
+          }
         }
-      }
-    </ul>
-  </div>
+      </ul>
+    </div>
+  }
 </div>

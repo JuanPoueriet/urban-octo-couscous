@@ -18,6 +18,7 @@ import { ToastService } from './core/services/toast.service';
 import { CookieBannerComponent } from './shared/components/cookie-banner/cookie-banner';
 import { ScrollEngineService } from './core/services/scroll-engine.service';
 import { MenuService } from './core/services/menu.service';
+import { LanguageSuggestionComponent } from './shared/components/language-suggestion/language-suggestion';
 import Lenis from 'lenis';
 
 @Component({
@@ -33,6 +34,7 @@ import Lenis from 'lenis';
     WhatsAppButtonComponent,
     ToastComponent,
     CookieBannerComponent,
+    LanguageSuggestionComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',

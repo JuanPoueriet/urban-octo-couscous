@@ -12,13 +12,13 @@ import { LucideAngularModule } from 'lucide-angular';
   templateUrl: './language-suggestion.html',
   styleUrl: './language-suggestion.scss',
   animations: [
-    trigger('slideInOut', [
+    trigger('fadeScale', [
       transition(':enter', [
-        style({ transform: 'translateY(-10px)', opacity: 0 }),
-        animate('400ms cubic-bezier(0.16, 1, 0.3, 1)', style({ transform: 'translateY(0)', opacity: 1 }))
+        style({ transform: 'scale(0.94) translateY(8px)', opacity: 0 }),
+        animate('350ms cubic-bezier(0.16, 1, 0.3, 1)', style({ transform: 'scale(1) translateY(0)', opacity: 1 }))
       ]),
       transition(':leave', [
-        animate('300ms cubic-bezier(0.16, 1, 0.3, 1)', style({ transform: 'translateY(-10px)', opacity: 0 }))
+        animate('250ms cubic-bezier(0.4, 0, 1, 1)', style({ transform: 'scale(0.94) translateY(8px)', opacity: 0 }))
       ])
     ])
   ]

@@ -1,19 +1,21 @@
-<div *ngIf="suggestion$ | async as suggestion" class="language-suggestion" @slideInOut>
-  <div class="language-suggestion__arrow"></div>
-  <div class="language-suggestion__content">
+<div *ngIf="suggestion$ | async as suggestion" class="language-suggestion" @fadeScale role="status" aria-live="polite">
+  <div class="language-suggestion__body">
     <div class="language-suggestion__icon">
       <lucide-icon name="Languages"></lucide-icon>
     </div>
     <div class="language-suggestion__text">
       <p>{{ 'LANGUAGE_SUGGESTION.MESSAGE' | translate:{ currentLanguage: suggestion.currentName, targetLanguage: suggestion.name } }}</p>
     </div>
+    <div class="language-suggestion__actions">
+      <button (click)="onSwitch(suggestion.code)" class="btn-switch">
+        {{ 'LANGUAGE_SUGGESTION.SWITCH' | translate }}
+      </button>
+      <button (click)="onDismiss()" class="btn-close" aria-label="Close">
+        <lucide-icon name="X" [size]="18"></lucide-icon>
+      </button>
+    </div>
   </div>
-  <div class="language-suggestion__actions">
-    <button (click)="onSwitch(suggestion.code)" class="btn-switch">
-      {{ 'LANGUAGE_SUGGESTION.SWITCH' | translate }}
-    </button>
-    <button (click)="onDismiss()" class="btn-close" aria-label="Close">
-      <lucide-icon name="X" [size]="18"></lucide-icon>
-    </button>
+  <div class="language-suggestion__progress">
+    <div class="language-suggestion__progress-bar"></div>
   </div>
 </div>

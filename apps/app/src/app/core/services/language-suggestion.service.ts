@@ -1,15 +1,17 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
-import { BehaviorSubject, filter } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 export interface LanguageSuggestion {
   code: string;
   name: string;
   currentName: string;
 }
+
+const AUTO_DISMISS_MS = 10_000;
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +31,7 @@ export class LanguageSuggestionService {
     private router: Router
   ) {
     if (isPlatformBrowser(this.platformId)) {
-      // 1. Initial check after full page load
+      // Only check once on initial page load — not on SPA navigations.
       const onWindowLoad = () => {
         setTimeout(() => this.checkSuggestion(), 500);
       };
@@ -39,57 +41,38 @@ export class LanguageSuggestionService {
       } else {
         window.addEventListener('load', onWindowLoad, { once: true });
       }
-
-      // 2. Check on subsequent navigations
-      this.router.events.pipe(
-        filter(event => event instanceof NavigationEnd)
-      ).subscribe(() => {
-        // Delay to allow TranslateService to stabilize and guards to finish
-        setTimeout(() => this.checkSuggestion(), 500);
-      });
     }
   }
 
   private checkSuggestion() {
     if (!isPlatformBrowser(this.platformId)) return;
 
-    // Avoid showing if already dismissed in this session
     if (sessionStorage.getItem(this.DISMISSED_SESSION_KEY)) {
-      this.suggestionSubject.next(null);
       return;
     }
 
     const currentUrlLang = this.router.url.split('/')[1];
     const supportedLangs = this.translate.getLangs();
 
-    if (!supportedLangs.includes(currentUrlLang)) {
-      this.suggestionSubject.next(null);
-      return;
-    }
+    if (!supportedLangs.includes(currentUrlLang)) return;
 
     const preferredLang = this.getPreferredLanguage(supportedLangs, currentUrlLang);
 
-    if (
-      preferredLang &&
-      preferredLang !== currentUrlLang &&
-      supportedLangs.includes(preferredLang)
-    ) {
+    if (preferredLang && preferredLang !== currentUrlLang && supportedLangs.includes(preferredLang)) {
       this.suggestionSubject.next({
         code: preferredLang,
         name: this.getLanguageName(preferredLang),
         currentName: this.getLanguageName(currentUrlLang),
       });
       this.startAutoDismissTimer();
-    } else {
-      this.suggestionSubject.next(null);
     }
   }
 
   private startAutoDismissTimer() {
     this.clearAutoDismissTimer();
     this.autoDismissTimer = setTimeout(() => {
-      this.suggestionSubject.next(null);
-    }, 5000);
+      this.dismiss();
+    }, AUTO_DISMISS_MS);
   }
 
   private clearAutoDismissTimer() {
@@ -100,7 +83,6 @@ export class LanguageSuggestionService {
   }
 
   private getPreferredLanguage(supportedLangs: readonly string[], currentUrlLang: string): string | null {
-    // 1. Prioritize browser/device languages for contextual UX suggestions.
     const browserLanguages = navigator.languages?.length ? navigator.languages : [navigator.language];
 
     for (const lang of browserLanguages) {
@@ -110,7 +92,6 @@ export class LanguageSuggestionService {
       }
     }
 
-    // 2. Fallback to explicit preference only if it differs from current URL language.
     const cookieLang = this.cookieService.get(this.PREFERRED_LANG_COOKIE)?.toLowerCase();
     if (cookieLang && supportedLangs.includes(cookieLang) && cookieLang !== currentUrlLang) {
       return cookieLang;
@@ -143,12 +124,10 @@ export class LanguageSuggestionService {
   }
 
   switchToPreferred(code: string) {
-    this.clearAutoDismissTimer();
     this.cookieService.set('lang', code, { expires: 365, path: '/' });
     this.cookieService.set(this.PREFERRED_LANG_COOKIE, code, { expires: 365, path: '/' });
 
-    const currentUrl = this.router.url;
-    const urlParts = currentUrl.split('/');
+    const urlParts = this.router.url.split('/');
     urlParts[1] = code;
 
     this.dismiss();
