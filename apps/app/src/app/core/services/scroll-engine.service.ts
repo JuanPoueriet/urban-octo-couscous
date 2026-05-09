@@ -14,6 +14,8 @@ export interface ScrollToOptions {
 // Interface to handle Lenis typing issues if necessary
 interface LenisWithScrollTo extends Lenis {
   scrollTo(target: number | string | HTMLElement, options?: any): void;
+  stop(): void;
+  start(): void;
 }
 
 @Injectable({
@@ -37,6 +39,16 @@ export class ScrollEngineService {
   setLenis(lenis: Lenis): void {
     this.lenisSubject.next(lenis as LenisWithScrollTo);
     this.readySubject.next(true);
+  }
+
+  /** Pauses smooth scrolling (e.g. when an overlay is open). */
+  stop(): void {
+    this.lenisSubject.value?.stop();
+  }
+
+  /** Resumes smooth scrolling after an overlay closes. */
+  start(): void {
+    this.lenisSubject.value?.start();
   }
 
   /**

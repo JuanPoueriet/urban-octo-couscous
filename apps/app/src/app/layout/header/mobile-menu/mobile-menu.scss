@@ -34,8 +34,8 @@ $mm-overlay-duration:   0.3s;
     inset-inline-start: 0;
     width: 85%;
     max-width: $mm-drawer-max-width;
-    height: 100vh; /* fallback for browsers without svh support */
-    height: 100vh; /* small viewport height — never hidden by browser UI */
+    // height: 100svh; /* small viewport height — never hidden by browser UI */
+    height: 100dvh; /* fallback for browsers without svh support */
     // background: rgba(18, 18, 18, 0.92);
     background: rgba(45 , 45 , 45 );
     backdrop-filter: blur(30px);

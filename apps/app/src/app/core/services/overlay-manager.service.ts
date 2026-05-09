@@ -1,5 +1,6 @@
 import { Injectable, inject, PLATFORM_ID, InjectionToken } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { ScrollEngineService } from './scroll-engine.service';
 
 /**
  * CSS selector targeting the page regions that should become inert when any overlay
@@ -20,6 +21,7 @@ export const OVERLAY_INERT_SELECTOR = new InjectionToken<string>(
 export class OverlayManagerService {
   private platformId = inject(PLATFORM_ID);
   private readonly rootContentSelector = inject(OVERLAY_INERT_SELECTOR);
+  private readonly scrollEngine = inject(ScrollEngineService);
 
   /** LIFO stack of active overlays. */
   private overlayStack: string[] = [];
@@ -78,13 +80,22 @@ export class OverlayManagerService {
   }
 
   /**
-   * Updates the 'inert' attribute on background elements based on the overlay stack.
-   * Applies to both selector-matched elements and dynamically registered targets.
+   * Updates the 'inert' attribute on background elements and locks/unlocks scroll
+   * based on the overlay stack state.
    */
   private updateInertState(): void {
     if (!isPlatformBrowser(this.platformId)) return;
 
     const hasActiveOverlays = this.overlayStack.length > 0;
+
+    // Scroll-lock: bloquea el scroll del documento y detiene Lenis.
+    if (hasActiveOverlays) {
+      document.documentElement.classList.add('scroll-locked');
+      this.scrollEngine.stop();
+    } else {
+      document.documentElement.classList.remove('scroll-locked');
+      this.scrollEngine.start();
+    }
 
     document.querySelectorAll(this.rootContentSelector).forEach((target) => {
       if (hasActiveOverlays) target.setAttribute('inert', '');

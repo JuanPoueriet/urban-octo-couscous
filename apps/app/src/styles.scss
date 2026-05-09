@@ -101,6 +101,14 @@ body {
   scroll-behavior: smooth;
 }
 
+// Scroll-lock: aplicado por OverlayManagerService cuando hay overlays activos.
+// El complemento Lenis usa .lenis-stopped internamente; esta clase cubre
+// el caso sin Lenis y sirve como contrato CSS explícito.
+html.scroll-locked,
+html.scroll-locked body {
+  overflow: hidden;
+}
+
 html.lenis,
 html.lenis body {
   height: auto;
