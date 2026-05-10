@@ -1,9 +1,14 @@
 <!-- Hero -->
 <section class="products-hero">
+  <div class="products-hero__bg" aria-hidden="true">
+    <div class="products-hero__orb products-hero__orb--1"></div>
+    <div class="products-hero__orb products-hero__orb--2"></div>
+    <div class="products-hero__grid"></div>
+  </div>
   <div class="container">
     <span class="section-eyebrow" jslAnimateOnScroll>{{ 'PRODUCTS.EYEBROW' | translate }}</span>
     <h1 jslAnimateOnScroll>{{ 'PRODUCTS.TITLE' | translate }}</h1>
-    <p class="subtitle" jslAnimateOnScroll>{{ 'PRODUCTS.SUBTITLE' | translate }}</p>
+    <p class="hero-subtitle" jslAnimateOnScroll>{{ 'PRODUCTS.SUBTITLE' | translate }}</p>
   </div>
 </section>
 
@@ -13,7 +18,9 @@
     <div class="stats-band">
       @for (stat of stats; track stat.labelKey) {
         <div class="stat-item" jslAnimateOnScroll>
-          <lucide-icon [name]="stat.icon" [size]="24"></lucide-icon>
+          <div class="stat-item__icon">
+            <lucide-icon [name]="stat.icon" [size]="20"></lucide-icon>
+          </div>
           <span class="stat-item__value">{{ stat.valueKey | translate }}</span>
           <span class="stat-item__label">{{ stat.labelKey | translate }}</span>
         </div>
@@ -35,9 +42,10 @@
       @for (product of products(); track product.key) {
         <article class="product-card product-card--{{ product.type }}"
                  jslAnimateOnScroll>
+          <div class="product-card__glow" aria-hidden="true"></div>
           <div class="product-card__header">
             <div class="product-card__icon-wrap">
-              <lucide-icon [name]="product.icon" [size]="32"></lucide-icon>
+              <lucide-icon [name]="product.icon" [size]="28"></lucide-icon>
             </div>
             <span class="product-card__badge">{{ 'PRODUCTS.' + product.key + '_BADGE' | translate }}</span>
           </div>
@@ -49,7 +57,7 @@
             <ul class="product-card__features">
               @for (feat of product.featuresKeys; track feat) {
                 <li>
-                  <lucide-icon name="CheckCircle" [size]="14"></lucide-icon>
+                  <lucide-icon name="CheckCircle" [size]="13"></lucide-icon>
                   {{ feat | translate }}
                 </li>
               }
@@ -63,7 +71,7 @@
             @if (product.externalUrl) {
               <a [href]="product.externalUrl" target="_blank" rel="noopener noreferrer" class="btn btn--primary">
                 {{ 'PRODUCTS.VIEW_DEDICATED_PAGE' | translate }}
-                <lucide-icon name="ExternalLink" [size]="14"></lucide-icon>
+                <lucide-icon name="ExternalLink" [size]="13"></lucide-icon>
               </a>
             }
           </div>
@@ -83,7 +91,9 @@
     <div class="why-grid">
       @for (item of whyItems; track item.icon) {
         <div class="why-item" jslAnimateOnScroll>
-          <lucide-icon [name]="item.icon" [size]="28"></lucide-icon>
+          <div class="why-item__icon">
+            <lucide-icon [name]="item.icon" [size]="22"></lucide-icon>
+          </div>
           <h3>{{ item.titleKey | translate }}</h3>
           <p>{{ item.descKey | translate }}</p>
         </div>

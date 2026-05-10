@@ -438,52 +438,84 @@
 </section>
 
 <section class="testimonials-section">
+  <div class="ts-bg" aria-hidden="true">
+    <div class="ts-bg__orb ts-bg__orb--1"></div>
+    <div class="ts-bg__orb ts-bg__orb--2"></div>
+  </div>
+
   <div class="container" jslAnimateOnScroll>
     <div class="testimonials-header">
-      <span class="section-eyebrow">{{ 'HOME.TESTIMONIALS_EYEBROW' | translate }}</span>
-      <h2 class="section-title">{{ 'HOME.TESTIMONIALS_TITLE' | translate }}</h2>
+      <div class="testimonials-header__text">
+        <span class="section-eyebrow">{{ 'HOME.TESTIMONIALS_EYEBROW' | translate }}</span>
+        <h2 class="section-title">{{ 'HOME.TESTIMONIALS_TITLE' | translate }}</h2>
+      </div>
+      <div class="testimonials-header__nav" aria-label="Testimonial navigation">
+        <button class="testimonial-nav-btn testimonial-nav-btn--prev" aria-label="Previous testimonial">
+          <lucide-icon name="ChevronLeft" [size]="18"></lucide-icon>
+        </button>
+        <button class="testimonial-nav-btn testimonial-nav-btn--next" aria-label="Next testimonial">
+          <lucide-icon name="ChevronRight" [size]="18"></lucide-icon>
+        </button>
+      </div>
     </div>
+
     <swiper-container init="false" class="testimonial-slider" [attr.dir]="directionService.isRtl() ? 'rtl' : 'ltr'">
       @for (testimonial of testimonials(); track testimonial.nameKey) {
-        <swiper-slide class="testimonial-card">
-          <div class="testimonial-card__stars">
-            @for (star of getStars(5); track $index) {
-              <lucide-icon name="Star"></lucide-icon>
-            }
-          </div>
-          <p class="testimonial-card__text">"{{ testimonial.textKey | translate }}"</p>
-          <div class="testimonial-card__author">
-            <img
-              [src]="testimonial.imageUrl"
-              [alt]="testimonial.nameKey | translate"
-              loading="lazy"
-              width="60"
-              height="60"
-            />
-            <div class="testimonial-card__author-info">
-              <span class="name">{{ testimonial.nameKey | translate }}</span>
-              <span class="role">{{ testimonial.roleKey | translate }}</span>
-            </div>
-          </div>
+        <swiper-slide>
+          <div class="testimonial-card">
+            <span class="testimonial-card__deco" aria-hidden="true">"</span>
 
-          <!-- Social Proof Badge Simulation -->
-          <div class="social-proof-badge">
-             <lucide-icon name="CheckCircle" size="14"></lucide-icon>
-             <span>{{ 'HOME.VERIFIED_REVIEW' | translate }}</span>
+            <div class="testimonial-card__stars" aria-label="5 out of 5 stars">
+              @for (star of getStars(5); track $index) {
+                <lucide-icon name="Star" [size]="14"></lucide-icon>
+              }
+            </div>
+
+            <p class="testimonial-card__text">{{ testimonial.textKey | translate }}</p>
+
+            <div class="testimonial-card__divider"></div>
+
+            <div class="testimonial-card__author">
+              <img
+                [src]="testimonial.imageUrl"
+                [alt]="testimonial.nameKey | translate"
+                loading="lazy"
+                width="44"
+                height="44"
+              />
+              <div class="testimonial-card__author-info">
+                <span class="name">{{ testimonial.nameKey | translate }}</span>
+                <span class="role">{{ testimonial.roleKey | translate }}</span>
+              </div>
+              <lucide-icon name="BadgeCheck" [size]="18" class="verified-icon" aria-label="Verified review"></lucide-icon>
+            </div>
           </div>
         </swiper-slide>
       }
     </swiper-container>
 
     <div class="social-proof-widgets">
-       <div class="sp-widget">
-          <span class="sp-score">{{ 'HOME.CLUTCH_SCORE' | translate }}</span>
-          <span class="sp-source">{{ 'HOME.ON_CLUTCH' | translate }}</span>
-       </div>
-       <div class="sp-widget">
-          <span class="sp-score">{{ 'HOME.GOOGLE_SCORE' | translate }}</span>
-          <span class="sp-source">{{ 'HOME.ON_GOOGLE' | translate }}</span>
-       </div>
+      <div class="sp-widget">
+        <div class="sp-widget__stars" aria-hidden="true">
+          @for (star of getStars(5); track $index) {
+            <lucide-icon name="Star" [size]="12"></lucide-icon>
+          }
+        </div>
+        <span class="sp-score">{{ 'HOME.CLUTCH_SCORE' | translate }}</span>
+        <span class="sp-divider" aria-hidden="true">·</span>
+        <span class="sp-source">{{ 'HOME.ON_CLUTCH' | translate }}</span>
+      </div>
+      <div class="sp-widget__separator" aria-hidden="true"></div>
+      <div class="sp-widget">
+        <div class="sp-widget__stars" aria-hidden="true">
+          @for (star of getStars(5); track $index) {
+            <lucide-icon name="Star" [size]="12"></lucide-icon>
+          }
+        </div>
+        <span class="sp-score">{{ 'HOME.GOOGLE_SCORE' | translate }}</span>
+        <span class="sp-divider" aria-hidden="true">·</span>
+        <span class="sp-source">{{ 'HOME.ON_GOOGLE' | translate }}</span>
+      </div>
     </div>
   </div>
 </section>

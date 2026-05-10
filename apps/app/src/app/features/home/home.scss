@@ -44,9 +44,8 @@
     height: 100vh; // Menos altura en pantallas pequeñas
     height: 100svh; // Menos altura en pantallas pequeñas
     min-height: 400px;
-  }}
-
-
+  }
+}
 
 swiper-container {
   width: 100%;
@@ -809,125 +808,312 @@ swiper-container {
   }
 }
 
-// --- 3. NUEVO: Testimonials Section ---
+// --- 3. Testimonials Section ---
 .testimonials-section {
-  padding: 6rem 0;
-  // 1. Fondo con gradiente sutil para un look más premium
+  position: relative;
+  padding: 7rem 0;
   background:
-    radial-gradient(circle at 0% 100%, rgba(var(--primary-rgb), 0.1), transparent 40%),
-    radial-gradient(circle at 100% 50%, rgba(var(--accent-secondary-rgb), 0.1), transparent 40%),
+    radial-gradient(ellipse 60% 50% at 0% 100%, rgba(var(--primary-rgb), 0.06) 0%, transparent 60%),
+    radial-gradient(
+      ellipse 50% 60% at 100% 30%,
+      rgba(var(--accent-secondary-rgb), 0.05) 0%,
+      transparent 60%
+    ),
     var(--bg-secondary);
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
-  overflow: hidden; // Para el slider
+  overflow: hidden;
 }
 
+// Background orbs
+.ts-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ts-bg__orb {
+  position: absolute;
+  border-radius: 50%;
+
+  &--1 {
+    width: 500px;
+    height: 500px;
+    bottom: -200px;
+    inset-inline-start: -100px;
+    background: radial-gradient(circle, rgba(255, 75, 43, 0.08) 0%, transparent 65%);
+    filter: blur(60px);
+  }
+
+  &--2 {
+    width: 400px;
+    height: 400px;
+    top: -100px;
+    inset-inline-end: -80px;
+    background: radial-gradient(circle, rgba(0, 210, 255, 0.06) 0%, transparent 70%);
+    filter: blur(60px);
+  }
+}
+
+// Section header — split layout with nav on the right
 .testimonials-header {
-  text-align: center;
-  max-width: 750px;
-  margin: 0 auto 4rem;
-}
-
-.testimonial-slider {
-  width: 100%;
-  padding-bottom: 4rem; // Espacio para la paginación
-}
-
-.testimonial-card {
-  background-color: var(--bg-primary); // Más oscuro que el fondo de la sección
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 2.5rem 2rem;
   display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  position: relative; // 2. Necesario para los pseudo-elementos
-  overflow: hidden; // 3. Necesario para el glow
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 3rem;
 
-  // 4. Icono de comillas gigante como fondo (sutil)
-  &::before {
-    content: '“';
-    position: absolute;
-    top: -20px;
-    inset-inline-start: 1rem;
-    font-size: 150px;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.03);
-    z-index: 1;
-    line-height: 1;
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
   }
 
-  // Estilos del slide de coverflow
-  width: 100%;
-  max-width: 400px; // Ancho máximo de la tarjeta
-  height: auto;
+  &__text {
+    .section-title {
+      font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 0;
+    }
+  }
 
-  // Sombra y efecto 3D
-  transition:
-    transform var(--transition-speed) ease,
-    box-shadow var(--transition-speed) ease;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  z-index: 2; // 5. Asegurar que la tarjeta esté sobre el glow
-
-  .swiper-slide-active & {
-    // La tarjeta del centro
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-    transform: scale(1.05); // 6. Hacer la activa un poco más grande
-    border-color: rgba(var(--primary-rgb), 0.5);
+  &__nav {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    padding-bottom: 0.25rem;
   }
 }
 
-.testimonial-card__stars {
-  display: flex;
-  gap: 0.25rem;
-  color: #f39c12; // Amarillo estrella
-  z-index: 3; // Sobre el icono de comillas
-  lucide-icon {
-    width: 20px;
-    height: 20px;
-    // Rellenar la estrella
-    fill: #f39c12;
-  }
-}
-
-.testimonial-card__text {
-  font-size: 1.15rem; // 7. Un poco más grande
-  font-style: italic;
-  font-weight: 400; // 8. Más legible
-  color: var(--text-main);
-  line-height: 1.7;
-  flex-grow: 1; // Para alinear al autor abajo
-  z-index: 3; // Sobre el icono de comillas
-}
-
-.testimonial-card__author {
+// Custom nav buttons
+.testimonial-nav-btn {
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.2s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  &:hover {
+    background: rgba(255, 75, 43, 0.12);
+    border-color: rgba(255, 75, 43, 0.35);
+    transform: scale(1.06);
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+
+  &.swiper-button-disabled {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+}
+
+// Swiper container
+.testimonial-slider {
+  width: 100%;
+  padding-bottom: 3.5rem;
+  --swiper-pagination-color: var(--primary);
+  --swiper-pagination-bullet-inactive-color: rgba(255, 255, 255, 0.25);
+  --swiper-pagination-bullet-inactive-opacity: 1;
+  --swiper-pagination-bullet-size: 6px;
+  --swiper-pagination-bullet-horizontal-gap: 3px;
+}
+
+// Slide: fill full height so all cards are equal height
+.testimonial-slider swiper-slide,
+.testimonial-slider .swiper-slide {
+  height: auto;
+}
+
+// Glass card
+.testimonial-card {
+  position: relative;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
-  margin-top: auto;
-  z-index: 3; // Sobre el icono de comillas
+  overflow: hidden;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 
-  img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border: 2px solid var(--border-color);
+  &:hover {
+    border-color: rgba(255, 75, 43, 0.16);
+    box-shadow: 0 20px 56px rgba(0, 0, 0, 0.35);
   }
 
-  &-info {
+  &__deco {
+    position: absolute;
+    top: -0.5rem;
+    inset-inline-start: 1.25rem;
+    font-size: 5.5rem;
+    line-height: 1;
+    color: rgba(255, 75, 43, 0.1);
+    font-style: normal;
+    font-weight: 900;
+    user-select: none;
+    pointer-events: none;
+    font-family: Georgia, 'Times New Roman', serif;
+  }
+
+  &__stars {
     display: flex;
-    flex-direction: column;
+    gap: 0.15rem;
+    position: relative;
+    z-index: 1;
 
-    .name {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text-main);
-    }
-    .role {
-      font-size: 0.9rem;
-      color: var(--text-muted);
+    lucide-icon {
+      color: #f59e0b;
+      fill: #f59e0b;
     }
   }
+
+  &__text {
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: var(--text-main);
+    flex: 1;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.07);
+  }
+
+  &__author {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    img {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 75, 43, 0.25);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    &-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+
+      .name {
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: var(--text-main);
+      }
+
+      .role {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+      }
+    }
+
+    .verified-icon {
+      color: var(--primary);
+      opacity: 0.8;
+      flex-shrink: 0;
+    }
+  }
+}
+
+// Social proof widgets
+.social-proof-widgets {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-top: 2.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: var(--radius-full);
+  padding: 0.75rem 1.75rem;
+  width: fit-content;
+  margin-inline: auto;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    gap: 0.75rem;
+    width: 100%;
+    text-align: center;
+
+    .sp-widget__separator {
+      display: none;
+    }
+  }
+}
+
+.sp-widget {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &__stars {
+    display: flex;
+    gap: 0.1rem;
+
+    lucide-icon {
+      color: #f59e0b;
+      fill: #f59e0b;
+    }
+  }
+
+  &__separator {
+    width: 1px;
+    height: 1.25rem;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 0 1.25rem;
+  }
+}
+
+.sp-score {
+  font-size: 0.9rem;
+  font-weight: 700;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sp-divider {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 0.9rem;
+}
+
+.sp-source {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 500;
 }
 
 // --- 4. Featured Services, Products & Projects Section ---
@@ -950,11 +1136,21 @@ swiper-container {
 }
 
 .projects-filter {
+  // display: flex;
+  // justify-content: center;
+  // gap: 1rem;
+  // margin-bottom: 3rem;
+  // flex-wrap: wrap;
+
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 1rem;
   margin-bottom: 3rem;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
+  flex-direction: row;
+  scrollbar-width: none;
+  overflow: scroll;
+  /* padding: 0px 50px; */
 
   .filter-pill {
     padding: 0.5rem 1.5rem;
@@ -1359,7 +1555,6 @@ swiper-container {
     padding: 4rem 0;
   }
 
-
   .testimonials-header {
     margin-bottom: 3rem;
   }
@@ -1548,7 +1743,7 @@ swiper-container {
   .offering-slide .card,
   .project-slide .card,
   .insight-slide .card {
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.10);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
     border-radius: 20px;
     transition: box-shadow 280ms ease;
   }

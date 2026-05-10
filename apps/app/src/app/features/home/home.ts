@@ -789,41 +789,42 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
       // 3. Testimonial Slider
       const testimonialSwiperEl = this.el.nativeElement.querySelector(
-        '.testimonial-slider swiper-container'
+        'swiper-container.testimonial-slider'
       );
 
       if (testimonialSwiperEl) {
+        const prevBtn = this.el.nativeElement.querySelector('.testimonial-nav-btn--prev');
+        const nextBtn = this.el.nativeElement.querySelector('.testimonial-nav-btn--next');
+
         Object.assign(testimonialSwiperEl, {
-          modules: [Pagination, Autoplay, EffectCoverflow],
-          effect: 'coverflow',
-          coverflowEffect: {
-            rotate: 50,
-            stretch: 0,
-            depth: 100,
-            modifier: 1,
-            slideShadows: true,
-          },
-          spaceBetween: 30,
+          modules: [Pagination, Autoplay, Navigation],
+          effect: 'slide',
+          slidesPerView: 1.1,
+          spaceBetween: 16,
           grabCursor: true,
-          centeredSlides: true,
-          slidesPerView: 'auto',
+          centeredSlides: false,
           loop: true,
+          speed: 500,
           autoplay: {
-            delay: 7000,
-            disableOnInteraction: false,
+            delay: 6000,
+            disableOnInteraction: true,
+            pauseOnMouseEnter: true,
           },
           pagination: {
             clickable: true,
+            dynamicBullets: true,
+          },
+          navigation: {
+            nextEl: nextBtn,
+            prevEl: prevBtn,
+          },
+          breakpoints: {
+            640: { slidesPerView: 2, spaceBetween: 20 },
+            1024: { slidesPerView: 3, spaceBetween: 24 },
           },
         });
 
         testimonialSwiperEl.initialize();
-
-        setTimeout(() => {
-          if (testimonialSwiperEl.swiper && testimonialSwiperEl.swiper.autoplay) {
-            testimonialSwiperEl.swiper.autoplay.start();
-          }
-        }, 500);
       }
 
       // 4. Offerings Slider

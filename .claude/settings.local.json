@@ -11,7 +11,9 @@
       "Bash(xargs grep -l \"drawer\\\\|sidebar\\\\|lateral\\\\|side-menu\\\\|sidenav\")",
       "Bash(xargs grep -l \"mobile-menu\\\\|drawer\\\\|sidebar\\\\|lateral\")",
       "Bash(npx tsc *)",
-      "Bash(xargs grep -l \"menu\\\\|drawer\")"
+      "Bash(xargs grep -l \"menu\\\\|drawer\")",
+      "Bash(powershell -Command \"Get-ChildItem -Path . -Filter '*product*' -Recurse -File | Select-Object -ExpandProperty FullName | head -100\")",
+      "Bash(powershell *)"
     ]
   }
 }
