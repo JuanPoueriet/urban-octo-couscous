@@ -78,7 +78,7 @@
       "defaultConfiguration": "development",
       "options": {
         "prebundle": false,
-        "allowedHosts": ["hart-aspect-lil-grid.trycloudflare.com", "localhost", "127.0.0.1"]
+        "allowedHosts": ["bags-bennett-final-most.trycloudflare.com", "localhost", "127.0.0.1"]
       }
     },
     "extract-i18n": {

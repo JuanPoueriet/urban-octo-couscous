@@ -353,15 +353,41 @@
     >
       @for (project of filteredProjects(); track project.key) {
         <swiper-slide class="project-slide">
-          <jsl-card
-            [imageUrl]="project.imageUrl"
-            [title]="'PROJECTS.' + project.key + '_TITLE' | translate"
-            [description]="'PROJECTS.' + project.key + '_DESC' | translate"
-            [link]="['/', currentLang, 'projects', project.slug]"
-            [metrics]="project.metrics || []"
-            jslAnimateOnScroll
-          >
-          </jsl-card>
+          <a [routerLink]="['/', currentLang, 'projects', project.slug]" class="project-card">
+            <div class="project-card__image-wrap">
+              <img
+                [src]="project.imageUrl"
+                [alt]="'PROJECTS.' + project.key + '_TITLE' | translate"
+                class="project-card__image"
+                loading="lazy"
+                width="600"
+                height="380"
+              >
+              <div class="project-card__overlay"></div>
+              @if (project.category) {
+                <span class="project-card__category">{{ project.category }}</span>
+              }
+            </div>
+            <div class="project-card__body">
+              <div class="project-card__content">
+                <h3 class="project-card__title">{{ 'PROJECTS.' + project.key + '_TITLE' | translate }}</h3>
+                <p class="project-card__desc">{{ 'PROJECTS.' + project.key + '_DESC' | translate }}</p>
+              </div>
+              @if (project.metrics?.length) {
+                <div class="project-card__metrics">
+                  @for (metric of (project.metrics ?? []).slice(0, 3); track metric) {
+                    <span class="project-card__metric">{{ metric }}</span>
+                  }
+                </div>
+              }
+              <div class="project-card__footer">
+                <span class="project-card__cta">
+                  {{ 'COMMON.READ_MORE' | translate }}
+                  <lucide-icon name="ArrowRight" [size]="14" class="project-card__cta-icon"></lucide-icon>
+                </span>
+              </div>
+            </div>
+          </a>
         </swiper-slide>
       }
       <swiper-slide class="project-slide view-more-slide">
@@ -550,8 +576,34 @@
 
 <section class="latest-insights container">
   <div class="latest-insights__header" jslAnimateOnScroll>
-    <span class="section-eyebrow">{{ 'HOME.BLOG_EYEBROW' | translate }}</span>
-    <h2 class="section-title">{{ 'HOME.BLOG_TITLE' | translate }}</h2>
+    <div class="latest-insights__header-left">
+      <span class="section-eyebrow">{{ 'HOME.BLOG_EYEBROW' | translate }}</span>
+      <h2 class="section-title">{{ 'HOME.BLOG_TITLE' | translate }}</h2>
+    </div>
+    <div class="latest-insights__header-right">
+      <div class="insights-header-nav">
+        <button
+          class="insights-nav-btn"
+          [class.is-disabled]="!canInsightsPrev()"
+          [attr.aria-disabled]="!canInsightsPrev()"
+          [attr.aria-label]="'ARIA.PREVIOUS_SLIDE' | translate"
+          (click)="onPrevInsights()">
+          <lucide-icon name="ArrowLeft" [size]="16"></lucide-icon>
+        </button>
+        <button
+          class="insights-nav-btn"
+          [class.is-disabled]="!canInsightsNext()"
+          [attr.aria-disabled]="!canInsightsNext()"
+          [attr.aria-label]="'ARIA.NEXT_SLIDE' | translate"
+          (click)="onNextInsights()">
+          <lucide-icon name="ArrowRight" [size]="16"></lucide-icon>
+        </button>
+      </div>
+      <a [routerLink]="['/', currentLang, 'blog']" class="insights-view-all">
+        {{ 'HEADER.BLOG' | translate }}
+        <lucide-icon name="ArrowRight" [size]="14"></lucide-icon>
+      </a>
+    </div>
   </div>
 
   <div class="insights-slider-wrapper">
@@ -562,53 +614,65 @@
     >
       @for (post of latestBlogPosts(); track post.key) {
         <swiper-slide class="insight-slide">
-          <jsl-card
-            [imageUrl]="post.imageUrl"
-            [title]="'BLOG.' + post.key + '_TITLE' | translate"
-            [description]="'BLOG.' + post.key + '_EXCERPT' | translate"
-            [link]="['/', currentLang, 'blog', post.slug]"
-            jslAnimateOnScroll
-          >
-          </jsl-card>
+          <article class="insight-card">
+            <a [routerLink]="['/', currentLang, 'blog', post.slug]" class="insight-card__inner">
+              <div class="insight-card__image-wrap">
+                <img
+                  [src]="post.imageUrl"
+                  [alt]="'BLOG.' + post.key + '_TITLE' | translate"
+                  class="insight-card__image"
+                  loading="lazy"
+                  width="600"
+                  height="338"
+                >
+                <div class="insight-card__image-overlay"></div>
+                @if (post.tags?.length) {
+                  <div class="insight-card__badges">
+                    <span class="insight-card__badge">{{ post.tags[0] }}</span>
+                  </div>
+                }
+              </div>
+              <div class="insight-card__body">
+                <div class="insight-card__meta">
+                  <span class="insight-meta-item">
+                    <lucide-icon name="Calendar" [size]="11"></lucide-icon>
+                    {{ post.date | date:'MMM d, y' }}
+                  </span>
+                  <span class="insight-meta-sep">·</span>
+                  <span class="insight-meta-item">
+                    <lucide-icon name="Clock" [size]="11"></lucide-icon>
+                    {{ post.readTime }} {{ 'BLOG.READ_TIME_UNIT' | translate }}
+                  </span>
+                </div>
+                <h3 class="insight-card__title">{{ 'BLOG.' + post.key + '_TITLE' | translate }}</h3>
+                <p class="insight-card__excerpt">{{ 'BLOG.' + post.key + '_EXCERPT' | translate }}</p>
+                <div class="insight-card__footer">
+                  <div class="insight-card__tags">
+                    @for (tag of post.tags.slice(0, 2); track tag) {
+                      <span class="insight-card__tag">{{ tag }}</span>
+                    }
+                  </div>
+                  <span class="insight-card__cta">
+                    {{ 'COMMON.READ_MORE' | translate }}
+                    <lucide-icon name="ArrowRight" [size]="13" class="insight-card__cta-icon"></lucide-icon>
+                  </span>
+                </div>
+              </div>
+            </a>
+          </article>
         </swiper-slide>
       }
       <swiper-slide class="insight-slide view-more-slide">
         <a [routerLink]="['/', currentLang, 'blog']" class="view-more-card">
           <div class="view-more-card__content">
             <div class="view-more-card__icon">
-              <lucide-icon name="ArrowRight"></lucide-icon>
+              <lucide-icon name="BookOpen"></lucide-icon>
             </div>
             <span class="view-more-card__text">{{ 'HEADER.BLOG' | translate }}</span>
           </div>
         </a>
       </swiper-slide>
     </swiper-container>
-
-    <!-- Custom Navigation Buttons -->
-    <div
-      class="insights-swiper-button-prev"
-      [class.is-disabled]="!canInsightsPrev()"
-      [attr.aria-disabled]="!canInsightsPrev()"
-      [attr.aria-label]="'ARIA.PREVIOUS_SLIDE' | translate"
-      role="button"
-      tabindex="0"
-      (click)="onPrevInsights()"
-      (keydown.enter)="onPrevInsights()"
-      (keydown.space)="onPrevInsights()">
-      <lucide-icon name="ChevronLeft"></lucide-icon>
-    </div>
-    <div
-      class="insights-swiper-button-next"
-      [class.is-disabled]="!canInsightsNext()"
-      [attr.aria-disabled]="!canInsightsNext()"
-      [attr.aria-label]="'ARIA.NEXT_SLIDE' | translate"
-      role="button"
-      tabindex="0"
-      (click)="onNextInsights()"
-      (keydown.enter)="onNextInsights()"
-      (keydown.space)="onNextInsights()">
-      <lucide-icon name="ChevronRight"></lucide-icon>
-    </div>
   </div>
 </section>
 
