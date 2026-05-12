@@ -13,7 +13,10 @@
       "Bash(npx tsc *)",
       "Bash(xargs grep -l \"menu\\\\|drawer\")",
       "Bash(powershell -Command \"Get-ChildItem -Path . -Filter '*product*' -Recurse -File | Select-Object -ExpandProperty FullName | head -100\")",
-      "Bash(powershell *)"
+      "Bash(powershell *)",
+      "Bash(dir \"apps\\\\app\\\\src\\\\app\\\\shared\\\\components\")",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Usuario\\\\Downloads\\\\jules_session_1391041394126519322 \\(3\\)\\\\apps\\\\app\\\\src\\\\app\\\\shared\\\\components\" | Where-Object {$_.PSIsContainer} | Select-Object Name)",
+      "PowerShell(Get-ChildItem *)"
     ]
   }
 }
