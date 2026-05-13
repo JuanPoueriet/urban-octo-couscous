@@ -1,4 +1,8 @@
-<div class="page-container container">
+<div class="page-container container about-hero">
+  <div class="about-hero-badge" jslAnimateOnScroll>
+    <span class="about-hero-badge__dot"></span>
+    <span>{{ 'ABOUT.INTRO_EYEBROW' | translate }}</span>
+  </div>
   <h1 class="page-title" jslAnimateOnScroll>{{ 'ABOUT.TITLE' | translate }}</h1>
   <p class="page-subtitle" jslAnimateOnScroll>{{ 'ABOUT.SUBTITLE' | translate }}</p>
 </div>
@@ -36,6 +40,8 @@
   </div>
 </section>
 
+<div class="about-gradient-divider"></div>
+
 <!-- Core Values -->
 <section class="core-values-section">
   <div class="container">
@@ -47,7 +53,7 @@
       @for (value of coreValues; track value.key) {
         <div class="core-value-card" jslAnimateOnScroll>
           <div class="core-value-card__icon">
-            <lucide-icon [name]="value.icon" [size]="32"></lucide-icon>
+            <lucide-icon [name]="value.icon" [size]="20"></lucide-icon>
           </div>
           <h3 class="core-value-card__title">{{ 'ABOUT.' + value.key + '_TITLE' | translate }}</h3>
           <p class="core-value-card__desc">{{ 'ABOUT.' + value.key + '_DESC' | translate }}</p>
@@ -67,9 +73,11 @@
     <div class="awards-grid">
       @for (award of awards; track award.key) {
         <div class="award-card" jslAnimateOnScroll>
-          <lucide-icon [name]="award.icon" [size]="36"></lucide-icon>
-          <h3>{{ 'ABOUT.AWARD_' + award.key + '_TITLE' | translate }}</h3>
-          <p>{{ 'ABOUT.AWARD_' + award.key + '_DESC' | translate }}</p>
+          <lucide-icon [name]="award.icon" [size]="32"></lucide-icon>
+          <div class="award-card__text">
+            <h3>{{ 'ABOUT.AWARD_' + award.key + '_TITLE' | translate }}</h3>
+            <p>{{ 'ABOUT.AWARD_' + award.key + '_DESC' | translate }}</p>
+          </div>
         </div>
       }
     </div>

@@ -16,7 +16,13 @@
       "Bash(powershell *)",
       "Bash(dir \"apps\\\\app\\\\src\\\\app\\\\shared\\\\components\")",
       "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Usuario\\\\Downloads\\\\jules_session_1391041394126519322 \\(3\\)\\\\apps\\\\app\\\\src\\\\app\\\\shared\\\\components\" | Where-Object {$_.PSIsContainer} | Select-Object Name)",
-      "PowerShell(Get-ChildItem *)"
+      "PowerShell(Get-ChildItem *)",
+      "PowerShell(\\(Get-Content \"C:\\\\Users\\\\Usuario\\\\Downloads\\\\jules_session_1391041394126519322 \\(3\\)\\\\apps\\\\app\\\\src\\\\app\\\\core\\\\data\\\\mock-data.ts\" | Select-String -Pattern \"TEAM_MEMBERS|export const\" | Select-Object -First 10\\).LineNumber)",
+      "Bash(C:/Users/Usuario/.claude/plugins/cache/claude-plugins-official/superpowers/5.1.0/scripts/start-server.sh *)",
+      "Bash(bash *)",
+      "PowerShell(New-Item *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
