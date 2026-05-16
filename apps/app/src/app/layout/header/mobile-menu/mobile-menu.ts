@@ -261,7 +261,7 @@ export class MobileMenu implements OnDestroy, AfterViewInit {
           this.menuTranslateX = translateX;
           this.menuScaleX     = 1;
         },
-        onRegisterOverlay:   () => this.overlayManagerService.register('mobile-menu'),
+        onRegisterOverlay:   () => this.overlayManagerService.register('mobile-menu', { lockScroll: false }),
         onUnregisterOverlay: () => this.overlayManagerService.unregister('mobile-menu'),
         onTriggerHaptic:     () => this.triggerThrottledHaptic(),
         onA11yOpen: () => {

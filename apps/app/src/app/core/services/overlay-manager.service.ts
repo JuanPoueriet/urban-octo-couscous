@@ -23,8 +23,8 @@ export class OverlayManagerService {
   private readonly rootContentSelector = inject(OVERLAY_INERT_SELECTOR);
   private readonly scrollEngine = inject(ScrollEngineService);
 
-  /** LIFO stack of active overlays. */
-  private overlayStack: string[] = [];
+  /** LIFO stack of active overlays with per-overlay behavior. */
+  private overlayStack: Array<{ id: string; lockScroll: boolean }> = [];
 
   /** Elements registered at runtime via registerInertTarget(). */
   private readonly dynamicTargets = new Set<Element>();
@@ -33,10 +33,10 @@ export class OverlayManagerService {
    * Registers an active overlay and pushes it to the stack.
    * @param id Unique identifier for the overlay.
    */
-  register(id: string): void {
+  register(id: string, options?: { lockScroll?: boolean }): void {
     if (!isPlatformBrowser(this.platformId)) return;
     this.unregister(id);
-    this.overlayStack.push(id);
+    this.overlayStack.push({ id, lockScroll: options?.lockScroll ?? true });
     this.updateInertState();
   }
 
@@ -46,7 +46,7 @@ export class OverlayManagerService {
    */
   unregister(id: string): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    this.overlayStack = this.overlayStack.filter(item => item !== id);
+    this.overlayStack = this.overlayStack.filter(item => item.id !== id);
     this.updateInertState();
   }
 
@@ -54,7 +54,7 @@ export class OverlayManagerService {
    * Returns the ID of the topmost active overlay.
    */
   getActiveOverlayId(): string | null {
-    return this.overlayStack.length > 0 ? this.overlayStack[this.overlayStack.length - 1] : null;
+    return this.overlayStack.length > 0 ? this.overlayStack[this.overlayStack.length - 1].id : null;
   }
 
   /**
@@ -87,9 +87,10 @@ export class OverlayManagerService {
     if (!isPlatformBrowser(this.platformId)) return;
 
     const hasActiveOverlays = this.overlayStack.length > 0;
+    const shouldLockScroll = this.overlayStack.some((overlay) => overlay.lockScroll);
 
-    // Scroll-lock: bloquea el scroll del documento y detiene Lenis.
-    if (hasActiveOverlays) {
+    // Scroll-lock: solo cuando hay overlays que lo requieren.
+    if (shouldLockScroll) {
       document.documentElement.classList.add('scroll-locked');
       this.scrollEngine.stop();
     } else {
