@@ -3,11 +3,13 @@
 import { Component, Inject, OnInit, OnDestroy, ElementRef, inject } from '@angular/core';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { ClickOutsideDirective } from '@shared/directives/click-outside';
+import { BottomSheetComponent } from '@shared/components/bottom-sheet/bottom-sheet';
+import { LanguageListComponent } from './language-list';
 import { LanguageSuggestionService } from '@core/services/language-suggestion.service';
 import { BreakpointService } from '@core/services/breakpoint.service';
 
@@ -23,9 +25,10 @@ export interface LanguageItem {
   imports: [
     CommonModule,
     TranslateModule,
-    RouterLink,
     LucideAngularModule,
     ClickOutsideDirective,
+    BottomSheetComponent,
+    LanguageListComponent,
   ],
   templateUrl: './language-switcher.html',
   styleUrl: './language-switcher.scss',
@@ -42,7 +45,7 @@ export class LanguageSwitcher implements OnInit, OnDestroy {
   public breakpointService = inject(BreakpointService);
 
   private routerSubscription: Subscription | undefined;
-  private currentRouteWithoutLang: string[] = [];
+  public currentRouteWithoutLang: string[] = [];
 
   // Define which languages are considered "featured"
   private readonly FEATURED_CODES = ['en', 'es', 'pt', 'fr'];
