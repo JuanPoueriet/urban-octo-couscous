@@ -244,13 +244,6 @@
         </div>
 
         <div class="recaptcha-container" aria-hidden="true"></div>
-        <p class="recaptcha-disclaimer">
-          {{ 'CONTACT.FORM.RECAPTCHA_NOTICE_PREFIX' | translate }}
-          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">{{ 'CONTACT.FORM.RECAPTCHA_PRIVACY' | translate }}</a>
-          {{ 'CONTACT.FORM.RECAPTCHA_NOTICE_MIDDLE' | translate }}
-          <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer">{{ 'CONTACT.FORM.RECAPTCHA_TERMS' | translate }}</a>
-          {{ 'CONTACT.FORM.RECAPTCHA_NOTICE_SUFFIX' | translate }}
-        </p>
 
         <!-- Botón de Envío -->
         <div class="form-actions">
@@ -264,6 +257,14 @@
             }
           </button>
         </div>
+
+        <p class="recaptcha-disclaimer">
+          {{ 'CONTACT.FORM.RECAPTCHA_NOTICE_PREFIX' | translate }}
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">{{ 'CONTACT.FORM.RECAPTCHA_PRIVACY' | translate }}</a>
+          {{ 'CONTACT.FORM.RECAPTCHA_NOTICE_MIDDLE' | translate }}
+          <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer">{{ 'CONTACT.FORM.RECAPTCHA_TERMS' | translate }}</a>
+          {{ 'CONTACT.FORM.RECAPTCHA_NOTICE_SUFFIX' | translate }}
+        </p>
 
         <!-- Mensajes de Estado -->
         @if (submitSuccess) {
