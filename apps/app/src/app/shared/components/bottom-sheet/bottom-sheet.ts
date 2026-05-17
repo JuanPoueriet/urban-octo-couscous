@@ -50,6 +50,9 @@ export class BottomSheetComponent implements OnInit, OnChanges, OnDestroy {
   public overlayOpacity = 0;
   public transitionStyle = 'transform 400ms cubic-bezier(0.32, 0.72, 0, 1), opacity 300ms ease';
 
+  private lastHapticTime = 0;
+  private readonly HAPTIC_COOLDOWN_MS = 200;
+
   private gestures?: BottomSheetGestures;
   private gestureBus = inject(GestureBusService);
   private ngZone = inject(NgZone);
@@ -78,13 +81,19 @@ export class BottomSheetComponent implements OnInit, OnChanges, OnDestroy {
       {
         isOpen: () => this.isOpen,
         isAtTop: () => !this.sheetContent || this.sheetContent.nativeElement.scrollTop <= 0,
-        onUpdateTranslate: (y, progress) => {
+        onUpdateTranslate: (y, progress, scaleY, transformOrigin) => {
           const isDragging = progress !== null;
 
           if (isDragging) {
             // High-frequency updates outside Angular zone for performance
             if (this.sheetContainer) {
-              this.renderer.setStyle(this.sheetContainer.nativeElement, 'transform', `translateY(${y}px)`);
+              const transform = `translateY(${y}px) scaleY(${scaleY ?? 1})`;
+              this.renderer.setStyle(this.sheetContainer.nativeElement, 'transform', transform);
+              this.renderer.setStyle(
+                this.sheetContainer.nativeElement,
+                'transform-origin',
+                transformOrigin ?? 'bottom'
+              );
               this.renderer.setStyle(this.sheetContainer.nativeElement, 'transition', 'none');
             }
             if (this.backdropElement) {
@@ -104,6 +113,7 @@ export class BottomSheetComponent implements OnInit, OnChanges, OnDestroy {
               // Clear manual styles
               if (this.sheetContainer) {
                 this.renderer.removeStyle(this.sheetContainer.nativeElement, 'transform');
+                this.renderer.removeStyle(this.sheetContainer.nativeElement, 'transform-origin');
                 this.renderer.removeStyle(this.sheetContainer.nativeElement, 'transition');
               }
               if (this.backdropElement) {
@@ -131,6 +141,7 @@ export class BottomSheetComponent implements OnInit, OnChanges, OnDestroy {
             this.cdRef.markForCheck();
           });
         },
+        onToggleHaptic: () => this.triggerThrottledHaptic(),
         getMaxTranslateY: () => this.getSheetHeightPx()
       },
       this.ngZone,
@@ -199,6 +210,21 @@ export class BottomSheetComponent implements OnInit, OnChanges, OnDestroy {
 
   onClose(): void {
     this.close.emit();
+  }
+
+  private triggerThrottledHaptic(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    const now = Date.now();
+    if (now - this.lastHapticTime < this.HAPTIC_COOLDOWN_MS) return;
+    this.lastHapticTime = now;
+
+    if (this.document.defaultView?.navigator.vibrate) {
+      const activation = (this.document.defaultView?.navigator as any).userActivation;
+      if (!activation || activation.isActive) {
+        this.document.defaultView.navigator.vibrate(5);
+      }
+    }
   }
 
   private toggleBodyScroll(lock: boolean): void {

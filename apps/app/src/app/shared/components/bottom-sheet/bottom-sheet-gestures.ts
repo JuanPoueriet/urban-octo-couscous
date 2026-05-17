@@ -31,13 +31,25 @@ export interface BottomSheetGestureConfig {
    * Callback to update the visual translation.
    * @param translateY The current Y translation in pixels.
    * @param progress A normalized value (1 = open, 0 = closed) for overlay opacity.
+   * @param scaleY Optional vertical scale for elastic effects.
+   * @param transformOrigin Optional transform origin for scaling.
    */
-  onUpdateTranslate: (translateY: number, progress: number | null) => void;
+  onUpdateTranslate: (
+    translateY: number,
+    progress: number | null,
+    scaleY?: number,
+    transformOrigin?: string
+  ) => void;
 
   /**
    * Trigger the close action.
    */
   onClose: () => void;
+
+  /**
+   * Trigger a throttled haptic feedback.
+   */
+  onToggleHaptic?: () => void;
 
   /**
    * Trigger the open action (restore to open state).
@@ -48,6 +60,11 @@ export interface BottomSheetGestureConfig {
    * Stop any active transitions.
    */
   onStopTransition: () => void;
+
+  /**
+   * Maximum vertical stretch allowed (in percent).
+   */
+  maxStretchPercent?: number;
 
   /**
    * Maximum positive translateY (in px) allowed while dragging.
@@ -72,9 +89,14 @@ export class BottomSheetGestures implements GestureHandler {
   private readonly VELOCITY_WINDOW_MS = 100;
   private readonly DEFAULT_VELOCITY_THRESHOLD = 0.25;
   private readonly DEFAULT_CLOSE_THRESHOLD = 150;
-  private readonly DEFAULT_ELASTIC_RESISTANCE = 0.25;
-  private readonly DEFAULT_BOTTOM_BOUNDARY_RESISTANCE = 0.18;
+  private readonly DEFAULT_ELASTIC_RESISTANCE = 25; // 0-100 scale to match MobileMenuGestures
+  private readonly DEFAULT_MAX_STRETCH_PERCENT = 4;
 
+  private readonly ELASTIC_OVERSHOOT_REFERENCE_RATIO = 0.25;
+  private readonly MIN_ELASTIC_EXPONENT = 1;
+  private readonly MAX_ELASTIC_EXPONENT = 5;
+
+  private wasOvershooting = false;
   private gestureBusUnregister: (() => void) | null = null;
 
   constructor(
@@ -122,37 +144,31 @@ export class BottomSheetGestures implements GestureHandler {
       }
     }
 
-    let targetTranslate = diffY;
+    const maxTranslate = Math.max(0, this.config.getMaxTranslateY());
+    const targetTranslate = this.initialTranslateY + diffY;
 
-    // Elastic effect when dragging UP (diffY < 0)
-    if (targetTranslate < 0) {
-      const resistance = this.config.elasticResistance ?? this.DEFAULT_ELASTIC_RESISTANCE;
-      targetTranslate = targetTranslate * resistance;
+    // Bottom boundary is maxTranslate (closed), Top boundary is 0 (open)
+    const transform = this.getElasticTransform(targetTranslate, 0, maxTranslate);
+
+    const isOvershooting = transform.scaleY > 1;
+    if (isOvershooting && !this.wasOvershooting) {
+      this.config.onToggleHaptic?.();
     }
-
-    // Soft boundary when dragging DOWN (diffY > 0):
-    // Never allow the sheet to reach/overflow its closed boundary while dragging.
-    // This mirrors the side drawer's resistance behavior and keeps gestures stable.
-    if (targetTranslate > 0) {
-      const maxTranslate = Math.max(0, this.config.getMaxTranslateY());
-      if (targetTranslate >= maxTranslate) {
-        const overshoot = targetTranslate - maxTranslate;
-        targetTranslate =
-          maxTranslate -
-          (maxTranslate * this.DEFAULT_BOTTOM_BOUNDARY_RESISTANCE) / (overshoot + 1);
-      }
-    }
-
-    this.lastDragPosition = targetTranslate;
+    this.wasOvershooting = isOvershooting;
+    this.lastDragPosition = transform.translateY;
 
     // Progress calculation for overlay
-    // 0 is fully open, closeThreshold is where it should be almost closed
-    const closeThreshold = this.config.closeThreshold ?? this.DEFAULT_CLOSE_THRESHOLD;
-    const progress = targetTranslate > 0
-      ? Math.max(0, 1 - (targetTranslate / (closeThreshold * 2)))
+    // 0 is open, maxTranslate is closed
+    const progress = transform.translateY > 0
+      ? Math.max(0, 1 - (transform.translateY / (maxTranslate || 1)))
       : 1;
 
-    this.config.onUpdateTranslate(targetTranslate, progress);
+    this.config.onUpdateTranslate(
+      transform.translateY,
+      progress,
+      transform.scaleY,
+      transform.transformOrigin
+    );
   }
 
   public onPointerUp(event: PointerEvent): void {
@@ -196,8 +212,57 @@ export class BottomSheetGestures implements GestureHandler {
 
   private resetDragState(): void {
     this.isDragging = false;
+    this.wasOvershooting = false;
     this.activePointerId = null;
     this.resetVelocityBuffer();
+  }
+
+  private calculateElasticScale(overshoot: number): number {
+    const safeOvershoot = Math.max(0, overshoot);
+    if (safeOvershoot === 0) return 1;
+
+    const maxStretchPercent = Math.max(0, this.config.maxStretchPercent ?? this.DEFAULT_MAX_STRETCH_PERCENT);
+    const maxScale = 1 + maxStretchPercent / 100;
+
+    const sheetHeight = this.config.getMaxTranslateY();
+    const referenceOvershootPx = Math.max(1, sheetHeight * this.ELASTIC_OVERSHOOT_REFERENCE_RATIO);
+    const normalizedOvershoot = Math.min(safeOvershoot / referenceOvershootPx, 1);
+
+    const rawResistance = this.config.elasticResistance ?? this.DEFAULT_ELASTIC_RESISTANCE;
+    const normalizedResistance = Math.min(100, Math.max(0, rawResistance)) / 100;
+    const exponent =
+      this.MIN_ELASTIC_EXPONENT +
+      normalizedResistance * (this.MAX_ELASTIC_EXPONENT - this.MIN_ELASTIC_EXPONENT);
+
+    const damped = 1 - Math.pow(1 - normalizedOvershoot, exponent);
+    return 1 + damped * (maxScale - 1);
+  }
+
+  private getElasticTransform(
+    translateY: number,
+    min: number,
+    max: number
+  ): { translateY: number; scaleY: number; transformOrigin: string } {
+    let finalTranslateY = translateY;
+    let scaleY = 1;
+    let transformOrigin = 'bottom';
+
+    if (translateY < min) {
+      // Overshooting UP (beyond open)
+      finalTranslateY = min;
+      scaleY = this.calculateElasticScale(min - translateY);
+      transformOrigin = 'bottom';
+    } else if (translateY > max) {
+      // Overshooting DOWN (beyond closed) - We align this with mobile menu behavior
+      // where it doesn't really overshoot but resists, but here the requirement
+      // is specifically that it shouldn't be draggable past its limit (the bottom edge).
+      // So we apply the resistance/elastic scale but keep the bottom edge aligned.
+      finalTranslateY = max;
+      scaleY = this.calculateElasticScale(translateY - max);
+      transformOrigin = 'top';
+    }
+
+    return { translateY: finalTranslateY, scaleY, transformOrigin };
   }
 
   private pushVelocitySample(y: number): void {
