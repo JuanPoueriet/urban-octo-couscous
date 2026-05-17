@@ -264,11 +264,22 @@
         "MINLENGTH": "Se requieren al menos {{value}} caracteres."
       },
       "SUCCESS": "¡Mensaje enviado! Gracias por contactarnos. Te responderemos pronto.",
-      "ERROR": "Hubo un error al enviar tu mensaje. Por favor, inténtalo de nuevo más tarde."
+      "ERROR": "Hubo un error al enviar tu mensaje. Por favor, inténtalo de nuevo más tarde.",
+      "SERVICE_OTHER_DETAILS": "What other service are you interested in?",
+      "SERVICE_OTHER_DETAILS_PLACEHOLDER": "Please specify the service",
+      "REFERRAL": "How did you hear about us? (optional)",
+      "REFERRAL_PROMPT": "Select an option (optional)",
+      "REFERRAL_OPTIONS": {
+        "GOOGLE": "Google/Search engines",
+        "SOCIAL_MEDIA": "Social media",
+        "RECOMMENDATION": "Recommendation",
+        "EVENT": "Event or conference",
+        "BLOG": "Blog or article"
+      }
     },
     "LOCATION_ADDRESS": "Santo Domingo, República Dominicana",
     "PHONE_DISPLAY": "+1 (809) 264-1693",
-    "EMAIL_DISPLAY": "info@jsl.technology",
+    "EMAIL_DISPLAY": "contact@jsl.technology",
     "EYEBROW": "Ponte en Contacto",
     "RESPONSE_TIME": "Respuesta en menos de 24 horas",
     "BUSINESS_HOURS": "Lunes–Viernes, 9am–6pm EST",
