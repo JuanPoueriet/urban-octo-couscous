@@ -1556,7 +1556,10 @@
     "CONTACT_DESC": "Get in touch with JSL Technology experts to discuss your next software project. We provide custom consulting and high-end technological solutions for your business growth."
   },
   "LANGUAGE_SUGGESTION": {
-    "MESSAGE": "You are viewing this page in {{currentLanguage}}. Switch to {{targetLanguage}}?",
-    "SWITCH": "Switch"
+    "TITLE": "Prefer to view this page in {{targetLanguage}}?",
+    "SUBTITLE": "We detected that your language might be {{targetLanguage}}.",
+    "SWITCH": "Switch to {{targetLanguage}}",
+    "KEEP": "Keep {{currentLanguage}}",
+    "FOOTER": "You can change the language again whenever you want."
   }
 }

@@ -1546,7 +1546,10 @@
     "CONTACT_DESC": "联系 JSL Technology 专家讨论您的下一个软件项目。我们为您的业务增长提供定制咨询和高端技术解决方案。"
   },
   "LANGUAGE_SUGGESTION": {
-    "MESSAGE": "您正在以 {{currentLanguage}} 查看此页面。是否切换到 {{targetLanguage}}？",
-    "SWITCH": "切换"
+    "TITLE": "您想用{{targetLanguage}}查看此页面吗？",
+    "SUBTITLE": "我们检测到您的语言可能是{{targetLanguage}}。",
+    "SWITCH": "切换到{{targetLanguage}}",
+    "KEEP": "保持{{currentLanguage}}",
+    "FOOTER": "您可以随时再次更改语言。"
   }
 }
