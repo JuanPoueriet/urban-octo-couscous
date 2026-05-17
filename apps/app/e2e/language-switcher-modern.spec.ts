@@ -65,14 +65,14 @@ test.describe('Language Switcher Modern UI', () => {
         // Take screenshot of mobile bottom sheet
         await page.screenshot({ path: 'reports/debug-mobile-3-after-click.png' });
 
-        // Use any open container for mobile
-        const container = page.locator('.lang-switcher__container.is-open');
+        // Use bottom sheet for mobile
+        const container = page.locator('.bottom-sheet-wrapper');
         console.log(`Found ${await container.count()} open containers`);
 
         // Check for "More languages" button
         const moreBtn = container.locator('.lang-switcher__more-toggle').first();
         await expect(moreBtn).toBeVisible({ timeout: 5000 });
-        await moreBtn.click();
+        await moreBtn.click({ force: true });
 
         // Check if other languages appear and scroll is possible (visual check)
         await page.waitForTimeout(500);

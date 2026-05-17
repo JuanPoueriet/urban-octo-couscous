@@ -1,0 +1,40 @@
+<div class="bottom-sheet-wrapper" *ngIf="isOpen" role="dialog" [attr.aria-modal]="true">
+  <!-- Backdrop -->
+  <div
+    class="bottom-sheet-backdrop"
+    (click)="onClose()"
+    @backdropFade
+  ></div>
+
+  <!-- Sheet Container -->
+  <div
+    class="bottom-sheet-container"
+    @sheetSlide
+  >
+    <!-- Handle for mobile feel -->
+    <div class="bottom-sheet-handle-wrapper" (click)="onClose()">
+      <div class="bottom-sheet-handle"></div>
+    </div>
+
+    <!-- Header (Optional) -->
+    <div class="bottom-sheet-header" *ngIf="title || showCloseButton">
+      <div class="bottom-sheet-header-content" *ngIf="title || subtitle">
+        <h3 *ngIf="title">{{ title }}</h3>
+        <p *ngIf="subtitle">{{ subtitle }}</p>
+      </div>
+      <button
+        *ngIf="showCloseButton"
+        class="bottom-sheet-close"
+        (click)="onClose()"
+        [attr.aria-label]="'COMMON.CLOSE' | translate"
+      >
+        <lucide-icon name="X"></lucide-icon>
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div class="bottom-sheet-content" #sheetContent>
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>
