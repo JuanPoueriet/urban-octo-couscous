@@ -10,8 +10,9 @@ import {
   Inject,
   PLATFORM_ID,
   Renderer2,
+  ElementRef,
   ViewChild,
-  ElementRef
+  OnInit
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser, DOCUMENT } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
@@ -45,7 +46,7 @@ import { TranslateModule } from '@ngx-translate/core';
     ])
   ]
 })
-export class BottomSheetComponent implements OnChanges, OnDestroy {
+export class BottomSheetComponent implements OnInit, OnChanges, OnDestroy {
   @Input() isOpen = false;
   @Input() title?: string;
   @Input() subtitle?: string;
@@ -58,22 +59,57 @@ export class BottomSheetComponent implements OnChanges, OnDestroy {
   private startY = 0;
   private currentY = 0;
   protected isDragging = false;
+  private originalParent: Node | null = null;
+  private originalNextSibling: Node | null = null;
+  private isAppendedToBody = false;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: object,
     @Inject(DOCUMENT) private document: Document,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private hostElementRef: ElementRef<HTMLElement>
   ) {}
+
+  ngOnInit(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    const host = this.hostElementRef.nativeElement;
+    this.originalParent = host.parentNode;
+    this.originalNextSibling = host.nextSibling;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (isPlatformBrowser(this.platformId) && changes['isOpen']) {
       this.toggleBodyScroll(changes['isOpen'].currentValue);
+      this.syncHostMountPoint(changes['isOpen'].currentValue);
     }
   }
 
   ngOnDestroy(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.toggleBodyScroll(false);
+      this.syncHostMountPoint(false);
+    }
+  }
+
+  private syncHostMountPoint(isOpen: boolean): void {
+    const host = this.hostElementRef.nativeElement;
+
+    if (isOpen && !this.isAppendedToBody) {
+      this.renderer.appendChild(this.document.body, host);
+      this.isAppendedToBody = true;
+      return;
+    }
+
+    if (!isOpen && this.isAppendedToBody && this.originalParent) {
+      if (this.originalNextSibling?.parentNode === this.originalParent) {
+        this.renderer.insertBefore(this.originalParent, host, this.originalNextSibling);
+      } else {
+        this.renderer.appendChild(this.originalParent, host);
+      }
+      this.isAppendedToBody = false;
     }
   }
 
