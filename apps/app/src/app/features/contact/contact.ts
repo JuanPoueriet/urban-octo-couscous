@@ -9,7 +9,7 @@ import { Seo } from '@core/services/seo';
 import { Router, RouterLink } from '@angular/router';
 import { AnimateOnScroll } from '@shared/directives/animate-on-scroll';
 import { Subject } from 'rxjs';
-import { takeUntil, finalize } from 'rxjs/operators';
+import { takeUntil, finalize, distinctUntilChanged } from 'rxjs/operators';
 import { ALL_ICONS } from '@core/constants/icons';
 
 @Component({
@@ -43,10 +43,32 @@ export class Contact implements OnInit, OnDestroy {
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       service: ['', [Validators.required]],
+      serviceOther: [''],
+      referralSource: [''],
       message: ['', [Validators.required, Validators.minLength(10)]],
       privacy: [false, Validators.requiredTrue],
       honeypot: ['']
     });
+
+    this.setupConditionalValidation();
+  }
+
+  private setupConditionalValidation(): void {
+    const serviceControl = this.contactForm.get('service');
+    const serviceOtherControl = this.contactForm.get('serviceOther');
+
+    serviceControl?.valueChanges
+      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+      .subscribe((value: string) => {
+        if (value === 'other') {
+          serviceOtherControl?.setValidators([Validators.required, Validators.minLength(3)]);
+        } else {
+          serviceOtherControl?.clearValidators();
+          serviceOtherControl?.setValue('');
+        }
+
+        serviceOtherControl?.updateValueAndValidity({ emitEvent: false });
+      });
   }
 
   ngOnDestroy(): void {
@@ -69,7 +91,7 @@ export class Contact implements OnInit, OnDestroy {
     if (this.contactForm.value.honeypot) {
       console.warn('Bot detected via honeypot');
       this.submitSuccess = true;
-      this.contactForm.reset();
+      this.contactForm.reset({ privacy: false, serviceOther: '', referralSource: '', honeypot: '' });
       this.toastService.show('CONTACT.FORM.SUCCESS', 'success');
       return;
     }
@@ -90,7 +112,7 @@ export class Contact implements OnInit, OnDestroy {
         next: (response: any) => {
           console.log('Respuesta de API:', response);
           this.submitSuccess = true;
-          this.contactForm.reset();
+          this.contactForm.reset({ privacy: false, serviceOther: '', referralSource: '', honeypot: '' });
           this.toastService.show('CONTACT.FORM.SUCCESS', 'success');
           this.analytics.trackConversion('contact_form_submit');
           this.analytics.trackEvent('generate_lead', { method: 'contact_form' });

@@ -41,7 +41,7 @@
           </div>
           <div class="info-card__content">
             <h4>{{ 'CONTACT.EMAIL' | translate }}</h4>
-            <a href="mailto:info@jsl.technology" class="info-card__link">{{ 'CONTACT.EMAIL_DISPLAY' | translate }}</a>
+            <a href="mailto:contact@jsl.technology" class="info-card__link">{{ 'CONTACT.EMAIL_DISPLAY' | translate }}</a>
           </div>
         </div>
 
@@ -139,10 +139,9 @@
             <select id="service" class="form-control" formControlName="service"
                     [class.is-invalid]="f['service'].invalid && (f['service'].dirty || f['service'].touched)">
               <option value="" disabled>{{ 'CONTACT.FORM.SERVICE_PROMPT' | translate }}</option>
-              <option value="erp">{{ 'PRODUCTS_LIST.ERP' | translate }}</option>
-              <option value="pos">{{ 'PRODUCTS_LIST.POS' | translate }}</option>
               <option value="web_dev">{{ 'SERVICES_LIST.WEB' | translate }}</option>
               <option value="mobile_dev">{{ 'SERVICES_LIST.MOBILE' | translate }}</option>
+              <option value="desktop_dev">{{ 'SERVICES_LIST.DESKTOP' | translate }}</option>
               <option value="other">{{ 'CONTACT.FORM.SERVICE_OTHER' | translate }}</option>
             </select>
           </div>
@@ -155,6 +154,43 @@
           }
         </div>
 
+        @if (f['service'].value === 'other') {
+          <div class="form-group">
+            <label for="serviceOther">{{ 'CONTACT.FORM.SERVICE_OTHER_DETAILS' | translate }}</label>
+            <div class="input-wrapper">
+              <lucide-icon name="Pencil" [size]="18" class="input-icon"></lucide-icon>
+              <input type="text" id="serviceOther" class="form-control" formControlName="serviceOther"
+                     [placeholder]="'CONTACT.FORM.SERVICE_OTHER_DETAILS_PLACEHOLDER' | translate"
+                     [class.is-invalid]="f['serviceOther'].invalid && (f['serviceOther'].dirty || f['serviceOther'].touched)">
+            </div>
+            @if (f['serviceOther'].invalid && (f['serviceOther'].dirty || f['serviceOther'].touched)) {
+              <div class="form-error">
+                @if (f['serviceOther'].errors?.['required']) {
+                  <span>{{ 'CONTACT.FORM.ERRORS.REQUIRED' | translate }}</span>
+                }
+                @if (f['serviceOther'].errors?.['minlength']) {
+                  <span>{{ 'CONTACT.FORM.ERRORS.MINLENGTH' | translate:{'value': 3} }}</span>
+                }
+              </div>
+            }
+          </div>
+        }
+
+        <div class="form-group">
+          <label for="referralSource">{{ 'CONTACT.FORM.REFERRAL' | translate }}</label>
+          <div class="input-wrapper">
+            <lucide-icon name="Megaphone" [size]="18" class="input-icon"></lucide-icon>
+            <select id="referralSource" class="form-control" formControlName="referralSource">
+              <option value="" selected>{{ 'CONTACT.FORM.REFERRAL_PROMPT' | translate }}</option>
+              <option value="google">{{ 'CONTACT.FORM.REFERRAL_OPTIONS.GOOGLE' | translate }}</option>
+              <option value="social_media">{{ 'CONTACT.FORM.REFERRAL_OPTIONS.SOCIAL_MEDIA' | translate }}</option>
+              <option value="recommendation">{{ 'CONTACT.FORM.REFERRAL_OPTIONS.RECOMMENDATION' | translate }}</option>
+              <option value="event">{{ 'CONTACT.FORM.REFERRAL_OPTIONS.EVENT' | translate }}</option>
+              <option value="blog">{{ 'CONTACT.FORM.REFERRAL_OPTIONS.BLOG' | translate }}</option>
+              <option value="other">{{ 'CONTACT.FORM.SERVICE_OTHER' | translate }}</option>
+            </select>
+          </div>
+        </div>
         <!-- Campo Mensaje -->
         <div class="form-group">
           <label for="message">{{ 'CONTACT.FORM.MESSAGE' | translate }}</label>

@@ -274,10 +274,13 @@
 
 select.form-control {
   appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23A0A0A0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: inset-inline-end 1rem center;
+  background-position: right 1rem center;
   background-size: 1.2rem;
+  padding-right: 2.75rem;
 }
 
 // Checkbox Styling
@@ -286,9 +289,10 @@ select.form-control {
 }
 
 .checkbox-container {
-  display: block;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
   position: relative;
-  padding-inline-start: 2.25rem;
   cursor: pointer;
   font-size: 0.85rem;
   color: var(--text-muted);
@@ -304,11 +308,12 @@ select.form-control {
   }
 
   .checkmark {
-    position: absolute;
-    top: 0;
+    position: relative;
+    top: 0.05rem;
     inset-inline-start: 0;
     height: 1.25rem;
     width: 1.25rem;
+    flex-shrink: 0;
     background-color: var(--bg-primary);
     border: 1px solid var(--border-color);
     border-radius: 4px;
@@ -322,6 +327,11 @@ select.form-control {
   input:checked ~ .checkmark {
     background-color: var(--primary);
     border-color: var(--primary);
+  }
+
+  .checkbox-text {
+    display: block;
+    line-height: 1.5;
   }
 
   .checkmark:after {
@@ -516,9 +526,3 @@ select.form-control {
   }
 }
 
-// RTL fixes for select icon
-[dir="rtl"] {
-  select.form-control {
-    background-position: left 1rem center;
-  }
-}
