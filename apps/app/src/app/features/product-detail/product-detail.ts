@@ -32,8 +32,8 @@ interface ProductCountry {
 }
 
 interface ProductStat {
-  value: string;
-  label: string;
+  valueKey: string;
+  labelKey: string;
   icon: string;
 }
 
@@ -55,10 +55,10 @@ const PRODUCT_EXTRAS: Record<string, ProductExtras> = {
     tagline: 'Enterprise Resource Planning for Latin America & the US',
     overview: 'virtex is a multi-tenant, multi-region ERP SaaS ecosystem built on Clean Architecture, microservices, and GraphQL Federation. Designed for the fiscal complexity of the Americas, it offers complete tax localization, offline-first mobile apps, and an extensible plugin marketplace — all from a single unified platform.',
     stats: [
-      { value: '10+', label: 'Functional Modules', icon: 'LayoutGrid' },
-      { value: '5',   label: 'Platform Apps',     icon: 'Monitor' },
-      { value: '4',   label: 'Countries (GA/Beta)',icon: 'Globe' },
-      { value: '∞',   label: 'Multi-tenant SaaS', icon: 'Infinity' },
+      { valueKey: 'PRODUCTS.VIRTEX_STAT_MODULES_VAL',  labelKey: 'PRODUCTS.VIRTEX_STAT_MODULES_LABEL',  icon: 'LayoutGrid' },
+      { valueKey: 'PRODUCTS.VIRTEX_STAT_APPS_VAL',     labelKey: 'PRODUCTS.VIRTEX_STAT_APPS_LABEL',     icon: 'Monitor'    },
+      { valueKey: 'PRODUCTS.VIRTEX_STAT_COUNTRIES_VAL',labelKey: 'PRODUCTS.VIRTEX_STAT_COUNTRIES_LABEL',icon: 'Globe'      },
+      { valueKey: 'PRODUCTS.VIRTEX_STAT_SAAS_VAL',     labelKey: 'PRODUCTS.VIRTEX_STAT_SAAS_LABEL',     icon: 'Infinity'   },
     ],
     modules: [
       { icon: 'Shield',       name: 'Identity & Access',      desc: 'SSO with Keycloak, MFA (WebAuthn), RBAC/ABAC and full access audit.' },

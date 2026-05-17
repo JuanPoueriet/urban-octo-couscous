@@ -32,7 +32,7 @@ interface PressAsset {
 }
 
 interface PressStat {
-  value: string;
+  valueKey: string;
   labelKey: string;
   icon: string;
 }
@@ -46,10 +46,10 @@ interface PressStat {
 })
 export class Press {
   readonly stats: PressStat[] = [
-    { value: '50+',  labelKey: 'PRESS.STATS_OUTLETS',       icon: 'Globe'     },
-    { value: '200+', labelKey: 'PRESS.STATS_MENTIONS_LABEL', icon: 'Newspaper' },
-    { value: '18',   labelKey: 'PRESS.STATS_COUNTRIES',      icon: 'MapPin'    },
-    { value: '500+', labelKey: 'PRESS.STATS_ARTICLES',       icon: 'FileText'  },
+    { valueKey: 'PRESS.STATS_OUTLETS_VAL',  labelKey: 'PRESS.STATS_OUTLETS',       icon: 'Globe'     },
+    { valueKey: 'PRESS.STATS_MENTIONS_VAL', labelKey: 'PRESS.STATS_MENTIONS_LABEL', icon: 'Newspaper' },
+    { valueKey: 'PRESS.STATS_COUNTRIES_VAL', labelKey: 'PRESS.STATS_COUNTRIES',     icon: 'MapPin'    },
+    { valueKey: 'PRESS.STATS_ARTICLES_VAL', labelKey: 'PRESS.STATS_ARTICLES',       icon: 'FileText'  },
   ];
 
   readonly pressReleases: PressRelease[] = [

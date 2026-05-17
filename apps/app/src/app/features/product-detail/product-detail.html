@@ -64,11 +64,11 @@
       <div class="pd-stats">
         <div class="container">
           <div class="pd-stats__grid">
-            @for (stat of extras.stats; track stat.label) {
+            @for (stat of extras.stats; track stat.labelKey) {
               <div class="pd-stats__item">
                 <lucide-icon [name]="stat.icon" [size]="20"></lucide-icon>
-                <strong>{{ stat.value }}</strong>
-                <span>{{ stat.label }}</span>
+                <strong>{{ stat.valueKey | translate }}</strong>
+                <span>{{ stat.labelKey | translate }}</span>
               </div>
             }
           </div>

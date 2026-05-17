@@ -21,14 +21,9 @@
     <p>{{ 'LIFE_AT_JSL.CULTURE_DESC_2' | translate }}</p>
   </div>
   <div class="culture-stats">
-    @for (stat of [
-      { value: '50+', key: 'TEAM_MEMBERS'  },
-      { value: '12',  key: 'NATIONALITIES' },
-      { value: '4.9', key: 'GLASSDOOR'     },
-      { value: '93%', key: 'RETENTION'     }
-    ]; track stat.key) {
+    @for (stat of cultureStats; track stat.key) {
       <div class="culture-stat">
-        <strong>{{ stat.value }}</strong>
+        <strong>{{ 'LIFE_AT_JSL.STAT_' + stat.key + '_VAL' | translate }}</strong>
         <span>{{ 'LIFE_AT_JSL.STAT_' + stat.key | translate }}</span>
       </div>
     }

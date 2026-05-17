@@ -47,7 +47,7 @@
         <div class="press-stat__icon">
           <lucide-icon [name]="stat.icon" [size]="22"></lucide-icon>
         </div>
-        <p class="press-stat__value">{{ stat.value }}</p>
+        <p class="press-stat__value">{{ stat.valueKey | translate }}</p>
         <p class="press-stat__label">{{ stat.labelKey | translate }}</p>
       </div>
     }

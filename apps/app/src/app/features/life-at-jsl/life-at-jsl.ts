@@ -35,6 +35,13 @@ export class LifeAtJsl implements OnDestroy {
     { key: 'TRAVEL',    icon: 'Plane'      },
   ];
 
+  readonly cultureStats = [
+    { key: 'TEAM_MEMBERS'  },
+    { key: 'NATIONALITIES' },
+    { key: 'GLASSDOOR'     },
+    { key: 'RETENTION'     },
+  ];
+
   values = [
     { key: 'OWNERSHIP',   icon: 'Target'    },
     { key: 'EXCELLENCE',  icon: 'Star'      },
