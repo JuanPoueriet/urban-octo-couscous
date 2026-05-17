@@ -1,28 +1,86 @@
 <div class="lang-switcher" (jslClickOutside)="closeDropdown()">
+  <!-- Trigger Button -->
   <button
     class="lang-switcher__button"
     (click)="toggleDropdown()"
     [attr.aria-label]="'ARIA.SELECT_LANGUAGE' | translate"
     [class.is-open]="isDropdownOpen"
   >
-    <lucide-icon name="Globe"></lucide-icon>
+    <lucide-icon name="Globe" class="lang-switcher__button-icon"></lucide-icon>
     <span>{{ currentLang | uppercase }}</span>
-    <lucide-icon name="ChevronDown"></lucide-icon>
+    <lucide-icon name="ChevronDown" class="lang-switcher__caret"></lucide-icon>
   </button>
 
+  <!-- Overlay for Mobile Bottom Sheet -->
   <div 
-    class="lang-switcher__dropdown" 
-    [class.is-open]="isDropdownOpen"
-    [class.opens-up]="opensUp">
-    <a
-      *ngFor="let lang of languages"
-      [routerLink]="getRouteForLang(lang.code)"
-      (click)="setLanguage(lang.code); closeDropdown()"
-      [class.active]="currentLang === lang.code"
-    >
-      <span>{{ lang.name | translate }}</span>
-      <lucide-icon *ngIf="currentLang === lang.code" name="Check"></lucide-icon>
-    </a>
-  </div>
+    class="lang-switcher__overlay"
+    *ngIf="breakpointService.isMobile() && isDropdownOpen"
+    (click)="closeDropdown()"
+  ></div>
 
+  <!-- Main Container (Dropdown or Bottom Sheet) -->
+  <div
+    class="lang-switcher__container"
+    [class.is-open]="isDropdownOpen"
+    [class.is-mobile]="breakpointService.isMobile()"
+    [class.opens-up]="opensUp">
+
+    <!-- Header -->
+    <div class="lang-switcher__header">
+      <div class="lang-switcher__header-content">
+        <h3>{{ 'LANGUAGE_SELECTOR.TITLE' | translate }}</h3>
+        <p>{{ 'LANGUAGE_SELECTOR.SUBTITLE' | translate }}</p>
+      </div>
+      <button class="lang-switcher__close" (click)="closeDropdown()" *ngIf="breakpointService.isMobile()">
+        <lucide-icon name="X"></lucide-icon>
+      </button>
+    </div>
+
+    <div class="lang-switcher__list-wrapper">
+      <!-- Featured Languages -->
+      <div class="lang-switcher__list">
+        <a
+          *ngFor="let lang of featuredLanguages"
+          [routerLink]="getRouteForLang(lang.code)"
+          (click)="setLanguage(lang.code); closeDropdown()"
+          [class.active]="currentLang === lang.code"
+          class="lang-switcher__item"
+        >
+          <div class="lang-switcher__item-info">
+            <span class="lang-switcher__item-name">{{ lang.nativeName }}</span>
+            <span class="lang-switcher__item-subname">{{ lang.translatedName | translate }} · {{ lang.code | uppercase }}</span>
+          </div>
+          <lucide-icon *ngIf="currentLang === lang.code" name="Check" class="lang-switcher__check"></lucide-icon>
+        </a>
+      </div>
+
+      <!-- More Languages Toggle -->
+      <button
+        *ngIf="otherLanguages.length > 0"
+        class="lang-switcher__more-toggle"
+        (click)="toggleMoreLanguages($event)"
+        [class.is-expanded]="showAllLanguages"
+      >
+        <span>{{ 'LANGUAGE_SELECTOR.MORE_LANGUAGES' | translate }}</span>
+        <lucide-icon name="ChevronDown"></lucide-icon>
+      </button>
+
+      <!-- Other Languages (Expandable) -->
+      <div class="lang-switcher__list lang-switcher__list--others" *ngIf="showAllLanguages">
+        <a
+          *ngFor="let lang of otherLanguages"
+          [routerLink]="getRouteForLang(lang.code)"
+          (click)="setLanguage(lang.code); closeDropdown()"
+          [class.active]="currentLang === lang.code"
+          class="lang-switcher__item"
+        >
+          <div class="lang-switcher__item-info">
+            <span class="lang-switcher__item-name">{{ lang.nativeName }}</span>
+            <span class="lang-switcher__item-subname">{{ lang.translatedName | translate }} · {{ lang.code | uppercase }}</span>
+          </div>
+          <lucide-icon *ngIf="currentLang === lang.code" name="Check" class="lang-switcher__check"></lucide-icon>
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
