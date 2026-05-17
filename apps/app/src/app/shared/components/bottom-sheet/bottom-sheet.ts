@@ -12,12 +12,16 @@ import {
   Renderer2,
   ElementRef,
   ViewChild,
-  OnInit
+  OnInit,
+  ChangeDetectorRef,
+  NgZone,
+  inject
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser, DOCUMENT } from '@angular/common';
-import { trigger, transition, style, animate } from '@angular/animations';
 import { LucideAngularModule } from 'lucide-angular';
 import { TranslateModule } from '@ngx-translate/core';
+import { GestureBusService } from '@core/services/gesture-bus.service';
+import { BottomSheetGestures } from './bottom-sheet-gestures';
 
 @Component({
   selector: 'jsl-bottom-sheet',
@@ -25,26 +29,6 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [CommonModule, LucideAngularModule, TranslateModule],
   templateUrl: './bottom-sheet.html',
   styleUrl: './bottom-sheet.scss',
-  animations: [
-    trigger('backdropFade', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('300ms ease-out', style({ opacity: 1 }))
-      ]),
-      transition(':leave', [
-        animate('250ms ease-in', style({ opacity: 0 }))
-      ])
-    ]),
-    trigger('sheetSlide', [
-      transition(':enter', [
-        style({ transform: 'translateY(100%)' }),
-        animate('400ms cubic-bezier(0.32, 0.72, 0, 1)', style({ transform: 'translateY(0)' }))
-      ]),
-      transition(':leave', [
-        animate('300ms cubic-bezier(0.32, 0.72, 0, 1)', style({ transform: 'translateY(100%)' }))
-      ])
-    ])
-  ]
 })
 export class BottomSheetComponent implements OnInit, OnChanges, OnDestroy {
   @Input() isOpen = false;
@@ -55,13 +39,21 @@ export class BottomSheetComponent implements OnInit, OnChanges, OnDestroy {
 
   @ViewChild('sheetContainer') sheetContainer?: ElementRef<HTMLElement>;
   @ViewChild('sheetContent') sheetContent?: ElementRef<HTMLElement>;
+  @ViewChild('backdropElement') backdropElement?: ElementRef<HTMLElement>;
 
-  private startY = 0;
-  private currentY = 0;
   protected isDragging = false;
   private originalParent: Node | null = null;
   private originalNextSibling: Node | null = null;
   private isAppendedToBody = false;
+
+  public translateY = 100; // % by default (closed)
+  public overlayOpacity = 0;
+  public transitionStyle = 'transform 400ms cubic-bezier(0.32, 0.72, 0, 1), opacity 300ms ease';
+
+  private gestures?: BottomSheetGestures;
+  private gestureBus = inject(GestureBusService);
+  private ngZone = inject(NgZone);
+  private cdRef = inject(ChangeDetectorRef);
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: object,
@@ -71,26 +63,106 @@ export class BottomSheetComponent implements OnInit, OnChanges, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
+    const isBrowser = isPlatformBrowser(this.platformId);
 
-    const host = this.hostElementRef.nativeElement;
-    this.originalParent = host.parentNode;
-    this.originalNextSibling = host.nextSibling;
+    if (isBrowser) {
+      const host = this.hostElementRef.nativeElement;
+      this.originalParent = host.parentNode;
+      this.originalNextSibling = host.nextSibling;
+      this.setupGestures();
+    }
+  }
+
+  private setupGestures(): void {
+    this.gestures = new BottomSheetGestures(
+      {
+        isOpen: () => this.isOpen,
+        isAtTop: () => !this.sheetContent || this.sheetContent.nativeElement.scrollTop <= 0,
+        onUpdateTranslate: (y, progress) => {
+          const isDragging = progress !== null;
+
+          if (isDragging) {
+            // High-frequency updates outside Angular zone for performance
+            if (this.sheetContainer) {
+              this.renderer.setStyle(this.sheetContainer.nativeElement, 'transform', `translateY(${y}px)`);
+              this.renderer.setStyle(this.sheetContainer.nativeElement, 'transition', 'none');
+            }
+            if (this.backdropElement) {
+              this.renderer.setStyle(this.backdropElement.nativeElement, 'opacity', (progress ?? 1).toString());
+              this.renderer.setStyle(this.backdropElement.nativeElement, 'transition', 'none');
+            }
+          } else {
+            // Reset to reactive state
+            this.ngZone.run(() => {
+              this.translateY = y;
+              this.isDragging = false;
+              this.overlayOpacity = this.isOpen ? 1 : 0;
+              this.transitionStyle = this.isOpen
+                ? 'transform 400ms cubic-bezier(0.32, 0.72, 0, 1), opacity 300ms ease'
+                : 'transform 300ms cubic-bezier(0.32, 0.72, 0, 1), opacity 250ms ease';
+
+              // Clear manual styles
+              if (this.sheetContainer) {
+                this.renderer.removeStyle(this.sheetContainer.nativeElement, 'transform');
+                this.renderer.removeStyle(this.sheetContainer.nativeElement, 'transition');
+              }
+              if (this.backdropElement) {
+                this.renderer.removeStyle(this.backdropElement.nativeElement, 'opacity');
+                this.renderer.removeStyle(this.backdropElement.nativeElement, 'transition');
+              }
+
+              this.cdRef.markForCheck();
+            });
+          }
+        },
+        onOpen: () => {
+          this.ngZone.run(() => {
+            this.updateState(true);
+          });
+        },
+        onClose: () => {
+          this.ngZone.run(() => {
+            this.onClose();
+          });
+        },
+        onStopTransition: () => {
+          this.ngZone.run(() => {
+            this.transitionStyle = 'none';
+            this.cdRef.markForCheck();
+          });
+        }
+      },
+      this.ngZone,
+      this.gestureBus
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (isPlatformBrowser(this.platformId) && changes['isOpen']) {
-      this.toggleBodyScroll(changes['isOpen'].currentValue);
-      this.syncHostMountPoint(changes['isOpen'].currentValue);
+      const isOpen = changes['isOpen'].currentValue;
+      this.updateState(isOpen);
     }
+  }
+
+  private updateState(isOpen: boolean): void {
+    this.toggleBodyScroll(isOpen);
+    this.syncHostMountPoint(isOpen);
+
+    this.transitionStyle = isOpen
+      ? 'transform 400ms cubic-bezier(0.32, 0.72, 0, 1), opacity 300ms ease'
+      : 'transform 300ms cubic-bezier(0.32, 0.72, 0, 1), opacity 250ms ease';
+
+    this.translateY = isOpen ? 0 : 100;
+    this.overlayOpacity = isOpen ? 1 : 0;
+
+    this.cdRef.markForCheck();
   }
 
   ngOnDestroy(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.toggleBodyScroll(false);
       this.syncHostMountPoint(false);
+      this.gestures?.destroy();
     }
   }
 
@@ -122,57 +194,6 @@ export class BottomSheetComponent implements OnInit, OnChanges, OnDestroy {
 
   onClose(): void {
     this.close.emit();
-  }
-
-  @HostListener('touchstart', ['$event'])
-  onTouchStart(event: TouchEvent): void {
-    if (!this.isOpen) return;
-    this.startY = event.touches[0].clientY;
-    this.currentY = this.startY;
-    this.isDragging = true;
-  }
-
-  @HostListener('touchmove', ['$event'])
-  onTouchMove(event: TouchEvent): void {
-    if (!this.isDragging || !this.sheetContainer) return;
-
-    this.currentY = event.touches[0].clientY;
-    const deltaY = this.currentY - this.startY;
-
-    // Only drag down if we are at the top of the content scroll
-    const isAtTop = !this.sheetContent || this.sheetContent.nativeElement.scrollTop <= 0;
-
-    if (deltaY > 0 && isAtTop) {
-      // Apply transform directly to the container for immediate feedback
-      this.renderer.setStyle(this.sheetContainer.nativeElement, 'transform', `translateY(${deltaY}px)`);
-      this.renderer.setStyle(this.sheetContainer.nativeElement, 'transition', 'none');
-
-      // Prevent content scrolling while dragging the sheet
-      if (event.cancelable) {
-        event.preventDefault();
-      }
-    } else {
-      // Reset transform if we are scrolling up or content is not at top
-      this.renderer.removeStyle(this.sheetContainer.nativeElement, 'transform');
-    }
-  }
-
-  @HostListener('touchend')
-  onTouchEnd(): void {
-    if (!this.isDragging || !this.sheetContainer) return;
-    this.isDragging = false;
-
-    const deltaY = this.currentY - this.startY;
-
-    // Reset styles
-    this.renderer.removeStyle(this.sheetContainer.nativeElement, 'transform');
-    this.renderer.removeStyle(this.sheetContainer.nativeElement, 'transition');
-
-    // Close if dragged down far enough and was at top
-    const isAtTop = !this.sheetContent || this.sheetContent.nativeElement.scrollTop <= 0;
-    if (deltaY > 150 && isAtTop) {
-      this.onClose();
-    }
   }
 
   private toggleBodyScroll(lock: boolean): void {
