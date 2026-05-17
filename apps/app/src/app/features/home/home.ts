@@ -41,7 +41,7 @@ import { PictureComponent } from '@shared/components/picture/picture';
 import { computed } from '@angular/core';
 
 // Swiper Web Components
-import { Pagination, Autoplay, EffectCoverflow, EffectFade, Navigation, FreeMode } from 'swiper/modules';
+import { Pagination, Autoplay, EffectCoverflow, EffectFade, Navigation } from 'swiper/modules';
 import { register } from 'swiper/element/bundle';
 import { triggerTick } from '@shared/utils/haptic-feedback';
 
@@ -104,7 +104,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   };
 
   public offeringsSwiperConfig: SwiperOptions = {
-    modules: [Navigation, Pagination, FreeMode],
+    modules: [Navigation, Pagination],
     watchSlidesProgress: true,
     slidesPerView: 1,
     centeredSlides: true,
@@ -121,15 +121,6 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     longSwipesMs: 100,
     followFinger: true,
     touchReleaseOnEdges: false,
-    freeMode: {
-      enabled: true,
-      sticky: true,
-      momentum: true,
-      minimumVelocity: 0.04,
-      momentumRatio: 2.0,
-      momentumVelocityRatio: 1.2,
-      momentumBounce: false,
-    },
     pagination: { clickable: true, dynamicBullets: true },
     navigation: {
       nextEl: '.offerings-swiper-button-next',
@@ -140,14 +131,12 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         slidesPerView: 4,
         spaceBetween: 24,
         centeredSlides: false,
-        freeMode: { enabled: false },
         speed: 480,
       },
       1024: {
         slidesPerView: 4,
         spaceBetween: 28,
         centeredSlides: false,
-        freeMode: { enabled: false },
         speed: 480,
       },
     },
@@ -210,7 +199,7 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
   };
 
   public insightsSwiperConfig: SwiperOptions = {
-    modules: [Navigation, Pagination, FreeMode],
+    modules: [Navigation, Pagination],
     watchSlidesProgress: true,
     slidesPerView: 1.12,
     centeredSlides: false,
@@ -221,14 +210,6 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     touchRatio: 1.1,
     resistanceRatio: 0.85,
     threshold: 10,
-    freeMode: {
-      enabled: true,
-      momentum: true,
-      sticky: true,
-      momentumRatio: 1.8,
-      momentumVelocityRatio: 1.5,
-      momentumBounce: false,
-    },
     pagination: { clickable: true, dynamicBullets: true },
     navigation: {
       nextEl: '.insights-swiper-button-next',
@@ -239,27 +220,24 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         slidesPerView: 2,
         spaceBetween: 20,
         centeredSlides: false,
-        freeMode: { enabled: false },
         speed: 480,
       },
       1024: {
         slidesPerView: 3,
         spaceBetween: 24,
         centeredSlides: false,
-        freeMode: { enabled: false },
         speed: 480,
       },
       1440: {
         slidesPerView: 3,
         spaceBetween: 28,
         centeredSlides: false,
-        freeMode: { enabled: false },
       },
     },
   };
 
   public projectsSwiperConfig: SwiperOptions = {
-    modules: [Navigation, Pagination, FreeMode],
+    modules: [Navigation, Pagination],
     watchSlidesProgress: true,
     slidesPerView: 1.08,
     centeredSlides: false,
@@ -270,14 +248,6 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
     touchRatio: 1.1,
     resistanceRatio: 0.85,
     threshold: 8,
-    freeMode: {
-      enabled: true,
-      momentum: true,
-      sticky: true,
-      momentumRatio: 2.0,
-      momentumVelocityRatio: 1.5,
-      momentumBounce: false,
-    },
     pagination: { clickable: true, dynamicBullets: true },
     navigation: {
       nextEl: '.projects-swiper-button-next',
@@ -288,20 +258,17 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         slidesPerView: 1.85,
         spaceBetween: 20,
         centeredSlides: false,
-        freeMode: { enabled: false },
         speed: 480,
       },
       1024: {
         slidesPerView: 3,
         spaceBetween: 24,
         centeredSlides: false,
-        freeMode: { enabled: false },
       },
       1440: {
         slidesPerView: 3,
         spaceBetween: 28,
         centeredSlides: false,
-        freeMode: { enabled: false },
       },
     },
   };
@@ -529,11 +496,6 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
 
     if (!offeringsSwiperEl.swiper) {
       offeringsSwiperEl.initialize();
-      const offeringsTransforms = { tx: 82, ty: 10, tz: 240, scale: 0.86, opacity: 0.55 };
-      const applyOfferings = () => this.applyCardStackTransforms(offeringsSwiperEl.swiper, offeringsTransforms);
-      offeringsSwiperEl.swiper.on('progress', applyOfferings);
-      offeringsSwiperEl.swiper.on('breakpoint', applyOfferings);
-      applyOfferings();
       this.setupOfferingsNavigationVisibility();
       this.bindSliderBoundaryState(
         offeringsSwiperEl,
@@ -548,29 +510,6 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
         this.canOfferingsNext
       );
     }
-  }
-
-  private applyCardStackTransforms(
-    swiper: any,
-    cfg: { tx: number; ty: number; tz: number; scale: number; opacity: number }
-  ): void {
-    if (!swiper?.slides?.length) return;
-    const isMobile = swiper.params?.slidesPerView === 1;
-    swiper.slides.forEach((slide: HTMLElement) => {
-      if (!isMobile) {
-        slide.style.transform = '';
-        slide.style.opacity = '';
-        slide.style.zIndex = '';
-        return;
-      }
-      const rawP = (slide as any).progress ?? 0;
-      const p    = Math.max(Math.min(rawP, 3), -3);
-      const absP = Math.min(Math.abs(p), 1);
-      const sign = p < 0 ? -1 : 1;
-      slide.style.transform = `translate3d(${sign * absP * cfg.tx}%, ${absP * cfg.ty}%, ${-absP * cfg.tz}px) scale(${1 - absP * (1 - cfg.scale)})`;
-      slide.style.opacity   = String(Math.max(1 - absP * (1 - cfg.opacity), 0.05));
-      slide.style.zIndex    = String(Math.max(Math.round(100 - Math.abs(p) * 10), 1));
-    });
   }
 
   private bindSliderBoundaryState(
@@ -841,11 +780,6 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       if (insightsSwiperEl) {
         Object.assign(insightsSwiperEl, this.insightsSwiperConfig);
         insightsSwiperEl.initialize();
-        const insightsTransforms = { tx: 95, ty: 25, tz: 400, scale: 0.85, opacity: 0.4 };
-        const applyInsights = () => this.applyCardStackTransforms(insightsSwiperEl.swiper, insightsTransforms);
-        insightsSwiperEl.swiper.on('progress', applyInsights);
-        insightsSwiperEl.swiper.on('breakpoint', applyInsights);
-        applyInsights();
         this.setupInsightsNavigationVisibility();
         this.bindSliderBoundaryState(insightsSwiperEl, this.canInsightsPrev, this.canInsightsNext);
       }
@@ -856,11 +790,6 @@ export class Home implements OnInit, AfterViewInit, OnDestroy {
       if (projectsSwiperEl) {
         Object.assign(projectsSwiperEl, this.projectsSwiperConfig);
         projectsSwiperEl.initialize();
-        const projectsTransforms = { tx: 95, ty: 25, tz: 400, scale: 0.85, opacity: 0.4 };
-        const applyProjects = () => this.applyCardStackTransforms(projectsSwiperEl.swiper, projectsTransforms);
-        projectsSwiperEl.swiper.on('progress', applyProjects);
-        projectsSwiperEl.swiper.on('breakpoint', applyProjects);
-        applyProjects();
         this.setupProjectsNavigationVisibility();
         this.bindSliderBoundaryState(projectsSwiperEl, this.canProjectsPrev, this.canProjectsNext);
       }
