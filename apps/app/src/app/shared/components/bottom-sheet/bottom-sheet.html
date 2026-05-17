@@ -3,13 +3,17 @@
   <div
     class="bottom-sheet-backdrop"
     (click)="onClose()"
-    @backdropFade
+    #backdropElement
+    [style.opacity]="overlayOpacity"
+    [style.transition]="transitionStyle"
   ></div>
 
   <!-- Sheet Container -->
   <div
     class="bottom-sheet-container"
-    @sheetSlide
+    #sheetContainer
+    [style.transform]="'translateY(' + translateY + (isDragging ? 'px)' : '%)')"
+    [style.transition]="transitionStyle"
   >
     <!-- Handle for mobile feel -->
     <div class="bottom-sheet-handle-wrapper" (click)="onClose()">
