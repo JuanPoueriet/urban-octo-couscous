@@ -21,5 +21,13 @@ export class ContactDto {
 
   @IsString()
   @IsOptional()
+  phone?: string;
+
+  @IsString()
+  @IsOptional()
   honeypot?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  recaptchaToken: string;
 }

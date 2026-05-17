@@ -22,6 +22,7 @@ export class MailService {
   async sendContactEmail(contactData: {
     name: string;
     email: string;
+    phone?: string;
     service: string;
     message: string;
   }) {
@@ -34,6 +35,7 @@ export class MailService {
 
         Name: ${contactData.name}
         Email: ${contactData.email}
+        Phone: ${contactData.phone || 'Not provided'}
         Service of Interest: ${contactData.service}
         Message: ${contactData.message}
       `,
@@ -41,6 +43,7 @@ export class MailService {
         <h3>New Contact Form Submission</h3>
         <p><strong>Name:</strong> ${contactData.name}</p>
         <p><strong>Email:</strong> ${contactData.email}</p>
+        <p><strong>Phone:</strong> ${contactData.phone || 'Not provided'}</p>
         <p><strong>Service of Interest:</strong> ${contactData.service}</p>
         <p><strong>Message:</strong></p>
         <p>${contactData.message}</p>

@@ -25,6 +25,7 @@ export class Contact implements OnInit, OnDestroy {
   submitSuccess = false;
   submitError = false;
   readonly icons = ALL_ICONS;
+  private readonly recaptchaSiteKey = (globalThis as any).__env?.RECAPTCHA_SITE_KEY ?? '';
 
   private destroy$ = new Subject<void>();
 
@@ -39,15 +40,18 @@ export class Contact implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.seo.setOrganizationSchema();
+    this.injectRecaptchaScript();
     this.contactForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
+      phone: ['', [Validators.pattern(/^[+()\-.\s\d]{7,20}$/)]],
       service: ['', [Validators.required]],
       serviceOther: [''],
       referralSource: [''],
       message: ['', [Validators.required, Validators.minLength(10)]],
       privacy: [false, Validators.requiredTrue],
-      honeypot: ['']
+      honeypot: [''],
+      recaptchaToken: ['']
     });
 
     this.setupConditionalValidation();
@@ -80,7 +84,7 @@ export class Contact implements OnInit, OnDestroy {
     return this.contactForm.controls;
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.contactForm.invalid) {
       this.contactForm.markAllAsTouched();
       this.toastService.show('CONTACT.FORM.ERROR', 'error');
@@ -96,12 +100,18 @@ export class Contact implements OnInit, OnDestroy {
       return;
     }
 
+    const recaptchaToken = await this.getRecaptchaToken();
+    if (!recaptchaToken) {
+      this.toastService.show('CONTACT.FORM.RECAPTCHA_ERROR', 'error');
+      return;
+    }
+
     this.isSubmitting = true;
     this.submitSuccess = false;
     this.submitError = false;
 
     this.apiService
-      .sendContactForm(this.contactForm.value)
+      .sendContactForm({ ...this.contactForm.value, recaptchaToken })
       .pipe(
         takeUntil(this.destroy$),
         finalize(() => {
@@ -124,5 +134,32 @@ export class Contact implements OnInit, OnDestroy {
           this.toastService.show('CONTACT.FORM.ERROR', 'error');
         },
       });
+  }
+
+  private async getRecaptchaToken(): Promise<string | null> {
+    if (!this.recaptchaSiteKey || !(globalThis as any).grecaptcha?.execute) {
+      return null;
+    }
+
+    try {
+      return await (globalThis as any).grecaptcha.execute(this.recaptchaSiteKey, { action: 'contact_form_submit' });
+    } catch {
+      return null;
+    }
+  }
+
+  private injectRecaptchaScript(): void {
+    if (!this.recaptchaSiteKey) {
+      return;
+    }
+    if (document.getElementById('recaptcha-enterprise-script')) {
+      return;
+    }
+    const script = document.createElement('script');
+    script.id = 'recaptcha-enterprise-script';
+    script.src = `https://www.google.com/recaptcha/api.js?render=${encodeURIComponent(this.recaptchaSiteKey)}`;
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
   }
 }
