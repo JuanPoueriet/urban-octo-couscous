@@ -261,10 +261,10 @@
       "SUBMIT": "Enviar Mensaje",
       "HONEYPOT_LABEL": "Deje este campo en blanco",
       "CONSENT_LABEL": "Consentimiento",
-      "RECAPTCHA_NOTICE_PREFIX": "Este formulario está protegido por reCAPTCHA y se aplican la",
-      "RECAPTCHA_PRIVACY": "Política de Privacidad",
+      "RECAPTCHA_NOTICE_PREFIX": "Protegido por reCAPTCHA. Se aplican la",
+      "RECAPTCHA_PRIVACY": "Privacidad",
       "RECAPTCHA_NOTICE_MIDDLE": "y los",
-      "RECAPTCHA_TERMS": "Términos del Servicio",
+      "RECAPTCHA_TERMS": "Términos",
       "RECAPTCHA_NOTICE_SUFFIX": "de Google.",
       "RECAPTCHA_ERROR": "No se pudo validar el reCAPTCHA. Inténtalo de nuevo.",
       "ERRORS": {
