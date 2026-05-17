@@ -288,6 +288,9 @@ swiper-container {
 
 // --- NUEVO: Offerings Tabs Section ---
 .offerings-section {
+  --home-slider-card-shadow: 0 10px 26px rgba(7, 10, 18, 0.1);
+  --home-slider-card-shadow-hover: 0 18px 44px rgba(7, 10, 18, 0.16);
+
   padding: 6rem 0;
 
   .offerings-header {
@@ -890,6 +893,9 @@ swiper-container {
 
 // --- 3. Testimonials Section ---
 .testimonials-section {
+  --home-slider-card-shadow: 0 14px 36px rgba(2, 6, 18, 0.34);
+  --home-slider-card-shadow-hover: 0 24px 58px rgba(2, 6, 18, 0.44);
+
   position: relative;
   padding: 7rem 0;
   background:
@@ -1037,10 +1043,11 @@ swiper-container {
   transition:
     border-color 0.3s ease,
     box-shadow 0.3s ease;
+  box-shadow: var(--home-slider-card-shadow, 0 14px 36px rgba(2, 6, 18, 0.34));
 
   &:hover {
     border-color: rgba(255, 75, 43, 0.16);
-    box-shadow: 0 20px 56px rgba(0, 0, 0, 0.35);
+    box-shadow: var(--home-slider-card-shadow-hover, 0 24px 58px rgba(2, 6, 18, 0.44));
   }
 
   &__deco {
@@ -1397,12 +1404,13 @@ swiper-container {
     border-color 0.35s ease,
     box-shadow 0.35s ease,
     transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+  box-shadow: var(--home-slider-card-shadow, 0 10px 26px rgba(7, 10, 18, 0.1));
 
   &:hover {
     border-color: rgba(var(--primary-rgb), 0.28);
     box-shadow:
       0 0 0 1px rgba(var(--primary-rgb), 0.04),
-      0 20px 56px rgba(0, 0, 0, 0.14);
+      var(--home-slider-card-shadow-hover, 0 18px 44px rgba(7, 10, 18, 0.16));
     transform: translateY(-6px);
 
     .project-card__image {
@@ -1808,12 +1816,13 @@ swiper-container {
     border-color 0.35s ease,
     box-shadow 0.35s ease,
     transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+  box-shadow: var(--home-slider-card-shadow, 0 10px 26px rgba(7, 10, 18, 0.1));
 
   &:hover {
     border-color: rgba(var(--primary-rgb), 0.22);
     box-shadow:
       0 0 0 1px rgba(var(--primary-rgb), 0.04),
-      0 20px 60px rgba(0, 0, 0, 0.12);
+      var(--home-slider-card-shadow-hover, 0 18px 44px rgba(7, 10, 18, 0.16));
     transform: translateY(-6px);
 
     .insight-card__image {
@@ -2271,6 +2280,7 @@ swiper-container {
   min-height: 250px;
   position: relative;
   overflow: hidden;
+  box-shadow: var(--home-slider-card-shadow, 0 10px 26px rgba(7, 10, 18, 0.1));
 
   // Top accent line — matches card pattern
   &::before {
@@ -2289,8 +2299,8 @@ swiper-container {
   &:hover {
     transform: translateY(-5px);
     border-color: rgba(var(--primary-rgb), 0.22);
-    box-shadow: 0 20px 44px rgba(0, 0, 0, 0.35),
-                0 0 0 1px rgba(var(--primary-rgb), 0.12);
+    box-shadow: 0 0 0 1px rgba(var(--primary-rgb), 0.12),
+                var(--home-slider-card-shadow-hover, 0 18px 44px rgba(7, 10, 18, 0.16));
 
     &::before {
       opacity: 1;
@@ -2424,16 +2434,18 @@ swiper-container {
   /* Sombra diferenciada: activa con mayor elevación para efecto float. */
   .offering-slide .card,
   .project-slide .card,
-  .insight-slide .card {
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  .insight-slide .card,
+  .view-more-slide .view-more-card {
+    box-shadow: var(--home-slider-card-shadow, 0 10px 26px rgba(7, 10, 18, 0.1));
     border-radius: 20px;
     transition: box-shadow 280ms ease;
   }
 
   .offering-slide.swiper-slide-active .card,
   .project-slide.swiper-slide-active .card,
-  .insight-slide.swiper-slide-active .card {
-    box-shadow: 0 20px 42px rgba(0, 0, 0, 0.24);
+  .insight-slide.swiper-slide-active .card,
+  .view-more-slide.swiper-slide-active .view-more-card {
+    box-shadow: var(--home-slider-card-shadow-hover, 0 18px 44px rgba(7, 10, 18, 0.16));
   }
 }
 
