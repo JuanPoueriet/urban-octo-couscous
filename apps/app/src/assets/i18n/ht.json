@@ -1551,5 +1551,10 @@
     "SWITCH": "Chanje an {{targetLanguage}}",
     "KEEP": "Kenbe {{currentLanguage}}",
     "FOOTER": "Ou ka chanje lang lan ankò nenpòt lè ou vle."
+  },
+  "LANGUAGE_SELECTOR": {
+    "TITLE": "Lang",
+    "SUBTITLE": "Chwazi lang ou pi pito a",
+    "MORE_LANGUAGES": "Plis lang"
   }
 }

@@ -1551,5 +1551,10 @@
     "SWITCH": "切换到{{targetLanguage}}",
     "KEEP": "保持{{currentLanguage}}",
     "FOOTER": "您可以随时再次更改语言。"
+  },
+  "LANGUAGE_SELECTOR": {
+    "TITLE": "语言",
+    "SUBTITLE": "选择您首选的语言",
+    "MORE_LANGUAGES": "更多语言"
   }
 }

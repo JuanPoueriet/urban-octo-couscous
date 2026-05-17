@@ -1,4 +1,5 @@
 import {
+  BadgeCheck,
   Copy,
   Archive,
   ArrowLeft,
@@ -168,6 +169,7 @@ export const ICON_LIST = {
     Gauge,
     Lock,
     Award,
+    BadgeCheck,
     ThumbsUp,
     ThumbsDown,
     LayoutGrid,

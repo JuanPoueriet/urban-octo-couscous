@@ -1551,5 +1551,10 @@
     "SWITCH": "التغيير إلى {{targetLanguage}}",
     "KEEP": "البقاء على {{currentLanguage}}",
     "FOOTER": "يمكنك تغيير اللغة مرة أخرى في أي وقت تريده."
+  },
+  "LANGUAGE_SELECTOR": {
+    "TITLE": "اللغة",
+    "SUBTITLE": "اختر لغتك المفضلة",
+    "MORE_LANGUAGES": "المزيد من اللغات"
   }
 }

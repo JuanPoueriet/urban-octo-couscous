@@ -1551,5 +1551,10 @@
     "SWITCH": "{{targetLanguage}}に切り替える",
     "KEEP": "{{currentLanguage}}のままにする",
     "FOOTER": "言語はいつでも変更できます。"
+  },
+  "LANGUAGE_SELECTOR": {
+    "TITLE": "言語",
+    "SUBTITLE": "優先言語を選択してください",
+    "MORE_LANGUAGES": "その他の言語"
   }
 }
