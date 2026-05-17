@@ -1546,7 +1546,10 @@
     "CONTACT_DESC": "Pran kontak ak ekspè JSL Technology pou diskite sou pwochen pwojè lojisyèl ou a. Nou bay konsiltasyon pèsonalize ak solisyon teknolojik wo nivo."
   },
   "LANGUAGE_SUGGESTION": {
-    "MESSAGE": "W ap gade paj sa a nan {{currentLanguage}}. Chanje nan {{targetLanguage}}?",
-    "SWITCH": "Chanje"
+    "TITLE": "Èske ou prefere wè paj sa a an {{targetLanguage}}?",
+    "SUBTITLE": "Nou detekte ke lang ou ka {{targetLanguage}}.",
+    "SWITCH": "Chanje an {{targetLanguage}}",
+    "KEEP": "Kenbe {{currentLanguage}}",
+    "FOOTER": "Ou ka chanje lang lan ankò nenpòt lè ou vle."
   }
 }

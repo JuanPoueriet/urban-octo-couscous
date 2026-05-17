@@ -21,7 +21,7 @@ export class LanguageSuggestionService {
   suggestion$ = this.suggestionSubject.asObservable();
 
   private readonly PREFERRED_LANG_COOKIE = 'jsl_user_preferred_lang';
-  private readonly DISMISSED_SESSION_KEY = 'jsl_lang_suggestion_dismissed';
+  private readonly DISMISSED_STORAGE_KEY = 'jsl_lang_suggestion_dismissed';
   private autoDismissTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
@@ -33,7 +33,8 @@ export class LanguageSuggestionService {
     if (isPlatformBrowser(this.platformId)) {
       // Only check once on initial page load — not on SPA navigations.
       const onWindowLoad = () => {
-        setTimeout(() => this.checkSuggestion(), 500);
+        // Delay suggestion to feel like an assistant, not an interruption
+        setTimeout(() => this.checkSuggestion(), 3000);
       };
 
       if (document.readyState === 'complete') {
@@ -47,8 +48,15 @@ export class LanguageSuggestionService {
   private checkSuggestion() {
     if (!isPlatformBrowser(this.platformId)) return;
 
-    if (sessionStorage.getItem(this.DISMISSED_SESSION_KEY)) {
-      return;
+    const dismissedAt = localStorage.getItem(this.DISMISSED_STORAGE_KEY);
+    if (dismissedAt) {
+      const dismissedTime = parseInt(dismissedAt, 10);
+      const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+
+      // Don't show again for 30 days if dismissed
+      if (Date.now() - dismissedTime < thirtyDaysMs) {
+        return;
+      }
     }
 
     const currentUrlLang = this.router.url.split('/')[1];
@@ -119,7 +127,7 @@ export class LanguageSuggestionService {
 
   dismiss() {
     this.clearAutoDismissTimer();
-    sessionStorage.setItem(this.DISMISSED_SESSION_KEY, 'true');
+    localStorage.setItem(this.DISMISSED_STORAGE_KEY, Date.now().toString());
     this.suggestionSubject.next(null);
   }
 

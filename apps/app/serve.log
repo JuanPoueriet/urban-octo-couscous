@@ -1,0 +1,117 @@
+
+> nx run app:serve:development
+
+[33m❯[39m Building...
+[32m✔[39m Building...
+[37m[35mBrowser bundles[37m
+[1mInitial chunk files[22m [2m | [22m[1mNames[22m           [2m | [22m [1mRaw size[22m
+[32mmain.js[37m             [2m | [22m[2mmain[22m            [2m | [22m  [36m1.94 MB[37m[2m | [22m
+[32mchunk-BX7EF3GD.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m1.10 MB[37m[2m | [22m
+[32mchunk-BY4VM3K2.js[37m   [2m | [22m[2m-[22m               [2m | [22m[36m748.52 kB[37m[2m | [22m
+[32mchunk-VTSS4PYX.js[37m   [2m | [22m[2m-[22m               [2m | [22m[36m569.16 kB[37m[2m | [22m
+[32mchunk-VZ56LI5O.js[37m   [2m | [22m[2m-[22m               [2m | [22m[36m232.10 kB[37m[2m | [22m
+[32mchunk-SP5J6XPJ.js[37m   [2m | [22m[2m-[22m               [2m | [22m [36m39.05 kB[37m[2m | [22m
+[32mchunk-JPJINZMO.js[37m   [2m | [22m[2m-[22m               [2m | [22m [36m26.89 kB[37m[2m | [22m
+[32mchunk-5O32BLHY.js[37m   [2m | [22m[2m-[22m               [2m | [22m [36m19.36 kB[37m[2m | [22m
+[32mchunk-M5W2VZTB.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m9.40 kB[37m[2m | [22m
+[32mchunk-N6ZASUBG.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m7.58 kB[37m[2m | [22m
+[32mstyles.css[37m          [2m | [22m[2mstyles[22m          [2m | [22m  [36m5.79 kB[37m[2m | [22m
+[32mchunk-4PLLOF3J.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m4.62 kB[37m[2m | [22m
+[32mchunk-UHP6XI63.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m3.62 kB[37m[2m | [22m
+[32mchunk-BVKNI4HA.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m3.05 kB[37m[2m | [22m
+[32mchunk-D7MF2QZF.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m1.74 kB[37m[2m | [22m
+[32mchunk-U4ZZPPSF.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m1.56 kB[37m[2m | [22m
+[32mchunk-IIIOIUFD.js[37m   [2m | [22m[2m-[22m               [2m | [22m  [36m1.46 kB[3[39m
+[37m9m[2m | [22m
+[1m [22m                   [2m | [22m[1mInitial total[22m   [2m | [22m  [1m4.71 MB[22m
+[1mLazy chunk files[22m    [2m | [22m[1mNames[22m           [2m | [22m [1mRaw size[22m
+[32mchunk-Q2GRSAPL.js[37m   [2m | [22m[2mhome[22m            [2m | [22m[36m475.30 kB[37m[2m | [22m
+[32mchunk-ZFEO4IRW.js[37m   [2m | [22m[2m-[22m               [2m | [22m[36m361.35 kB[37m[2m | [22m
+[32mchunk-Y23W5DAY.js[37m   [2m | [22m[2mcareers[22m         [2m | [22m[36m289.33 kB[37m[2m | [22m
+[32mchunk-UFB6O5AT.js[37m   [2m | [22m[2mblog-detail[22m     [2m | [22m[36m167.21 kB[37m[2m | [22m
+[32mchunk-S37C2YLQ.js[37m   [2m | [22m[2mbrowser[22m         [2m | [22m[36m149.16 kB[37m[2m | [22m
+[32mchunk-YIHLAARH.js[37m   [2m | [22m[2mproduct-detail[22m  [2m | [22m [36m89.61 kB[37m[2m | [22m
+[32mchunk-DNJKXLUF.js[37m   [2m | [22m[2mcontact[22m         [2m | [22m [36m85.42 kB[37m[2m | [22m
+[32mchunk-BU3NLXUD.js[37m   [2m | [22m[2mpress[22m           [2m | [22m [36m70.70 kB[37m[2m | [22m
+[32mchunk-NDALFRB5.js[37m   [2m | [22m[2msolution-detail[22m [2m | [22m [36m66.96 kB[37m[2m | [22m
+[32mchunk-N3KFSXJP.js[37m   [2m | [22m[2mprism[22m           [2m | [22m [36m58.55 kB[37m[2m | [22m
+[32mchunk-2SALQ62R.js[37m   [2m | [22m[2minvestors[22m       [2m | [22m [36m49.91 kB[37m[2m | [22m
+[32mchunk-Z2D6RQJG.js[37m   [2m | [22m[2mpricing[22m         [2m | [22m [36m47.03 kB[37m[2m | [22m
+[32mchunk-3SOPW5TI.js[37m   [2m | [22m[2mabout-us[22m        [2m | [22m [36m46.22 kB[37m[2m | [22m
+[32mchunk-W7LCSZUS.js[37m   [2m | [22m[2mfaq[22m             [2m | [22m [36m45.75 kB[37m[2m | [22m
+[32mchunk-4FHUWVFZ.js[37m   [2m | [22m[2mdevelopers[22m      [2m | [22m [36m44.56 kB[37m[2m | [22m
+[2m...and 27 more lazy chunks files. Use "--verbose" to show all the files.[22m
+[35mServer bundles[37m
+[1mIniti[39m[37mal chunk files[22m [2m | [22m[1mNames[22m           [2m | [22m [1mRaw size[22m
+[32mmain.server.mjs[37m     [2m | [22m[2mmain.server[22m     [2m | [22m  [36m2.88 MB[37m[2m | [22m
+[32mserver.mjs[37m          [2m | [22m[2mserver[22m          [2m | [22m  [36m2.18 MB[37m[2m | [22m
+[32mchunk-YRLWFGPX.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m1.05 MB[37m[2m | [22m
+[32mchunk-LPOCPYG4.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m[36m748.56 kB[37m[2m | [22m
+[32mchunk-WIX66ZCD.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m[36m565.28 kB[37m[2m | [22m
+[32mpolyfills.server.mjs[37m[2m | [22m[2mpolyfills.server[22m[2m | [22m[36m493.23 kB[37m[2m | [22m
+[32mchunk-WMXPNC4O.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m[36m232.14 kB[37m[2m | [22m
+[32mchunk-QGZBIEGZ.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m [36m39.08 kB[37m[2m | [22m
+[32mchunk-5IA7HFTU.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m [36m26.93 kB[37m[2m | [22m
+[32mchunk-WJUYCA34.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m [36m13.41 kB[37m[2m | [22m
+[32mchunk-VOR5JPRP.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m9.44 kB[37m[2m | [22m
+[32mchunk-TRSIB3BY.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m7.62 kB[37m[2m | [22m
+[32mchunk-WHZ2V7EB.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m6.43 kB[37m[2m | [22m
+[32mchunk-ZQON32DC.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m4.66 kB[37m[2m | [22m
+[32mchunk-TBUZWMMB.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m3.65 kB[37m[2m | [22m
+[32mchunk-HLWOUPLB.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m3.25 kB[37m[2m | [22m
+[32mchunk-OH5DAJIU.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m3.09 kB[37m[2m | [22m
+[32mchunk-4KGORVLN.mjs[[39m[37m39m  [2m | [22m[2m-[22m               [2m | [22m  [36m2.15 kB[37m[2m | [22m
+[32mchunk-ULSAIHWD.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m1.59 kB[37m[2m | [22m
+[32mchunk-6KVB2S76.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m  [36m1.49 kB[37m[2m | [22m
+[1mLazy chunk files[22m    [2m | [22m[1mNames[22m           [2m | [22m [1mRaw size[22m
+[32mchunk-7JQSC76B.mjs[37m  [2m | [22m[2mhome[22m            [2m | [22m[36m475.38 kB[37m[2m | [22m
+[32mchunk-ZID3O5VM.mjs[37m  [2m | [22m[2m-[22m               [2m | [22m[36m361.38 kB[37m[2m | [22m
+[32mchunk-AKIRENVW.mjs[37m  [2m | [22m[2mcareers[22m         [2m | [22m[36m289.40 kB[37m[2m | [22m
+[32mchunk-76YKUE7C.mjs[37m  [2m | [22m[2mblog-detail[22m     [2m | [22m[36m167.29 kB[37m[2m | [22m
+[32mchunk-2KL37IEJ.mjs[37m  [2m | [22m[2mbrowser[22m         [2m | [22m[36m149.19 kB[37m[2m | [22m
+[32mchunk-JAKYE7KG.mjs[37m  [2m | [22m[2mproduct-detail[22m  [2m | [22m [36m89.69 kB[37m[2m | [22m
+[32mchunk-O2PJ4JDR.mjs[37m  [2m | [22m[2mcontact[22m         [2m | [22m [36m85.47 kB[37m[2m | [22m
+[32mchunk-PBJ3WO7C.mjs[37m  [2m | [22m[2mpress[22m           [2m | [22m [36m70.74 kB[37m[2m | [22m
+[32mchunk-UF72X6M5.mjs[37m  [2m | [22m[2msolution-detail[22m [2m | [22m [36m67.04 kB[37m[2m | [22m
+[32mchunk-FHS5ZTG4.mjs[37m  [2m | [22m[2mprism[22m           [2m | [22m [36m58.58 kB[37m[2m | [22m
+[32mchunk-HF6OINSF.mjs[37m  [2m | [22m[2minvestors[22m       [2m | [22m [36m49.95 kB[37m[2m | [22m
+[32mchunk-I6OPYQ66.mjs[37m  [2m | [22m[2mpricing[22m         [2m | [22m [36m47.07 kB[37m[2m | [22m
+[32mchunk-4I6I6T42.mjs[37m  [2m | [22m[2mabout-us[22m        [2m | [22m [36m46.30 kB[37m[2m | [22m
+[32mchunk-V2DRMMMR.mjs[37m  [2m | [22m[2mfaq[22m             [2m | [22m [36m45.83 kB[37m[2m | [22m
+[32mchunk-ZI7BQF47.mjs[37m  [2m | [2[39m[37m2m[2mdevelopers[22m      [2m | [22m [36m44.60 kB[37m[2m | [22m
+[2m...and 30 more lazy chunks files. Use "--verbose" to show all the files.[22m
+Application bundle generation complete. [28.791 seconds] - 2026-05-17T05:52:30.467Z
+[39m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: BreadcrumbsComponent is not used within the template of App[0m [1m[35m[plugin angular-compiler][0m
+    apps/app/src/app/app.ts:32:4:
+[37m      32 │     [32mBreadcrumbsComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~[0m
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: ImageComparisonComponent is not used within the template of Home[0m [1m[35m[plugin angular-compiler][0m
+    apps/app/src/app/features/home/home.ts:64:4:
+[37m      64 │     [32mImageComparisonComponent[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mDeprecation[0m [1m[35m[plugin angular-sass][0m
+    apps/app/src/app/features/investors/investors.scss:177:2:
+[37m      177 │   [32m[37mbackground: radial-gradient(circle at 50% 0%, rgba(var(--primar...
+          ╵   [32m^[0m
+  Sass's behavior for declarations that appear after nested
+  rules will be changing to match the behavior specified by CSS in an upcoming
+  version. To keep the existing behavior, move the declaration above the nested
+  rule. To opt into the new behavior, wrap the declaration in `& {}`.
+
+  More info: [4mhttps://sass-lang.com/d/mixed-decls[0m
+[39m[22m
+[37mWatch mode enabled. Watching for file changes...[39m
+[37mNOTE: Raw file sizes do not reflect development server per-request transformations.[39m
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m4200[22m/[39m
+ERROR Error: The "BadgeCheck" icon has not been provided by any available icon providers.
+    at LucideAngularComponent.Component [90m(/app/[39m.angular/vite-root/app/node_modules/[4mlucide-angular[24m/fesm2020/lucide-angular.mjs:45932:4[90m)[39m
+    at LucideAngularComponent.rememberChangeHistoryAndInvokeOnChangesHook [90m(/app/[39mnode_modules/[4m@angular/core[24m/fesm2022/debug_node.mjs:594:14[90m)[39m
+    at callHookInternal [90m(/app/[39mnode_modules/[4m@angular/core[24m/fesm2022/debug_node.mjs:860:14[90m)[39m
+    at callHook [90m(/app/[39mnode_modules/[4m@angular/core[24m/fesm2022/debug_node.mjs:891:9[90m)[39m
+    at callHooks [90m(/app/[39mnode_modules/[4m@angular/core[24m/fesm2022/debug_node.mjs:841:17[90m)[39m
+    at executeInitAndCheckHooks [90m(/app/[39mnode_modules/[4m@angular/core[24m/fesm2022/debug_node.mjs:791:9[90m)[39m
+    at refreshView [90m(/app/[39mnode_modules/[4m@angular/core[24m/fesm2022/debug_node.mjs:10177:21[90m)[39m
+    at detectChangesInView [90m(/app/[39mnode_modules/[4m@angular/core[24m/fesm2022/debug_node.mjs:10382:9[90m)[39m
+    at detectChangesInViewIfAttached [90m(/app/[39mnode_modules/[4m@angular/core[24m/fesm2022/debug_node.mjs:10342:5[90m)[39m
+    at detectChangesInEmbeddedViews [90m(/app/[39mnode_modules/[4m@angular/core[24m/fesm2022/debug_node.mjs:10299:13[90m)[39m

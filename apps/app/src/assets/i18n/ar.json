@@ -1479,8 +1479,7 @@
     "STAT_PAGES": "٣٢ صفحة",
     "STAT_INDUSTRIES": "٥ صناعات",
     "STAT_FREE": "مجاني",
-    "YEAR": "٢٠٢٥",
-    "STAT_FREE": "مجاني"
+    "YEAR": "٢٠٢٥"
   },
   "SHARE": {
     "LABEL": "شارك هذا المقال",
@@ -1547,7 +1546,10 @@
     "CONTACT_DESC": "تواصل مع خبراء JSL Technology لمناقشة مشروعك البرمجي القادم. نحن نقدم استشارات مخصصة وحلولًا تقنية متطورة لتنمية أعمالك."
   },
   "LANGUAGE_SUGGESTION": {
-    "MESSAGE": "أنت تشاهد هذه الصفحة باللغة {{currentLanguage}}. هل تريد التغيير إلى {{targetLanguage}}؟",
-    "SWITCH": "تبديل"
+    "TITLE": "هل تفضل عرض هذه الصفحة باللغة {{targetLanguage}}؟",
+    "SUBTITLE": "لقد اكتشفنا أن لغتك قد تكون {{targetLanguage}}.",
+    "SWITCH": "التغيير إلى {{targetLanguage}}",
+    "KEEP": "البقاء على {{currentLanguage}}",
+    "FOOTER": "يمكنك تغيير اللغة مرة أخرى في أي وقت تريده."
   }
 }

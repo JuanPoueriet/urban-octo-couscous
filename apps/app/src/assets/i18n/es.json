@@ -1556,7 +1556,10 @@
     "CONTACT_DESC": "Póngase en contacto con los expertos de JSL Technology para discutir su próximo proyecto de software. Brindamos consultoría personalizada y soluciones tecnológicas de alto nivel."
   },
   "LANGUAGE_SUGGESTION": {
-    "MESSAGE": "Estás viendo esta página en {{currentLanguage}}. ¿Cambiar a {{targetLanguage}}?",
-    "SWITCH": "Cambiar"
+    "TITLE": "¿Prefieres ver esta página en {{targetLanguage}}?",
+    "SUBTITLE": "Detectamos que tu idioma puede ser {{targetLanguage}}.",
+    "SWITCH": "Cambiar a {{targetLanguage}}",
+    "KEEP": "Mantener {{currentLanguage}}",
+    "FOOTER": "Puedes cambiar el idioma nuevamente cuando quieras."
   }
 }
