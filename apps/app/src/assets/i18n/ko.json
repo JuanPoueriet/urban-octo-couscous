@@ -264,11 +264,22 @@
         "MINLENGTH": "최소 {{value}}자가 필요합니다."
       },
       "SUCCESS": "메시지가 전송되었습니다! 문의해 주셔서 감사합니다. 곧 연락드리겠습니다.",
-      "ERROR": "메시지를 보내는 동안 오류가 발생했습니다. 나중에 다시 시도하십시오."
+      "ERROR": "메시지를 보내는 동안 오류가 발생했습니다. 나중에 다시 시도하십시오.",
+      "SERVICE_OTHER_DETAILS": "What other service are you interested in?",
+      "SERVICE_OTHER_DETAILS_PLACEHOLDER": "Please specify the service",
+      "REFERRAL": "How did you hear about us? (optional)",
+      "REFERRAL_PROMPT": "Select an option (optional)",
+      "REFERRAL_OPTIONS": {
+        "GOOGLE": "Google/Search engines",
+        "SOCIAL_MEDIA": "Social media",
+        "RECOMMENDATION": "Recommendation",
+        "EVENT": "Event or conference",
+        "BLOG": "Blog or article"
+      }
     },
     "LOCATION_ADDRESS": "Santo Domingo, Dominican Republic",
     "PHONE_DISPLAY": "+1 (809) 264-1693",
-    "EMAIL_DISPLAY": "info@jsl.technology",
+    "EMAIL_DISPLAY": "contact@jsl.technology",
     "EYEBROW": "Get in Touch",
     "RESPONSE_TIME": "Response within 24 hours",
     "BUSINESS_HOURS": "Mon-Fri, 9am-6pm EST",
