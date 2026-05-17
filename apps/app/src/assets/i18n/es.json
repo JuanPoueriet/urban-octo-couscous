@@ -250,6 +250,8 @@
     "FORM": {
       "NAME": "Nombre Completo",
       "EMAIL": "Correo Electrónico",
+      "PHONE_OPTIONAL": "Teléfono (opcional)",
+      "PHONE_PLACEHOLDER": "+1 (809) 000-0000",
       "SERVICE": "Servicio de Interés",
       "SERVICE_PROMPT": "Selecciona un servicio...",
       "SERVICE_OTHER": "Otro",
@@ -258,10 +260,18 @@
       "PRIVACY_LINK": "Política de Privacidad",
       "SUBMIT": "Enviar Mensaje",
       "HONEYPOT_LABEL": "Deje este campo en blanco",
+      "CONSENT_LABEL": "Consentimiento",
+      "RECAPTCHA_NOTICE_PREFIX": "Este formulario está protegido por reCAPTCHA y se aplican la",
+      "RECAPTCHA_PRIVACY": "Política de Privacidad",
+      "RECAPTCHA_NOTICE_MIDDLE": "y los",
+      "RECAPTCHA_TERMS": "Términos del Servicio",
+      "RECAPTCHA_NOTICE_SUFFIX": "de Google.",
+      "RECAPTCHA_ERROR": "No se pudo validar el reCAPTCHA. Inténtalo de nuevo.",
       "ERRORS": {
         "REQUIRED": "Este campo es requerido.",
         "EMAIL": "Por favor, introduce un correo válido.",
-        "MINLENGTH": "Se requieren al menos {{value}} caracteres."
+        "MINLENGTH": "Se requieren al menos {{value}} caracteres.",
+        "PHONE": "Introduce un teléfono válido o deja este campo vacío."
       },
       "SUCCESS": "¡Mensaje enviado! Gracias por contactarnos. Te responderemos pronto.",
       "ERROR": "Hubo un error al enviar tu mensaje. Por favor, inténtalo de nuevo más tarde.",

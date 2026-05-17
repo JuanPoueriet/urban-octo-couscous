@@ -131,6 +131,21 @@
           </div>
         </div>
 
+        <div class="form-group">
+          <label for="phone">{{ 'CONTACT.FORM.PHONE_OPTIONAL' | translate }}</label>
+          <div class="input-wrapper">
+            <lucide-icon name="Phone" [size]="18" class="input-icon"></lucide-icon>
+            <input type="tel" id="phone" class="form-control" formControlName="phone"
+                   [placeholder]="'CONTACT.FORM.PHONE_PLACEHOLDER' | translate"
+                   [class.is-invalid]="f['phone'].invalid && (f['phone'].dirty || f['phone'].touched)">
+          </div>
+          @if (f['phone'].invalid && (f['phone'].dirty || f['phone'].touched)) {
+            <div class="form-error">
+              <span>{{ 'CONTACT.FORM.ERRORS.PHONE' | translate }}</span>
+            </div>
+          }
+        </div>
+
         <!-- Campo Servicio -->
         <div class="form-group">
           <label for="service">{{ 'CONTACT.FORM.SERVICE' | translate }}</label>
@@ -213,6 +228,7 @@
 
         <!-- Privacy Policy Checkbox -->
         <div class="form-group form-checkbox">
+          <span class="consent-label">{{ 'CONTACT.FORM.CONSENT_LABEL' | translate }}</span>
           <label class="checkbox-container">
             <input type="checkbox" formControlName="privacy" class="checkbox-input">
             <span class="checkbox-text">
@@ -226,6 +242,15 @@
             </div>
           }
         </div>
+
+        <div class="recaptcha-container" aria-hidden="true"></div>
+        <p class="recaptcha-disclaimer">
+          {{ 'CONTACT.FORM.RECAPTCHA_NOTICE_PREFIX' | translate }}
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">{{ 'CONTACT.FORM.RECAPTCHA_PRIVACY' | translate }}</a>
+          {{ 'CONTACT.FORM.RECAPTCHA_NOTICE_MIDDLE' | translate }}
+          <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer">{{ 'CONTACT.FORM.RECAPTCHA_TERMS' | translate }}</a>
+          {{ 'CONTACT.FORM.RECAPTCHA_NOTICE_SUFFIX' | translate }}
+        </p>
 
         <!-- Botón de Envío -->
         <div class="form-actions">

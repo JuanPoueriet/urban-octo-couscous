@@ -250,6 +250,8 @@
     "FORM": {
       "NAME": "Full Name",
       "EMAIL": "Email Address",
+      "PHONE_OPTIONAL": "Phone (optional)",
+      "PHONE_PLACEHOLDER": "+1 (809) 000-0000",
       "SERVICE": "Service of Interest",
       "SERVICE_PROMPT": "Select a service...",
       "SERVICE_OTHER": "Other",
@@ -258,10 +260,18 @@
       "PRIVACY_LINK": "Privacy Policy",
       "SUBMIT": "Send Message",
       "HONEYPOT_LABEL": "Leave this field blank",
+      "CONSENT_LABEL": "Consent",
+      "RECAPTCHA_NOTICE_PREFIX": "This form is protected by reCAPTCHA and the Google",
+      "RECAPTCHA_PRIVACY": "Privacy Policy",
+      "RECAPTCHA_NOTICE_MIDDLE": "and",
+      "RECAPTCHA_TERMS": "Terms of Service",
+      "RECAPTCHA_NOTICE_SUFFIX": "apply.",
+      "RECAPTCHA_ERROR": "reCAPTCHA validation failed. Please try again.",
       "ERRORS": {
         "REQUIRED": "This field is required.",
         "EMAIL": "Please enter a valid email address.",
-        "MINLENGTH": "At least {{value}} characters are required."
+        "MINLENGTH": "At least {{value}} characters are required.",
+        "PHONE": "Please enter a valid phone number or leave it blank."
       },
       "SUCCESS": "Message sent! Thank you for contacting us. We will get back to you soon.",
       "ERROR": "There was an error sending your message. Please try again later.",
