@@ -48,6 +48,12 @@ export interface BottomSheetGestureConfig {
    * Stop any active transitions.
    */
   onStopTransition: () => void;
+
+  /**
+   * Maximum positive translateY (in px) allowed while dragging.
+   * Represents the closed boundary where the sheet's bottom edge aligns with the viewport bottom edge.
+   */
+  getMaxTranslateY: () => number;
 }
 
 export class BottomSheetGestures implements GestureHandler {
@@ -67,6 +73,7 @@ export class BottomSheetGestures implements GestureHandler {
   private readonly DEFAULT_VELOCITY_THRESHOLD = 0.25;
   private readonly DEFAULT_CLOSE_THRESHOLD = 150;
   private readonly DEFAULT_ELASTIC_RESISTANCE = 0.25;
+  private readonly DEFAULT_BOTTOM_BOUNDARY_RESISTANCE = 0.18;
 
   private gestureBusUnregister: (() => void) | null = null;
 
@@ -121,6 +128,19 @@ export class BottomSheetGestures implements GestureHandler {
     if (targetTranslate < 0) {
       const resistance = this.config.elasticResistance ?? this.DEFAULT_ELASTIC_RESISTANCE;
       targetTranslate = targetTranslate * resistance;
+    }
+
+    // Soft boundary when dragging DOWN (diffY > 0):
+    // Never allow the sheet to reach/overflow its closed boundary while dragging.
+    // This mirrors the side drawer's resistance behavior and keeps gestures stable.
+    if (targetTranslate > 0) {
+      const maxTranslate = Math.max(0, this.config.getMaxTranslateY());
+      if (targetTranslate >= maxTranslate) {
+        const overshoot = targetTranslate - maxTranslate;
+        targetTranslate =
+          maxTranslate -
+          (maxTranslate * this.DEFAULT_BOTTOM_BOUNDARY_RESISTANCE) / (overshoot + 1);
+      }
     }
 
     this.lastDragPosition = targetTranslate;

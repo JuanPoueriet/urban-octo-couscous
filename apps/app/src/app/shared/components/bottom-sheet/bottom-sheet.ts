@@ -130,11 +130,16 @@ export class BottomSheetComponent implements OnInit, OnChanges, OnDestroy {
             this.transitionStyle = 'none';
             this.cdRef.markForCheck();
           });
-        }
+        },
+        getMaxTranslateY: () => this.getSheetHeightPx()
       },
       this.ngZone,
       this.gestureBus
     );
+  }
+
+  private getSheetHeightPx(): number {
+    return this.sheetContainer?.nativeElement.getBoundingClientRect().height ?? 0;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
